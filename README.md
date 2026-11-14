@@ -29,3 +29,5 @@ Only Android debug builds enable cleartext HTTP traffic.
 Cloud Functions checks: `npm run lint`, `npm run build`, and `npm test` inside
 `firebase/functions`. The test script currently reports that no tests exist
 and exits successfully; it does not claim test coverage.
+
+Auth emulator shows OTP codes at http://localhost:4000/auth (or in emulator logs); any phone number works.

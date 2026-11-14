@@ -8,5 +8,51 @@
   "roleDriverSubtitle": "اكسب على وقتك",
   "riderMode": "وضع الراكب",
   "driverMode": "وضع السائق",
-  "continueLabel": "متابعة"
+  "continueLabel": "متابعة",
+  "phoneTitle": "أدخل رقم موبايلك",
+  "phoneLabel": "رقم الموبايل",
+  "countryCode": "🇯🇴 +962",
+  "smsFootnote": "رح نبعتلك رسالة SMS فيها رمز التحقق.",
+  "otpTitle": "أدخل الرمز",
+  "otpSent": "بعتنالك رمز على {phone}",
+  "resendCode": "إعادة إرسال الرمز",
+  "resendCountdown": "إعادة الإرسال بعد {seconds} ث",
+  "editPhone": "تعديل الرقم",
+  "nameTitle": "شو اسمك؟",
+  "firstName": "الاسم الأول",
+  "lastName": "اسم العائلة",
+  "comingSoon": "قريباً",
+  "signOutLabel": "تسجيل الخروج",
+  "retryLabel": "حاول مرة ثانية",
+  "otpDigit": "خانة الرمز {digit}",
+  "errorInvalidPhone": "أدخل رقم موبايل صحيح.",
+  "errorInvalidCode": "الرمز مش صحيح. جرّب مرة ثانية.",
+  "errorCodeExpired": "انتهت صلاحية الرمز. اطلب رمز جديد.",
+  "errorTooManyRequests": "محاولات كثيرة. جرّب بعد شوي.",
+  "errorNetwork": "تأكد من اتصال الإنترنت وجرّب مرة ثانية.",
+  "errorQuota": "الرسائل مش متاحة حالياً. جرّب بعد شوي.",
+  "errorGeneric": "صار خطأ. جرّب مرة ثانية.",
+  "errorNameRequired": "أدخل اسمك الأول واسم العائلة.",
+  "errorNameLength": "لازم يكون اسمك بين حرفين و٤٠ حرف.",
+  "@otpSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@resendCountdown": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@otpDigit": {
+    "placeholders": {
+      "digit": {
+        "type": "int"
+      }
+    }
+  }
 }
