@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mishwar/app/app.dart';
+import 'package:mishwar/app/bloc_observer.dart';
+import 'package:mishwar/app/di/injection.dart';
 
-import 'app/app.dart';
-
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
+  Bloc.observer = AppBlocObserver();
   runApp(const MishwarApp());
 }

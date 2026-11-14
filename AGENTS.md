@@ -41,6 +41,7 @@ Flutter is managed by **FVM** (pinned in `.fvmrc`). Always run `fvm flutter ...`
 - Resolve cubits only via `BlocProvider(create: (_) => getIt<X>())` or in the router. No `getIt` calls elsewhere in widgets.
 
 ## UI rules
+- **Follow `DESIGN_SYSTEM.md` exactly** (colors, typography, components, motion, map style). It is part of every UI task's acceptance criteria.
 - `ScreenUtilInit(designSize: Size(375, 812), minTextAdapt: true, splitScreenMode: true)`.
 - All sizes use `.w .h .r .sp`; spacing and text styles come from `core/theme` tokens. No magic numbers.
 - Arabic is the default locale (RTL); every user-facing string comes from `.arb` files.
@@ -51,7 +52,7 @@ Flutter is managed by **FVM** (pinned in `.fvmrc`). Always run `fvm flutter ...`
 
 ## Commands to run before reporting
 ```
-fvm dart run build_runner build -d   # after changing freezed / injectable / json code
+fvm dart run build_runner build   # after changing freezed / injectable / json code
 fvm dart format .
 fvm flutter analyze                  # must be 0 issues
 fvm flutter test                     # must pass
