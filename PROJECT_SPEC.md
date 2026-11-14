@@ -365,7 +365,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - [x] **T0.1** إنشاء تطبيق Flutter واحد (`mishwar`, Android/iOS/Web) + هيكل المجلدات + شاشة اختيار وضع مؤقتة + FVM
 - [x] **T0.2** إضافة الحزم الأساسية (flutter_bloc, get_it, injectable, flutter_screenutil, go_router, freezed, fpdart, equatable, very_good_analysis) + `analysis_options.yaml` صارم
 - [x] **T0.2b** أساس Clean Architecture في `core`: `Failure`، `UseCase`، `configureDependencies()`، `FirebaseModule`، و `AppBlocObserver` للـ logging
-- [ ] **T0.3** الثيم (ألوان، خطوط عربية مثل Cairo أو Tajawal، مقاسات بـ ScreenUtil) + دعم RTL + ملفات الترجمة
+- [x] **T0.3** الثيم (ألوان، خطوط عربية مثل Cairo أو Tajawal، مقاسات بـ ScreenUtil) + دعم RTL + ملفات الترجمة
 - [ ] **T0.4** ربط Firebase (`flutterfire configure`) + تشغيل Emulators محلياً
 - [ ] **T0.5** كتابة `AGENTS.md`
 
