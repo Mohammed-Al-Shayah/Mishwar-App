@@ -91,6 +91,14 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 
 ---
 
+### Sign-in controls
+
+- `MwPrimaryButton` implements the primary-button specification above; loading keeps the primary fill and replaces the label with a monochrome spinner.
+- `MwTextField` uses the theme's filled pill input and body typography.
+- `MwOtpInput`: six LTR digit cells, each 48 × 56, radius 8, fill colour; focused cell has a 2px text-primary border. OTP boxes stay LTR within Arabic screens.
+- Country chip: non-editable filled pill. Sign-in headings use `title1`; the splash and role-picker wordmarks use `largeTitle`. Supporting copy uses `footnote`, errors use `negative`, countdowns use tabular figures.
+- All dimensions above are defined as ScreenUtil tokens in `core/theme`.
+
 ## 6. Map
 
 - Custom map style JSON (`assets/map_styles/light.json`, `dark.json`): grey roads/blocks, light green parks, muted blue water, minimal POIs, small grey street labels.

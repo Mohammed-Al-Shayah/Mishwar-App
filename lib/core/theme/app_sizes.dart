@@ -1,6 +1,8 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get otpWidth => 48.w;
+  static double get otpHeight => 56.h;
   static double get buttonHeight => 52.h;
   static double get searchHeight => 52.h;
   static double get rowMinHeight => 64.h;
