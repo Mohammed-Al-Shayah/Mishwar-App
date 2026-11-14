@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appName": "Mishwar",
+  "roleTitle": "How do you want to use Mishwar?",
+  "roleRider": "I need a ride",
+  "roleRiderSubtitle": "Get a car wherever you're going",
+  "roleDriver": "I want to drive",
+  "roleDriverSubtitle": "Earn on your schedule",
+  "riderMode": "Rider mode",
+  "driverMode": "Driver mode",
+  "continueLabel": "Continue"
+}

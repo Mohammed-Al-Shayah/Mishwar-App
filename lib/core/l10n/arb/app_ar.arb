@@ -1,0 +1,12 @@
+{
+  "@@locale": "ar",
+  "appName": "مشوار",
+  "roleTitle": "كيف بدك تستخدم مشوار؟",
+  "roleRider": "بدي أطلب مشوار",
+  "roleRiderSubtitle": "اطلب سيارة لوين ما بدك",
+  "roleDriver": "بدي أشتغل سائق",
+  "roleDriverSubtitle": "اكسب على وقتك",
+  "riderMode": "وضع الراكب",
+  "driverMode": "وضع السائق",
+  "continueLabel": "متابعة"
+}
