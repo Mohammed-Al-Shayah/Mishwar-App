@@ -200,6 +200,67 @@ lib/features/
 }
 ```
 
+### إضافات المرحلتين 6 و 7
+
+**`users/{uid}/savedPlaces/{placeId}`**
+```json
+{ "label": "home | work | other", "name": "البيت", "address": "string", "geopoint": "GeoPoint", "updatedAt": "timestamp" }
+```
+
+**`users/{uid}/trustedContacts/{id}`**
+```json
+{ "name": "string", "phone": "+962..." }
+```
+
+**حقول جديدة على `rides/{rideId}`**
+```json
+{
+  "serviceType": "ride | parcel | airport",
+  "scheduledFor": "timestamp?",
+  "promo": { "code": "WELCOME50", "discount": 1.70 },
+  "fare": { "estimated": 0, "final": 0, "discount": 0, "cancellationFee": 0, "waitingFee": 0, "currency": "JOD" },
+  "parcel": { "recipientName": "string", "recipientPhone": "+962...", "description": "string", "photoUrl": "string?", "deliveryCode": "4 digits (hashed)" },
+  "airport": { "flightNumber": "RJ 182?", "direction": "to_airport | from_airport", "fixedFare": true },
+  "shareToken": "string?",
+  "report": { "reason": "string", "details": "string", "status": "open | resolved" }
+}
+```
+حالة جديدة بالـ state machine: `scheduled` (قبل `searching`).
+
+**`promos/{code}`**
+```json
+{ "type": "percent | fixed", "value": 50, "maxDiscount": 2.00, "minFare": 1.50, "firstRideOnly": true,
+  "usageLimit": 1000, "perUserLimit": 1, "usedCount": 0, "validFrom": "timestamp", "validUntil": "timestamp", "active": true }
+```
+`promos/{code}/redemptions/{uid}`: بتسجل مين استخدم الكود.
+
+**`banners/{id}`**
+```json
+{ "title": "خصم 50% على أول مشوار", "subtitle": "string", "imageUrl": "string", "promoCode": "string?",
+  "action": "open_search | open_promo | url", "order": 1, "validUntil": "timestamp", "active": true }
+```
+
+**`config/app`** (feature flags والخدمات)
+```json
+{
+  "services": [
+    { "id": "ride", "enabled": true, "order": 1 },
+    { "id": "schedule", "enabled": false, "order": 2 },
+    { "id": "parcel", "enabled": false, "order": 3 },
+    { "id": "airport", "enabled": false, "order": 4 }
+  ],
+  "cancellationFee": { "afterSeconds": 120, "amount": 0.50 },
+  "waitingFee": { "freeMinutes": 3, "perMinute": 0.05 },
+  "airport": { "zone": "GeoJSON polygon", "fixedFares": { "economy": 12.0, "comfort": 16.0, "van": 20.0 } },
+  "scheduling": { "minLeadMinutes": 30, "maxDaysAhead": 30, "dispatchBeforeMinutes": 15 }
+}
+```
+
+**`supportTickets/{id}`**
+```json
+{ "uid": "string", "rideId": "string?", "category": "lost_item | fare | safety | other", "message": "string", "status": "open | in_progress | closed", "createdAt": "timestamp" }
+```
+
 ---
 
 ## 5. دورة حياة المشوار (State Machine)
@@ -238,7 +299,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 3. **اختيار الوضع:** "بدي أطلب مشوار" (راكب) أو "بدي أشتغل سائق". الاختيار بينحفظ، وبيتغير من الملف الشخصي.
 
 ### وضع الراكب
-3. **الرئيسية:** خريطة فيها موقعي، وخانة "وين رايح؟"
+3. **الرئيسية:** شوف التفاصيل تحت ("الشاشة الرئيسية للراكب")
 4. البحث عن وجهة (Places Autocomplete + اختيار من الخريطة)
 5. تأكيد المشوار: المسار على الخريطة، ونوع السيارة والسعر لكل نوع، وطريقة الدفع، وزر "اطلب"
 6. جاري البحث عن سائق (أنيميشن + زر إلغاء)
@@ -246,6 +307,29 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 8. خلال المشوار: التتبع على الخريطة
 9. نهاية المشوار: السعر النهائي + تقييم السائق (نجوم + تعليق)
 10. سجل المشاوير، والملف الشخصي، والإعدادات (اللغة)
+
+### الشاشة الرئيسية للراكب (من فوق لتحت)
+
+> الشكل حسب `DESIGN_SYSTEM.md` (قسم 9). العناصر اللي مرحلتها 6 أو 7 بتنبني من المرحلة 2 كـ placeholder "قريباً"، وبتتفعّل لما توصل مرحلتها.
+> كل عنصر بيتحكم بظهوره من `config/app` (feature flags)، يعني الأدمن بيخفيه أو بيظهره بدون تحديث للتطبيق.
+
+| # | العنصر | الوظيفة | المرحلة |
+|---|---|---|---|
+| 1 | **الهيدر** | "مشوار" أو تحية حسب الوقت ("صباح الخير، محمد") + أيقونة إشعارات مع نقطة لما يكون في جديد | 1 (الإشعارات 5) |
+| 2 | **كرت المشوار الحالي** | بيظهر بس لما يكون في مشوار شغال: الحالة، والوقت، والسيارة، واللوحة. الضغط عليه بيرجعك لشاشة التتبع | 4 |
+| 3 | **"وين رايح؟"** | بيفتح شاشة البحث | 2 |
+| 4 | **زر "لاحقاً"** | حجز مشوار مسبق (من 30 دقيقة لحد 30 يوم لقدام) | 6 |
+| 5 | **الأماكن الأخيرة** | آخر مكانين. الضغط عليهم بيروح لاختيار السيارة مباشرة | 2 |
+| 6 | **البيت والشغل** | أماكن محفوظة، بتتعدل من الحساب | 6 |
+| 7 | **الاقتراحات** | 4 مربعات (رحلة، احجز، طرد، مطار) + زر "الكل". الترتيب والظهور من `config/app.services` | رحلة 2 · احجز 6 · طرد ومطار 7 |
+| 8 | **البانر الترويجي** | Carousel لعروض من `banners`، وكل عرض إله صورة ونص وكود وتاريخ انتهاء | 6 |
+| 9 | **"طرق أكثر للتنقل"** | صفوف بتعرّف بالخدمات (المطار، والطرد، و"اشتغل سائق معنا")، بتظهر تحت البانر | 7 ("اشتغل سائق" من 3) |
+| 10 | **شريط التنقل** | الرئيسية · النشاط · الحساب | 1 |
+
+**عند السحب لتحت:** الهيدر بيصغر لشريط فيه اسم "مشوار" بالنص.
+
+**تبويب النشاط:** المشاوير الجاية (المحجوزة، مع زر إلغاء) والسابقة، وفاتورة كل مشوار، و"اطلب نفس المشوار"، و"الإبلاغ عن مشكلة".
+**تبويب الحساب:** الملف الشخصي، والأماكن المحفوظة، وطرق الدفع، والأمان (جهات الاتصال الموثوقة)، واللغة، و**"اشتغل سائق معنا"** (تحويل الوضع)، والدعم، وتسجيل الخروج.
 
 ### وضع السائق
 1. أول مرة بيختار وضع السائق: التسجيل كسائق (بيانات السيارة + صورة الرخصة) ← بانتظار موافقة الأدمن
@@ -279,8 +363,8 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 
 ### المرحلة 0 — التجهيز
 - [x] **T0.1** إنشاء تطبيق Flutter واحد (`mishwar`, Android/iOS/Web) + هيكل المجلدات + شاشة اختيار وضع مؤقتة + FVM
-- [ ] **T0.2** إضافة الحزم الأساسية (flutter_bloc, get_it, injectable, flutter_screenutil, go_router, freezed, fpdart, equatable, very_good_analysis) + `analysis_options.yaml` صارم
-- [ ] **T0.2b** أساس Clean Architecture في `core`: `Failure`، `UseCase`، `configureDependencies()`، `FirebaseModule`، و `AppBlocObserver` للـ logging
+- [x] **T0.2** إضافة الحزم الأساسية (flutter_bloc, get_it, injectable, flutter_screenutil, go_router, freezed, fpdart, equatable, very_good_analysis) + `analysis_options.yaml` صارم
+- [x] **T0.2b** أساس Clean Architecture في `core`: `Failure`، `UseCase`، `configureDependencies()`، `FirebaseModule`، و `AppBlocObserver` للـ logging
 - [ ] **T0.3** الثيم (ألوان، خطوط عربية مثل Cairo أو Tajawal، مقاسات بـ ScreenUtil) + دعم RTL + ملفات الترجمة
 - [ ] **T0.4** ربط Firebase (`flutterfire configure`) + تشغيل Emulators محلياً
 - [ ] **T0.5** كتابة `AGENTS.md`
@@ -330,6 +414,45 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - [ ] **T5.4** Firestore Rules كاملة + اختبارات rules
 - [ ] **T5.5** تجهيز الإصدار: الأيقونات، Splash، أسماء الحزم، وبناء APK
 
+### المرحلة 6 — الراحة والأمان والعروض
+- [ ] **T6.1** الأماكن المحفوظة (البيت، الشغل، غيرهم): إضافة وتعديل وحذف من الحساب + ظهورها بالرئيسية وبالبحث
+- [ ] **T6.2** الحجز المسبق:
+  - زر "لاحقاً" + شاشة "متى تريد المغادرة؟" (تاريخ ووقت)
+  - حالة `scheduled`
+  - Cloud Function مجدولة كل دقيقة بتبلش البحث عن سائق قبل الموعد بـ `dispatchBeforeMinutes`
+  - تذكير بإشعار قبل الموعد
+  - إلغاء من تبويب النشاط
+- [ ] **T6.3** أكواد الخصم:
+  - إدخال الكود بشاشة اختيار السيارة
+  - Callable `validatePromo` بتتحقق من الصلاحية والحدود والمشوار الأول
+  - الخصم بينحسب بالسيرفر وقت `completed` (Transaction على `usedCount`)
+- [ ] **T6.4** البانر الترويجي: Carousel من `banners` + أكشن لكل بانر + إدارتها من لوحة الأدمن
+- [ ] **T6.5** شبكة الخدمات بالرئيسية من `config/app.services` + "قريباً" للخدمات المقفلة + شاشة "الكل"
+- [ ] **T6.6** رسوم الإلغاء والانتظار: بتنحسب بالسيرفر حسب `config/app`، وبتظهر للراكب قبل ما يأكد الإلغاء، وبتنضاف على الفاتورة
+- [ ] **T6.7** أدوات الأمان:
+  - مشاركة المشوار برابط تتبع (`shareToken` + صفحة ويب بسيطة)
+  - زر الطوارئ (اتصال بـ 911 + إرسال الموقع لجهات الاتصال الموثوقة)
+  - إدارة جهات الاتصال الموثوقة
+- [ ] **T6.8** تبويب النشاط كامل: الجاية والسابقة، والفاتورة، و"اطلب نفس المشوار"، و"الإبلاغ عن مشكلة" (`supportTickets`)
+- [ ] **T6.9** الدعم: تذاكر من التطبيق (أغراض منسية، سعر، أمان) + إدارتها والرد عليها من لوحة الأدمن
+
+**معيار القبول:** راكب بيحجز مشوار لبعد ساعة بكود خصم، وبيوصله تذكير، وبيتوزع على سائق بالوقت الصح، والفاتورة فيها الخصم. ومشاركة المشوار بتفتح صفحة تتبع شغالة.
+
+### المرحلة 7 — الخدمات الإضافية
+- [ ] **T7.1** خدمة الطرد:
+  - شاشة "طرد": المستلم ورقمه، والوصف، وصورة الغرض
+  - رمز تسليم من 4 أرقام بيوصل للمستلم بـ SMS، والسائق بيدخله عشان ينهي التوصيل
+  - شاشات السائق الخاصة بالطرد
+- [ ] **T7.2** خدمة المطار:
+  - كشف منطقة المطار (`airport.zone`) وسعر ثابت (`fixedFares`)
+  - رحلة "للمطار" و"من المطار" مع رقم الرحلة
+  - نقاط انطلاق مقترحة بالمطار
+- [ ] **T7.3** تأكيد نقطة الانطلاق: نقاط مقترحة على الخريطة + "أكّد موقع الانطلاق" + سحب الدبوس
+- [ ] **T7.4** لوحة الأدمن للخدمات: تفعيل وترتيب الخدمات، وأسعار المطار، ورسوم الإلغاء والانتظار، والأكواد، والبانرات (كلها بتعدّل `config/app`)
+- [ ] **T7.5** تقارير الأدمن: عدد المشاوير وإيرادها يومياً، وكم كود استُخدم، ونسبة الإلغاء
+
+**معيار القبول:** طرد بيتوصّل وبيتأكد استلامه برمز التسليم، ومشوار من المطار بياخذ السعر الثابت، والأدمن بيفعّل خدمة من اللوحة وبتظهر بالتطبيق بدون تحديث.
+
 ---
 
 ## 9. طريقة الشغل (Claude ↔ Codex)
@@ -345,7 +468,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - كل نص بيطلع للمستخدم لازم يكون من ملفات الترجمة (ممنوع نصوص ثابتة بالكود).
 - الالتزام بقواعد طبقات Clean Architecture (قسم 3). الـ widgets بتعرض بس وبتبعت أحداث للـ Cubit أو الـ Bloc.
 - ممنوع `getIt<>()` جوا الـ widgets إلا بـ `BlocProvider(create:)` أو بالـ router.
-- بعد أي تعديل على `@injectable` أو freezed: `dart run build_runner build -d`.
+- بعد أي تعديل على `@injectable` أو freezed: `dart run build_runner build`.
 - كل الأبعاد بـ ScreenUtil (`.w .h .r .sp`).
 - أي منطق حساس (سعر، حالة، قبول) لازم يكون بالسيرفر.
 - اختبارات: Unit للـ UseCases والسعر، `bloc_test` لكل Cubit وBloc، و`mocktail` للـ Repositories.
