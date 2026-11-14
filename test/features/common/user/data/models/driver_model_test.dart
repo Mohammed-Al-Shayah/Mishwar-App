@@ -15,6 +15,8 @@ class MockDocument extends Mock
 void main() {
   final model = DriverModel(
     id: 'd',
+    licensePhotoPath: 'drivers/d/license',
+    rejectionReason: 'Blurry license',
     status: DriverStatus.approved,
     isOnline: false,
     vehicle: const VehicleModel(
@@ -55,7 +57,12 @@ void main() {
     expect(parsed.toEntity().canGoOnline, isFalse);
   });
   test('nullable location and timestamp round trip', () {
-    final nullable = model.copyWith(location: null, lastSeenAt: null);
+    final nullable = model.copyWith(
+      location: null,
+      lastSeenAt: null,
+      licensePhotoPath: null,
+      rejectionReason: null,
+    );
     expect(DriverModel.fromJson({...nullable.toJson(), 'id': 'd'}), nullable);
   });
   test('snapshot injects id', () {

@@ -13,6 +13,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:cloud_functions/cloud_functions.dart' as _i809;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
+import 'package:firebase_storage/firebase_storage.dart' as _i457;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:mishwar/core/di/register_module.dart' as _i398;
@@ -44,18 +45,32 @@ import 'package:mishwar/features/common/auth/presentation/cubit/role_cubit.dart'
     as _i520;
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart'
     as _i838;
+import 'package:mishwar/features/common/user/data/datasources/driver_remote_data_source.dart'
+    as _i327;
 import 'package:mishwar/features/common/user/data/datasources/user_remote_data_source.dart'
     as _i726;
+import 'package:mishwar/features/common/user/data/repositories/driver_repository_impl.dart'
+    as _i251;
 import 'package:mishwar/features/common/user/data/repositories/user_repository_impl.dart'
     as _i18;
+import 'package:mishwar/features/common/user/domain/repositories/driver_repository.dart'
+    as _i95;
 import 'package:mishwar/features/common/user/domain/repositories/user_repository.dart'
     as _i695;
 import 'package:mishwar/features/common/user/domain/usecases/create_user_profile.dart'
     as _i801;
 import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart'
     as _i600;
+import 'package:mishwar/features/common/user/domain/usecases/submit_driver_application.dart'
+    as _i587;
+import 'package:mishwar/features/common/user/domain/usecases/upload_license_photo.dart'
+    as _i556;
+import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart'
+    as _i291;
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart'
     as _i106;
+import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart'
+    as _i396;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -66,8 +81,27 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.auth);
+    gh.lazySingleton<_i457.FirebaseStorage>(() => firebaseModule.storage);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
+    gh.lazySingleton<_i327.DriverRemoteDataSource>(
+      () => _i327.DriverRemoteDataSource(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i457.FirebaseStorage>(),
+      ),
+    );
+    gh.lazySingleton<_i95.DriverRepository>(
+      () => _i251.DriverRepositoryImpl(gh<_i327.DriverRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i587.SubmitDriverApplication>(
+      () => _i587.SubmitDriverApplication(gh<_i95.DriverRepository>()),
+    );
+    gh.lazySingleton<_i556.UploadLicensePhoto>(
+      () => _i556.UploadLicensePhoto(gh<_i95.DriverRepository>()),
+    );
+    gh.lazySingleton<_i291.WatchDriver>(
+      () => _i291.WatchDriver(gh<_i95.DriverRepository>()),
+    );
     gh.lazySingleton<_i243.AuthRemoteDataSource>(
       () => _i243.AuthRemoteDataSourceImpl(gh<_i59.FirebaseAuth>()),
     );
@@ -76,6 +110,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i695.UserRepository>(
       () => _i18.UserRepositoryImpl(gh<_i726.UserRemoteDataSource>()),
+    );
+    gh.factory<_i396.DriverOnboardingCubit>(
+      () => _i396.DriverOnboardingCubit(
+        gh<_i556.UploadLicensePhoto>(),
+        gh<_i587.SubmitDriverApplication>(),
+      ),
     );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
@@ -107,14 +147,17 @@ extension GetItInjectableX on _i174.GetIt {
           _i267.OtpCubit(gh<_i454.VerifyOtp>(), gh<_i563.SendOtp>(), session),
     );
     gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));
+    gh.lazySingleton<_i838.SessionCubit>(
+      () => _i838.SessionCubit(
+        gh<_i584.WatchAuthState>(),
+        gh<_i106.WatchUser>(),
+        gh<_i291.WatchDriver>(),
+      ),
+    );
     gh.factory<_i693.NameCubit>(
       () => _i693.NameCubit(gh<_i801.CreateUserProfile>()),
     );
     gh.factory<_i964.PhoneCubit>(() => _i964.PhoneCubit(gh<_i563.SendOtp>()));
-    gh.lazySingleton<_i838.SessionCubit>(
-      () =>
-          _i838.SessionCubit(gh<_i584.WatchAuthState>(), gh<_i106.WatchUser>()),
-    );
     return this;
   }
 }

@@ -9,6 +9,7 @@ String emulatorHost({required bool isAndroid, required bool isWeb}) {
   return isAndroid && !isWeb ? '10.0.2.2' : 'localhost';
 }
 
+const int storageEmulatorPort = 9199;
 const int authEmulatorPort = 9099;
 const int firestoreEmulatorPort = 8080;
 const int functionsEmulatorPort = 5001;

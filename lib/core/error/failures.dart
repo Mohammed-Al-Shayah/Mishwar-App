@@ -55,5 +55,9 @@ final class UnexpectedFailure extends Failure {
 }
 
 final class ValidationFailure extends Failure {
-  const ValidationFailure(super.message);
+  const ValidationFailure(super.message, [this.code = 'invalid']);
+  String get field => message;
+  final String code;
+  @override
+  List<Object> get props => [field, code];
 }

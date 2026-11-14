@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DriverModel {
 
-@JsonKey(includeToJson: false) String get id;@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus get status; bool get isOnline; VehicleModel get vehicle; String? get currentRideId; DriverLocationModel? get location; double get heading;@TimestampConverter() DateTime? get lastSeenAt;
+@JsonKey(includeToJson: false) String get id;@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus get status; bool get isOnline; VehicleModel get vehicle; String? get licensePhotoPath; String? get rejectionReason; String? get currentRideId; DriverLocationModel? get location; double get heading;@TimestampConverter() DateTime? get lastSeenAt;
 /// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DriverModelCopyWith<DriverModel> get copyWith => _$DriverModelCopyWithImpl<Driv
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.licensePhotoPath, licensePhotoPath) || other.licensePhotoPath == licensePhotoPath)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,currentRideId,location,heading,lastSeenAt);
+int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,licensePhotoPath,rejectionReason,currentRideId,location,heading,lastSeenAt);
 
 @override
 String toString() {
-  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, currentRideId: $currentRideId, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
+  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, licensePhotoPath: $licensePhotoPath, rejectionReason: $rejectionReason, currentRideId: $currentRideId, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DriverModelCopyWith<$Res>  {
   factory $DriverModelCopyWith(DriverModel value, $Res Function(DriverModel) _then) = _$DriverModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? currentRideId, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
+@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? licensePhotoPath, String? rejectionReason, String? currentRideId, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
 });
 
 
@@ -65,13 +65,15 @@ class _$DriverModelCopyWithImpl<$Res>
 
 /// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? currentRideId = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? licensePhotoPath = freezed,Object? rejectionReason = freezed,Object? currentRideId = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as DriverStatus,isOnline: null == isOnline ? _self.isOnline : isOnline // ignore: cast_nullable_to_non_nullable
 as bool,vehicle: null == vehicle ? _self.vehicle : vehicle // ignore: cast_nullable_to_non_nullable
-as VehicleModel,currentRideId: freezed == currentRideId ? _self.currentRideId : currentRideId // ignore: cast_nullable_to_non_nullable
+as VehicleModel,licensePhotoPath: freezed == licensePhotoPath ? _self.licensePhotoPath : licensePhotoPath // ignore: cast_nullable_to_non_nullable
+as String?,rejectionReason: freezed == rejectionReason ? _self.rejectionReason : rejectionReason // ignore: cast_nullable_to_non_nullable
+as String?,currentRideId: freezed == currentRideId ? _self.currentRideId : currentRideId // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as DriverLocationModel?,heading: null == heading ? _self.heading : heading // ignore: cast_nullable_to_non_nullable
 as double,lastSeenAt: freezed == lastSeenAt ? _self.lastSeenAt : lastSeenAt // ignore: cast_nullable_to_non_nullable
@@ -181,10 +183,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DriverModel() when $default != null:
-return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
+return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
   return orElse();
 
 }
@@ -202,10 +204,10 @@ return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.current
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)  $default,) {final _that = this;
 switch (_that) {
 case _DriverModel():
-return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
+return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -222,10 +224,10 @@ return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.current
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DriverModel() when $default != null:
-return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
+return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
   return null;
 
 }
@@ -237,13 +239,15 @@ return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.current
 
 @JsonSerializable(explicitToJson: true)
 class _DriverModel extends DriverModel {
-  const _DriverModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(unknownEnumValue: DriverStatus.pending) required this.status, required this.isOnline, required this.vehicle, this.currentRideId, this.location, this.heading = 0, @TimestampConverter() this.lastSeenAt}): super._();
+  const _DriverModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(unknownEnumValue: DriverStatus.pending) required this.status, required this.isOnline, required this.vehicle, this.licensePhotoPath, this.rejectionReason, this.currentRideId, this.location, this.heading = 0, @TimestampConverter() this.lastSeenAt}): super._();
   factory _DriverModel.fromJson(Map<String, dynamic> json) => _$DriverModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override@JsonKey(unknownEnumValue: DriverStatus.pending) final  DriverStatus status;
 @override final  bool isOnline;
 @override final  VehicleModel vehicle;
+@override final  String? licensePhotoPath;
+@override final  String? rejectionReason;
 @override final  String? currentRideId;
 @override final  DriverLocationModel? location;
 @override@JsonKey() final  double heading;
@@ -262,16 +266,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.licensePhotoPath, licensePhotoPath) || other.licensePhotoPath == licensePhotoPath)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,currentRideId,location,heading,lastSeenAt);
+int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,licensePhotoPath,rejectionReason,currentRideId,location,heading,lastSeenAt);
 
 @override
 String toString() {
-  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, currentRideId: $currentRideId, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
+  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, licensePhotoPath: $licensePhotoPath, rejectionReason: $rejectionReason, currentRideId: $currentRideId, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
 }
 
 
@@ -282,7 +286,7 @@ abstract mixin class _$DriverModelCopyWith<$Res> implements $DriverModelCopyWith
   factory _$DriverModelCopyWith(_DriverModel value, $Res Function(_DriverModel) _then) = __$DriverModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? currentRideId, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
+@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? licensePhotoPath, String? rejectionReason, String? currentRideId, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
 });
 
 
@@ -299,13 +303,15 @@ class __$DriverModelCopyWithImpl<$Res>
 
 /// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? currentRideId = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? licensePhotoPath = freezed,Object? rejectionReason = freezed,Object? currentRideId = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
   return _then(_DriverModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as DriverStatus,isOnline: null == isOnline ? _self.isOnline : isOnline // ignore: cast_nullable_to_non_nullable
 as bool,vehicle: null == vehicle ? _self.vehicle : vehicle // ignore: cast_nullable_to_non_nullable
-as VehicleModel,currentRideId: freezed == currentRideId ? _self.currentRideId : currentRideId // ignore: cast_nullable_to_non_nullable
+as VehicleModel,licensePhotoPath: freezed == licensePhotoPath ? _self.licensePhotoPath : licensePhotoPath // ignore: cast_nullable_to_non_nullable
+as String?,rejectionReason: freezed == rejectionReason ? _self.rejectionReason : rejectionReason // ignore: cast_nullable_to_non_nullable
+as String?,currentRideId: freezed == currentRideId ? _self.currentRideId : currentRideId // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as DriverLocationModel?,heading: null == heading ? _self.heading : heading // ignore: cast_nullable_to_non_nullable
 as double,lastSeenAt: freezed == lastSeenAt ? _self.lastSeenAt : lastSeenAt // ignore: cast_nullable_to_non_nullable

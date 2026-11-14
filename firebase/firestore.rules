@@ -24,6 +24,35 @@ service cloud.firestore {
       allow delete: if isOwner() && !('role' in resource.data);
     }
 
+    match /drivers/{uid} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+      function nonEmpty(value) { return value is string && value.size() > 0; }
+      function validApplication() {
+        let data = request.resource.data;
+        return data.vehicle is map
+          && data.vehicle.type in ['economy', 'comfort', 'van']
+          && nonEmpty(data.vehicle.make) && nonEmpty(data.vehicle.model)
+          && nonEmpty(data.vehicle.color) && nonEmpty(data.vehicle.plate)
+          && data.licensePhotoPath is string
+          && data.licensePhotoPath.matches('^drivers/' + uid + '/.+');
+      }
+      allow read: if isOwner();
+      allow create: if isOwner() && validApplication()
+        && request.resource.data.status == 'pending'
+        && request.resource.data.isOnline == false
+        && !('currentRideId' in request.resource.data);
+      allow update: if isOwner() && validApplication()
+        && resource.data.status in ['pending', 'rejected']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['vehicle', 'licensePhotoPath', 'updatedAt', 'status'])
+        && (request.resource.data.status == resource.data.status
+          || (resource.data.status == 'rejected'
+            && request.resource.data.status == 'pending'));
+      allow delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

@@ -4,8 +4,10 @@ import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
+import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
+import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
 void main() {
   final user = UserEntity(
@@ -21,7 +23,7 @@ void main() {
     const SessionNeedsName(AuthUser(uid: 'u')): '/auth/name',
     SessionNeedsRole(user): '/role',
     SessionReady(user.copyWith(role: UserRole.rider)): '/rider',
-    SessionReady(user.copyWith(role: UserRole.driver)): '/driver',
+    SessionReady(user.copyWith(role: UserRole.driver)): '/driver/onboarding',
     const SessionError(ServerFailure('secret')): '/splash',
   };
   for (final entry in table.entries) {
@@ -39,6 +41,42 @@ void main() {
         expect(
           sessionRedirect(entry.key, path),
           path == entry.value ? null : entry.value,
+        );
+      });
+    }
+  }
+  for (final status in DriverStatus.values) {
+    for (final path in [
+      '/driver',
+      '/driver/onboarding',
+      '/driver/pending',
+      '/rider',
+      '/auth/phone',
+    ]) {
+      test('driver status $status at $path', () {
+        final driver = DriverEntity(
+          id: 'u',
+          status: status,
+          isOnline: false,
+          vehicle: const VehicleEntity(
+            type: VehicleType.economy,
+            make: 'Toyota',
+            model: 'Corolla',
+            color: 'White',
+            plate: '12-34567',
+          ),
+        );
+        final target = status == DriverStatus.approved
+            ? '/driver'
+            : status == DriverStatus.rejected && path == '/driver/onboarding'
+            ? '/driver/onboarding'
+            : '/driver/pending';
+        expect(
+          sessionRedirect(
+            SessionReady(user.copyWith(role: UserRole.driver), driver: driver),
+            path,
+          ),
+          path == target ? null : target,
         );
       });
     }

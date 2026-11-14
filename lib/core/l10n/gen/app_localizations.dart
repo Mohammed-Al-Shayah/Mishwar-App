@@ -301,6 +301,204 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لازم يكون اسمك بين حرفين و٤٠ حرف.'**
   String get errorNameLength;
+
+  /// No description provided for @driverRegisterTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل سيارتك'**
+  String get driverRegisterTitle;
+
+  /// No description provided for @driverReviewTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنراجع طلبك خلال 24 ساعة'**
+  String get driverReviewTime;
+
+  /// No description provided for @vehicleTypeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع السيارة'**
+  String get vehicleTypeTitle;
+
+  /// No description provided for @vehicleEconomy.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتصادي'**
+  String get vehicleEconomy;
+
+  /// No description provided for @vehicleComfort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مريح'**
+  String get vehicleComfort;
+
+  /// No description provided for @vehicleVan.
+  ///
+  /// In ar, this message translates to:
+  /// **'عائلي'**
+  String get vehicleVan;
+
+  /// No description provided for @vehicleEconomyDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'4 ركاب، سعر أقل'**
+  String get vehicleEconomyDescription;
+
+  /// No description provided for @vehicleComfortDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'4 ركاب، سيارة أحدث'**
+  String get vehicleComfortDescription;
+
+  /// No description provided for @vehicleVanDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'حتى 6 ركاب'**
+  String get vehicleVanDescription;
+
+  /// No description provided for @vehicleDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات السيارة'**
+  String get vehicleDetailsTitle;
+
+  /// No description provided for @vehicleMake.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشركة المصنّعة'**
+  String get vehicleMake;
+
+  /// No description provided for @vehicleModel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموديل'**
+  String get vehicleModel;
+
+  /// No description provided for @vehicleColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللون'**
+  String get vehicleColor;
+
+  /// No description provided for @vehiclePlate.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم اللوحة'**
+  String get vehiclePlate;
+
+  /// No description provided for @vehiclePlateHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'12-34567'**
+  String get vehiclePlateHint;
+
+  /// No description provided for @licenseTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رخصة القيادة'**
+  String get licenseTitle;
+
+  /// No description provided for @photoChoose.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف صورة الرخصة'**
+  String get photoChoose;
+
+  /// No description provided for @photoChange.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير'**
+  String get photoChange;
+
+  /// No description provided for @photoSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة الرخصة محفوظة'**
+  String get photoSaved;
+
+  /// No description provided for @photoCamera.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكاميرا'**
+  String get photoCamera;
+
+  /// No description provided for @photoGallery.
+  ///
+  /// In ar, this message translates to:
+  /// **'معرض الصور'**
+  String get photoGallery;
+
+  /// No description provided for @driverSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل الطلب'**
+  String get driverSubmit;
+
+  /// No description provided for @driverPendingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبك قيد المراجعة'**
+  String get driverPendingTitle;
+
+  /// No description provided for @driverPendingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنراجع بياناتك ورخصتك خلال 24 ساعة. بنخبرك هون لما يتغيّر طلبك.'**
+  String get driverPendingBody;
+
+  /// No description provided for @driverRejectedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما انقبل طلبك'**
+  String get driverRejectedTitle;
+
+  /// No description provided for @driverRejectedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع بياناتك وعدّلها وأعد إرسال الطلب.'**
+  String get driverRejectedBody;
+
+  /// No description provided for @driverSuspendedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابك موقوف مؤقتاً'**
+  String get driverSuspendedTitle;
+
+  /// No description provided for @driverSuspendedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع الدعم للمساعدة بخصوص حسابك.'**
+  String get driverSuspendedBody;
+
+  /// No description provided for @driverResubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدّل وأعد الإرسال'**
+  String get driverResubmit;
+
+  /// No description provided for @errorVehicleLength.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل من حرفين إلى 30 حرفاً.'**
+  String get errorVehicleLength;
+
+  /// No description provided for @errorPlateFormat.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم لوحة صحيح مثل 12-34567.'**
+  String get errorPlateFormat;
+
+  /// No description provided for @errorPhotoRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف صورة رخصة القيادة.'**
+  String get errorPhotoRequired;
+
+  /// No description provided for @vehicleSummary.
+  ///
+  /// In ar, this message translates to:
+  /// **'{make} {model} · {color}'**
+  String vehicleSummary(String make, String model, String color);
 }
 
 class _AppLocalizationsDelegate

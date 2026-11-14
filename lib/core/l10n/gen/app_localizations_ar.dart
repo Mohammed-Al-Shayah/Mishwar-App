@@ -115,4 +115,106 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get errorNameLength => 'لازم يكون اسمك بين حرفين و٤٠ حرف.';
+
+  @override
+  String get driverRegisterTitle => 'سجّل سيارتك';
+
+  @override
+  String get driverReviewTime => 'بنراجع طلبك خلال 24 ساعة';
+
+  @override
+  String get vehicleTypeTitle => 'نوع السيارة';
+
+  @override
+  String get vehicleEconomy => 'اقتصادي';
+
+  @override
+  String get vehicleComfort => 'مريح';
+
+  @override
+  String get vehicleVan => 'عائلي';
+
+  @override
+  String get vehicleEconomyDescription => '4 ركاب، سعر أقل';
+
+  @override
+  String get vehicleComfortDescription => '4 ركاب، سيارة أحدث';
+
+  @override
+  String get vehicleVanDescription => 'حتى 6 ركاب';
+
+  @override
+  String get vehicleDetailsTitle => 'بيانات السيارة';
+
+  @override
+  String get vehicleMake => 'الشركة المصنّعة';
+
+  @override
+  String get vehicleModel => 'الموديل';
+
+  @override
+  String get vehicleColor => 'اللون';
+
+  @override
+  String get vehiclePlate => 'رقم اللوحة';
+
+  @override
+  String get vehiclePlateHint => '12-34567';
+
+  @override
+  String get licenseTitle => 'رخصة القيادة';
+
+  @override
+  String get photoChoose => 'أضف صورة الرخصة';
+
+  @override
+  String get photoChange => 'تغيير';
+
+  @override
+  String get photoSaved => 'صورة الرخصة محفوظة';
+
+  @override
+  String get photoCamera => 'الكاميرا';
+
+  @override
+  String get photoGallery => 'معرض الصور';
+
+  @override
+  String get driverSubmit => 'أرسل الطلب';
+
+  @override
+  String get driverPendingTitle => 'طلبك قيد المراجعة';
+
+  @override
+  String get driverPendingBody =>
+      'بنراجع بياناتك ورخصتك خلال 24 ساعة. بنخبرك هون لما يتغيّر طلبك.';
+
+  @override
+  String get driverRejectedTitle => 'ما انقبل طلبك';
+
+  @override
+  String get driverRejectedBody => 'راجع بياناتك وعدّلها وأعد إرسال الطلب.';
+
+  @override
+  String get driverSuspendedTitle => 'حسابك موقوف مؤقتاً';
+
+  @override
+  String get driverSuspendedBody => 'تواصل مع الدعم للمساعدة بخصوص حسابك.';
+
+  @override
+  String get driverResubmit => 'عدّل وأعد الإرسال';
+
+  @override
+  String get errorVehicleLength => 'أدخل من حرفين إلى 30 حرفاً.';
+
+  @override
+  String get errorPlateFormat => 'أدخل رقم لوحة صحيح مثل 12-34567.';
+
+  @override
+  String get errorPhotoRequired => 'أضف صورة رخصة القيادة.';
+
+  @override
+  String vehicleSummary(String make, String model, String color) {
+    return '$make $model · $color';
+  }
 }

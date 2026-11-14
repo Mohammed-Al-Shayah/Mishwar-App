@@ -54,5 +54,51 @@
         "type": "int"
       }
     }
+  },
+  "driverRegisterTitle": "Register your vehicle",
+  "driverReviewTime": "We review your application within 24 hours",
+  "vehicleTypeTitle": "Vehicle type",
+  "vehicleEconomy": "Economy",
+  "vehicleComfort": "Comfort",
+  "vehicleVan": "Family",
+  "vehicleEconomyDescription": "4 passengers, lower fares",
+  "vehicleComfortDescription": "4 passengers, a newer car",
+  "vehicleVanDescription": "Up to 6 passengers",
+  "vehicleDetailsTitle": "Vehicle details",
+  "vehicleMake": "Make",
+  "vehicleModel": "Model",
+  "vehicleColor": "Color",
+  "vehiclePlate": "License plate",
+  "vehiclePlateHint": "12-34567",
+  "licenseTitle": "Driving license",
+  "photoChoose": "Add license photo",
+  "photoChange": "Change",
+  "photoSaved": "Your license photo is saved",
+  "photoCamera": "Camera",
+  "photoGallery": "Photo library",
+  "driverSubmit": "Submit application",
+  "driverPendingTitle": "Your application is under review",
+  "driverPendingBody": "We review your vehicle details and license within 24 hours. Your status will update here.",
+  "driverRejectedTitle": "Your application was rejected",
+  "driverRejectedBody": "Review your details, make changes and resubmit.",
+  "driverSuspendedTitle": "Your account is temporarily suspended",
+  "driverSuspendedBody": "Contact support for help with your account.",
+  "driverResubmit": "Edit and resubmit",
+  "errorVehicleLength": "Enter between 2 and 30 characters.",
+  "errorPlateFormat": "Enter a valid plate, such as 12-34567.",
+  "errorPhotoRequired": "Add a photo of your driving license.",
+  "vehicleSummary": "{make} {model} · {color}",
+  "@vehicleSummary": {
+    "placeholders": {
+      "make": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
   }
 }

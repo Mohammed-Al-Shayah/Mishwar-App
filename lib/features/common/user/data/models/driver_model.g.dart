@@ -15,6 +15,8 @@ _DriverModel _$DriverModelFromJson(Map<String, dynamic> json) => _DriverModel(
   ),
   isOnline: json['isOnline'] as bool,
   vehicle: VehicleModel.fromJson(json['vehicle'] as Map<String, dynamic>),
+  licensePhotoPath: json['licensePhotoPath'] as String?,
+  rejectionReason: json['rejectionReason'] as String?,
   currentRideId: json['currentRideId'] as String?,
   location: json['location'] == null
       ? null
@@ -31,6 +33,8 @@ Map<String, dynamic> _$DriverModelToJson(_DriverModel instance) =>
       'status': _$DriverStatusEnumMap[instance.status]!,
       'isOnline': instance.isOnline,
       'vehicle': instance.vehicle.toJson(),
+      'licensePhotoPath': instance.licensePhotoPath,
+      'rejectionReason': instance.rejectionReason,
       'currentRideId': instance.currentRideId,
       'location': instance.location?.toJson(),
       'heading': instance.heading,

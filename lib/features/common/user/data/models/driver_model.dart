@@ -18,6 +18,8 @@ abstract class DriverModel with _$DriverModel {
     required DriverStatus status,
     required bool isOnline,
     required VehicleModel vehicle,
+    String? licensePhotoPath,
+    String? rejectionReason,
     String? currentRideId,
     DriverLocationModel? location,
     @Default(0) double heading,
@@ -33,6 +35,8 @@ abstract class DriverModel with _$DriverModel {
       });
   factory DriverModel.fromEntity(DriverEntity entity) => DriverModel(
     id: entity.id,
+    licensePhotoPath: entity.licensePhotoPath,
+    rejectionReason: entity.rejectionReason,
     status: entity.status,
     isOnline: entity.isOnline,
     currentRideId: entity.currentRideId,
@@ -45,6 +49,8 @@ abstract class DriverModel with _$DriverModel {
   );
   DriverEntity toEntity() => DriverEntity(
     id: id,
+    licensePhotoPath: licensePhotoPath,
+    rejectionReason: rejectionReason,
     status: status,
     isOnline: isOnline,
     currentRideId: currentRideId,
