@@ -367,13 +367,13 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - [x] **T0.2b** أساس Clean Architecture في `core`: `Failure`، `UseCase`، `configureDependencies()`، `FirebaseModule`، و `AppBlocObserver` للـ logging
 - [x] **T0.3** الثيم (ألوان، خطوط عربية مثل Cairo أو Tajawal، مقاسات بـ ScreenUtil) + دعم RTL + ملفات الترجمة
 - [x] **T0.4** ربط Firebase (`flutterfire configure`) + تشغيل Emulators محلياً
-- [ ] **T0.5** كتابة `AGENTS.md`
+- [x] **T0.5** كتابة `AGENTS.md`
 
 **معيار القبول:** التطبيق بيشتغل على المحاكي، وبتطلع شاشة Splash ثم اختيار الوضع بالعربي.
 
 ### المرحلة 1 — تسجيل الدخول والخريطة
-- [ ] **T1.1** Entities (`UserEntity`, `DriverEntity`, `VehicleEntity`) بالـ domain + Models (freezed) بالـ data
-- [ ] **T1.2** feature `auth` كامل: `AuthRemoteDataSource` ← `AuthRepositoryImpl` ← UseCases (`SendOtp`, `VerifyOtp`, `SignOut`, `WatchAuthState`) + اختبارات
+- [x] **T1.1** Entities (`UserEntity`, `DriverEntity`, `VehicleEntity`) بالـ domain + Models (freezed) بالـ data
+- [x] **T1.2** feature `auth` كامل: `AuthRemoteDataSource` ← `AuthRepositoryImpl` ← UseCases (`SendOtp`, `VerifyOtp`, `SignOut`, `WatchAuthState`) + اختبارات
 - [ ] **T1.3** `AuthCubit` + `OtpCubit` + شاشات تسجيل الدخول (رقم ← OTP ← الاسم) + حماية المسارات بـ go_router
 - [ ] **T1.4** شاشة الخريطة الرئيسية + صلاحية الموقع + زر "موقعي"
 - [ ] **T1.5** تسجيل السائق (بيانات السيارة) + شاشة "بانتظار الموافقة"

@@ -1,5 +1,25 @@
 import 'package:equatable/equatable.dart';
 
+enum AuthFailureCode {
+  invalidPhone,
+  invalidCode,
+  codeExpired,
+  tooManyRequests,
+  network,
+  quotaExceeded,
+  unknown;
+
+  static AuthFailureCode fromFirebaseCode(String? code) => switch (code) {
+    'invalid-phone-number' => invalidPhone,
+    'invalid-verification-code' => invalidCode,
+    'session-expired' => codeExpired,
+    'too-many-requests' => tooManyRequests,
+    'network-request-failed' => network,
+    'quota-exceeded' => quotaExceeded,
+    _ => unknown,
+  };
+}
+
 sealed class Failure extends Equatable {
   const Failure(this.message);
 
@@ -18,7 +38,12 @@ final class NetworkFailure extends Failure {
 }
 
 final class AuthFailure extends Failure {
-  const AuthFailure(super.message);
+  const AuthFailure(super.message, {this.code = AuthFailureCode.unknown});
+
+  final AuthFailureCode code;
+
+  @override
+  List<Object> get props => [message, code];
 }
 
 final class CacheFailure extends Failure {
