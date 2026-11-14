@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "target": "es2022",
+    "module": "nodenext",
+    "noEmitOnError": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}
