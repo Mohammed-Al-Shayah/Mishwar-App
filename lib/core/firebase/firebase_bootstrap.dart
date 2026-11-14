@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mishwar/core/firebase/firebase_env.dart';
 import 'package:mishwar/firebase_options.dart';
@@ -22,6 +23,10 @@ abstract final class FirebaseBootstrap {
         isWeb: kIsWeb,
       );
       await FirebaseAuth.instance.useAuthEmulator(host, authEmulatorPort);
+      await FirebaseStorage.instance.useStorageEmulator(
+        host,
+        storageEmulatorPort,
+      );
       FirebaseFirestore.instance.useFirestoreEmulator(
         host,
         firestoreEmulatorPort,

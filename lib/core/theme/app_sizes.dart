@@ -1,6 +1,8 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get statusCircle => 64.r;
+  static double get licenseThumbnail => 160.h;
   static double get otpWidth => 48.w;
   static double get otpHeight => 56.h;
   static double get buttonHeight => 52.h;

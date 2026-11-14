@@ -5,6 +5,7 @@ class MwTextField extends StatelessWidget {
   const MwTextField({
     required this.label,
     this.onChanged,
+    this.hintText,
     this.controller,
     this.keyboardType,
     this.inputFormatters,
@@ -14,6 +15,7 @@ class MwTextField extends StatelessWidget {
     super.key,
   });
   final String label;
+  final String? hintText;
   final ValueChanged<String>? onChanged;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -30,6 +32,6 @@ class MwTextField extends StatelessWidget {
     textDirection: textDirection,
     enabled: enabled,
     autofillHints: autofillHints,
-    decoration: InputDecoration(labelText: label),
+    decoration: InputDecoration(labelText: label, hintText: hintText),
   );
 }

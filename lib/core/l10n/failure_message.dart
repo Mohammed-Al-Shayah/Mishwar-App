@@ -14,6 +14,10 @@ String failureMessage(BuildContext context, Failure failure) {
       AuthFailureCode.quotaExceeded => l10n.errorQuota,
       AuthFailureCode.unknown => l10n.errorGeneric,
     },
+    ValidationFailure(field: 'make' || 'model' || 'color') =>
+      l10n.errorVehicleLength,
+    ValidationFailure(field: 'plate') => l10n.errorPlateFormat,
+    ValidationFailure(field: 'photo') => l10n.errorPhotoRequired,
     ValidationFailure(message: 'name-required') => l10n.errorNameRequired,
     ValidationFailure() => l10n.errorNameLength,
     NetworkFailure() => l10n.errorNetwork,

@@ -54,5 +54,51 @@
         "type": "int"
       }
     }
+  },
+  "driverRegisterTitle": "سجّل سيارتك",
+  "driverReviewTime": "بنراجع طلبك خلال 24 ساعة",
+  "vehicleTypeTitle": "نوع السيارة",
+  "vehicleEconomy": "اقتصادي",
+  "vehicleComfort": "مريح",
+  "vehicleVan": "عائلي",
+  "vehicleEconomyDescription": "4 ركاب، سعر أقل",
+  "vehicleComfortDescription": "4 ركاب، سيارة أحدث",
+  "vehicleVanDescription": "حتى 6 ركاب",
+  "vehicleDetailsTitle": "بيانات السيارة",
+  "vehicleMake": "الشركة المصنّعة",
+  "vehicleModel": "الموديل",
+  "vehicleColor": "اللون",
+  "vehiclePlate": "رقم اللوحة",
+  "vehiclePlateHint": "12-34567",
+  "licenseTitle": "رخصة القيادة",
+  "photoChoose": "أضف صورة الرخصة",
+  "photoChange": "تغيير",
+  "photoSaved": "صورة الرخصة محفوظة",
+  "photoCamera": "الكاميرا",
+  "photoGallery": "معرض الصور",
+  "driverSubmit": "أرسل الطلب",
+  "driverPendingTitle": "طلبك قيد المراجعة",
+  "driverPendingBody": "بنراجع بياناتك ورخصتك خلال 24 ساعة. بنخبرك هون لما يتغيّر طلبك.",
+  "driverRejectedTitle": "ما انقبل طلبك",
+  "driverRejectedBody": "راجع بياناتك وعدّلها وأعد إرسال الطلب.",
+  "driverSuspendedTitle": "حسابك موقوف مؤقتاً",
+  "driverSuspendedBody": "تواصل مع الدعم للمساعدة بخصوص حسابك.",
+  "driverResubmit": "عدّل وأعد الإرسال",
+  "errorVehicleLength": "أدخل من حرفين إلى 30 حرفاً.",
+  "errorPlateFormat": "أدخل رقم لوحة صحيح مثل 12-34567.",
+  "errorPhotoRequired": "أضف صورة رخصة القيادة.",
+  "vehicleSummary": "{make} {model} · {color}",
+  "@vehicleSummary": {
+    "placeholders": {
+      "make": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
   }
 }

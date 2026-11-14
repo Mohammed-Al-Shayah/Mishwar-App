@@ -118,4 +118,108 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorNameLength =>
       'Your name must be between 2 and 40 characters.';
+
+  @override
+  String get driverRegisterTitle => 'Register your vehicle';
+
+  @override
+  String get driverReviewTime => 'We review your application within 24 hours';
+
+  @override
+  String get vehicleTypeTitle => 'Vehicle type';
+
+  @override
+  String get vehicleEconomy => 'Economy';
+
+  @override
+  String get vehicleComfort => 'Comfort';
+
+  @override
+  String get vehicleVan => 'Family';
+
+  @override
+  String get vehicleEconomyDescription => '4 passengers, lower fares';
+
+  @override
+  String get vehicleComfortDescription => '4 passengers, a newer car';
+
+  @override
+  String get vehicleVanDescription => 'Up to 6 passengers';
+
+  @override
+  String get vehicleDetailsTitle => 'Vehicle details';
+
+  @override
+  String get vehicleMake => 'Make';
+
+  @override
+  String get vehicleModel => 'Model';
+
+  @override
+  String get vehicleColor => 'Color';
+
+  @override
+  String get vehiclePlate => 'License plate';
+
+  @override
+  String get vehiclePlateHint => '12-34567';
+
+  @override
+  String get licenseTitle => 'Driving license';
+
+  @override
+  String get photoChoose => 'Add license photo';
+
+  @override
+  String get photoChange => 'Change';
+
+  @override
+  String get photoSaved => 'Your license photo is saved';
+
+  @override
+  String get photoCamera => 'Camera';
+
+  @override
+  String get photoGallery => 'Photo library';
+
+  @override
+  String get driverSubmit => 'Submit application';
+
+  @override
+  String get driverPendingTitle => 'Your application is under review';
+
+  @override
+  String get driverPendingBody =>
+      'We review your vehicle details and license within 24 hours. Your status will update here.';
+
+  @override
+  String get driverRejectedTitle => 'Your application was rejected';
+
+  @override
+  String get driverRejectedBody =>
+      'Review your details, make changes and resubmit.';
+
+  @override
+  String get driverSuspendedTitle => 'Your account is temporarily suspended';
+
+  @override
+  String get driverSuspendedBody =>
+      'Contact support for help with your account.';
+
+  @override
+  String get driverResubmit => 'Edit and resubmit';
+
+  @override
+  String get errorVehicleLength => 'Enter between 2 and 30 characters.';
+
+  @override
+  String get errorPlateFormat => 'Enter a valid plate, such as 12-34567.';
+
+  @override
+  String get errorPhotoRequired => 'Add a photo of your driving license.';
+
+  @override
+  String vehicleSummary(String make, String model, String color) {
+    return '$make $model · $color';
+  }
 }

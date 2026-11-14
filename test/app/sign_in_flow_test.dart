@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -21,13 +22,19 @@ import 'package:mishwar/features/common/auth/presentation/cubit/phone_cubit.dart
 import 'package:mishwar/features/common/auth/presentation/cubit/role_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
+import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
+import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
+import 'package:mishwar/features/common/user/domain/repositories/driver_repository.dart';
 import 'package:mishwar/features/common/user/domain/repositories/user_repository.dart';
 import 'package:mishwar/features/common/user/domain/usecases/create_user_profile.dart';
 import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart';
+import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart';
 import 'package:mocktail/mocktail.dart';
+
+class MockDriverRepository extends Mock implements DriverRepository {}
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -95,7 +102,30 @@ void main() {
         ..registerFactory(() => NameCubit(CreateUserProfile(users)))
         ..registerFactory(() => RoleCubit(SetUserRole(users)))
         ..registerFactory(() => HomeCubit(SignOut(auth)));
-      final session = SessionCubit(watchAuth, WatchUser(users));
+      final drivers = MockDriverRepository();
+      when(() => drivers.watchDriver('u')).thenAnswer(
+        (_) => Stream.value(
+          const Right(
+            DriverEntity(
+              id: 'u',
+              status: DriverStatus.approved,
+              isOnline: false,
+              vehicle: VehicleEntity(
+                type: VehicleType.economy,
+                make: 'Toyota',
+                model: 'Corolla',
+                color: 'White',
+                plate: '12-34567',
+              ),
+            ),
+          ),
+        ),
+      );
+      final session = SessionCubit(
+        watchAuth,
+        WatchUser(users),
+        WatchDriver(drivers),
+      );
       addTearDown(() async {
         await session.close();
         await authEvents.close();

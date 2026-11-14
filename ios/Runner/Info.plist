@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>صوّر رخصة القيادة لإرسال طلبك كسائق. Take a photo of your driving license to apply as a driver.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>اختر صورة رخصة القيادة لإرسال طلبك كسائق. Choose your driving license photo to apply as a driver.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

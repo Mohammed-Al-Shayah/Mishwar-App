@@ -18,11 +18,15 @@ class DriverEntity extends Equatable {
     required this.status,
     required this.isOnline,
     required this.vehicle,
+    this.licensePhotoPath,
+    this.rejectionReason,
     this.currentRideId,
     this.location,
     this.heading = 0,
     this.lastSeenAt,
   });
+  final String? licensePhotoPath;
+  final String? rejectionReason;
   final String id;
   final DriverStatus status;
   final bool isOnline;
@@ -44,5 +48,7 @@ class DriverEntity extends Equatable {
     location,
     heading,
     lastSeenAt,
+    licensePhotoPath,
+    rejectionReason,
   ];
 }

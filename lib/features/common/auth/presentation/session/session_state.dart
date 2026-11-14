@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
+import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 
 sealed class SessionState extends Equatable {
@@ -32,10 +33,11 @@ final class SessionNeedsRole extends SessionState {
 }
 
 final class SessionReady extends SessionState {
-  const SessionReady(this.user);
+  const SessionReady(this.user, {this.driver});
+  final DriverEntity? driver;
   final UserEntity user;
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, driver];
 }
 
 final class SessionError extends SessionState {
