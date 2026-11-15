@@ -14,7 +14,7 @@ Flutter + Dart 3 · Firebase (Auth phone/OTP, Firestore, Functions in TypeScript
 No Riverpod, Provider, GetX, or other state management.
 
 ## Repo layout
-**One Flutter app** (`package:mishwar`, Android id `com.mishwar`, targets Android/iOS/Web) with three modes:
+**One Flutter app** (`package:mishwar`, Android id `com.shayah.mishwar`, targets Android/iOS/Web) with three modes:
 rider, driver, admin (admin = web only, `admin` custom claim).
 - `lib/app/` — app widget, go_router (`/auth`, `/role`, `/rider/*`, `/driver/*`, `/admin/*`), DI setup
 - `lib/core/` — di, error, usecase, network, theme, l10n, widgets
@@ -59,3 +59,9 @@ fvm flutter test                     # must pass
 ```
 For `firebase/functions`: `npm run lint && npm run build && npm test`.
 Use the Firebase Emulator Suite for local testing; never touch a production project.
+
+## Google Maps keys
+- App key: `android/secrets.properties` (`MAPS_API_KEY=...`), injected via `manifestPlaceholders`. Restricted to
+  package `com.shayah.mishwar` + debug SHA-1. Never print, log or commit it.
+- Server key (Places API (New) + Routes API): `firebase/functions/.secret.local` (`GOOGLE_MAPS_SERVER_KEY=...`),
+  read only by Cloud Functions. Both files are gitignored.

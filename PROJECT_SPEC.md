@@ -57,7 +57,7 @@ mishwar/
 ├── AGENTS.md                 # تعليمات لـ Codex (قواعد الكود والأوامر)
 ├── PROJECT_SPEC.md           # هذا الملف
 ├── .fvmrc                    # نسخة Flutter (FVM: stable 3.44)
-├── pubspec.yaml              # package: mishwar — Android id: com.mishwar
+├── pubspec.yaml              # package: mishwar — Android id: com.shayah.mishwar
 ├── android/ ios/ web/
 ├── lib/
 │   ├── main.dart             # configureDependencies() + runApp

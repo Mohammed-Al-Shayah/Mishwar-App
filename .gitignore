@@ -36,3 +36,9 @@ firebase/functions/lib/
 
 # FVM Version Cache
 .fvm/
+# Google Maps keys (never commit)
+android/secrets.properties
+firebase/functions/.secret.local
+
+# Kotlin compiler caches
+android/.kotlin/
