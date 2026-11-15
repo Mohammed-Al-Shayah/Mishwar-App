@@ -7,6 +7,7 @@ abstract final class AppSizes {
   static double get otpHeight => 56.h;
   static double get buttonHeight => 52.h;
   static double get searchHeight => 52.h;
+  static double get searchIcon => 22.r;
   static double get rowMinHeight => 64.h;
   static double get iconCircle => 40.r;
   static double get mapFab => 40.r;

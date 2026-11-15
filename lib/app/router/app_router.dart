@@ -23,7 +23,8 @@ import 'package:mishwar/features/driver/home/presentation/driver_home_placeholde
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
-import 'package:mishwar/features/rider/home/presentation/rider_home_placeholder.dart';
+import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
+import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
 
 String? sessionRedirect(
   SessionState session,
@@ -64,84 +65,90 @@ class SessionRouterRefresh extends ChangeNotifier {
   }
 }
 
-GoRouter createAppRouter(SessionCubit session, SessionRouterRefresh refresh) =>
-    GoRouter(
-      initialLocation: '/splash',
-      refreshListenable: refresh,
-      redirect: (_, state) =>
-          sessionRedirect(session.state, state.uri.path, extra: state.extra),
-      routes: [
-        GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
-        GoRoute(
-          path: '/auth/phone',
-          builder: (_, _) => BlocProvider(
-            create: (_) => getIt<PhoneCubit>(),
-            child: const PhoneScreen(),
+GoRouter createAppRouter(
+  SessionCubit session,
+  SessionRouterRefresh refresh, {
+  WidgetBuilder? riderMapBuilder,
+}) => GoRouter(
+  initialLocation: '/splash',
+  refreshListenable: refresh,
+  redirect: (_, state) =>
+      sessionRedirect(session.state, state.uri.path, extra: state.extra),
+  routes: [
+    GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
+    GoRoute(
+      path: '/auth/phone',
+      builder: (_, _) => BlocProvider(
+        create: (_) => getIt<PhoneCubit>(),
+        child: const PhoneScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/auth/otp',
+      builder: (_, state) => BlocProvider(
+        create: (_) => getIt<OtpCubit>(param1: state.extra! as OtpSession),
+        child: const OtpScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/auth/name',
+      builder: (_, _) {
+        final state = session.state;
+        if (state is! SessionNeedsName) return const SplashScreen();
+        return BlocProvider(
+          create: (_) => getIt<NameCubit>(),
+          child: NameScreen(user: state.authUser),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/role',
+      builder: (_, _) {
+        final state = session.state;
+        if (state is! SessionNeedsRole) return const SplashScreen();
+        return BlocProvider(
+          create: (_) => getIt<RoleCubit>(),
+          child: RoleScreen(user: state.user),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/rider',
+      builder: (_, _) => BlocProvider(
+        create: (_) => getIt<HomeCubit>(),
+        child: BlocProvider(
+          create: (_) => getIt<RiderHomeCubit>(),
+          child: RiderHomeScreen(mapBuilder: riderMapBuilder),
+        ),
+      ),
+    ),
+    GoRoute(
+      path: '/driver/onboarding',
+      builder: (_, _) {
+        final state = session.state;
+        if (state is! SessionReady) return const SplashScreen();
+        return BlocProvider(
+          create: (_) => getIt<DriverOnboardingCubit>(),
+          child: DriverOnboardingScreen(
+            uid: state.user.id,
+            driver: state.driver,
           ),
-        ),
-        GoRoute(
-          path: '/auth/otp',
-          builder: (_, state) => BlocProvider(
-            create: (_) => getIt<OtpCubit>(param1: state.extra! as OtpSession),
-            child: const OtpScreen(),
-          ),
-        ),
-        GoRoute(
-          path: '/auth/name',
-          builder: (_, _) {
-            final state = session.state;
-            if (state is! SessionNeedsName) return const SplashScreen();
-            return BlocProvider(
-              create: (_) => getIt<NameCubit>(),
-              child: NameScreen(user: state.authUser),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/role',
-          builder: (_, _) {
-            final state = session.state;
-            if (state is! SessionNeedsRole) return const SplashScreen();
-            return BlocProvider(
-              create: (_) => getIt<RoleCubit>(),
-              child: RoleScreen(user: state.user),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/rider',
-          builder: (_, _) => BlocProvider(
-            create: (_) => getIt<HomeCubit>(),
-            child: const RiderHomePlaceholder(),
-          ),
-        ),
-        GoRoute(
-          path: '/driver/onboarding',
-          builder: (_, _) {
-            final state = session.state;
-            if (state is! SessionReady) return const SplashScreen();
-            return BlocProvider(
-              create: (_) => getIt<DriverOnboardingCubit>(),
-              child: DriverOnboardingScreen(
-                uid: state.user.id,
-                driver: state.driver,
-              ),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/driver/pending',
-          builder: (_, _) => BlocProvider(
-            create: (_) => getIt<HomeCubit>(),
-            child: const DriverPendingScreen(),
-          ),
-        ),
-        GoRoute(
-          path: '/driver',
-          builder: (_, _) => BlocProvider(
-            create: (_) => getIt<HomeCubit>(),
-            child: const DriverHomePlaceholder(),
-          ),
-        ),
-      ],
-    );
+        );
+      },
+    ),
+    GoRoute(
+      path: '/driver/pending',
+      builder: (_, _) => BlocProvider(
+        create: (_) => getIt<HomeCubit>(),
+        child: const DriverPendingScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/driver',
+      builder: (_, _) => BlocProvider(
+        create: (_) => getIt<HomeCubit>(),
+        child: const DriverHomePlaceholder(),
+      ),
+    ),
+  ],
+);

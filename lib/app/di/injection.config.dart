@@ -45,6 +45,26 @@ import 'package:mishwar/features/common/auth/presentation/cubit/role_cubit.dart'
     as _i520;
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart'
     as _i838;
+import 'package:mishwar/features/common/location/data/datasources/geolocator_client.dart'
+    as _i766;
+import 'package:mishwar/features/common/location/data/datasources/location_data_source.dart'
+    as _i101;
+import 'package:mishwar/features/common/location/data/repositories/location_repository_impl.dart'
+    as _i578;
+import 'package:mishwar/features/common/location/domain/repositories/location_repository.dart'
+    as _i300;
+import 'package:mishwar/features/common/location/domain/usecases/check_location_permission.dart'
+    as _i524;
+import 'package:mishwar/features/common/location/domain/usecases/current_position.dart'
+    as _i107;
+import 'package:mishwar/features/common/location/domain/usecases/open_app_settings.dart'
+    as _i916;
+import 'package:mishwar/features/common/location/domain/usecases/open_location_settings.dart'
+    as _i682;
+import 'package:mishwar/features/common/location/domain/usecases/request_location_permission.dart'
+    as _i605;
+import 'package:mishwar/features/common/location/domain/usecases/watch_position.dart'
+    as _i365;
 import 'package:mishwar/features/common/user/data/datasources/driver_remote_data_source.dart'
     as _i327;
 import 'package:mishwar/features/common/user/data/datasources/user_remote_data_source.dart'
@@ -71,6 +91,8 @@ import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart'
     as _i106;
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart'
     as _i396;
+import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
+    as _i786;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -84,6 +106,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i457.FirebaseStorage>(() => firebaseModule.storage);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
+    gh.lazySingleton<_i766.GeolocatorClient>(() => _i766.GeolocatorClient());
     gh.lazySingleton<_i327.DriverRemoteDataSource>(
       () => _i327.DriverRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
@@ -105,6 +128,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i243.AuthRemoteDataSource>(
       () => _i243.AuthRemoteDataSourceImpl(gh<_i59.FirebaseAuth>()),
     );
+    gh.lazySingleton<_i101.LocationDataSource>(
+      () => _i101.LocationDataSource(gh<_i766.GeolocatorClient>()),
+    );
     gh.lazySingleton<_i726.UserRemoteDataSource>(
       () => _i726.UserRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
@@ -117,6 +143,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i587.SubmitDriverApplication>(),
       ),
     );
+    gh.lazySingleton<_i300.LocationRepository>(
+      () => _i578.LocationRepositoryImpl(gh<_i101.LocationDataSource>()),
+    );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
     );
@@ -128,6 +157,24 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i106.WatchUser>(
       () => _i106.WatchUser(gh<_i695.UserRepository>()),
+    );
+    gh.lazySingleton<_i524.CheckLocationPermission>(
+      () => _i524.CheckLocationPermission(gh<_i300.LocationRepository>()),
+    );
+    gh.lazySingleton<_i107.CurrentPosition>(
+      () => _i107.CurrentPosition(gh<_i300.LocationRepository>()),
+    );
+    gh.lazySingleton<_i916.OpenAppSettings>(
+      () => _i916.OpenAppSettings(gh<_i300.LocationRepository>()),
+    );
+    gh.lazySingleton<_i682.OpenLocationSettings>(
+      () => _i682.OpenLocationSettings(gh<_i300.LocationRepository>()),
+    );
+    gh.lazySingleton<_i605.RequestLocationPermission>(
+      () => _i605.RequestLocationPermission(gh<_i300.LocationRepository>()),
+    );
+    gh.lazySingleton<_i365.WatchPosition>(
+      () => _i365.WatchPosition(gh<_i300.LocationRepository>()),
     );
     gh.lazySingleton<_i563.SendOtp>(
       () => _i563.SendOtp(gh<_i290.AuthRepository>()),
@@ -145,6 +192,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryParam<_i267.OtpCubit, _i858.OtpSession, dynamic>(
       (session, _) =>
           _i267.OtpCubit(gh<_i454.VerifyOtp>(), gh<_i563.SendOtp>(), session),
+    );
+    gh.factory<_i786.RiderHomeCubit>(
+      () => _i786.RiderHomeCubit(
+        gh<_i524.CheckLocationPermission>(),
+        gh<_i605.RequestLocationPermission>(),
+        gh<_i107.CurrentPosition>(),
+        gh<_i365.WatchPosition>(),
+        gh<_i916.OpenAppSettings>(),
+        gh<_i682.OpenLocationSettings>(),
+      ),
     );
     gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));
     gh.lazySingleton<_i838.SessionCubit>(

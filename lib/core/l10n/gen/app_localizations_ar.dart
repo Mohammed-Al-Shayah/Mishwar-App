@@ -9,6 +9,46 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get whereTo => 'وين رايح؟';
+
+  @override
+  String get scheduleLater => 'لاحقاً';
+
+  @override
+  String get mapMobileOnly => 'الخريطة متاحة على تطبيق الموبايل';
+
+  @override
+  String get locationPermissionHint => 'اسمح بالموقع لنحدد نقطة انطلاقك.';
+
+  @override
+  String get allowLocation => 'اسمح بالموقع';
+
+  @override
+  String get openSettings => 'افتح الإعدادات';
+
+  @override
+  String get enableLocation => 'شغّل الموقع';
+
+  @override
+  String get locationForeverHint => 'فعّل صلاحية الموقع من إعدادات التطبيق.';
+
+  @override
+  String get locationServiceHint => 'شغّل خدمة الموقع لتحديد مكانك.';
+
+  @override
+  String get locationTimeout =>
+      'تعذّر تحديد موقعك بالوقت المحدد. حاول مرة ثانية.';
+
+  @override
+  String get locationError => 'تعذّر تحديد موقعك. حاول مرة ثانية.';
+
+  @override
+  String get recenterMap => 'موقعي';
+
+  @override
+  String get openMenu => 'القائمة';
+
+  @override
   String get appName => 'مشوار';
 
   @override

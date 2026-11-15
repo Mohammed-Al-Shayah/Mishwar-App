@@ -98,6 +98,84 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
+  /// No description provided for @whereTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'وين رايح؟'**
+  String get whereTo;
+
+  /// No description provided for @scheduleLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'لاحقاً'**
+  String get scheduleLater;
+
+  /// No description provided for @mapMobileOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخريطة متاحة على تطبيق الموبايل'**
+  String get mapMobileOnly;
+
+  /// No description provided for @locationPermissionHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسمح بالموقع لنحدد نقطة انطلاقك.'**
+  String get locationPermissionHint;
+
+  /// No description provided for @allowLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسمح بالموقع'**
+  String get allowLocation;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح الإعدادات'**
+  String get openSettings;
+
+  /// No description provided for @enableLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'شغّل الموقع'**
+  String get enableLocation;
+
+  /// No description provided for @locationForeverHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'فعّل صلاحية الموقع من إعدادات التطبيق.'**
+  String get locationForeverHint;
+
+  /// No description provided for @locationServiceHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'شغّل خدمة الموقع لتحديد مكانك.'**
+  String get locationServiceHint;
+
+  /// No description provided for @locationTimeout.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحديد موقعك بالوقت المحدد. حاول مرة ثانية.'**
+  String get locationTimeout;
+
+  /// No description provided for @locationError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحديد موقعك. حاول مرة ثانية.'**
+  String get locationError;
+
+  /// No description provided for @recenterMap.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقعي'**
+  String get recenterMap;
+
+  /// No description provided for @openMenu.
+  ///
+  /// In ar, this message translates to:
+  /// **'القائمة'**
+  String get openMenu;
+
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:

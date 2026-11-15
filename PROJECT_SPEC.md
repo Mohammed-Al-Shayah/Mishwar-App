@@ -375,7 +375,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - [x] **T1.1** Entities (`UserEntity`, `DriverEntity`, `VehicleEntity`) بالـ domain + Models (freezed) بالـ data
 - [x] **T1.2** feature `auth` كامل: `AuthRemoteDataSource` ← `AuthRepositoryImpl` ← UseCases (`SendOtp`, `VerifyOtp`, `SignOut`, `WatchAuthState`) + اختبارات
 - [x] **T1.3** `AuthCubit` + `OtpCubit` + شاشات تسجيل الدخول (رقم ← OTP ← الاسم) + حماية المسارات بـ go_router
-- [ ] **T1.4** شاشة الخريطة الرئيسية + صلاحية الموقع + زر "موقعي"
+- [x] **T1.4** شاشة الخريطة الرئيسية + صلاحية الموقع + زر "موقعي"
 - [x] **T1.5** تسجيل السائق (بيانات السيارة) + شاشة "بانتظار الموافقة"
 
 **معيار القبول:** مستخدم بيسجل دخول برقم تجريبي على الـ Emulator وبيشوف موقعه على الخريطة.
