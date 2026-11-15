@@ -5,9 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/app/app.dart';
 import 'package:mishwar/app/di/injection.dart';
+import 'package:mishwar/app/router/app_router.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations_ar.dart';
 import 'package:mishwar/core/usecase/usecase.dart';
+import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/domain/repositories/auth_repository.dart';
@@ -22,6 +24,7 @@ import 'package:mishwar/features/common/auth/presentation/cubit/phone_cubit.dart
 import 'package:mishwar/features/common/auth/presentation/cubit/role_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
+import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
@@ -33,6 +36,8 @@ import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart'
 import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../helpers/location_mocks.dart';
 
 class MockDriverRepository extends Mock implements DriverRepository {}
 
@@ -102,6 +107,11 @@ void main() {
         ..registerFactory(() => NameCubit(CreateUserProfile(users)))
         ..registerFactory(() => RoleCubit(SetUserRole(users)))
         ..registerFactory(() => HomeCubit(SignOut(auth)));
+      final location = MockLocationRepository();
+      when(location.checkPermission).thenAnswer(
+        (_) async => const Right(LocationPermissionStatus.deniedForever),
+      );
+      getIt.registerFactory(() => riderCubit(location));
       final drivers = MockDriverRepository();
       when(() => drivers.watchDriver('u')).thenAnswer(
         (_) => Stream.value(
@@ -132,7 +142,19 @@ void main() {
         await profiles.close();
         await getIt.reset();
       });
-      await tester.pumpWidget(MishwarApp(sessionCubit: session));
+      final refresh = SessionRouterRefresh(session.stream);
+      final router = createAppRouter(
+        session,
+        refresh,
+        riderMapBuilder: (_) => const MwMapPlaceholder(),
+      );
+      addTearDown(() {
+        router.dispose();
+        refresh.dispose();
+      });
+      await tester.pumpWidget(
+        MishwarApp(sessionCubit: session, router: router),
+      );
       expect(find.byType(SplashScreen), findsOneWidget);
       authEvents.add(const Right(null));
       await tester.pumpAndSettle();
@@ -167,10 +189,10 @@ void main() {
       await tester.pumpAndSettle();
       final l10n = AppLocalizationsAr();
       expect(
-        find.text(role == UserRole.rider ? l10n.riderMode : l10n.driverMode),
-        findsOneWidget,
+        find.text(role == UserRole.rider ? l10n.whereTo : l10n.driverMode),
+        role == UserRole.rider ? findsNWidgets(2) : findsOneWidget,
       );
-      final homeContext = tester.element(find.text(l10n.comingSoon));
+      final homeContext = tester.element(find.byKey(const Key('sign_out')));
       if (role == UserRole.driver) {
         expect(Theme.of(homeContext).brightness, Brightness.dark);
       }

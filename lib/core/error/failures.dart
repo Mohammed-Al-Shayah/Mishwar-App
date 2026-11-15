@@ -1,5 +1,14 @@
 import 'package:equatable/equatable.dart';
 
+enum LocationFailureCode { timeout, permissionDenied, serviceDisabled, unknown }
+
+final class LocationFailure extends Failure {
+  const LocationFailure(this.code) : super('location');
+  final LocationFailureCode code;
+  @override
+  List<Object> get props => [code];
+}
+
 enum AuthFailureCode {
   invalidPhone,
   invalidCode,

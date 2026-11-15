@@ -5,6 +5,12 @@ import 'package:mishwar/core/l10n/l10n.dart';
 String failureMessage(BuildContext context, Failure failure) {
   final l10n = context.l10n;
   return switch (failure) {
+    LocationFailure(:final code) => switch (code) {
+      LocationFailureCode.timeout => l10n.locationTimeout,
+      LocationFailureCode.permissionDenied => l10n.locationPermissionHint,
+      LocationFailureCode.serviceDisabled => l10n.locationServiceHint,
+      LocationFailureCode.unknown => l10n.locationError,
+    },
     AuthFailure(:final code) => switch (code) {
       AuthFailureCode.invalidPhone => l10n.errorInvalidPhone,
       AuthFailureCode.invalidCode => l10n.errorInvalidCode,

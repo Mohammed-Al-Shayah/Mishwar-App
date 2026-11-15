@@ -9,6 +9,48 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get whereTo => 'Where to?';
+
+  @override
+  String get scheduleLater => 'Later';
+
+  @override
+  String get mapMobileOnly => 'The map is available in the mobile app';
+
+  @override
+  String get locationPermissionHint =>
+      'Allow location to find your pickup point.';
+
+  @override
+  String get allowLocation => 'Allow location';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get enableLocation => 'Enable location';
+
+  @override
+  String get locationForeverHint =>
+      'Enable location permission in app settings.';
+
+  @override
+  String get locationServiceHint =>
+      'Turn on location services to find your position.';
+
+  @override
+  String get locationTimeout => 'Finding your location timed out. Try again.';
+
+  @override
+  String get locationError => 'Unable to find your location. Try again.';
+
+  @override
+  String get recenterMap => 'My location';
+
+  @override
+  String get openMenu => 'Menu';
+
+  @override
   String get appName => 'Mishwar';
 
   @override
