@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserModel {
 
-@JsonKey(includeToJson: false) String get id; String get name; String get phone;@TimestampConverter() DateTime get createdAt;@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) UserRole? get role; String? get photoUrl; double get rating; int get ratingCount; String? get fcmToken;
+@JsonKey(includeToJson: false) String get id; String get name; String get phone;@TimestampConverter() DateTime get createdAt;@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) UserRole? get role;@JsonKey(includeToJson: false) String? get pendingRatingRideId; String? get photoUrl; double get rating; int get ratingCount; String? get fcmToken;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.role, role) || other.role == role)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.role, role) || other.role == role)&&(identical(other.pendingRatingRideId, pendingRatingRideId) || other.pendingRatingRideId == pendingRatingRideId)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,createdAt,role,photoUrl,rating,ratingCount,fcmToken);
+int get hashCode => Object.hash(runtimeType,id,name,phone,createdAt,role,pendingRatingRideId,photoUrl,rating,ratingCount,fcmToken);
 
 @override
 String toString() {
-  return 'UserModel(id: $id, name: $name, phone: $phone, createdAt: $createdAt, role: $role, photoUrl: $photoUrl, rating: $rating, ratingCount: $ratingCount, fcmToken: $fcmToken)';
+  return 'UserModel(id: $id, name: $name, phone: $phone, createdAt: $createdAt, role: $role, pendingRatingRideId: $pendingRatingRideId, photoUrl: $photoUrl, rating: $rating, ratingCount: $ratingCount, fcmToken: $fcmToken)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String name, String phone,@TimestampConverter() DateTime createdAt,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) UserRole? role, String? photoUrl, double rating, int ratingCount, String? fcmToken
+@JsonKey(includeToJson: false) String id, String name, String phone,@TimestampConverter() DateTime createdAt,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) UserRole? role,@JsonKey(includeToJson: false) String? pendingRatingRideId, String? photoUrl, double rating, int ratingCount, String? fcmToken
 });
 
 
@@ -65,14 +65,15 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? createdAt = null,Object? role = freezed,Object? photoUrl = freezed,Object? rating = null,Object? ratingCount = null,Object? fcmToken = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? createdAt = null,Object? role = freezed,Object? pendingRatingRideId = freezed,Object? photoUrl = freezed,Object? rating = null,Object? ratingCount = null,Object? fcmToken = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserRole?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
+as UserRole?,pendingRatingRideId: freezed == pendingRatingRideId ? _self.pendingRatingRideId : pendingRatingRideId // ignore: cast_nullable_to_non_nullable
+as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
 as String?,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
 as double,ratingCount: null == ratingCount ? _self.ratingCount : ratingCount // ignore: cast_nullable_to_non_nullable
 as int,fcmToken: freezed == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable
@@ -161,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String phone, @TimestampConverter()  DateTime createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  UserRole? role,  String? photoUrl,  double rating,  int ratingCount,  String? fcmToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String phone, @TimestampConverter()  DateTime createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  UserRole? role, @JsonKey(includeToJson: false)  String? pendingRatingRideId,  String? photoUrl,  double rating,  int ratingCount,  String? fcmToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that.photoUrl,_that.rating,_that.ratingCount,_that.fcmToken);case _:
+return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that.pendingRatingRideId,_that.photoUrl,_that.rating,_that.ratingCount,_that.fcmToken);case _:
   return orElse();
 
 }
@@ -182,10 +183,10 @@ return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String phone, @TimestampConverter()  DateTime createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  UserRole? role,  String? photoUrl,  double rating,  int ratingCount,  String? fcmToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String name,  String phone, @TimestampConverter()  DateTime createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  UserRole? role, @JsonKey(includeToJson: false)  String? pendingRatingRideId,  String? photoUrl,  double rating,  int ratingCount,  String? fcmToken)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that.photoUrl,_that.rating,_that.ratingCount,_that.fcmToken);case _:
+return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that.pendingRatingRideId,_that.photoUrl,_that.rating,_that.ratingCount,_that.fcmToken);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +203,10 @@ return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String name,  String phone, @TimestampConverter()  DateTime createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  UserRole? role,  String? photoUrl,  double rating,  int ratingCount,  String? fcmToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String name,  String phone, @TimestampConverter()  DateTime createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  UserRole? role, @JsonKey(includeToJson: false)  String? pendingRatingRideId,  String? photoUrl,  double rating,  int ratingCount,  String? fcmToken)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that.photoUrl,_that.rating,_that.ratingCount,_that.fcmToken);case _:
+return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that.pendingRatingRideId,_that.photoUrl,_that.rating,_that.ratingCount,_that.fcmToken);case _:
   return null;
 
 }
@@ -217,7 +218,7 @@ return $default(_that.id,_that.name,_that.phone,_that.createdAt,_that.role,_that
 
 @JsonSerializable(explicitToJson: true)
 class _UserModel extends UserModel {
-  const _UserModel({@JsonKey(includeToJson: false) required this.id, required this.name, required this.phone, @TimestampConverter() required this.createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, this.photoUrl, this.rating = 5.0, this.ratingCount = 0, this.fcmToken}): super._();
+  const _UserModel({@JsonKey(includeToJson: false) required this.id, required this.name, required this.phone, @TimestampConverter() required this.createdAt, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.role, @JsonKey(includeToJson: false) this.pendingRatingRideId, this.photoUrl, this.rating = 5.0, this.ratingCount = 0, this.fcmToken}): super._();
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -225,6 +226,7 @@ class _UserModel extends UserModel {
 @override final  String phone;
 @override@TimestampConverter() final  DateTime createdAt;
 @override@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  UserRole? role;
+@override@JsonKey(includeToJson: false) final  String? pendingRatingRideId;
 @override final  String? photoUrl;
 @override@JsonKey() final  double rating;
 @override@JsonKey() final  int ratingCount;
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.role, role) || other.role == role)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.role, role) || other.role == role)&&(identical(other.pendingRatingRideId, pendingRatingRideId) || other.pendingRatingRideId == pendingRatingRideId)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,createdAt,role,photoUrl,rating,ratingCount,fcmToken);
+int get hashCode => Object.hash(runtimeType,id,name,phone,createdAt,role,pendingRatingRideId,photoUrl,rating,ratingCount,fcmToken);
 
 @override
 String toString() {
-  return 'UserModel(id: $id, name: $name, phone: $phone, createdAt: $createdAt, role: $role, photoUrl: $photoUrl, rating: $rating, ratingCount: $ratingCount, fcmToken: $fcmToken)';
+  return 'UserModel(id: $id, name: $name, phone: $phone, createdAt: $createdAt, role: $role, pendingRatingRideId: $pendingRatingRideId, photoUrl: $photoUrl, rating: $rating, ratingCount: $ratingCount, fcmToken: $fcmToken)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String name, String phone,@TimestampConverter() DateTime createdAt,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) UserRole? role, String? photoUrl, double rating, int ratingCount, String? fcmToken
+@JsonKey(includeToJson: false) String id, String name, String phone,@TimestampConverter() DateTime createdAt,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) UserRole? role,@JsonKey(includeToJson: false) String? pendingRatingRideId, String? photoUrl, double rating, int ratingCount, String? fcmToken
 });
 
 
@@ -280,14 +282,15 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? createdAt = null,Object? role = freezed,Object? photoUrl = freezed,Object? rating = null,Object? ratingCount = null,Object? fcmToken = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? createdAt = null,Object? role = freezed,Object? pendingRatingRideId = freezed,Object? photoUrl = freezed,Object? rating = null,Object? ratingCount = null,Object? fcmToken = freezed,}) {
   return _then(_UserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserRole?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
+as UserRole?,pendingRatingRideId: freezed == pendingRatingRideId ? _self.pendingRatingRideId : pendingRatingRideId // ignore: cast_nullable_to_non_nullable
+as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
 as String?,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
 as double,ratingCount: null == ratingCount ? _self.ratingCount : ratingCount // ignore: cast_nullable_to_non_nullable
 as int,fcmToken: freezed == fcmToken ? _self.fcmToken : fcmToken // ignore: cast_nullable_to_non_nullable

@@ -18,6 +18,7 @@ abstract class UserModel with _$UserModel {
     @TimestampConverter() required DateTime createdAt,
     @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
     UserRole? role,
+    @JsonKey(includeToJson: false) String? pendingRatingRideId,
     String? photoUrl,
     @Default(5.0) double rating,
     @Default(0) int ratingCount,
@@ -33,6 +34,7 @@ abstract class UserModel with _$UserModel {
       });
   factory UserModel.fromEntity(UserEntity entity) => UserModel(
     id: entity.id,
+    pendingRatingRideId: entity.pendingRatingRideId,
     name: entity.name,
     phone: entity.phone,
     role: entity.role,
@@ -43,6 +45,7 @@ abstract class UserModel with _$UserModel {
   );
   UserEntity toEntity() => UserEntity(
     id: id,
+    pendingRatingRideId: pendingRatingRideId,
     name: name,
     phone: phone,
     role: role,

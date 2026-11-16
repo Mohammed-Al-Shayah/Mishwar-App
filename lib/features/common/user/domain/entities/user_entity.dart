@@ -9,10 +9,12 @@ class UserEntity extends Equatable {
     required this.createdAt,
     this.role,
     this.photoUrl,
+    this.pendingRatingRideId,
     this.rating = 5.0,
     this.ratingCount = 0,
   });
   final String id;
+  final String? pendingRatingRideId;
   final String name;
   final String phone;
   final UserRole? role;
@@ -25,6 +27,7 @@ class UserEntity extends Equatable {
     String? id,
     String? name,
     String? phone,
+    Object? pendingRatingRideId = _unset,
     Object? role = _unset,
     Object? photoUrl = _unset,
     double? rating,
@@ -32,6 +35,9 @@ class UserEntity extends Equatable {
     DateTime? createdAt,
   }) => UserEntity(
     id: id ?? this.id,
+    pendingRatingRideId: identical(pendingRatingRideId, _unset)
+        ? this.pendingRatingRideId
+        : pendingRatingRideId as String?,
     name: name ?? this.name,
     phone: phone ?? this.phone,
     role: identical(role, _unset) ? this.role : role as UserRole?,
@@ -44,6 +50,7 @@ class UserEntity extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    pendingRatingRideId,
     name,
     phone,
     role,

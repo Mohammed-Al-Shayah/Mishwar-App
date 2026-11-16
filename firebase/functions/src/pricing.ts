@@ -31,6 +31,14 @@ function fils(value: number): bigint {
         throw new RangeError('Rates must use whole fils.');
     return n * 1000n / d;
 }
+// Exact half-up rounding to the nearest 0.05 JOD, also used after fare caps.
+function roundFils(numerator: bigint, denominator: bigint): bigint {
+    return ((numerator * 2n + 50n * denominator) / (100n * denominator)) * 50n;
+}
+export function roundFare(value: number): number {
+    const [n, d] = decimal(value);
+    return Number(roundFils(n * 1000n, d)) / 1000;
+}
 export function computeFare(rates: VehicleRates, distanceMeters: number, durationSeconds: number): number {
     const [distance, distanceScale] = decimal(distanceMeters);
     const [duration, durationScale] = decimal(durationSeconds);
@@ -40,7 +48,7 @@ export function computeFare(rates: VehicleRates, distanceMeters: number, duratio
         + fils(rates.perMin) * duration * distanceScale * 1000n;
     const minimum = fils(rates.minimum) * denominator;
     const fare = total > minimum ? total : minimum;
-    const roundedFils = ((fare * 2n + 50n * denominator) / (100n * denominator)) * 50n;
+    const roundedFils = roundFils(fare, denominator);
     const result = Number(roundedFils) / 1000;
     if (!Number.isFinite(result) || roundedFils > BigInt(Number.MAX_SAFE_INTEGER))
         throw new RangeError('Fare is too large.');

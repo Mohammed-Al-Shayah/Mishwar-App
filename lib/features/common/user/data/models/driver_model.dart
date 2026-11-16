@@ -21,6 +21,7 @@ abstract class DriverModel with _$DriverModel {
     String? licensePhotoPath,
     String? rejectionReason,
     String? currentRideId,
+    @JsonKey(includeToJson: false) String? pendingRatingRideId,
     DriverOfferModel? offer,
     DriverLocationModel? location,
     @Default(0) double heading,
@@ -36,6 +37,7 @@ abstract class DriverModel with _$DriverModel {
       });
   factory DriverModel.fromEntity(DriverEntity entity) => DriverModel(
     id: entity.id,
+    pendingRatingRideId: entity.pendingRatingRideId,
     licensePhotoPath: entity.licensePhotoPath,
     rejectionReason: entity.rejectionReason,
     status: entity.status,
@@ -53,6 +55,7 @@ abstract class DriverModel with _$DriverModel {
   );
   DriverEntity toEntity() => DriverEntity(
     id: id,
+    pendingRatingRideId: pendingRatingRideId,
     licensePhotoPath: licensePhotoPath,
     rejectionReason: rejectionReason,
     status: status,

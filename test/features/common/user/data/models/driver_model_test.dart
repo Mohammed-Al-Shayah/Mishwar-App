@@ -72,6 +72,19 @@ void main() {
     );
     expect(DriverModel.fromJson({...nullable.toJson(), 'id': 'd'}), nullable);
   });
+  test('pending rating maps into entity and stays out of client writes', () {
+    final parsed = DriverModel.fromJson({
+      ...model.toJson(),
+      'id': 'd',
+      'pendingRatingRideId': 'ride',
+    });
+    expect(parsed.toEntity().pendingRatingRideId, 'ride');
+    expect(
+      DriverModel.fromEntity(parsed.toEntity()).pendingRatingRideId,
+      'ride',
+    );
+    expect(parsed.toJson().containsKey('pendingRatingRideId'), isFalse);
+  });
   test('snapshot injects id', () {
     final snapshot = MockDocument();
     when(() => snapshot.id).thenReturn('actual');

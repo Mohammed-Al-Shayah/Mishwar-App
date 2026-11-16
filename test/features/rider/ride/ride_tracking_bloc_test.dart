@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
+import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
@@ -29,7 +30,7 @@ void main() {
     when(() => repository.watchRide('ride')).thenAnswer((_) => updates.stream);
     when(
       () => repository.cancelRide('ride'),
-    ).thenAnswer((_) async => const Right(unit));
+    ).thenAnswer((_) async => const Right(CancelRideResult()));
   });
   tearDown(() => updates.close());
   RideTrackingBloc build() =>

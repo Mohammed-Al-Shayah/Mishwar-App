@@ -18,6 +18,7 @@ _DriverModel _$DriverModelFromJson(Map<String, dynamic> json) => _DriverModel(
   licensePhotoPath: json['licensePhotoPath'] as String?,
   rejectionReason: json['rejectionReason'] as String?,
   currentRideId: json['currentRideId'] as String?,
+  pendingRatingRideId: json['pendingRatingRideId'] as String?,
   offer: json['offer'] == null
       ? null
       : DriverOfferModel.fromJson(json['offer'] as Map<String, dynamic>),

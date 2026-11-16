@@ -36,7 +36,7 @@ export class FakeFirestore {
     const result = this.queue.then(async () => {
       const writes = [];
       const tx = { get: (ref) => { if (writes.length) throw Error('Read after write'); return ref.get(); }, create: (ref, data) => writes.push([ref, data]),
-        update: (ref, data) => writes.push([ref, data]) };
+        set: (ref, data) => writes.push([ref, data]), update: (ref, data) => writes.push([ref, data]) };
       const result = await body(tx);
       for (const [ref, data] of writes) {
         const next = { ...this.records.get(ref.path) };

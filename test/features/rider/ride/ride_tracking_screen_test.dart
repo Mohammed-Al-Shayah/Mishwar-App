@@ -10,6 +10,7 @@ import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
+import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
@@ -91,7 +92,7 @@ void main() {
     repository = MockRideRepository();
     when(
       () => repository.cancelRide('ride'),
-    ).thenAnswer((_) async => const Right(unit));
+    ).thenAnswer((_) async => const Right(CancelRideResult()));
   });
   testWidgets(
     'searching shows rings, summary, rotating copy, and cancel confirmation',

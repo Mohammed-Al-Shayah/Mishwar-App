@@ -104,6 +104,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/decline_ride.dart'
     as _i100;
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart'
     as _i892;
+import 'package:mishwar/features/common/ride/domain/usecases/update_ride_status.dart'
+    as _i759;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart'
     as _i425;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart'
@@ -359,6 +361,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i892.RequestRide>(
       () => _i892.RequestRide(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i759.UpdateRideStatus>(
+      () => _i759.UpdateRideStatus(gh<_i118.RideRepository>()),
     );
     gh.lazySingleton<_i425.WatchActiveRideId>(
       () => _i425.WatchActiveRideId(gh<_i118.RideRepository>()),

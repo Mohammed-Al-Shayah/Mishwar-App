@@ -40,6 +40,17 @@ void main() {
       expect(model.rating, 5);
     }
   });
+  test('pending rating maps into entity and stays out of client writes', () {
+    final model = UserModel.fromJson({...json, 'pendingRatingRideId': 'ride'});
+    expect(model.toEntity().pendingRatingRideId, 'ride');
+    expect(UserModel.fromEntity(model.toEntity()).pendingRatingRideId, 'ride');
+    expect(model.toJson().containsKey('pendingRatingRideId'), isFalse);
+    expect(model.toEntity().copyWith(name: 'New').pendingRatingRideId, 'ride');
+    expect(
+      model.toEntity().copyWith(pendingRatingRideId: null).pendingRatingRideId,
+      isNull,
+    );
+  });
   test('snapshot id overrides payload id', () {
     final snapshot = MockDocument();
     when(() => snapshot.id).thenReturn('actual');

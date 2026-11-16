@@ -11,7 +11,10 @@ export const offerIsLive = (data: DocumentData, now: Timestamp) =>
   !!data.offeredTo && data.offerExpiresAt?.toMillis() > now.toMillis();
 
 function searchable(data: DocumentData | undefined, now: Timestamp): data is DocumentData {
-  return data?.status === 'searching' && now.toMillis() < data.searchExpiresAt.toMillis();
+  // Malformed rides (e.g. written by an admin tool without a deadline) are ignored, never crash the trigger.
+  const deadline = data?.searchExpiresAt;
+  return data?.status === 'searching' && deadline instanceof Timestamp && now.toMillis() < deadline.toMillis()
+    && !!data.pickup?.geopoint;
 }
 function distance(driver: DocumentData, ride: DocumentData) {
   const point = driver.location?.geopoint, pickup = ride.pickup.geopoint;

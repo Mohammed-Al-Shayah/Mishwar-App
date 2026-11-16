@@ -6,6 +6,7 @@ import 'package:mishwar/core/firebase/converters.dart';
 import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/data/repositories/ride_repository_impl.dart';
+import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mocktail/mocktail.dart';
@@ -39,6 +40,120 @@ Map<String, dynamic> rideJson() => {
   ),
 };
 void main() {
+  test('party snapshots and lifecycle dates round trip into domain', () {
+    final time = Timestamp.fromDate(DateTime.utc(2026, 11, 17));
+    final model = RideModel.fromJson({
+      ...rideJson(),
+      'driverInfo': {
+        'name': 'Driver',
+        'phone': '+962780000002',
+        'rating': 4.8,
+        'vehicle': {
+          'type': 'comfort',
+          'make': 'Toyota',
+          'model': 'Corolla',
+          'color': 'White',
+          'plate': '12-34567',
+        },
+      },
+      'riderInfo': {'name': 'Rider', 'phone': '+962780000001'},
+      'arrivingAt': time,
+      'arrivedAt': time,
+      'startedAt': time,
+      'completedAt': time,
+      'fare': {'estimated': 2.5, 'final': 3.75, 'currency': 'JOD'},
+    });
+    expect(RideModel.fromJson(model.toJson()), model);
+    final entity = model.toEntity();
+    expect(entity.driverInfo!.name, 'Driver');
+    expect(entity.driverInfo!.phone, '+962780000002');
+    expect(entity.driverInfo!.rating, 4.8);
+    expect(entity.driverInfo!.vehicle!.type, VehicleType.comfort);
+    expect(entity.driverInfo!.vehicle!.plate, '12-34567');
+    expect(entity.riderInfo!.rating, 5);
+    expect(entity.riderInfo!.vehicle, isNull);
+    expect(entity.arrivingAt, time.toDate().toUtc());
+    expect(entity.arrivedAt, time.toDate().toUtc());
+    expect(entity.startedAt, time.toDate().toUtc());
+    expect(entity.completedAt, time.toDate().toUtc());
+    expect(entity.fareFinalFils, 3750);
+    final legacy = RideModel.fromJson(rideJson()).toEntity();
+    expect(legacy.driverInfo, isNull);
+    expect(legacy.riderInfo, isNull);
+    expect(legacy.startedAt, isNull);
+  });
+  test(
+    'update status serializes status and maps typed action failures',
+    () async {
+      final source = MockSource();
+      final repository = RideRepositoryImpl(source);
+      when(
+        () => source.updateStatus('ride', 'in_progress'),
+      ).thenAnswer((_) async {});
+      expect(
+        await repository.updateStatus('ride', RideStatus.inProgress),
+        const Right<Failure, Unit>(unit),
+      );
+      verify(() => source.updateStatus('ride', 'in_progress')).called(1);
+      for (final entry in {
+        'too-far': RideActionFailureReason.tooFar,
+        'invalid-transition': RideActionFailureReason.invalidTransition,
+      }.entries) {
+        when(() => source.updateStatus('ride', 'arrived')).thenThrow(
+          FirebaseFunctionsException(
+            message: 'Rejected',
+            code: 'failed-precondition',
+            details: {'reason': entry.key},
+          ),
+        );
+        expect(
+          await repository.updateStatus('ride', RideStatus.arrived),
+          Left<Failure, Unit>(RideActionFailure(entry.value)),
+        );
+      }
+      for (final code in [
+        'permission-denied',
+        'unavailable',
+        'failed-precondition',
+      ]) {
+        when(() => source.updateStatus('ride', 'arrived')).thenThrow(
+          FirebaseFunctionsException(
+            message: 'Rejected',
+            code: code,
+            details: const {'reason': 'unknown'},
+          ),
+        );
+        final failure = (await repository.updateStatus(
+          'ride',
+          RideStatus.arrived,
+        )).getLeft().toNullable();
+        expect(
+          failure,
+          code == 'unavailable' ? isA<NetworkFailure>() : isA<ServerFailure>(),
+        );
+      }
+    },
+  );
+  test('cancel exposes re-dispatch result and maps errors', () async {
+    final source = MockSource();
+    final repository = RideRepositoryImpl(source);
+    for (final value in [false, true]) {
+      when(() => source.cancel('ride')).thenAnswer((_) async => value);
+      expect(
+        await repository.cancelRide('ride'),
+        Right<Failure, CancelRideResult>(CancelRideResult(redispatched: value)),
+      );
+    }
+    when(
+      () => source.cancel('ride'),
+    ).thenThrow(
+      FirebaseFunctionsException(message: 'Rejected', code: 'unavailable'),
+    );
+    expect(
+      (await repository.cancelRide('ride')).getLeft().toNullable(),
+      isA<NetworkFailure>(),
+    );
+  });
   test('accept and decline map success and offer failures', () async {
     final source = MockSource();
     final repository = RideRepositoryImpl(source);
@@ -194,10 +309,10 @@ void main() {
         () => source.watch('ride'),
       ).thenAnswer((_) => Stream.error(Exception('offline')));
       expect((await repository.watchRide('ride').first).isLeft(), isTrue);
-      when(() => source.cancel('ride')).thenAnswer((_) async {});
+      when(() => source.cancel('ride')).thenAnswer((_) async => false);
       expect(
         await repository.cancelRide('ride'),
-        const Right<Failure, Unit>(unit),
+        const Right<Failure, CancelRideResult>(CancelRideResult()),
       );
       verify(() => source.cancel('ride')).called(1);
     },

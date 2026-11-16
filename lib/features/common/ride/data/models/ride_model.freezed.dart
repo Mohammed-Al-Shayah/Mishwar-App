@@ -553,7 +553,7 @@ as double?,
 /// @nodoc
 mixin _$RideModel {
 
- String get id; String get riderId;@RideStatusConverter() RideStatus get status; VehicleType get vehicleType; RidePlaceModel get pickup; RidePlaceModel get dropoff; RideFareModel get fare;@TimestampConverter() DateTime get createdAt; String? get driverId; RouteModel? get route; String? get cancelledBy;@TimestampConverter() DateTime? get searchExpiresAt;@TimestampConverter() DateTime? get offerExpiresAt; int? get offerDistanceMeters;
+ String get id; String get riderId;@RideStatusConverter() RideStatus get status; VehicleType get vehicleType; RidePlaceModel get pickup; RidePlaceModel get dropoff; RideFareModel get fare;@TimestampConverter() DateTime get createdAt; String? get driverId; RidePartyInfoModel? get driverInfo; RidePartyInfoModel? get riderInfo;@TimestampConverter() DateTime? get arrivingAt;@TimestampConverter() DateTime? get arrivedAt;@TimestampConverter() DateTime? get startedAt;@TimestampConverter() DateTime? get completedAt; RouteModel? get route; String? get cancelledBy;@TimestampConverter() DateTime? get searchExpiresAt;@TimestampConverter() DateTime? get offerExpiresAt; int? get offerDistanceMeters;
 /// Create a copy of RideModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -566,16 +566,16 @@ $RideModelCopyWith<RideModel> get copyWith => _$RideModelCopyWithImpl<RideModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RideModel&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.status, status) || other.status == status)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.pickup, pickup) || other.pickup == pickup)&&(identical(other.dropoff, dropoff) || other.dropoff == dropoff)&&(identical(other.fare, fare) || other.fare == fare)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.route, route) || other.route == route)&&(identical(other.cancelledBy, cancelledBy) || other.cancelledBy == cancelledBy)&&(identical(other.searchExpiresAt, searchExpiresAt) || other.searchExpiresAt == searchExpiresAt)&&(identical(other.offerExpiresAt, offerExpiresAt) || other.offerExpiresAt == offerExpiresAt)&&(identical(other.offerDistanceMeters, offerDistanceMeters) || other.offerDistanceMeters == offerDistanceMeters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RideModel&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.status, status) || other.status == status)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.pickup, pickup) || other.pickup == pickup)&&(identical(other.dropoff, dropoff) || other.dropoff == dropoff)&&(identical(other.fare, fare) || other.fare == fare)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.driverInfo, driverInfo) || other.driverInfo == driverInfo)&&(identical(other.riderInfo, riderInfo) || other.riderInfo == riderInfo)&&(identical(other.arrivingAt, arrivingAt) || other.arrivingAt == arrivingAt)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.route, route) || other.route == route)&&(identical(other.cancelledBy, cancelledBy) || other.cancelledBy == cancelledBy)&&(identical(other.searchExpiresAt, searchExpiresAt) || other.searchExpiresAt == searchExpiresAt)&&(identical(other.offerExpiresAt, offerExpiresAt) || other.offerExpiresAt == offerExpiresAt)&&(identical(other.offerDistanceMeters, offerDistanceMeters) || other.offerDistanceMeters == offerDistanceMeters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,riderId,status,vehicleType,pickup,dropoff,fare,createdAt,driverId,route,cancelledBy,searchExpiresAt,offerExpiresAt,offerDistanceMeters);
+int get hashCode => Object.hashAll([runtimeType,id,riderId,status,vehicleType,pickup,dropoff,fare,createdAt,driverId,driverInfo,riderInfo,arrivingAt,arrivedAt,startedAt,completedAt,route,cancelledBy,searchExpiresAt,offerExpiresAt,offerDistanceMeters]);
 
 @override
 String toString() {
-  return 'RideModel(id: $id, riderId: $riderId, status: $status, vehicleType: $vehicleType, pickup: $pickup, dropoff: $dropoff, fare: $fare, createdAt: $createdAt, driverId: $driverId, route: $route, cancelledBy: $cancelledBy, searchExpiresAt: $searchExpiresAt, offerExpiresAt: $offerExpiresAt, offerDistanceMeters: $offerDistanceMeters)';
+  return 'RideModel(id: $id, riderId: $riderId, status: $status, vehicleType: $vehicleType, pickup: $pickup, dropoff: $dropoff, fare: $fare, createdAt: $createdAt, driverId: $driverId, driverInfo: $driverInfo, riderInfo: $riderInfo, arrivingAt: $arrivingAt, arrivedAt: $arrivedAt, startedAt: $startedAt, completedAt: $completedAt, route: $route, cancelledBy: $cancelledBy, searchExpiresAt: $searchExpiresAt, offerExpiresAt: $offerExpiresAt, offerDistanceMeters: $offerDistanceMeters)';
 }
 
 
@@ -586,11 +586,11 @@ abstract mixin class $RideModelCopyWith<$Res>  {
   factory $RideModelCopyWith(RideModel value, $Res Function(RideModel) _then) = _$RideModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String riderId,@RideStatusConverter() RideStatus status, VehicleType vehicleType, RidePlaceModel pickup, RidePlaceModel dropoff, RideFareModel fare,@TimestampConverter() DateTime createdAt, String? driverId, RouteModel? route, String? cancelledBy,@TimestampConverter() DateTime? searchExpiresAt,@TimestampConverter() DateTime? offerExpiresAt, int? offerDistanceMeters
+ String id, String riderId,@RideStatusConverter() RideStatus status, VehicleType vehicleType, RidePlaceModel pickup, RidePlaceModel dropoff, RideFareModel fare,@TimestampConverter() DateTime createdAt, String? driverId, RidePartyInfoModel? driverInfo, RidePartyInfoModel? riderInfo,@TimestampConverter() DateTime? arrivingAt,@TimestampConverter() DateTime? arrivedAt,@TimestampConverter() DateTime? startedAt,@TimestampConverter() DateTime? completedAt, RouteModel? route, String? cancelledBy,@TimestampConverter() DateTime? searchExpiresAt,@TimestampConverter() DateTime? offerExpiresAt, int? offerDistanceMeters
 });
 
 
-$RidePlaceModelCopyWith<$Res> get pickup;$RidePlaceModelCopyWith<$Res> get dropoff;$RideFareModelCopyWith<$Res> get fare;$RouteModelCopyWith<$Res>? get route;
+$RidePlaceModelCopyWith<$Res> get pickup;$RidePlaceModelCopyWith<$Res> get dropoff;$RideFareModelCopyWith<$Res> get fare;$RidePartyInfoModelCopyWith<$Res>? get driverInfo;$RidePartyInfoModelCopyWith<$Res>? get riderInfo;$RouteModelCopyWith<$Res>? get route;
 
 }
 /// @nodoc
@@ -603,7 +603,7 @@ class _$RideModelCopyWithImpl<$Res>
 
 /// Create a copy of RideModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? riderId = null,Object? status = null,Object? vehicleType = null,Object? pickup = null,Object? dropoff = null,Object? fare = null,Object? createdAt = null,Object? driverId = freezed,Object? route = freezed,Object? cancelledBy = freezed,Object? searchExpiresAt = freezed,Object? offerExpiresAt = freezed,Object? offerDistanceMeters = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? riderId = null,Object? status = null,Object? vehicleType = null,Object? pickup = null,Object? dropoff = null,Object? fare = null,Object? createdAt = null,Object? driverId = freezed,Object? driverInfo = freezed,Object? riderInfo = freezed,Object? arrivingAt = freezed,Object? arrivedAt = freezed,Object? startedAt = freezed,Object? completedAt = freezed,Object? route = freezed,Object? cancelledBy = freezed,Object? searchExpiresAt = freezed,Object? offerExpiresAt = freezed,Object? offerDistanceMeters = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,riderId: null == riderId ? _self.riderId : riderId // ignore: cast_nullable_to_non_nullable
@@ -614,7 +614,13 @@ as RidePlaceModel,dropoff: null == dropoff ? _self.dropoff : dropoff // ignore: 
 as RidePlaceModel,fare: null == fare ? _self.fare : fare // ignore: cast_nullable_to_non_nullable
 as RideFareModel,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,driverId: freezed == driverId ? _self.driverId : driverId // ignore: cast_nullable_to_non_nullable
-as String?,route: freezed == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
+as String?,driverInfo: freezed == driverInfo ? _self.driverInfo : driverInfo // ignore: cast_nullable_to_non_nullable
+as RidePartyInfoModel?,riderInfo: freezed == riderInfo ? _self.riderInfo : riderInfo // ignore: cast_nullable_to_non_nullable
+as RidePartyInfoModel?,arrivingAt: freezed == arrivingAt ? _self.arrivingAt : arrivingAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,arrivedAt: freezed == arrivedAt ? _self.arrivedAt : arrivedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,completedAt: freezed == completedAt ? _self.completedAt : completedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,route: freezed == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
 as RouteModel?,cancelledBy: freezed == cancelledBy ? _self.cancelledBy : cancelledBy // ignore: cast_nullable_to_non_nullable
 as String?,searchExpiresAt: freezed == searchExpiresAt ? _self.searchExpiresAt : searchExpiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,offerExpiresAt: freezed == offerExpiresAt ? _self.offerExpiresAt : offerExpiresAt // ignore: cast_nullable_to_non_nullable
@@ -648,6 +654,30 @@ $RideFareModelCopyWith<$Res> get fare {
   
   return $RideFareModelCopyWith<$Res>(_self.fare, (value) {
     return _then(_self.copyWith(fare: value));
+  });
+}/// Create a copy of RideModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RidePartyInfoModelCopyWith<$Res>? get driverInfo {
+    if (_self.driverInfo == null) {
+    return null;
+  }
+
+  return $RidePartyInfoModelCopyWith<$Res>(_self.driverInfo!, (value) {
+    return _then(_self.copyWith(driverInfo: value));
+  });
+}/// Create a copy of RideModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RidePartyInfoModelCopyWith<$Res>? get riderInfo {
+    if (_self.riderInfo == null) {
+    return null;
+  }
+
+  return $RidePartyInfoModelCopyWith<$Res>(_self.riderInfo!, (value) {
+    return _then(_self.copyWith(riderInfo: value));
   });
 }/// Create a copy of RideModel
 /// with the given fields replaced by the non-null parameter values.
@@ -743,10 +773,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String riderId, @RideStatusConverter()  RideStatus status,  VehicleType vehicleType,  RidePlaceModel pickup,  RidePlaceModel dropoff,  RideFareModel fare, @TimestampConverter()  DateTime createdAt,  String? driverId,  RouteModel? route,  String? cancelledBy, @TimestampConverter()  DateTime? searchExpiresAt, @TimestampConverter()  DateTime? offerExpiresAt,  int? offerDistanceMeters)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String riderId, @RideStatusConverter()  RideStatus status,  VehicleType vehicleType,  RidePlaceModel pickup,  RidePlaceModel dropoff,  RideFareModel fare, @TimestampConverter()  DateTime createdAt,  String? driverId,  RidePartyInfoModel? driverInfo,  RidePartyInfoModel? riderInfo, @TimestampConverter()  DateTime? arrivingAt, @TimestampConverter()  DateTime? arrivedAt, @TimestampConverter()  DateTime? startedAt, @TimestampConverter()  DateTime? completedAt,  RouteModel? route,  String? cancelledBy, @TimestampConverter()  DateTime? searchExpiresAt, @TimestampConverter()  DateTime? offerExpiresAt,  int? offerDistanceMeters)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RideModel() when $default != null:
-return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pickup,_that.dropoff,_that.fare,_that.createdAt,_that.driverId,_that.route,_that.cancelledBy,_that.searchExpiresAt,_that.offerExpiresAt,_that.offerDistanceMeters);case _:
+return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pickup,_that.dropoff,_that.fare,_that.createdAt,_that.driverId,_that.driverInfo,_that.riderInfo,_that.arrivingAt,_that.arrivedAt,_that.startedAt,_that.completedAt,_that.route,_that.cancelledBy,_that.searchExpiresAt,_that.offerExpiresAt,_that.offerDistanceMeters);case _:
   return orElse();
 
 }
@@ -764,10 +794,10 @@ return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pick
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String riderId, @RideStatusConverter()  RideStatus status,  VehicleType vehicleType,  RidePlaceModel pickup,  RidePlaceModel dropoff,  RideFareModel fare, @TimestampConverter()  DateTime createdAt,  String? driverId,  RouteModel? route,  String? cancelledBy, @TimestampConverter()  DateTime? searchExpiresAt, @TimestampConverter()  DateTime? offerExpiresAt,  int? offerDistanceMeters)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String riderId, @RideStatusConverter()  RideStatus status,  VehicleType vehicleType,  RidePlaceModel pickup,  RidePlaceModel dropoff,  RideFareModel fare, @TimestampConverter()  DateTime createdAt,  String? driverId,  RidePartyInfoModel? driverInfo,  RidePartyInfoModel? riderInfo, @TimestampConverter()  DateTime? arrivingAt, @TimestampConverter()  DateTime? arrivedAt, @TimestampConverter()  DateTime? startedAt, @TimestampConverter()  DateTime? completedAt,  RouteModel? route,  String? cancelledBy, @TimestampConverter()  DateTime? searchExpiresAt, @TimestampConverter()  DateTime? offerExpiresAt,  int? offerDistanceMeters)  $default,) {final _that = this;
 switch (_that) {
 case _RideModel():
-return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pickup,_that.dropoff,_that.fare,_that.createdAt,_that.driverId,_that.route,_that.cancelledBy,_that.searchExpiresAt,_that.offerExpiresAt,_that.offerDistanceMeters);case _:
+return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pickup,_that.dropoff,_that.fare,_that.createdAt,_that.driverId,_that.driverInfo,_that.riderInfo,_that.arrivingAt,_that.arrivedAt,_that.startedAt,_that.completedAt,_that.route,_that.cancelledBy,_that.searchExpiresAt,_that.offerExpiresAt,_that.offerDistanceMeters);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -784,10 +814,10 @@ return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pick
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String riderId, @RideStatusConverter()  RideStatus status,  VehicleType vehicleType,  RidePlaceModel pickup,  RidePlaceModel dropoff,  RideFareModel fare, @TimestampConverter()  DateTime createdAt,  String? driverId,  RouteModel? route,  String? cancelledBy, @TimestampConverter()  DateTime? searchExpiresAt, @TimestampConverter()  DateTime? offerExpiresAt,  int? offerDistanceMeters)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String riderId, @RideStatusConverter()  RideStatus status,  VehicleType vehicleType,  RidePlaceModel pickup,  RidePlaceModel dropoff,  RideFareModel fare, @TimestampConverter()  DateTime createdAt,  String? driverId,  RidePartyInfoModel? driverInfo,  RidePartyInfoModel? riderInfo, @TimestampConverter()  DateTime? arrivingAt, @TimestampConverter()  DateTime? arrivedAt, @TimestampConverter()  DateTime? startedAt, @TimestampConverter()  DateTime? completedAt,  RouteModel? route,  String? cancelledBy, @TimestampConverter()  DateTime? searchExpiresAt, @TimestampConverter()  DateTime? offerExpiresAt,  int? offerDistanceMeters)?  $default,) {final _that = this;
 switch (_that) {
 case _RideModel() when $default != null:
-return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pickup,_that.dropoff,_that.fare,_that.createdAt,_that.driverId,_that.route,_that.cancelledBy,_that.searchExpiresAt,_that.offerExpiresAt,_that.offerDistanceMeters);case _:
+return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pickup,_that.dropoff,_that.fare,_that.createdAt,_that.driverId,_that.driverInfo,_that.riderInfo,_that.arrivingAt,_that.arrivedAt,_that.startedAt,_that.completedAt,_that.route,_that.cancelledBy,_that.searchExpiresAt,_that.offerExpiresAt,_that.offerDistanceMeters);case _:
   return null;
 
 }
@@ -799,7 +829,7 @@ return $default(_that.id,_that.riderId,_that.status,_that.vehicleType,_that.pick
 
 @JsonSerializable(explicitToJson: true)
 class _RideModel extends RideModel {
-  const _RideModel({required this.id, required this.riderId, @RideStatusConverter() required this.status, required this.vehicleType, required this.pickup, required this.dropoff, required this.fare, @TimestampConverter() required this.createdAt, this.driverId, this.route, this.cancelledBy, @TimestampConverter() this.searchExpiresAt, @TimestampConverter() this.offerExpiresAt, this.offerDistanceMeters}): super._();
+  const _RideModel({required this.id, required this.riderId, @RideStatusConverter() required this.status, required this.vehicleType, required this.pickup, required this.dropoff, required this.fare, @TimestampConverter() required this.createdAt, this.driverId, this.driverInfo, this.riderInfo, @TimestampConverter() this.arrivingAt, @TimestampConverter() this.arrivedAt, @TimestampConverter() this.startedAt, @TimestampConverter() this.completedAt, this.route, this.cancelledBy, @TimestampConverter() this.searchExpiresAt, @TimestampConverter() this.offerExpiresAt, this.offerDistanceMeters}): super._();
   factory _RideModel.fromJson(Map<String, dynamic> json) => _$RideModelFromJson(json);
 
 @override final  String id;
@@ -811,6 +841,12 @@ class _RideModel extends RideModel {
 @override final  RideFareModel fare;
 @override@TimestampConverter() final  DateTime createdAt;
 @override final  String? driverId;
+@override final  RidePartyInfoModel? driverInfo;
+@override final  RidePartyInfoModel? riderInfo;
+@override@TimestampConverter() final  DateTime? arrivingAt;
+@override@TimestampConverter() final  DateTime? arrivedAt;
+@override@TimestampConverter() final  DateTime? startedAt;
+@override@TimestampConverter() final  DateTime? completedAt;
 @override final  RouteModel? route;
 @override final  String? cancelledBy;
 @override@TimestampConverter() final  DateTime? searchExpiresAt;
@@ -830,16 +866,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RideModel&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.status, status) || other.status == status)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.pickup, pickup) || other.pickup == pickup)&&(identical(other.dropoff, dropoff) || other.dropoff == dropoff)&&(identical(other.fare, fare) || other.fare == fare)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.route, route) || other.route == route)&&(identical(other.cancelledBy, cancelledBy) || other.cancelledBy == cancelledBy)&&(identical(other.searchExpiresAt, searchExpiresAt) || other.searchExpiresAt == searchExpiresAt)&&(identical(other.offerExpiresAt, offerExpiresAt) || other.offerExpiresAt == offerExpiresAt)&&(identical(other.offerDistanceMeters, offerDistanceMeters) || other.offerDistanceMeters == offerDistanceMeters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RideModel&&(identical(other.id, id) || other.id == id)&&(identical(other.riderId, riderId) || other.riderId == riderId)&&(identical(other.status, status) || other.status == status)&&(identical(other.vehicleType, vehicleType) || other.vehicleType == vehicleType)&&(identical(other.pickup, pickup) || other.pickup == pickup)&&(identical(other.dropoff, dropoff) || other.dropoff == dropoff)&&(identical(other.fare, fare) || other.fare == fare)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.driverId, driverId) || other.driverId == driverId)&&(identical(other.driverInfo, driverInfo) || other.driverInfo == driverInfo)&&(identical(other.riderInfo, riderInfo) || other.riderInfo == riderInfo)&&(identical(other.arrivingAt, arrivingAt) || other.arrivingAt == arrivingAt)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.route, route) || other.route == route)&&(identical(other.cancelledBy, cancelledBy) || other.cancelledBy == cancelledBy)&&(identical(other.searchExpiresAt, searchExpiresAt) || other.searchExpiresAt == searchExpiresAt)&&(identical(other.offerExpiresAt, offerExpiresAt) || other.offerExpiresAt == offerExpiresAt)&&(identical(other.offerDistanceMeters, offerDistanceMeters) || other.offerDistanceMeters == offerDistanceMeters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,riderId,status,vehicleType,pickup,dropoff,fare,createdAt,driverId,route,cancelledBy,searchExpiresAt,offerExpiresAt,offerDistanceMeters);
+int get hashCode => Object.hashAll([runtimeType,id,riderId,status,vehicleType,pickup,dropoff,fare,createdAt,driverId,driverInfo,riderInfo,arrivingAt,arrivedAt,startedAt,completedAt,route,cancelledBy,searchExpiresAt,offerExpiresAt,offerDistanceMeters]);
 
 @override
 String toString() {
-  return 'RideModel(id: $id, riderId: $riderId, status: $status, vehicleType: $vehicleType, pickup: $pickup, dropoff: $dropoff, fare: $fare, createdAt: $createdAt, driverId: $driverId, route: $route, cancelledBy: $cancelledBy, searchExpiresAt: $searchExpiresAt, offerExpiresAt: $offerExpiresAt, offerDistanceMeters: $offerDistanceMeters)';
+  return 'RideModel(id: $id, riderId: $riderId, status: $status, vehicleType: $vehicleType, pickup: $pickup, dropoff: $dropoff, fare: $fare, createdAt: $createdAt, driverId: $driverId, driverInfo: $driverInfo, riderInfo: $riderInfo, arrivingAt: $arrivingAt, arrivedAt: $arrivedAt, startedAt: $startedAt, completedAt: $completedAt, route: $route, cancelledBy: $cancelledBy, searchExpiresAt: $searchExpiresAt, offerExpiresAt: $offerExpiresAt, offerDistanceMeters: $offerDistanceMeters)';
 }
 
 
@@ -850,11 +886,11 @@ abstract mixin class _$RideModelCopyWith<$Res> implements $RideModelCopyWith<$Re
   factory _$RideModelCopyWith(_RideModel value, $Res Function(_RideModel) _then) = __$RideModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String riderId,@RideStatusConverter() RideStatus status, VehicleType vehicleType, RidePlaceModel pickup, RidePlaceModel dropoff, RideFareModel fare,@TimestampConverter() DateTime createdAt, String? driverId, RouteModel? route, String? cancelledBy,@TimestampConverter() DateTime? searchExpiresAt,@TimestampConverter() DateTime? offerExpiresAt, int? offerDistanceMeters
+ String id, String riderId,@RideStatusConverter() RideStatus status, VehicleType vehicleType, RidePlaceModel pickup, RidePlaceModel dropoff, RideFareModel fare,@TimestampConverter() DateTime createdAt, String? driverId, RidePartyInfoModel? driverInfo, RidePartyInfoModel? riderInfo,@TimestampConverter() DateTime? arrivingAt,@TimestampConverter() DateTime? arrivedAt,@TimestampConverter() DateTime? startedAt,@TimestampConverter() DateTime? completedAt, RouteModel? route, String? cancelledBy,@TimestampConverter() DateTime? searchExpiresAt,@TimestampConverter() DateTime? offerExpiresAt, int? offerDistanceMeters
 });
 
 
-@override $RidePlaceModelCopyWith<$Res> get pickup;@override $RidePlaceModelCopyWith<$Res> get dropoff;@override $RideFareModelCopyWith<$Res> get fare;@override $RouteModelCopyWith<$Res>? get route;
+@override $RidePlaceModelCopyWith<$Res> get pickup;@override $RidePlaceModelCopyWith<$Res> get dropoff;@override $RideFareModelCopyWith<$Res> get fare;@override $RidePartyInfoModelCopyWith<$Res>? get driverInfo;@override $RidePartyInfoModelCopyWith<$Res>? get riderInfo;@override $RouteModelCopyWith<$Res>? get route;
 
 }
 /// @nodoc
@@ -867,7 +903,7 @@ class __$RideModelCopyWithImpl<$Res>
 
 /// Create a copy of RideModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? riderId = null,Object? status = null,Object? vehicleType = null,Object? pickup = null,Object? dropoff = null,Object? fare = null,Object? createdAt = null,Object? driverId = freezed,Object? route = freezed,Object? cancelledBy = freezed,Object? searchExpiresAt = freezed,Object? offerExpiresAt = freezed,Object? offerDistanceMeters = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? riderId = null,Object? status = null,Object? vehicleType = null,Object? pickup = null,Object? dropoff = null,Object? fare = null,Object? createdAt = null,Object? driverId = freezed,Object? driverInfo = freezed,Object? riderInfo = freezed,Object? arrivingAt = freezed,Object? arrivedAt = freezed,Object? startedAt = freezed,Object? completedAt = freezed,Object? route = freezed,Object? cancelledBy = freezed,Object? searchExpiresAt = freezed,Object? offerExpiresAt = freezed,Object? offerDistanceMeters = freezed,}) {
   return _then(_RideModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,riderId: null == riderId ? _self.riderId : riderId // ignore: cast_nullable_to_non_nullable
@@ -878,7 +914,13 @@ as RidePlaceModel,dropoff: null == dropoff ? _self.dropoff : dropoff // ignore: 
 as RidePlaceModel,fare: null == fare ? _self.fare : fare // ignore: cast_nullable_to_non_nullable
 as RideFareModel,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,driverId: freezed == driverId ? _self.driverId : driverId // ignore: cast_nullable_to_non_nullable
-as String?,route: freezed == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
+as String?,driverInfo: freezed == driverInfo ? _self.driverInfo : driverInfo // ignore: cast_nullable_to_non_nullable
+as RidePartyInfoModel?,riderInfo: freezed == riderInfo ? _self.riderInfo : riderInfo // ignore: cast_nullable_to_non_nullable
+as RidePartyInfoModel?,arrivingAt: freezed == arrivingAt ? _self.arrivingAt : arrivingAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,arrivedAt: freezed == arrivedAt ? _self.arrivedAt : arrivedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,completedAt: freezed == completedAt ? _self.completedAt : completedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,route: freezed == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
 as RouteModel?,cancelledBy: freezed == cancelledBy ? _self.cancelledBy : cancelledBy // ignore: cast_nullable_to_non_nullable
 as String?,searchExpiresAt: freezed == searchExpiresAt ? _self.searchExpiresAt : searchExpiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,offerExpiresAt: freezed == offerExpiresAt ? _self.offerExpiresAt : offerExpiresAt // ignore: cast_nullable_to_non_nullable
@@ -918,6 +960,30 @@ $RideFareModelCopyWith<$Res> get fare {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
+$RidePartyInfoModelCopyWith<$Res>? get driverInfo {
+    if (_self.driverInfo == null) {
+    return null;
+  }
+
+  return $RidePartyInfoModelCopyWith<$Res>(_self.driverInfo!, (value) {
+    return _then(_self.copyWith(driverInfo: value));
+  });
+}/// Create a copy of RideModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RidePartyInfoModelCopyWith<$Res>? get riderInfo {
+    if (_self.riderInfo == null) {
+    return null;
+  }
+
+  return $RidePartyInfoModelCopyWith<$Res>(_self.riderInfo!, (value) {
+    return _then(_self.copyWith(riderInfo: value));
+  });
+}/// Create a copy of RideModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
 $RouteModelCopyWith<$Res>? get route {
     if (_self.route == null) {
     return null;
@@ -925,6 +991,302 @@ $RouteModelCopyWith<$Res>? get route {
 
   return $RouteModelCopyWith<$Res>(_self.route!, (value) {
     return _then(_self.copyWith(route: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$RidePartyInfoModel {
+
+ String get name; String get phone; double get rating; VehicleModel? get vehicle;
+/// Create a copy of RidePartyInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RidePartyInfoModelCopyWith<RidePartyInfoModel> get copyWith => _$RidePartyInfoModelCopyWithImpl<RidePartyInfoModel>(this as RidePartyInfoModel, _$identity);
+
+  /// Serializes this RidePartyInfoModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RidePartyInfoModel&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,phone,rating,vehicle);
+
+@override
+String toString() {
+  return 'RidePartyInfoModel(name: $name, phone: $phone, rating: $rating, vehicle: $vehicle)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RidePartyInfoModelCopyWith<$Res>  {
+  factory $RidePartyInfoModelCopyWith(RidePartyInfoModel value, $Res Function(RidePartyInfoModel) _then) = _$RidePartyInfoModelCopyWithImpl;
+@useResult
+$Res call({
+ String name, String phone, double rating, VehicleModel? vehicle
+});
+
+
+$VehicleModelCopyWith<$Res>? get vehicle;
+
+}
+/// @nodoc
+class _$RidePartyInfoModelCopyWithImpl<$Res>
+    implements $RidePartyInfoModelCopyWith<$Res> {
+  _$RidePartyInfoModelCopyWithImpl(this._self, this._then);
+
+  final RidePartyInfoModel _self;
+  final $Res Function(RidePartyInfoModel) _then;
+
+/// Create a copy of RidePartyInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? phone = null,Object? rating = null,Object? vehicle = freezed,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
+as double,vehicle: freezed == vehicle ? _self.vehicle : vehicle // ignore: cast_nullable_to_non_nullable
+as VehicleModel?,
+  ));
+}
+/// Create a copy of RidePartyInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$VehicleModelCopyWith<$Res>? get vehicle {
+    if (_self.vehicle == null) {
+    return null;
+  }
+
+  return $VehicleModelCopyWith<$Res>(_self.vehicle!, (value) {
+    return _then(_self.copyWith(vehicle: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [RidePartyInfoModel].
+extension RidePartyInfoModelPatterns on RidePartyInfoModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RidePartyInfoModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RidePartyInfoModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RidePartyInfoModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _RidePartyInfoModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RidePartyInfoModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RidePartyInfoModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String phone,  double rating,  VehicleModel? vehicle)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RidePartyInfoModel() when $default != null:
+return $default(_that.name,_that.phone,_that.rating,_that.vehicle);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String phone,  double rating,  VehicleModel? vehicle)  $default,) {final _that = this;
+switch (_that) {
+case _RidePartyInfoModel():
+return $default(_that.name,_that.phone,_that.rating,_that.vehicle);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String phone,  double rating,  VehicleModel? vehicle)?  $default,) {final _that = this;
+switch (_that) {
+case _RidePartyInfoModel() when $default != null:
+return $default(_that.name,_that.phone,_that.rating,_that.vehicle);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true)
+class _RidePartyInfoModel extends RidePartyInfoModel {
+  const _RidePartyInfoModel({required this.name, required this.phone, this.rating = 5.0, this.vehicle}): super._();
+  factory _RidePartyInfoModel.fromJson(Map<String, dynamic> json) => _$RidePartyInfoModelFromJson(json);
+
+@override final  String name;
+@override final  String phone;
+@override@JsonKey() final  double rating;
+@override final  VehicleModel? vehicle;
+
+/// Create a copy of RidePartyInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RidePartyInfoModelCopyWith<_RidePartyInfoModel> get copyWith => __$RidePartyInfoModelCopyWithImpl<_RidePartyInfoModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RidePartyInfoModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RidePartyInfoModel&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,phone,rating,vehicle);
+
+@override
+String toString() {
+  return 'RidePartyInfoModel(name: $name, phone: $phone, rating: $rating, vehicle: $vehicle)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RidePartyInfoModelCopyWith<$Res> implements $RidePartyInfoModelCopyWith<$Res> {
+  factory _$RidePartyInfoModelCopyWith(_RidePartyInfoModel value, $Res Function(_RidePartyInfoModel) _then) = __$RidePartyInfoModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String phone, double rating, VehicleModel? vehicle
+});
+
+
+@override $VehicleModelCopyWith<$Res>? get vehicle;
+
+}
+/// @nodoc
+class __$RidePartyInfoModelCopyWithImpl<$Res>
+    implements _$RidePartyInfoModelCopyWith<$Res> {
+  __$RidePartyInfoModelCopyWithImpl(this._self, this._then);
+
+  final _RidePartyInfoModel _self;
+  final $Res Function(_RidePartyInfoModel) _then;
+
+/// Create a copy of RidePartyInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? phone = null,Object? rating = null,Object? vehicle = freezed,}) {
+  return _then(_RidePartyInfoModel(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
+as double,vehicle: freezed == vehicle ? _self.vehicle : vehicle // ignore: cast_nullable_to_non_nullable
+as VehicleModel?,
+  ));
+}
+
+/// Create a copy of RidePartyInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$VehicleModelCopyWith<$Res>? get vehicle {
+    if (_self.vehicle == null) {
+    return null;
+  }
+
+  return $VehicleModelCopyWith<$Res>(_self.vehicle!, (value) {
+    return _then(_self.copyWith(vehicle: value));
   });
 }
 }

@@ -15,8 +15,18 @@ class RideRemoteDataSource {
     return result.data['rideId'] as String;
   }
 
-  Future<void> cancel(String id) async {
-    await _functions.httpsCallable('cancelRide').call<void>({'rideId': id});
+  Future<bool> cancel(String id) async {
+    final result = await _functions
+        .httpsCallable('cancelRide')
+        .call<Map<String, dynamic>>({'rideId': id});
+    return result.data['redispatched'] == true;
+  }
+
+  Future<void> updateStatus(String id, String status) async {
+    await _functions.httpsCallable('updateRideStatus').call<void>({
+      'rideId': id,
+      'status': status,
+    });
   }
 
   Future<void> accept(String id) async {
