@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_icons.dart';
@@ -16,8 +17,11 @@ import 'package:mishwar/core/widgets/mw_search_pill.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/form_state.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/home_cubit.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
+import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
+import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 
 class RiderHomeScreen extends StatefulWidget {
   const RiderHomeScreen({this.mapBuilder, super.key});
@@ -66,6 +70,38 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
         setState(() => _sheetHeight = height);
       }
     });
+  }
+
+  Future<void> _searchDestination() async {
+    final position = context.read<RiderHomeCubit>().state.position;
+    final details = await context.push<PlaceDetails>(
+      '/rider/search',
+      extra: DestinationSearchParams(
+        position: position,
+        language: Localizations.localeOf(context).languageCode,
+      ),
+    );
+    if (!mounted || details == null) return;
+    final pickup = context.read<RiderHomeCubit>().state.position ?? position;
+    if (pickup == null) {
+      // A real fix is required to create a ride draft.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.locationPermissionHint)),
+      );
+      return;
+    }
+    final label = context.l10n.currentLocation;
+    await context.push<void>(
+      '/rider/confirm',
+      extra: RideDraft(
+        pickup: RideStop(name: label, address: label, location: pickup),
+        dropoff: RideStop(
+          name: details.name,
+          address: details.address,
+          location: details.location,
+        ),
+      ),
+    );
   }
 
   Future<void> _recenter() async {
@@ -156,7 +192,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                           style: context.textStyles.headlineMedium,
                         ),
                         SizedBox(height: AppSpacing.md),
-                        const MwSearchPill(),
+                        MwSearchPill(onTap: _searchDestination),
                         if (state.isLocating)
                           Padding(
                             padding: EdgeInsets.only(top: AppSpacing.sm),

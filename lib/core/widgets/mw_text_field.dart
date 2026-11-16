@@ -12,6 +12,9 @@ class MwTextField extends StatelessWidget {
     this.textDirection,
     this.enabled = true,
     this.autofillHints,
+    this.autofocus = false,
+    this.textInputAction,
+    this.suffixIcon,
     super.key,
   });
   final String label;
@@ -23,6 +26,9 @@ class MwTextField extends StatelessWidget {
   final TextDirection? textDirection;
   final bool enabled;
   final Iterable<String>? autofillHints;
+  final bool autofocus;
+  final TextInputAction? textInputAction;
+  final Widget? suffixIcon;
   @override
   Widget build(BuildContext context) => TextField(
     controller: controller,
@@ -32,6 +38,12 @@ class MwTextField extends StatelessWidget {
     textDirection: textDirection,
     enabled: enabled,
     autofillHints: autofillHints,
-    decoration: InputDecoration(labelText: label, hintText: hintText),
+    autofocus: autofocus,
+    textInputAction: textInputAction,
+    decoration: InputDecoration(
+      labelText: label,
+      hintText: hintText,
+      suffixIcon: suffixIcon,
+    ),
   );
 }

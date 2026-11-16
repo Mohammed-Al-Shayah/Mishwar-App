@@ -382,7 +382,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 
 ### المرحلة 2 — طلب المشوار (الراكب)
 - [x] **T2.1** Cloud Functions: `placesAutocomplete`, `placeDetails`, `getRoute`
-- [ ] **T2.2** شاشة البحث عن وجهة
+- [x] **T2.2** شاشة البحث عن وجهة
 - [x] **T2.3** دالة حساب السعر (في `core` + نسخة بالسيرفر) + اختبارات Unit
 - [ ] **T2.4** شاشة تأكيد المشوار (المسار + أنواع السيارات + الأسعار)
 - [ ] **T2.5** `RideRepository.requestRide()` + شاشة "جاري البحث"

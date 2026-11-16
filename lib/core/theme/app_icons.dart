@@ -3,6 +3,13 @@ import 'package:flutter/widgets.dart';
 /// Phosphor regular glyphs from the bundled, licensed font.
 @staticIconProvider
 abstract final class AppIcons {
+  static const back = IconData(
+    0xe058,
+    fontFamily: 'PhosphorRegular',
+    matchTextDirection: true,
+  );
+  static const close = IconData(0xe4f6, fontFamily: 'PhosphorRegular');
+  static const mapPin = IconData(0xe316, fontFamily: 'PhosphorRegular');
   static const menu = IconData(0xe2f0, fontFamily: 'PhosphorRegular');
   static const map = IconData(0xe31a, fontFamily: 'PhosphorRegular');
   static const recenter = IconData(0xe1d6, fontFamily: 'PhosphorRegular');

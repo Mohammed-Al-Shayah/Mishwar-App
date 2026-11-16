@@ -17,14 +17,18 @@ import 'package:mishwar/features/common/auth/presentation/screens/role_screen.da
 import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_placeholder.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
+import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_placeholder.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
+import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
+import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
 
 String? sessionRedirect(
   SessionState session,
@@ -41,7 +45,12 @@ String? sessionRedirect(
     SessionNeedsRole() => '/role',
     SessionReady(:final user, :final driver) =>
       user.role != UserRole.driver
-          ? '/rider'
+          ? (user.role == UserRole.rider &&
+                    ((location == '/rider/search' &&
+                            extra is DestinationSearchParams) ||
+                        (location == '/rider/confirm' && extra is RideDraft))
+                ? location
+                : '/rider')
           : switch (driver?.status) {
               null => '/driver/onboarding',
               DriverStatus.approved => '/driver',
@@ -114,6 +123,22 @@ GoRouter createAppRouter(
     ),
     GoRoute(
       path: '/rider',
+      routes: [
+        GoRoute(
+          path: 'search',
+          builder: (_, state) => BlocProvider(
+            create: (_) => getIt<DestinationSearchBloc>(
+              param1: state.extra! as DestinationSearchParams,
+            ),
+            child: const DestinationSearchScreen(),
+          ),
+        ),
+        GoRoute(
+          path: 'confirm',
+          builder: (_, state) =>
+              RideConfirmPlaceholder(draft: state.extra! as RideDraft),
+        ),
+      ],
       builder: (_, _) => BlocProvider(
         create: (_) => getIt<HomeCubit>(),
         child: BlocProvider(

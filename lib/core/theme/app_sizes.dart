@@ -1,6 +1,12 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get timelineMark => 8.r;
+  static double get timelineLine => 1.5.w;
+  static double get timelineHeight => 40.h;
+  static double get skeletonTitle => 160.w;
+  static double get skeletonSubtitle => 220.w;
+  static double get skeletonBar => 12.h;
   static double get statusCircle => 64.r;
   static double get licenseThumbnail => 160.h;
   static double get otpWidth => 48.w;

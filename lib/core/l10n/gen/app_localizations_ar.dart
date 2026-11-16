@@ -9,6 +9,26 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get planRide => 'خطّط مشوارك';
+
+  @override
+  String get currentLocation => 'موقعك الحالي';
+
+  @override
+  String get clearSearch => 'مسح البحث';
+
+  @override
+  String get searchPlacesHint => 'اكتب اسم مكان أو شارع';
+
+  @override
+  String noPlacesFound(String query) {
+    return 'ما لقينا نتائج لـ “$query”';
+  }
+
+  @override
+  String get chooseRide => 'اختر الرحلة';
+
+  @override
   String get whereTo => 'وين رايح؟';
 
   @override

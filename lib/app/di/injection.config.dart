@@ -113,6 +113,8 @@ import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onb
     as _i396;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
     as _i786;
+import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart'
+    as _i448;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -187,6 +189,17 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i62.SearchPlaces>(
       () => _i62.SearchPlaces(gh<_i1040.PlacesRepository>()),
+    );
+    gh.factoryParam<
+      _i448.DestinationSearchBloc,
+      _i448.DestinationSearchParams,
+      dynamic
+    >(
+      (params, _) => _i448.DestinationSearchBloc(
+        gh<_i62.SearchPlaces>(),
+        gh<_i393.GetPlaceDetails>(),
+        params,
+      ),
     );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),

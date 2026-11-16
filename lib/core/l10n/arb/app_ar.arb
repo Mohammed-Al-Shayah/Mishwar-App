@@ -1,4 +1,18 @@
 {
+  "planRide": "خطّط مشوارك",
+  "currentLocation": "موقعك الحالي",
+  "clearSearch": "مسح البحث",
+  "searchPlacesHint": "اكتب اسم مكان أو شارع",
+  "noPlacesFound": "ما لقينا نتائج لـ “{query}”",
+  "chooseRide": "اختر الرحلة",
+  "@noPlacesFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+
   "whereTo": "وين رايح؟",
   "scheduleLater": "لاحقاً",
   "mapMobileOnly": "الخريطة متاحة على تطبيق الموبايل",
