@@ -19,5 +19,13 @@ abstract final class AppIcons {
   static const camera = IconData(0xe0fa, fontFamily: 'PhosphorRegular');
   static const image = IconData(0xe2ca, fontFamily: 'PhosphorRegular');
   static const person = IconData(0xe3a8, fontFamily: 'PhosphorRegular');
+  static const user = IconData(0xe4c2, fontFamily: 'PhosphorRegular');
+  static const van = IconData(0xe826, fontFamily: 'PhosphorRegular');
+  static const cash = IconData(0xe588, fontFamily: 'PhosphorRegular');
+  static const chevron = IconData(
+    0xe13a,
+    fontFamily: 'PhosphorRegular',
+    matchTextDirection: true,
+  );
   static const car = IconData(0xe112, fontFamily: 'PhosphorRegular');
 }

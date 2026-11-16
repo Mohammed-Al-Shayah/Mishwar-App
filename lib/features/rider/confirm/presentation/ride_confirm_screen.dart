@@ -1,0 +1,347 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:mishwar/core/geo/polyline.dart';
+import 'package:mishwar/core/l10n/failure_message.dart';
+import 'package:mishwar/core/l10n/l10n.dart';
+import 'package:mishwar/core/theme/app_colors.dart';
+import 'package:mishwar/core/theme/app_icons.dart';
+import 'package:mishwar/core/theme/app_radius.dart';
+import 'package:mishwar/core/theme/app_shadows.dart';
+import 'package:mishwar/core/theme/app_sizes.dart';
+import 'package:mishwar/core/theme/app_spacing.dart';
+import 'package:mishwar/core/theme/app_text_styles.dart';
+import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/map/mw_map.dart';
+import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
+import 'package:mishwar/core/widgets/map/mw_map_markers.dart';
+import 'package:mishwar/core/widgets/mw_payment_row.dart';
+import 'package:mishwar/core/widgets/mw_primary_button.dart';
+import 'package:mishwar/core/widgets/mw_skeleton.dart';
+import 'package:mishwar/core/widgets/mw_vehicle_row.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
+import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
+import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
+
+class RideConfirmScreen extends StatefulWidget {
+  const RideConfirmScreen({required this.draft, this.mapBuilder, super.key});
+  final RideDraft draft;
+  final WidgetBuilder? mapBuilder;
+  @override
+  State<RideConfirmScreen> createState() => _RideConfirmScreenState();
+}
+
+class _RideConfirmScreenState extends State<RideConfirmScreen> {
+  MwMapController? _controller;
+  Set<Marker> _markers = {};
+  late final DateTime _now;
+  @override
+  void initState() {
+    super.initState();
+    _now = DateTime.now();
+    unawaited(context.read<RideConfirmCubit>().start());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!kIsWeb && widget.mapBuilder == null) unawaited(_loadMarkers());
+  }
+
+  Future<void> _loadMarkers() async {
+    final ratio = MediaQuery.devicePixelRatioOf(context);
+    final icons = await Future.wait([
+      MwMapMarkers.square(pickup: true, pixelRatio: ratio),
+      MwMapMarkers.square(pickup: false, pixelRatio: ratio),
+    ]);
+    if (!mounted) return;
+    setState(
+      () => _markers = {
+        for (var i = 0; i < 2; i++)
+          Marker(
+            markerId: MarkerId(i == 0 ? 'pickup' : 'dropoff'),
+            position: LatLng(
+              (i == 0 ? widget.draft.pickup : widget.draft.dropoff)
+                  .location
+                  .lat,
+              (i == 0 ? widget.draft.pickup : widget.draft.dropoff)
+                  .location
+                  .lng,
+            ),
+            icon: icons[i],
+            anchor: const Offset(0.5, 0.5),
+            infoWindow: InfoWindow(
+              title: (i == 0 ? widget.draft.pickup : widget.draft.dropoff).name,
+            ),
+          ),
+      },
+    );
+  }
+
+  List<GeoPointValue> _route(RideConfirmState state) =>
+      state is RideConfirmLoaded ? decodePolyline(state.route.polyline) : [];
+
+  void _fit(RideConfirmState state) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(
+        _controller?.fitBounds([
+          widget.draft.pickup.location,
+          widget.draft.dropoff.location,
+          ..._route(state),
+        ], AppSpacing.xl),
+      );
+    });
+  }
+
+  String _name(BuildContext context, VehicleType type) => switch (type) {
+    VehicleType.economy => context.l10n.vehicleEconomy,
+    VehicleType.comfort => context.l10n.vehicleComfort,
+    VehicleType.van => context.l10n.vehicleVan,
+  };
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) => BlocConsumer<RideConfirmCubit, RideConfirmState>(
+    listener: (_, state) {
+      if (state is RideConfirmLoaded && state is! RideConfirmRequested) {
+        _fit(state);
+      }
+      // T2.5 consumes RideConfirmRequested to request the ride.
+    },
+    builder: (context, state) => Scaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final sheetHeight =
+              constraints.maxHeight * AppSizes.confirmSheetFraction;
+          final loaded = state is RideConfirmLoaded ? state : null;
+          final minutes = loaded == null
+              ? 0
+              : (loaded.route.durationSeconds / 60).ceil();
+          final arrival = loaded == null
+              ? ''
+              : DateFormat.jm(
+                  Localizations.localeOf(context).toString(),
+                ).format(
+                  _now.add(
+                    Duration(
+                      milliseconds: (loaded.route.durationSeconds * 1000)
+                          .round(),
+                    ),
+                  ),
+                );
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned.fill(
+                child: MwMap(
+                  mapBuilder: widget.mapBuilder,
+                  padding: EdgeInsets.only(bottom: sheetHeight),
+                  markers: _markers,
+                  polylines: {
+                    if (loaded != null)
+                      Polyline(
+                        polylineId: const PolylineId('route'),
+                        color: context.colors.route,
+                        width: AppSizes.routeWidth,
+                        points: _route(
+                          state,
+                        ).map((p) => LatLng(p.lat, p.lng)).toList(),
+                      ),
+                  },
+                  onMapCreated: (controller) {
+                    _controller = controller;
+                    _fit(state);
+                  },
+                ),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.md),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MwMapFab(
+                        icon: AppIcons.back,
+                        label: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
+                        onPressed: () => context.pop(),
+                      ),
+                      SizedBox(width: AppSpacing.xs),
+                      if (loaded != null)
+                        Expanded(
+                          child: Center(
+                            heightFactor: 1,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                                vertical: AppSpacing.xs,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.black,
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.pinLabel,
+                                ),
+                              ),
+                              child: Text(
+                                context.l10n.tripPill(
+                                  minutes,
+                                  widget.draft.dropoff.name,
+                                ),
+                                style: AppTextStyles.tabular(
+                                  AppTextStyles.footnote,
+                                ).copyWith(color: AppColors.white),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                      SizedBox(width: AppSizes.mapFab + AppSpacing.xs),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: sheetHeight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: context.colors.sheet,
+                    borderRadius: AppRadius.sheetBorder,
+                    boxShadow: AppShadows.soft,
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                      child: Column(
+                        children: [
+                          SizedBox(height: AppSpacing.xs),
+                          Container(
+                            width: AppSizes.grabberWidth,
+                            height: AppSizes.grabberHeight,
+                            decoration: BoxDecoration(
+                              color: context.colors.grabber,
+                              borderRadius: AppRadius.pillBorder,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(AppSpacing.sm),
+                            child: Text(
+                              context.l10n.chooseRide,
+                              style: AppTextStyles.headline,
+                            ),
+                          ),
+                          Divider(
+                            height: AppSizes.divider,
+                            thickness: AppSizes.divider,
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  if (loaded != null)
+                                    for (final type in VehicleType.values)
+                                      MwVehicleRow(
+                                        key: ValueKey(type),
+                                        name: _name(context, type),
+                                        seats: type == VehicleType.van ? 6 : 4,
+                                        isVan: type == VehicleType.van,
+                                        selected: loaded.selected == type,
+                                        onTap: () => context
+                                            .read<RideConfirmCubit>()
+                                            .select(type),
+                                        subtitle: context.l10n.arrivalDuration(
+                                          arrival,
+                                          minutes,
+                                        ),
+                                        tagline: switch (type) {
+                                          VehicleType.economy =>
+                                            context.l10n.economyTagline,
+                                          VehicleType.comfort =>
+                                            context.l10n.comfortTagline,
+                                          VehicleType.van =>
+                                            context.l10n.vanTagline,
+                                        },
+                                        price: context.l10n.fareJod(
+                                          Money(
+                                            loaded.fares
+                                                .firstWhere(
+                                                  (f) => f.vehicleType == type,
+                                                )
+                                                .fils,
+                                          ).toJodString(),
+                                        ),
+                                      ),
+                                  if (state is RideConfirmLoading)
+                                    for (var i = 0; i < 3; i++)
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: AppSpacing.xs,
+                                        ),
+                                        child: MwSkeleton(
+                                          height: AppSizes.rowMinHeight,
+                                        ),
+                                      ),
+                                  if (state is RideConfirmFailure)
+                                    Padding(
+                                      padding: EdgeInsets.all(AppSpacing.md),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            failureMessage(
+                                              context,
+                                              state.failure,
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => context
+                                                .read<RideConfirmCubit>()
+                                                .retry(),
+                                            child: Text(
+                                              context.l10n.confirmRetry,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const MwPaymentRow(),
+                          MwPrimaryButton(
+                            label: loaded == null
+                                ? context.l10n.chooseRide
+                                : context.l10n.chooseVehicle(
+                                    _name(context, loaded.selected),
+                                  ),
+                            onPressed: loaded == null
+                                ? null
+                                : context.read<RideConfirmCubit>().confirm,
+                          ),
+                          SizedBox(height: AppSpacing.xs),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    ),
+  );
+}

@@ -77,6 +77,8 @@ import 'package:mishwar/features/common/places/domain/usecases/search_places.dar
     as _i62;
 import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart'
     as _i304;
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart'
+    as _i422;
 import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
     as _i400;
 import 'package:mishwar/features/common/route/data/repositories/route_repository_impl.dart'
@@ -111,6 +113,8 @@ import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart'
     as _i106;
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart'
     as _i396;
+import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart'
+    as _i934;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
     as _i786;
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart'
@@ -203,6 +207,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
+    );
+    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
+      (draft, _) => _i934.RideConfirmCubit(gh<_i598.GetFareEstimates>(), draft),
     );
     gh.lazySingleton<_i801.CreateUserProfile>(
       () => _i801.CreateUserProfile(gh<_i695.UserRepository>()),

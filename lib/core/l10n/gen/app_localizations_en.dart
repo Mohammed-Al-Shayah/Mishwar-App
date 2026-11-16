@@ -284,4 +284,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String vehicleSummary(String make, String model, String color) {
     return '$make $model · $color';
   }
+
+  @override
+  String get economyTagline => 'Affordable rides';
+
+  @override
+  String get comfortTagline => 'Newer cars and more space';
+
+  @override
+  String get vanTagline => 'Up to 6 passengers';
+
+  @override
+  String get cashPayment => 'Cash';
+
+  @override
+  String get confirmRetry => 'Try again';
+
+  @override
+  String chooseVehicle(String vehicle) {
+    return 'Choose $vehicle';
+  }
+
+  @override
+  String tripPill(int minutes, String destination) {
+    return '$minutes min · $destination';
+  }
+
+  @override
+  String arrivalDuration(String time, int minutes) {
+    return '$time · $minutes minutes';
+  }
+
+  @override
+  String fareJod(String amount) {
+    return 'JD $amount';
+  }
 }

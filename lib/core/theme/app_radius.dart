@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppRadius {
+  static double get pinLabel => 4.r;
   static double get button => 8.r;
   static double get vehicleRow => 10.r;
   static double get tile => 12.r;

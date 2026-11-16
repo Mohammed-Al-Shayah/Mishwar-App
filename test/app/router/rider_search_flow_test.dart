@@ -8,6 +8,7 @@ import 'package:mishwar/app/router/app_router.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
+import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
 import 'package:mishwar/core/widgets/mw_search_pill.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/form_state.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/home_cubit.dart';
@@ -16,15 +17,20 @@ import 'package:mishwar/features/common/auth/presentation/session/session_state.
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/places/domain/usecases/get_place_details.dart';
 import 'package:mishwar/features/common/places/domain/usecases/search_places.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
-import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_placeholder.dart';
+import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
+import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../features/rider/confirm/ride_confirm_cubit_test.dart'
+    show MockRouteRepository, estimates;
 import '../../features/rider/search/destination_search_bloc_test.dart'
     show MockPlacesRepository, details, point, suggestion;
 
@@ -89,7 +95,20 @@ void main() {
         lang: 'en',
       ),
     ).thenAnswer((_) async => const Right(details));
+    final routes = MockRouteRepository();
     getIt
+      ..registerFactoryParam<RideConfirmCubit, RideDraft, dynamic>((
+        draft,
+        _,
+      ) {
+        when(
+          () => routes.getFareEstimates(
+            origin: draft.pickup.location,
+            destination: draft.dropoff.location,
+          ),
+        ).thenAnswer((_) async => Right(estimates));
+        return RideConfirmCubit(GetFareEstimates(routes), draft);
+      })
       ..registerFactory<HomeCubit>(() => home)
       ..registerFactory<RiderHomeCubit>(() => rider)
       ..registerFactoryParam<
@@ -144,16 +163,16 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(suggestion.primaryText));
     await tester.pumpAndSettle();
-    expect(find.byType(RideConfirmPlaceholder), findsOneWidget);
-    final confirm = tester.widget<RideConfirmPlaceholder>(
-      find.byType(RideConfirmPlaceholder),
+    expect(find.byType(RideConfirmScreen), findsOneWidget);
+    final confirm = tester.widget<RideConfirmScreen>(
+      find.byType(RideConfirmScreen),
     );
     expect(confirm.draft.pickup.location, point);
     expect(confirm.draft.pickup.name, 'Your current location');
     expect(confirm.draft.dropoff.name, details.name);
     expect(confirm.draft.dropoff.address, details.address);
     expect(confirm.draft.dropoff.location, details.location);
-    await tester.tap(find.byType(BackButton));
+    await tester.tap(find.byType(MwMapFab));
     await tester.pumpAndSettle();
     expect(find.byType(MwSearchPill), findsOneWidget);
   });
