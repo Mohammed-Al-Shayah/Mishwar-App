@@ -78,7 +78,7 @@ test('all deployed callables require auth',async(context)=>{
  context.mock.method(globalThis,'fetch',()=>assert.fail('network called'));
  const callables=Object.entries(deployed).filter(([,value])=>value.__endpoint?.callableTrigger);
  assert.deepEqual(callables.map(([name])=>name).sort(),[
-  'getFareEstimates','getRoute','ping','placeDetails','placesAutocomplete',
+  'cancelRide','getFareEstimates','getRoute','ping','placeDetails','placesAutocomplete','requestRide',
  ]);
  for(const [name,callable] of callables) {
   await assert.rejects(()=>callable.run({data:{}}),(error)=>{

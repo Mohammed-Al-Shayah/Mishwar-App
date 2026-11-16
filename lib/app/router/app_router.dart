@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +17,7 @@ import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_placeholder.dart';
@@ -28,6 +28,9 @@ import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_c
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
+import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
+import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
+import 'package:mishwar/features/rider/ride/presentation/ride_tracking_screen.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
 
@@ -49,7 +52,8 @@ String? sessionRedirect(
           ? (user.role == UserRole.rider &&
                     ((location == '/rider/search' &&
                             extra is DestinationSearchParams) ||
-                        (location == '/rider/confirm' && extra is RideDraft))
+                        (location == '/rider/confirm' && extra is RideDraft) ||
+                        RegExp(r'^/rider/ride/[^/]+$').hasMatch(location))
                 ? location
                 : '/rider')
           : switch (driver?.status) {
@@ -126,6 +130,14 @@ GoRouter createAppRouter(
       path: '/rider',
       routes: [
         GoRoute(
+          path: 'ride/:rideId',
+          builder: (_, state) => BlocProvider(
+            create: (_) =>
+                getIt<RideTrackingBloc>(param1: state.pathParameters['rideId']),
+            child: RideTrackingScreen(mapBuilder: riderMapBuilder),
+          ),
+        ),
+        GoRoute(
           path: 'search',
           builder: (_, state) => BlocProvider(
             create: (_) => getIt<DestinationSearchBloc>(
@@ -150,7 +162,11 @@ GoRouter createAppRouter(
         create: (_) => getIt<HomeCubit>(),
         child: BlocProvider(
           create: (_) => getIt<RiderHomeCubit>(),
-          child: RiderHomeScreen(mapBuilder: riderMapBuilder),
+          child: ActiveRideListener(
+            watch: getIt<WatchActiveRideId>(),
+            uid: (session.state as SessionReady).user.id,
+            child: RiderHomeScreen(mapBuilder: riderMapBuilder),
+          ),
         ),
       ),
     ),

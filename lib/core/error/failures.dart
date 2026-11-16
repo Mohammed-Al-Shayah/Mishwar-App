@@ -70,3 +70,10 @@ final class ValidationFailure extends Failure {
   @override
   List<Object> get props => [field, code];
 }
+
+final class ActiveRideFailure extends Failure {
+  const ActiveRideFailure(this.activeRideId) : super('active-ride');
+  final String activeRideId;
+  @override
+  List<Object> get props => [activeRideId];
+}

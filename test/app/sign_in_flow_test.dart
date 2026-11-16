@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -25,6 +24,7 @@ import 'package:mishwar/features/common/auth/presentation/cubit/role_cubit.dart'
 import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
@@ -36,8 +36,8 @@ import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart'
 import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart';
 import 'package:mocktail/mocktail.dart';
-
 import '../helpers/location_mocks.dart';
+import '../helpers/ride_mocks.dart';
 
 class MockDriverRepository extends Mock implements DriverRepository {}
 
@@ -143,6 +143,7 @@ void main() {
         await getIt.reset();
       });
       final refresh = SessionRouterRefresh(session.stream);
+      getIt.registerSingleton<WatchActiveRideId>(emptyActiveRideWatch());
       final router = createAppRouter(
         session,
         refresh,

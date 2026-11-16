@@ -319,4 +319,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String fareJod(String amount) {
     return 'JD $amount';
   }
+
+  @override
+  String get searchingTitle => 'Looking for a nearby driver…';
+
+  @override
+  String get searchingQuick => 'Usually takes less than a minute';
+
+  @override
+  String searchingVehicle(String vehicleName) {
+    return 'Finding you a $vehicleName';
+  }
+
+  @override
+  String get searchingNearby => 'Contacting nearby drivers';
+
+  @override
+  String get rideCancel => 'Cancel request';
+
+  @override
+  String get rideCancelTitle => 'Cancel your request?';
+
+  @override
+  String get rideKeepSearching => 'Keep looking';
+
+  @override
+  String get rideNoDrivers => 'No nearby drivers found';
+
+  @override
+  String get rideTryAgain => 'Try again';
+
+  @override
+  String get rideBack => 'Back';
+
+  @override
+  String get rideAccepted => 'We found a driver!';
 }

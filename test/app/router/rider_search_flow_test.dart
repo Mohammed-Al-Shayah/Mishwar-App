@@ -18,6 +18,7 @@ import 'package:mishwar/features/common/location/domain/entities/location_permis
 import 'package:mishwar/features/common/places/domain/usecases/get_place_details.dart';
 import 'package:mishwar/features/common/places/domain/usecases/search_places.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
@@ -28,11 +29,11 @@ import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
 import 'package:mocktail/mocktail.dart';
-
 import '../../features/rider/confirm/ride_confirm_cubit_test.dart'
     show MockRouteRepository, estimates;
 import '../../features/rider/search/destination_search_bloc_test.dart'
     show MockPlacesRepository, details, point, suggestion;
+import '../../helpers/ride_mocks.dart';
 
 class MockSession extends MockCubit<SessionState> implements SessionCubit {}
 
@@ -107,7 +108,11 @@ void main() {
             destination: draft.dropoff.location,
           ),
         ).thenAnswer((_) async => Right(estimates));
-        return RideConfirmCubit(GetFareEstimates(routes), draft);
+        return RideConfirmCubit(
+          GetFareEstimates(routes),
+          requestRideStub(),
+          draft,
+        );
       })
       ..registerFactory<HomeCubit>(() => home)
       ..registerFactory<RiderHomeCubit>(() => rider)
@@ -124,6 +129,7 @@ void main() {
       );
     addTearDown(getIt.reset);
     final refresh = SessionRouterRefresh(session.stream);
+    getIt.registerSingleton<WatchActiveRideId>(emptyActiveRideWatch());
     final router = createAppRouter(
       session,
       refresh,

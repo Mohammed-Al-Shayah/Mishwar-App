@@ -54,6 +54,7 @@ class MwMap extends StatefulWidget {
   const MwMap({
     this.polylines = const {},
     this.markers = const {},
+    this.circles = const {},
     this.permissionGranted = false,
     this.padding = EdgeInsets.zero,
     this.onMapCreated,
@@ -62,6 +63,7 @@ class MwMap extends StatefulWidget {
   });
   final Set<Polyline> polylines;
   final Set<Marker> markers;
+  final Set<Circle> circles;
   final bool permissionGranted;
   final EdgeInsets padding;
   final ValueChanged<MwMapController>? onMapCreated;
@@ -108,6 +110,7 @@ class _MwMapState extends State<MwMap> {
           padding: widget.padding,
           polylines: widget.polylines,
           markers: widget.markers,
+          circles: widget.circles,
           onMapCreated: (controller) => widget.onMapCreated?.call(
             MwMapController(
               controller,

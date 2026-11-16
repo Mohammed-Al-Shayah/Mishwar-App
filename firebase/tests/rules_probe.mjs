@@ -26,7 +26,24 @@ const fsReq = (method, path, fields, mask) =>
 const upload = (name, type) =>
   fetch(`${ST}?uploadType=media&name=${encodeURIComponent(name)}`, { method: 'POST', headers: { Authorization: `Firebase ${token}`, 'Content-Type': type }, body: 'bytes' }).then((r) => r.status);
 
+const ownerSeed = (path, fields) => fetch(FS + '/' + path, {
+  method: 'PATCH', headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' },
+  body: JSON.stringify({ fields }),
+}).then((r) => r.status);
+const ownRide = { riderId: s(uid), status: s('searching'), fare: { mapValue: { fields: { estimated: { doubleValue: 2.5 } } } } };
 const checks = [
+  ['cannot create user with activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('rider'), activeRideId: s('forged') })],
+  ['seed rider via Admin SDK equivalent', 200, () => ownerSeed('users/' + uid, { role: s('rider') })],
+  ['cannot set activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { activeRideId: s('forged') }, ['activeRideId'])],
+  ['cannot create ride', 403, () => fsReq('PATCH', 'rides/forged-' + uid, ownRide)],
+  ['seed own ride via Admin SDK equivalent', 200, () => ownerSeed('rides/own-' + uid, ownRide)],
+  ['read own server-created ride', 200, () => fsReq('GET', 'rides/own-' + uid)],
+  ['cannot update ride status', 403, () => fsReq('PATCH', 'rides/own-' + uid, { status: s('cancelled') }, ['status'])],
+  ['cannot delete ride', 403, () => fsReq('DELETE', 'rides/own-' + uid)],
+  ['seed other rider ride', 200, () => ownerSeed('rides/other-' + uid, { ...ownRide, riderId: s('someoneElse') })],
+  ['cannot read other rider ride', 403, () => fsReq('GET', 'rides/other-' + uid)],
+  ['seed active pointer', 200, () => ownerSeed('users/' + uid, { role: s('rider'), activeRideId: s('own-' + uid) })],
+  ['cannot clear activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, {}, ['activeRideId'])],
   ['create driver doc as APPROVED', 403, () => fsReq('PATCH', `drivers/${uid}`, { ...base, status: s('approved') })],
   ['create driver doc as pending', 200, () => fsReq('PATCH', `drivers/${uid}`, { ...base, status: s('pending') })],
   ['self-approve', 403, () => fsReq('PATCH', `drivers/${uid}`, { status: s('approved') }, ['status'])],
@@ -47,3 +64,5 @@ for (const [name, want, run] of checks) {
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}: got ${got}, want ${want}`);
 }
 console.log(failed ? `${failed} FAILED` : 'ALL PASS');
+
+if (failed) process.exitCode = 1;

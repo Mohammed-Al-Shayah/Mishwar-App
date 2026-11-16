@@ -667,6 +667,72 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'JD {amount}'**
   String fareJod(String amount);
+
+  /// No description provided for @searchingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بندوّر على أقرب سائق…'**
+  String get searchingTitle;
+
+  /// No description provided for @searchingQuick.
+  ///
+  /// In ar, this message translates to:
+  /// **'عادة بياخذ أقل من دقيقة'**
+  String get searchingQuick;
+
+  /// No description provided for @searchingVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'منلاقيلك سيارة {vehicleName}'**
+  String searchingVehicle(String vehicleName);
+
+  /// No description provided for @searchingNearby.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنتواصل مع السائقين القريبين'**
+  String get searchingNearby;
+
+  /// No description provided for @rideCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get rideCancel;
+
+  /// No description provided for @rideCancelTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأكد بدك تلغي؟'**
+  String get rideCancelTitle;
+
+  /// No description provided for @rideKeepSearching.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا، كمّل'**
+  String get rideKeepSearching;
+
+  /// No description provided for @rideNoDrivers.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما لقينا سائق قريب'**
+  String get rideNoDrivers;
+
+  /// No description provided for @rideTryAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاول مرة ثانية'**
+  String get rideTryAgain;
+
+  /// No description provided for @rideBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get rideBack;
+
+  /// No description provided for @rideAccepted.
+  ///
+  /// In ar, this message translates to:
+  /// **'لقينا سائق!'**
+  String get rideAccepted;
 }
 
 class _AppLocalizationsDelegate

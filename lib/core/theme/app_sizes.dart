@@ -1,6 +1,11 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static const searchPulseDuration = Duration(seconds: 2);
+  static const searchSubtitleDuration = Duration(seconds: 3);
+  static const searchRingRadiusMeters = 180.0;
+  static const trackingSheetFraction = 0.5;
+  static double get searchProgressHeight => 2.h;
   static double get vehicleWidth => 70.w;
   static double get vehicleHeight => 34.h;
   static double get pinSize => 12.r;

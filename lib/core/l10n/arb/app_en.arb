@@ -12,7 +12,6 @@
       }
     }
   },
-
   "whereTo": "Where to?",
   "scheduleLater": "Later",
   "mapMobileOnly": "The map is available in the mobile app",
@@ -167,6 +166,24 @@
   "@fareJod": {
     "placeholders": {
       "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "searchingTitle": "Looking for a nearby driver…",
+  "searchingQuick": "Usually takes less than a minute",
+  "searchingVehicle": "Finding you a {vehicleName}",
+  "searchingNearby": "Contacting nearby drivers",
+  "rideCancel": "Cancel request",
+  "rideCancelTitle": "Cancel your request?",
+  "rideKeepSearching": "Keep looking",
+  "rideNoDrivers": "No nearby drivers found",
+  "rideTryAgain": "Try again",
+  "rideBack": "Back",
+  "rideAccepted": "We found a driver!",
+  "@searchingVehicle": {
+    "placeholders": {
+      "vehicleName": {
         "type": "String"
       }
     }

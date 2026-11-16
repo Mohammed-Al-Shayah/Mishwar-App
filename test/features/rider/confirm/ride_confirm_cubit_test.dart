@@ -12,6 +12,7 @@ import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dar
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../helpers/ride_mocks.dart';
 
 class MockRouteRepository extends Mock implements RouteRepository {}
 
@@ -55,8 +56,11 @@ void main() {
     repository = MockRouteRepository();
     stubSuccess(repository);
   });
-  RideConfirmCubit build() =>
-      RideConfirmCubit(GetFareEstimates(repository), draft);
+  RideConfirmCubit build() => RideConfirmCubit(
+    GetFareEstimates(repository),
+    requestRideStub(const Right('ride-id')),
+    draft,
+  );
   blocTest<RideConfirmCubit, RideConfirmState>(
     'success defaults to economy',
     build: build,
@@ -73,13 +77,12 @@ void main() {
     ).called(1),
   );
   blocTest<RideConfirmCubit, RideConfirmState>(
-    'selects and emits confirm stub with selected fare',
+    'requests selected vehicle and returns ride id',
     build: build,
     act: (c) async {
       await c.start();
-      c
-        ..select(VehicleType.van)
-        ..confirm();
+      c.select(VehicleType.van);
+      await c.confirm();
     },
     expect: () => [
       const RideConfirmLoading(),
@@ -89,6 +92,7 @@ void main() {
         'selected',
         VehicleType.van,
       ),
+      isA<RideConfirmLoaded>().having((s) => s.isRequesting, 'loading', true),
       isA<RideConfirmRequested>()
           .having((s) => s.fareFils, 'fare', 7200)
           .having((s) => s.selected, 'selected', VehicleType.van),
@@ -120,11 +124,40 @@ void main() {
   blocTest<RideConfirmCubit, RideConfirmState>(
     'loading ignores selection and confirmation',
     build: build,
-    act: (c) {
-      c
-        ..select(VehicleType.van)
-        ..confirm();
+    act: (c) async {
+      c.select(VehicleType.van);
+      await c.confirm();
     },
     expect: () => <RideConfirmState>[],
   );
+  for (final failure in [
+    const ActiveRideFailure('existing'),
+    const NetworkFailure('offline'),
+  ]) {
+    blocTest<RideConfirmCubit, RideConfirmState>(
+      'request handles ${failure.runtimeType}',
+      build: () => RideConfirmCubit(
+        GetFareEstimates(repository),
+        requestRideStub(Left(failure)),
+        draft,
+      ),
+      act: (c) async {
+        await c.start();
+        await c.confirm();
+      },
+      expect: () => [
+        const RideConfirmLoading(),
+        isA<RideConfirmLoaded>(),
+        isA<RideConfirmLoaded>().having((s) => s.isRequesting, 'loading', true),
+        if (failure is ActiveRideFailure)
+          isA<RideConfirmRequested>().having((s) => s.rideId, 'id', 'existing')
+        else
+          isA<RideConfirmLoaded>().having(
+            (s) => s.requestFailure,
+            'failure',
+            failure,
+          ),
+      ],
+    );
+  }
 }

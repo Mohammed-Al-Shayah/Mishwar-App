@@ -77,8 +77,22 @@ import 'package:mishwar/features/common/places/domain/usecases/search_places.dar
     as _i62;
 import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart'
     as _i304;
+import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart'
+    as _i747;
+import 'package:mishwar/features/common/ride/data/repositories/ride_repository_impl.dart'
+    as _i297;
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart'
     as _i422;
+import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart'
+    as _i118;
+import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart'
+    as _i72;
+import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart'
+    as _i892;
+import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart'
+    as _i425;
+import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart'
+    as _i263;
 import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
     as _i400;
 import 'package:mishwar/features/common/route/data/repositories/route_repository_impl.dart'
@@ -117,6 +131,8 @@ import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_c
     as _i934;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
     as _i786;
+import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart'
+    as _i893;
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart'
     as _i448;
 
@@ -173,6 +189,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i726.UserRemoteDataSource>(
       () => _i726.UserRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i747.RideRemoteDataSource>(
+      () => _i747.RideRemoteDataSource(
+        gh<_i809.FirebaseFunctions>(),
+        gh<_i974.FirebaseFirestore>(),
+      ),
+    );
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
     );
@@ -208,8 +230,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
     );
-    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
-      (draft, _) => _i934.RideConfirmCubit(gh<_i598.GetFareEstimates>(), draft),
+    gh.lazySingleton<_i118.RideRepository>(
+      () => _i297.RideRepositoryImpl(gh<_i747.RideRemoteDataSource>()),
     );
     gh.lazySingleton<_i801.CreateUserProfile>(
       () => _i801.CreateUserProfile(gh<_i695.UserRepository>()),
@@ -251,6 +273,18 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i584.WatchAuthState(gh<_i290.AuthRepository>()),
     );
     gh.factory<_i520.RoleCubit>(() => _i520.RoleCubit(gh<_i600.SetUserRole>()));
+    gh.lazySingleton<_i72.CancelRide>(
+      () => _i72.CancelRide(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i892.RequestRide>(
+      () => _i892.RequestRide(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i425.WatchActiveRideId>(
+      () => _i425.WatchActiveRideId(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i263.WatchRide>(
+      () => _i263.WatchRide(gh<_i118.RideRepository>()),
+    );
     gh.factoryParam<_i267.OtpCubit, _i858.OtpSession, dynamic>(
       (session, _) =>
           _i267.OtpCubit(gh<_i454.VerifyOtp>(), gh<_i563.SendOtp>(), session),
@@ -266,6 +300,13 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));
+    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
+      (draft, _) => _i934.RideConfirmCubit(
+        gh<_i598.GetFareEstimates>(),
+        gh<_i892.RequestRide>(),
+        draft,
+      ),
+    );
     gh.lazySingleton<_i838.SessionCubit>(
       () => _i838.SessionCubit(
         gh<_i584.WatchAuthState>(),
@@ -277,6 +318,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i693.NameCubit(gh<_i801.CreateUserProfile>()),
     );
     gh.factory<_i964.PhoneCubit>(() => _i964.PhoneCubit(gh<_i563.SendOtp>()));
+    gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
+      (rideId, _) => _i893.RideTrackingBloc(
+        gh<_i263.WatchRide>(),
+        gh<_i72.CancelRide>(),
+        rideId,
+      ),
+    );
     return this;
   }
 }
