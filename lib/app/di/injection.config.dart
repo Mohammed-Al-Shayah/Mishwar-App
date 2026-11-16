@@ -65,6 +65,26 @@ import 'package:mishwar/features/common/location/domain/usecases/request_locatio
     as _i605;
 import 'package:mishwar/features/common/location/domain/usecases/watch_position.dart'
     as _i365;
+import 'package:mishwar/features/common/places/data/datasources/places_remote_data_source.dart'
+    as _i29;
+import 'package:mishwar/features/common/places/data/repositories/places_repository_impl.dart'
+    as _i692;
+import 'package:mishwar/features/common/places/domain/repositories/places_repository.dart'
+    as _i1040;
+import 'package:mishwar/features/common/places/domain/usecases/get_place_details.dart'
+    as _i393;
+import 'package:mishwar/features/common/places/domain/usecases/search_places.dart'
+    as _i62;
+import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart'
+    as _i304;
+import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
+    as _i400;
+import 'package:mishwar/features/common/route/data/repositories/route_repository_impl.dart'
+    as _i627;
+import 'package:mishwar/features/common/route/domain/repositories/route_repository.dart'
+    as _i1040;
+import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart'
+    as _i598;
 import 'package:mishwar/features/common/user/data/datasources/driver_remote_data_source.dart'
     as _i327;
 import 'package:mishwar/features/common/user/data/datasources/user_remote_data_source.dart'
@@ -107,6 +127,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
     gh.lazySingleton<_i766.GeolocatorClient>(() => _i766.GeolocatorClient());
+    gh.lazySingleton<_i304.FareCalculator>(() => const _i304.FareCalculator());
     gh.lazySingleton<_i327.DriverRemoteDataSource>(
       () => _i327.DriverRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
@@ -131,8 +152,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i101.LocationDataSource>(
       () => _i101.LocationDataSource(gh<_i766.GeolocatorClient>()),
     );
+    gh.lazySingleton<_i29.PlacesRemoteDataSource>(
+      () => _i29.PlacesRemoteDataSource(gh<_i809.FirebaseFunctions>()),
+    );
+    gh.lazySingleton<_i400.RouteRemoteDataSource>(
+      () => _i400.RouteRemoteDataSource(gh<_i809.FirebaseFunctions>()),
+    );
+    gh.lazySingleton<_i1040.RouteRepository>(
+      () => _i627.RouteRepositoryImpl(gh<_i400.RouteRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i1040.PlacesRepository>(
+      () => _i692.PlacesRepositoryImpl(gh<_i29.PlacesRemoteDataSource>()),
+    );
     gh.lazySingleton<_i726.UserRemoteDataSource>(
       () => _i726.UserRemoteDataSource(gh<_i974.FirebaseFirestore>()),
+    );
+    gh.lazySingleton<_i598.GetFareEstimates>(
+      () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
     );
     gh.lazySingleton<_i695.UserRepository>(
       () => _i18.UserRepositoryImpl(gh<_i726.UserRemoteDataSource>()),
@@ -145,6 +181,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i300.LocationRepository>(
       () => _i578.LocationRepositoryImpl(gh<_i101.LocationDataSource>()),
+    );
+    gh.lazySingleton<_i393.GetPlaceDetails>(
+      () => _i393.GetPlaceDetails(gh<_i1040.PlacesRepository>()),
+    );
+    gh.lazySingleton<_i62.SearchPlaces>(
+      () => _i62.SearchPlaces(gh<_i1040.PlacesRepository>()),
     );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),

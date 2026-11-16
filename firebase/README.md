@@ -45,3 +45,46 @@ node firebase/tests/rules_probe.mjs +962781111199
 It signs in a fresh phone user on the Auth emulator and checks 11 Firestore/Storage rules
 (self-approval, going online while pending, admin escalation, foreign uploads, non-image uploads, ...).
 Use a new phone number each run. Emulators only — it never talks to a real project.
+
+## Places, routes and pricing (T2.1 / T2.3)
+
+The four authenticated callables run in europe-west1. Configure the Maps server
+secret in the Functions emulator's ignored local secret file; Firebase loads it
+automatically. The app never receives the server key.
+
+Start the Functions and Firestore emulators with a demo project. Build and seed
+pricing from PowerShell (all npm commands run inside firebase/functions):
+
+```powershell
+cd firebase/functions
+npm.cmd run build
+$env:FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080'
+node ../seed/seed_pricing.mjs demo-mishwar
+```
+
+The seed overwrites config/pricing with PROJECT_SPEC section 4 defaults using
+REST and Authorization: Bearer owner. It refuses missing or non-loopback hosts
+and HTTP redirects. It imports the compiled server defaults, so build first.
+Missing pricing documents use defaults; malformed documents fail rather than
+silently charging defaults.
+
+Run npm.cmd test in firebase/functions and fvm flutter test at the repo root.
+Both pricing suites read firebase/functions/test/fixtures/fares.json. Rates use
+whole fils internally in Dart; both calculators preserve decimal inputs as
+exact fractions and round half up to 50 fils after applying the minimum.
+Numeric callable amounts are JOD; JSON numbers do not preserve trailing zeros.
+Dart Money.toJodString() supplies two-digit display formatting.
+
+Create one PlacesSessionToken per autocomplete session. Keep its value for the
+selected placeDetails call, then renew it when selection completes or a search
+is abandoned. No Google APIs are contacted by the automated tests.
+
+## Leftover emulator processes
+
+If `firebase emulators:start` says a port is taken after an interrupted run, stop the leftovers:
+
+```
+powershell -File firebase/scripts/stop-emulators.ps1
+```
+
+It only stops Java/Node processes whose command line references the Firebase emulator binaries.

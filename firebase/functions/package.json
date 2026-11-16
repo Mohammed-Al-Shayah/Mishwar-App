@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint .",
     "build": "tsc",
-    "test": "node -e \"console.log('No Cloud Functions tests yet (T0.4 skeleton).')\"",
+    "test": "npm run build && node --test test/*.test.mjs",
     "serve": "npm run build && firebase emulators:start --only functions"
   },
   "dependencies": {

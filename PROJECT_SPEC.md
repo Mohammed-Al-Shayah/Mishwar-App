@@ -381,9 +381,9 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 **معيار القبول:** مستخدم بيسجل دخول برقم تجريبي على الـ Emulator وبيشوف موقعه على الخريطة.
 
 ### المرحلة 2 — طلب المشوار (الراكب)
-- [ ] **T2.1** Cloud Functions: `placesAutocomplete`, `placeDetails`, `getRoute`
+- [x] **T2.1** Cloud Functions: `placesAutocomplete`, `placeDetails`, `getRoute`
 - [ ] **T2.2** شاشة البحث عن وجهة
-- [ ] **T2.3** دالة حساب السعر (في `core` + نسخة بالسيرفر) + اختبارات Unit
+- [x] **T2.3** دالة حساب السعر (في `core` + نسخة بالسيرفر) + اختبارات Unit
 - [ ] **T2.4** شاشة تأكيد المشوار (المسار + أنواع السيارات + الأسعار)
 - [ ] **T2.5** `RideRepository.requestRide()` + شاشة "جاري البحث"
 
