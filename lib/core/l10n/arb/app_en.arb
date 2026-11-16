@@ -235,5 +235,29 @@
         "type": "String"
       }
     }
-  }
+  },
+  "tripOnTrip": "On the way to the destination",
+  "tripCancel": "Cancel trip",
+  "tripCashPrompt": "Collect cash from the rider",
+  "tripCall": "Call rider",
+  "tripNavigate": "Google Maps",
+  "tripPrice": "JD {amount}",
+  "tripToPickup": "Heading to the rider",
+  "tripArrived": "I have arrived",
+  "tripCompleteConfirm": "Reached the destination?",
+  "tripCashCollected": "Cash collected",
+  "tripComplete": "End trip",
+  "tripWaitingTime": "Waiting for {time}",
+  "tripRedispatched": "The trip is going to another driver",
+  "tripCancelled": "This trip was cancelled",
+  "tripNo": "No",
+  "tripRating": "{rating}",
+  "tripCancelConfirm": "Are you sure? This trip will go to another driver",
+  "tripMore": "More options",
+  "tripWaiting": "Waiting for the rider",
+  "tripTooFar": "You need to be near the pickup point",
+  "tripStart": "Start trip",
+  "@tripWaitingTime": {"placeholders":{"time":{"type":"String"}}},
+  "@tripRating": {"placeholders":{"rating":{"type":"String"}}},
+  "@tripPrice": {"placeholders":{"amount":{"type":"String"}}}
 }

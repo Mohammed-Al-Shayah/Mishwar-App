@@ -166,6 +166,8 @@ import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presen
     as _i562;
 import 'package:mishwar/features/driver/presence/presentation/bloc/presence_scheduler.dart'
     as _i262;
+import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart'
+    as _i1059;
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart'
     as _i934;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
@@ -196,6 +198,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i27.DriverLocationSource(),
     );
     gh.lazySingleton<_i262.PresenceScheduler>(() => _i262.PresenceScheduler());
+    gh.lazySingleton<_i1059.TripTicker>(() => _i1059.TripTicker());
     gh.lazySingleton<_i897.WatchPushRoutes>(
       () => _i897.WatchPushRoutes(gh<_i43.PushRepository>()),
     );
@@ -383,6 +386,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i365.WatchPosition>(),
         gh<_i916.OpenAppSettings>(),
         gh<_i682.OpenLocationSettings>(),
+      ),
+    );
+    gh.factoryParam<_i1059.DriverTripBloc, String, dynamic>(
+      (rideId, _) => _i1059.DriverTripBloc(
+        rideId,
+        gh<_i263.WatchRide>(),
+        gh<_i759.UpdateRideStatus>(),
+        gh<_i72.CancelRide>(),
+        gh<_i1059.TripTicker>(),
       ),
     );
     gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(

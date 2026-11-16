@@ -859,6 +859,132 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'عندك مشوار حالي'**
   String get offerDriverBusy;
+
+  /// No description provided for @tripOnTrip.
+  ///
+  /// In ar, this message translates to:
+  /// **'بالطريق للوجهة'**
+  String get tripOnTrip;
+
+  /// No description provided for @tripCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء المشوار'**
+  String get tripCancel;
+
+  /// No description provided for @tripCashPrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلم كاش من الراكب'**
+  String get tripCashPrompt;
+
+  /// No description provided for @tripCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل بالراكب'**
+  String get tripCall;
+
+  /// No description provided for @tripNavigate.
+  ///
+  /// In ar, this message translates to:
+  /// **'خرائط Google'**
+  String get tripNavigate;
+
+  /// No description provided for @tripPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'JD {amount}'**
+  String tripPrice(String amount);
+
+  /// No description provided for @tripToPickup.
+  ///
+  /// In ar, this message translates to:
+  /// **'رايح لعند الراكب'**
+  String get tripToPickup;
+
+  /// No description provided for @tripArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت'**
+  String get tripArrived;
+
+  /// No description provided for @tripCompleteConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت للوجهة؟'**
+  String get tripCompleteConfirm;
+
+  /// No description provided for @tripCashCollected.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلمت المبلغ'**
+  String get tripCashCollected;
+
+  /// No description provided for @tripComplete.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنهاء المشوار'**
+  String get tripComplete;
+
+  /// No description provided for @tripWaitingTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'بتستنى من {time}'**
+  String tripWaitingTime(String time);
+
+  /// No description provided for @tripRedispatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشوار راح لسائق ثاني'**
+  String get tripRedispatched;
+
+  /// No description provided for @tripCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إلغاء المشوار'**
+  String get tripCancelled;
+
+  /// No description provided for @tripNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا'**
+  String get tripNo;
+
+  /// No description provided for @tripRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'{rating}'**
+  String tripRating(String rating);
+
+  /// No description provided for @tripCancelConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأكد؟ رح يروح المشوار لسائق ثاني'**
+  String get tripCancelConfirm;
+
+  /// No description provided for @tripMore.
+  ///
+  /// In ar, this message translates to:
+  /// **'خيارات إضافية'**
+  String get tripMore;
+
+  /// No description provided for @tripWaiting.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الراكب'**
+  String get tripWaiting;
+
+  /// No description provided for @tripTooFar.
+  ///
+  /// In ar, this message translates to:
+  /// **'لازم تكون قريب من نقطة الانطلاق'**
+  String get tripTooFar;
+
+  /// No description provided for @tripStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ المشوار'**
+  String get tripStart;
 }
 
 class _AppLocalizationsDelegate
