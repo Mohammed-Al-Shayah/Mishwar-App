@@ -55,5 +55,23 @@ class DriverPresenceRepositoryImpl implements DriverPresenceRepository {
     double? heading,
   }) => _write(_location(point, heading));
   @override
+  Future<Either<Failure, Unit>> publishTripLocation(
+    String rideId,
+    GeoPointValue point, {
+    double? heading,
+  }) async {
+    try {
+      await _firestore.doc('rides/$rideId/live/driver').set({
+        'geopoint': GeoPoint(point.lat, point.lng),
+        'heading': ?heading,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      return const Right(unit);
+    } on Object {
+      return const Left(ServerFailure('trip-location'));
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> goOffline() => _write({'isOnline': false});
 }

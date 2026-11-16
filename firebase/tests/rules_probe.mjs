@@ -134,6 +134,39 @@ checks.push(
   ['push write cannot change role', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('driver') }, ['role'])],
   ['push token deletion allowed', 200, () => pushToken(undefined)],
 );
+// Trip locations are a separate participant-only channel.
+const liveRide = 'live-' + uid;
+const livePath = 'rides/' + liveRide + '/live/driver';
+const liveWrite = (fields = {}, serverTime = true) => fetch(FS + ':commit', {
+  method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ writes: [{
+    update: { name: 'projects/demo-mishwar/databases/(default)/documents/' + livePath,
+      fields: { geopoint: { geoPointValue: { latitude: 31.95, longitude: 35.91 } }, heading: { doubleValue: 90 },
+        ...(!serverTime ? { updatedAt: { timestampValue: '2020-01-01T00:00:00Z' } } : {}), ...fields } },
+    ...(serverTime ? { updateTransforms: [{ fieldPath: 'updatedAt', setToServerValue: 'REQUEST_TIME' }] } : {}),
+  }] }),
+}).then(r => r.status);
+const seedLiveRide = (rider, driver, status) => ownerSeed('rides/' + liveRide, { riderId: s(rider), driverId: s(driver), status: s(status) });
+checks.push(
+  ['seed assigned live ride', 200, () => seedLiveRide('live-rider', uid, 'accepted')],
+  ['assigned driver creates live location', 200, () => liveWrite()],
+  ['assigned driver reads live location', 200, () => fsReq('GET', livePath)],
+  ['assigned driver updates live location', 200, () => liveWrite()],
+  ['invalid live heading denied', 403, () => liveWrite({ heading: { doubleValue: 361 } })],
+  ['extra live field denied', 403, () => liveWrite({ driverId: s(uid) })],
+  ['client live timestamp denied', 403, () => liveWrite({}, false)],
+  ['live deletion denied', 403, () => fsReq('DELETE', livePath)],
+  ['seed live rider identity', 200, () => seedLiveRide(uid, 'live-driver', 'arriving')],
+  ['rider reads live location', 200, () => fsReq('GET', livePath)],
+  ['rider cannot publish live location', 403, () => liveWrite()],
+  ['seed foreign live ride', 200, () => seedLiveRide('live-rider', 'live-driver', 'in_progress')],
+  ['other driver cannot publish live location', 403, () => liveWrite()],
+  ['stranger cannot read live location', 403, () => fsReq('GET', livePath)],
+  ['seed completed live ride', 200, () => seedLiveRide('live-rider', uid, 'completed')],
+  ['completed trip location denied', 403, () => liveWrite()],
+  ['seed online busy driver', 200, () => ownerSeed('drivers/' + uid, { ...base, status: s('approved'), isOnline: { booleanValue: true }, currentRideId: s(liveRide) })],
+  ['assigned driver heartbeat allowed', 200, () => presence(true)],
+);
 let failed = 0;
 for (const [name, want, run] of checks) {
   const got = await run();

@@ -19,6 +19,20 @@ void main() {
     phone: '+962791234567',
     createdAt: DateTime.utc(2026),
   );
+  test(
+    'summary allows no active ride; pending rating redirects home',
+    () {
+      final rider = SessionReady(user.copyWith(role: UserRole.rider));
+      const path = '/rider/ride/completed/summary';
+      expect(sessionRedirect(rider, path), isNull);
+      expect(sessionRedirect(const SessionSignedOut(), path), '/auth/phone');
+      final pending = SessionReady(
+        user.copyWith(role: UserRole.rider, pendingRatingRideId: 'completed'),
+      );
+      expect(sessionRedirect(pending, '/rider'), path);
+      expect(sessionRedirect(pending, path), isNull);
+    },
+  );
   const stop = RideStop(
     name: 'Place',
     address: 'Street',

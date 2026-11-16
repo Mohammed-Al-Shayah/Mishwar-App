@@ -108,6 +108,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/update_ride_status.
     as _i759;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart'
     as _i425;
+import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart'
+    as _i787;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart'
     as _i263;
 import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
@@ -158,6 +160,8 @@ import 'package:mishwar/features/driver/presence/domain/usecases/go_offline.dart
     as _i247;
 import 'package:mishwar/features/driver/presence/domain/usecases/go_online.dart'
     as _i89;
+import 'package:mishwar/features/driver/presence/domain/usecases/publish_trip_location.dart'
+    as _i36;
 import 'package:mishwar/features/driver/presence/domain/usecases/update_driver_location.dart'
     as _i587;
 import 'package:mishwar/features/driver/presence/domain/usecases/watch_driver_location.dart'
@@ -174,6 +178,8 @@ import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.
     as _i786;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart'
     as _i893;
+import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart'
+    as _i569;
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart'
     as _i448;
 
@@ -199,6 +205,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i262.PresenceScheduler>(() => _i262.PresenceScheduler());
     gh.lazySingleton<_i1059.TripTicker>(() => _i1059.TripTicker());
+    gh.lazySingleton<_i569.RideTrackingClock>(() => _i569.RideTrackingClock());
     gh.lazySingleton<_i897.WatchPushRoutes>(
       () => _i897.WatchPushRoutes(gh<_i43.PushRepository>()),
     );
@@ -237,6 +244,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i89.GoOnline>(
       () => _i89.GoOnline(gh<_i726.DriverPresenceRepository>()),
+    );
+    gh.lazySingleton<_i36.PublishTripLocation>(
+      () => _i36.PublishTripLocation(gh<_i726.DriverPresenceRepository>()),
     );
     gh.lazySingleton<_i587.UpdateDriverLocation>(
       () => _i587.UpdateDriverLocation(gh<_i726.DriverPresenceRepository>()),
@@ -371,6 +381,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i425.WatchActiveRideId>(
       () => _i425.WatchActiveRideId(gh<_i118.RideRepository>()),
     );
+    gh.lazySingleton<_i787.WatchDriverLocation>(
+      () => _i787.WatchDriverLocation(gh<_i118.RideRepository>()),
+    );
     gh.lazySingleton<_i263.WatchRide>(
       () => _i263.WatchRide(gh<_i118.RideRepository>()),
     );
@@ -386,6 +399,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i365.WatchPosition>(),
         gh<_i916.OpenAppSettings>(),
         gh<_i682.OpenLocationSettings>(),
+      ),
+    );
+    gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
+      (rideId, _) => _i893.RideTrackingBloc(
+        gh<_i263.WatchRide>(),
+        gh<_i72.CancelRide>(),
+        rideId,
+        gh<_i787.WatchDriverLocation>(),
+        gh<_i569.RideTrackingClock>(),
       ),
     );
     gh.factoryParam<_i1059.DriverTripBloc, String, dynamic>(
@@ -431,6 +453,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i290.AuthRepository>(),
       ),
     );
+    gh.lazySingleton<_i282.UnregisterPushToken>(
+      () => _i282.UnregisterPushToken(
+        gh<_i43.PushRepository>(),
+        gh<_i290.AuthRepository>(),
+        gh<_i768.PushTokenSync>(),
+      ),
+    );
     gh.factory<_i562.DriverPresenceBloc>(
       () => _i562.DriverPresenceBloc(
         gh<_i291.WatchDriver>(),
@@ -444,20 +473,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i916.OpenAppSettings>(),
         gh<_i262.PresenceScheduler>(),
         gh<_i126.RegisterPushToken>(),
-      ),
-    );
-    gh.lazySingleton<_i282.UnregisterPushToken>(
-      () => _i282.UnregisterPushToken(
-        gh<_i43.PushRepository>(),
-        gh<_i290.AuthRepository>(),
-        gh<_i768.PushTokenSync>(),
-      ),
-    );
-    gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
-      (rideId, _) => _i893.RideTrackingBloc(
-        gh<_i263.WatchRide>(),
-        gh<_i72.CancelRide>(),
-        rideId,
+        gh<_i36.PublishTripLocation>(),
       ),
     );
     gh.lazySingleton<_i442.SignOut>(

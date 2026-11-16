@@ -83,7 +83,8 @@ service cloud.firestore {
             && request.resource.data.heading >= 0
             && request.resource.data.heading <= 360))
         && request.resource.data.lastSeenAt == request.time
-        && (!request.resource.data.isOnline
+        && (request.resource.data.isOnline == resource.data.isOnline
+          || !request.resource.data.isOnline
           || !('currentRideId' in resource.data)
           || resource.data.currentRideId == null);
       allow delete: if false;
@@ -98,6 +99,21 @@ service cloud.firestore {
         || resource.data.get('driverId', null) == request.auth.uid
         || resource.data.get('offeredTo', null) == request.auth.uid);
       allow create, update, delete: if false;
+      match /live/driver {
+        function ride() { return get(/databases/$(database)/documents/rides/$(rideId)).data; }
+        allow read: if request.auth != null
+          && request.auth.uid in [ride().riderId, ride().get('driverId', null)];
+        allow create, update: if request.auth != null
+          && request.auth.uid == ride().get('driverId', null)
+          && ride().status in ['accepted', 'arriving', 'arrived', 'in_progress']
+          && request.resource.data.keys().hasOnly(['geopoint', 'heading', 'updatedAt'])
+          && request.resource.data.geopoint is latlng
+          && request.resource.data.updatedAt == request.time
+          && (!('heading' in request.resource.data)
+            || (request.resource.data.heading is number
+              && request.resource.data.heading >= 0 && request.resource.data.heading <= 360));
+        allow delete: if false;
+      }
     }
 
     match /{document=**} {

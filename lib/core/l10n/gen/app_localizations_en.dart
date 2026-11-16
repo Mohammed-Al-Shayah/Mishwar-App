@@ -494,4 +494,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tripStart => 'Start trip';
+
+  @override
+  String riderEta(int minutes) {
+    return 'Driver arrives in $minutes min';
+  }
+
+  @override
+  String get riderArrived => 'Your driver has arrived ? waiting for you';
+
+  @override
+  String riderArrival(String time) {
+    return 'Arriving at $time';
+  }
+
+  @override
+  String riderWaiting(int minutes) {
+    return 'Waiting for $minutes min';
+  }
+
+  @override
+  String get riderRedispatched =>
+      'Your driver cancelled. Finding another driver';
+
+  @override
+  String get riderCancelConfirm =>
+      'Cancel this trip? Your driver is on the way';
+
+  @override
+  String get riderContinue => 'No, continue';
+
+  @override
+  String get riderCall => 'Call';
+
+  @override
+  String get riderShare => 'Share';
+
+  @override
+  String get riderSafety => 'Safety';
+
+  @override
+  String riderRating(String rating) {
+    return '★ $rating';
+  }
+
+  @override
+  String riderVehicle(String make, String model, String color) {
+    return '$make $model · $color';
+  }
+
+  @override
+  String get riderCash => 'Cash';
+
+  @override
+  String get riderCashNote => 'Pay your driver in cash';
+
+  @override
+  String get riderCompleted => 'You’ve arrived!';
+
+  @override
+  String get riderDone => 'Done';
+
+  @override
+  String get riderRecenter => 'Recenter';
+
+  @override
+  String get riderCancel => 'Cancel trip';
 }

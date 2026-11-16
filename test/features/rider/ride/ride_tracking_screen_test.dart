@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,16 +10,23 @@ import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
+import 'package:mishwar/core/widgets/mw_driver_card.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
+import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
+import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart';
+import 'package:mishwar/features/rider/ride/presentation/ride_summary_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/ride_tracking_screen.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../helpers/ride_mocks.dart';
+import '../../common/ride/ride_data_test.dart' show rideJson;
 import 'ride_tracking_bloc_test.dart' show rideWith;
 
 Future<GoRouter> pumpTracking(
@@ -27,13 +35,14 @@ Future<GoRouter> pumpTracking(
   bool reducedMotion = false,
   double scale = 1,
   String language = 'en',
+  bool summary = false,
 }) async {
   tester.view.physicalSize = const Size(375, 812);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   final router = GoRouter(
-    initialLocation: '/rider/ride/ride',
+    initialLocation: summary ? '/rider/ride/ride/summary' : '/rider/ride/ride',
     routes: [
       GoRoute(
         path: '/rider',
@@ -45,12 +54,27 @@ Future<GoRouter> pumpTracking(
             Scaffold(body: Text((state.extra! as RideDraft).dropoff.name)),
       ),
       GoRoute(
+        path: '/rider/ride/:id/summary',
+        builder: (_, _) => BlocProvider(
+          create: (_) => RideTrackingBloc(
+            WatchRide(repository),
+            CancelRide(repository),
+            'ride',
+            WatchDriverLocation(repository),
+            RideTrackingClock(),
+          ),
+          child: const RideSummaryScreen(),
+        ),
+      ),
+      GoRoute(
         path: '/rider/ride/:id',
         builder: (_, _) => BlocProvider(
           create: (_) => RideTrackingBloc(
             WatchRide(repository),
             CancelRide(repository),
             'ride',
+            WatchDriverLocation(repository),
+            RideTrackingClock(),
           ),
           child: RideTrackingScreen(
             mapBuilder: (_) => const MwMapPlaceholder(),
@@ -86,13 +110,127 @@ Future<GoRouter> pumpTracking(
   return router;
 }
 
+RideEntity liveRide(RideStatus status, {int? finalFils}) => RideModel.fromJson({
+  ...rideJson(),
+  'status': 'accepted',
+  'driverId': 'driver',
+  'driverInfo': {
+    'name': 'Ahmad',
+    'phone': '+962780000002',
+    'rating': 4.9,
+    'vehicle': {
+      'type': 'economy',
+      'make': 'Toyota',
+      'model': 'Corolla',
+      'color': 'White',
+      'plate': '12-34567',
+    },
+  },
+  'route': {'polyline': '', 'distanceMeters': 1000, 'durationSeconds': 600},
+  'fare': {
+    'estimated': 2.55,
+    'final': finalFils == null ? null : finalFils / 1000,
+    'currency': 'JOD',
+  },
+}).copyWith(status: status).toEntity();
 void main() {
   late MockRideRepository repository;
   setUp(() {
     repository = MockRideRepository();
     when(
+      () => repository.watchDriverLocation(any()),
+    ).thenAnswer((_) => const Stream.empty());
+    when(
       () => repository.cancelRide('ride'),
     ).thenAnswer((_) async => const Right(CancelRideResult()));
+  });
+  for (final language in ['ar', 'en']) {
+    for (final status in [
+      RideStatus.accepted,
+      RideStatus.arriving,
+      RideStatus.arrived,
+      RideStatus.inProgress,
+    ]) {
+      testWidgets('trip phase $status $language at scale 1.3', (tester) async {
+        when(
+          () => repository.watchRide('ride'),
+        ).thenAnswer((_) => Stream.value(Right(liveRide(status))));
+        await pumpTracking(
+          tester,
+          repository,
+          language: language,
+          scale: 1.3,
+          reducedMotion: true,
+        );
+        expect(find.byType(MwDriverCard), findsOneWidget);
+        expect(find.text('Ahmad'), findsOneWidget);
+        final cancel = find.text(
+          language == 'ar' ? 'إلغاء المشوار' : 'Cancel trip',
+        );
+        if (status == RideStatus.inProgress) {
+          expect(cancel, findsNothing);
+        } else {
+          await tester.ensureVisible(cancel);
+          await tester.tap(cancel);
+          await tester.pumpAndSettle();
+          expect(
+            find.text(
+              language == 'ar'
+                  ? 'متأكد بدك تلغي المشوار؟ السائق بالطريق'
+                  : 'Cancel this trip? Your driver is on the way',
+            ),
+            findsOneWidget,
+          );
+          await tester.tap(find.byType(MwPrimaryButton));
+          await tester.pumpAndSettle();
+          verify(() => repository.cancelRide('ride')).called(1);
+        }
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+    testWidgets('summary fare and trip rows $language', (tester) async {
+      when(() => repository.watchRide('ride')).thenAnswer(
+        (_) => Stream.value(
+          Right(liveRide(RideStatus.completed, finalFils: 5250)),
+        ),
+      );
+      final router = await pumpTracking(
+        tester,
+        repository,
+        language: language,
+        scale: 1.3,
+        reducedMotion: true,
+        summary: true,
+      );
+      expect(find.text('JD 5.25'), findsOneWidget);
+      expect(find.text('Pickup'), findsOneWidget);
+      expect(find.text('Dropoff'), findsOneWidget);
+      await tester.tap(find.byType(MwPrimaryButton));
+      await tester.pumpAndSettle();
+      expect(router.routeInformationProvider.value.uri.path, '/rider');
+    });
+  }
+  testWidgets('completion navigates to summary with estimated fare fallback', (
+    tester,
+  ) async {
+    final updates = StreamController<Either<Failure, RideEntity>>.broadcast();
+    addTearDown(updates.close);
+    when(() => repository.watchRide('ride')).thenAnswer((_) => updates.stream);
+    final router = await pumpTracking(tester, repository, reducedMotion: true);
+    updates.add(Right(liveRide(RideStatus.accepted)));
+    await tester.pumpAndSettle();
+    updates.add(Right(liveRide(RideStatus.completed)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    // The summary Bloc obtains its own snapshot subscription.
+    updates.add(Right(liveRide(RideStatus.completed)));
+    await tester.pumpAndSettle();
+    expect(
+      router.routeInformationProvider.value.uri.path,
+      '/rider/ride/ride/summary',
+    );
+    expect(find.text('JD 2.55'), findsOneWidget);
   });
   testWidgets(
     'searching shows rings, summary, rotating copy, and cancel confirmation',
@@ -144,7 +282,7 @@ void main() {
     expect(find.text('Dropoff'), findsOneWidget);
   });
   testWidgets(
-    'cancelled snapshot returns home and accepted shows placeholder',
+    'cancelled snapshot returns home and accepted shows ETA',
     (tester) async {
       final updates = StreamController<Either<Failure, RideEntity>>();
       addTearDown(updates.close);
@@ -155,7 +293,7 @@ void main() {
       updates.add(Right(rideWith(RideStatus.accepted)));
       await tester.pump();
       await tester.pump();
-      expect(find.text('We found a driver!'), findsOneWidget);
+      expect(find.text('Driver arrives in 1 min'), findsOneWidget);
       updates.add(Right(rideWith(RideStatus.cancelled)));
       await tester.pumpAndSettle();
       expect(router.routeInformationProvider.value.uri.path, '/rider');

@@ -257,7 +257,84 @@
   "tripWaiting": "بانتظار الراكب",
   "tripTooFar": "لازم تكون قريب من نقطة الانطلاق",
   "tripStart": "ابدأ المشوار",
-  "@tripWaitingTime": {"placeholders":{"time":{"type":"String"}}},
-  "@tripRating": {"placeholders":{"rating":{"type":"String"}}},
-  "@tripPrice": {"placeholders":{"amount":{"type":"String"}}}
+  "@tripWaitingTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@tripRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "@tripPrice": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "riderEta": "السائق بيوصل خلال {minutes} د",
+  "@riderEta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "riderArrived": "السائق وصل — هو بانتظارك",
+  "riderArrival": "بتوصل الساعة {time}",
+  "@riderArrival": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "riderWaiting": "بانتظارك منذ {minutes} د",
+  "@riderWaiting": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "riderRedispatched": "السائق لغى، بندوّر على سائق ثاني",
+  "riderCancelConfirm": "متأكد بدك تلغي المشوار؟ السائق بالطريق",
+  "riderContinue": "لا، كمّل",
+  "riderCall": "اتصال",
+  "riderShare": "مشاركة",
+  "riderSafety": "الأمان",
+  "riderRating": "★ {rating}",
+  "@riderRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "riderVehicle": "{make} {model} · {color}",
+  "@riderVehicle": {
+    "placeholders": {
+      "make": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "riderCash": "كاش",
+  "riderCashNote": "ادفع للسائق كاش",
+  "riderCompleted": "وصلت!",
+  "riderDone": "تم",
+  "riderRecenter": "رجّع الخريطة",
+  "riderCancel": "إلغاء المشوار"
 }

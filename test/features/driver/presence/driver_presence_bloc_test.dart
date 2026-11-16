@@ -22,6 +22,7 @@ import 'package:mishwar/features/driver/presence/domain/driver_fix.dart';
 import 'package:mishwar/features/driver/presence/domain/driver_presence_repository.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/go_offline.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/go_online.dart';
+import 'package:mishwar/features/driver/presence/domain/usecases/publish_trip_location.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/update_driver_location.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
@@ -79,6 +80,13 @@ class Harness {
     when(
       () => presence.goOnline(any(), heading: any(named: 'heading')),
     ).thenAnswer((_) async => const Right(unit));
+    when(
+      () => presence.publishTripLocation(
+        any(),
+        any(),
+        heading: any(named: 'heading'),
+      ),
+    ).thenAnswer((_) async => const Right(unit));
     when(presence.goOffline).thenAnswer((_) async => const Right(unit));
     when(
       () => presence.updateLocation(any(), heading: any(named: 'heading')),
@@ -102,6 +110,7 @@ class Harness {
       OpenAppSettings(location),
       scheduler ?? PresenceScheduler(),
       registerPush,
+      PublishTripLocation(presence),
     );
   }
   final registerPush = MockRegisterPushToken();
@@ -139,6 +148,57 @@ class Harness {
 void main() {
   setUpAll(() => registerFallbackValue(point));
   late Harness h;
+  test(
+    'trip channel publishes only while assigned and failure is non-fatal',
+    () => fakeAsync((fake) {
+      final h = Harness(scheduler: FakeScheduler(fake))
+        ..start(fake, online: true);
+      fake
+        ..elapse(const Duration(seconds: 5))
+        ..flushMicrotasks();
+      verifyNever(
+        () => h.presence.publishTripLocation(
+          any(),
+          any(),
+          heading: any(named: 'heading'),
+        ),
+      );
+      h.docs.add(Right(driver(online: true, ride: 'trip')));
+      fake.flushMicrotasks();
+      when(
+        () => h.presence.publishTripLocation(
+          'trip',
+          point,
+          heading: any(named: 'heading'),
+        ),
+      ).thenAnswer((_) async => const Left(ServerFailure('live')));
+      fake
+        ..elapse(const Duration(seconds: 5))
+        ..flushMicrotasks();
+      verify(
+        () => h.presence.publishTripLocation(
+          'trip',
+          point,
+          heading: any(named: 'heading'),
+        ),
+      ).called(1);
+      expect(h.bloc.state.status, PresenceStatus.online);
+      h.docs.add(Right(driver(online: true)));
+      fake
+        ..flushMicrotasks()
+        ..elapse(const Duration(seconds: 5))
+        ..flushMicrotasks();
+      verifyNever(
+        () => h.presence.publishTripLocation(
+          any(),
+          any(),
+          heading: any(named: 'heading'),
+        ),
+      );
+      unawaited(h.close());
+      fake.flushMicrotasks();
+    }),
+  );
   test(
     'push registration runs once across online toggles and is non-fatal',
     () => fakeAsync((fake) {

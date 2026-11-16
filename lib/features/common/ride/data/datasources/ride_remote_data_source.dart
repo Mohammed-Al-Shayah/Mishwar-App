@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mishwar/features/common/ride/data/models/driver_live_location_model.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 
 @lazySingleton
@@ -37,6 +38,13 @@ class RideRemoteDataSource {
     await _functions.httpsCallable('declineRide').call<void>({'rideId': id});
   }
 
+  Stream<DriverLiveLocationModel> watchDriverLocation(String id) => _firestore
+      .doc('rides/$id/live/driver')
+      .snapshots()
+      .where(
+        (snapshot) => snapshot.exists && snapshot.data()?['updatedAt'] != null,
+      )
+      .map((snapshot) => DriverLiveLocationModel.fromJson(snapshot.data()!));
   Stream<RideModel> watch(String id) =>
       _firestore.collection('rides').doc(id).snapshots().map((snapshot) {
         final data = snapshot.data();

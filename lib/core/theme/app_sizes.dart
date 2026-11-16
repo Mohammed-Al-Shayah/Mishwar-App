@@ -1,6 +1,12 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get driverAvatar => 56.r;
+  static double get ratingStar => 11.r;
+  static double get carMarker => 32.r;
+  static const markerDuration = Duration(seconds: 1);
+  static const cameraInterval = Duration(seconds: 5);
+  static const riderTripSheetFraction = 0.60;
   static double get tripActionCircle => 48.r;
   static const tripSheetFraction = 0.44;
   static const tripTopFraction = 0.28;

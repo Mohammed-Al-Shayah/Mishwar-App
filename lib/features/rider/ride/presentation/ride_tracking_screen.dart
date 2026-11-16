@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_radius.dart';
@@ -11,17 +12,24 @@ import 'package:mishwar/core/theme/app_shadows.dart';
 import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
+import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
-import 'package:mishwar/core/widgets/map/mw_map.dart';
-import 'package:mishwar/core/widgets/map/mw_map_markers.dart';
+import 'package:mishwar/core/widgets/mw_driver_card.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
+import 'package:mishwar/features/rider/ride/presentation/rider_trip_map.dart';
+import 'package:mishwar/features/rider/ride/presentation/trip_stops.dart';
 
 class RideTrackingScreen extends StatefulWidget {
-  const RideTrackingScreen({this.mapBuilder, super.key});
+  const RideTrackingScreen({
+    this.mapBuilder,
+    this.launcher = launchRiderUri,
+    super.key,
+  });
+  final RiderUriLauncher launcher;
   final WidgetBuilder? mapBuilder;
   @override
   State<RideTrackingScreen> createState() => _RideTrackingScreenState();
@@ -31,8 +39,7 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulse;
   Timer? _subtitleTimer;
-  MwMapController? _map;
-  BitmapDescriptor? _pickupIcon;
+  bool _assigned = false;
   bool _reduceMotion = false;
   bool _searching = false;
   @override
@@ -50,17 +57,6 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
     super.didChangeDependencies();
     _reduceMotion = MediaQuery.disableAnimationsOf(context);
     _motion();
-    if (!kIsWeb && widget.mapBuilder == null && _pickupIcon == null) {
-      unawaited(_loadIcon());
-    }
-  }
-
-  Future<void> _loadIcon() async {
-    final icon = await MwMapMarkers.square(
-      pickup: true,
-      pixelRatio: MediaQuery.devicePixelRatioOf(context),
-    );
-    if (mounted) setState(() => _pickupIcon = icon);
   }
 
   void _motion() {
@@ -88,24 +84,38 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
     VehicleType.comfort => context.l10n.vehicleComfort,
     VehicleType.van => context.l10n.vehicleVan,
   };
-  Future<void> _cancel() async {
+  Future<void> _cancel(BuildContext sheetContext) async {
+    final searching =
+        context.read<RideTrackingBloc>().state.ride?.status ==
+        RideStatus.searching;
     final confirmed = await showModalBottomSheet<bool>(
-      context: context,
+      context: sheetContext,
       builder: (context) => SafeArea(
         child: Padding(
           padding: EdgeInsets.all(AppSpacing.md),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(context.l10n.rideCancelTitle, style: AppTextStyles.title1),
+              Text(
+                searching
+                    ? context.l10n.rideCancelTitle
+                    : context.l10n.riderCancelConfirm,
+                style: AppTextStyles.title1,
+              ),
               SizedBox(height: AppSpacing.xl),
               MwPrimaryButton(
-                label: context.l10n.rideCancel,
+                label: searching
+                    ? context.l10n.rideCancel
+                    : context.l10n.riderCancel,
                 onPressed: () => Navigator.pop(context, true),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: Text(context.l10n.rideKeepSearching),
+                child: Text(
+                  searching
+                      ? context.l10n.rideKeepSearching
+                      : context.l10n.riderContinue,
+                ),
               ),
             ],
           ),
@@ -117,50 +127,14 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
     }
   }
 
-  Widget _stop(BuildContext context, RidePlace place, {required bool pickup}) =>
-      Row(
-        children: [
-          SizedBox(
-            width: AppSizes.iconCircle,
-            height: AppSizes.rowMinHeight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: AppSizes.timelineMark,
-                  height: AppSizes.timelineMark,
-                  decoration: BoxDecoration(color: context.colors.textPrimary),
-                  child: pickup
-                      ? Center(
-                          child: Container(
-                            width: AppSizes.pinInner,
-                            height: AppSizes.pinInner,
-                            color: context.colors.sheet,
-                          ),
-                        )
-                      : null,
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(place.name, style: AppTextStyles.headline),
-                Text(
-                  place.address,
-                  style: AppTextStyles.footnote.copyWith(
-                    color: context.colors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
   @override
   Widget build(
+    BuildContext context,
+  ) => Theme(
+    data: AppTheme.light(),
+    child: Builder(builder: _buildTrip),
+  );
+  Widget _buildTrip(
     BuildContext context,
   ) => BlocConsumer<RideTrackingBloc, RideTrackingState>(
     listener: (context, state) {
@@ -170,8 +144,14 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
       if (state.navigation == RideNavigation.confirm) {
         context.go('/rider/confirm', extra: state.retryDraft);
       }
-      final pickup = state.ride?.pickup.location;
-      if (pickup != null) unawaited(_map?.animateTo(pickup));
+      if (state.navigation == RideNavigation.summary) {
+        context.go('/rider/ride/${state.ride!.id}/summary');
+      }
+      final assigned =
+          state.ride?.driverId != null &&
+          state.ride?.status != RideStatus.searching;
+      if (assigned && !_assigned) unawaited(HapticFeedback.mediumImpact());
+      _assigned = assigned;
     },
     builder: (context, state) {
       final ride = state.ride;
@@ -181,67 +161,26 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
         body: LayoutBuilder(
           builder: (context, constraints) {
             final sheetHeight =
-                constraints.maxHeight * AppSizes.trackingSheetFraction;
+                constraints.maxHeight *
+                (searching || noDrivers
+                    ? AppSizes.trackingSheetFraction
+                    : AppSizes.riderTripSheetFraction);
             return Stack(
               fit: StackFit.expand,
               children: [
-                AnimatedBuilder(
-                  animation: _pulse,
-                  builder: (context, _) => MwMap(
-                    mapBuilder: widget.mapBuilder,
-                    padding: EdgeInsets.only(bottom: sheetHeight),
-                    markers: {
-                      if (ride != null && _pickupIcon != null)
-                        Marker(
-                          markerId: const MarkerId('pickup'),
-                          position: LatLng(
-                            ride.pickup.location.lat,
-                            ride.pickup.location.lng,
-                          ),
-                          icon: _pickupIcon!,
-                          anchor: const Offset(0.5, 0.5),
-                          infoWindow: InfoWindow(title: ride.pickup.name),
-                        ),
-                    },
-                    circles: {
-                      if (searching && ride != null)
-                        for (var i = 0; i < 2; i++)
-                          Circle(
-                            circleId: CircleId('search-ring-$i'),
-                            center: LatLng(
-                              ride.pickup.location.lat,
-                              ride.pickup.location.lng,
-                            ),
-                            radius:
-                                AppSizes.searchRingRadiusMeters *
-                                (_reduceMotion
-                                    ? (i + 1) / 2
-                                    : ((_pulse.value + i / 2) % 1)),
-                            strokeColor: context.colors.textPrimary.withValues(
-                              alpha: _reduceMotion
-                                  ? 0.3
-                                  : 1 - ((_pulse.value + i / 2) % 1),
-                            ),
-                            strokeWidth: AppSizes.routeWidth,
-                          ),
-                    },
-                    onMapCreated: (controller) {
-                      _map = controller;
-                      final pickup = context
-                          .read<RideTrackingBloc>()
-                          .state
-                          .ride
-                          ?.pickup
-                          .location;
-                      if (pickup != null) {
-                        unawaited(controller.animateTo(pickup));
-                      }
-                    },
-                  ),
+                RiderTripMap(
+                  state: state,
+                  sheetHeight: sheetHeight,
+                  pulse: _pulse,
+                  mapBuilder: widget.mapBuilder,
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: _reduceMotion
+                        ? Duration.zero
+                        : AppSizes.contentDuration,
+                    curve: Curves.easeOutCubic,
                     height: sheetHeight,
                     decoration: BoxDecoration(
                       color: context.colors.sheet,
@@ -284,9 +223,66 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                     ? context.l10n.rideNoDrivers
                                     : searching
                                     ? context.l10n.searchingTitle
-                                    : context.l10n.rideAccepted,
+                                    : switch (ride.status) {
+                                        RideStatus.arrived =>
+                                          context.l10n.riderArrived,
+                                        RideStatus.inProgress =>
+                                          context.l10n.riderArrival(
+                                            DateFormat.jm(
+                                              Localizations.localeOf(
+                                                context,
+                                              ).toLanguageTag(),
+                                            ).format(
+                                              (state.now ?? DateTime.now()).add(
+                                                Duration(
+                                                  minutes: state.etaMinutes,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        _ => context.l10n.riderEta(
+                                          state.etaMinutes,
+                                        ),
+                                      },
                                 style: AppTextStyles.title1,
                               ),
+                              if (state.redispatchNotice)
+                                Container(
+                                  padding: EdgeInsets.all(AppSpacing.sm),
+                                  color: context.colors.fill,
+                                  child: Text(
+                                    context.l10n.riderRedispatched,
+                                    style: AppTextStyles.footnote,
+                                  ),
+                                ),
+                              if (ride.status == RideStatus.arrived &&
+                                  state.waitingSince != null)
+                                Text(
+                                  context.l10n.riderWaiting(
+                                    ((state.now ?? DateTime.now())
+                                                .difference(state.waitingSince!)
+                                                .inSeconds /
+                                            60)
+                                        .floor()
+                                        .clamp(0, 9999),
+                                  ),
+                                  style: AppTextStyles.footnote,
+                                ),
+                              if (ride.status == RideStatus.inProgress)
+                                Text(
+                                  ride.dropoff.name,
+                                  style: AppTextStyles.footnote,
+                                ),
+                              if (!searching && ride.driverInfo != null)
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: AppSpacing.md,
+                                  ),
+                                  child: MwDriverCard(
+                                    driver: ride.driverInfo!,
+                                    launcher: widget.launcher,
+                                  ),
+                                ),
                               if (searching) ...[
                                 SizedBox(height: AppSpacing.xs),
                                 Text(
@@ -310,21 +306,7 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                 ),
                               ],
                               SizedBox(height: AppSpacing.sm),
-                              _stop(context, ride.pickup, pickup: true),
-                              Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                  start: AppSizes.iconCircle / 2,
-                                ),
-                                child: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Container(
-                                    width: AppSizes.timelineLine,
-                                    height: AppSpacing.sm,
-                                    color: context.colors.textPrimary,
-                                  ),
-                                ),
-                              ),
-                              _stop(context, ride.dropoff, pickup: false),
+                              TripStops(ride: ride),
                               Divider(
                                 height: AppSpacing.md,
                                 thickness: AppSizes.divider,
@@ -345,6 +327,27 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                     ),
                                     style: AppTextStyles.tabular(
                                       AppTextStyles.headline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // Colour carries meaning only: a cash dot,
+                              // readable text in the normal text colour.
+                              Row(
+                                children: [
+                                  Container(
+                                    width: AppSizes.timelineMark,
+                                    height: AppSizes.timelineMark,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: context.colors.cash,
+                                    ),
+                                  ),
+                                  SizedBox(width: AppSpacing.xs),
+                                  Text(
+                                    context.l10n.riderCash,
+                                    style: AppTextStyles.footnote.copyWith(
+                                      color: context.colors.textSecondary,
                                     ),
                                   ),
                                 ],
@@ -379,7 +382,7 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                 TextButton(
                                   onPressed: state.isCancelling
                                       ? null
-                                      : _cancel,
+                                      : () => _cancel(context),
                                   child: state.isCancelling
                                       ? SizedBox.square(
                                           dimension: AppSizes.icon,
@@ -390,7 +393,9 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                           ),
                                         )
                                       : Text(
-                                          context.l10n.rideCancel,
+                                          searching
+                                              ? context.l10n.rideCancel
+                                              : context.l10n.riderCancel,
                                           style: AppTextStyles.headline
                                               .copyWith(
                                                 color: context.colors.negative,

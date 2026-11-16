@@ -16,6 +16,7 @@ import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/driver/presence/domain/driver_fix.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/go_offline.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/go_online.dart';
+import 'package:mishwar/features/driver/presence/domain/usecases/publish_trip_location.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/update_driver_location.dart';
 import 'package:mishwar/features/driver/presence/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/presence_scheduler.dart';
@@ -115,6 +116,7 @@ class DriverPresenceBloc
     this._settings,
     this._scheduler,
     this._registerPushToken,
+    this._publishTripLocation,
   ) : super(const DriverPresenceState()) {
     // One queue for all event types prevents heartbeat/toggle writes from racing.
     on<DriverPresenceEvent>(
@@ -123,6 +125,7 @@ class DriverPresenceBloc
     );
   }
   static const interval = Duration(seconds: 5);
+  final PublishTripLocation _publishTripLocation;
   final WatchDriver _watchDriver;
   final CheckLocationPermission _checkPermission;
   final RequestLocationPermission _requestPermission;
@@ -317,6 +320,10 @@ class DriverPresenceBloc
         // Reserve the interval before awaiting, even if the network fails.
         _lastSent = now;
         final result = await _update(fix.point, heading: fix.heading);
+        final rideId = _driver?.currentRideId;
+        if (!_closing && rideId != null) {
+          await _publishTripLocation(rideId, fix.point, heading: fix.heading);
+        }
         if (_closing) return;
         final failure = result.getLeft().toNullable();
         emit(
