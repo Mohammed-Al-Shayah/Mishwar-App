@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -7,9 +8,12 @@ import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
+import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../helpers/ride_mocks.dart';
 import '../../common/ride/ride_data_test.dart' show rideJson;
 
@@ -26,6 +30,9 @@ void main() {
   late StreamController<Either<Failure, RideEntity>> updates;
   setUp(() {
     repository = MockRideRepository();
+    when(
+      () => repository.watchDriverLocation(any()),
+    ).thenAnswer((_) => const Stream.empty());
     updates = StreamController.broadcast();
     when(() => repository.watchRide('ride')).thenAnswer((_) => updates.stream);
     when(
@@ -33,8 +40,13 @@ void main() {
     ).thenAnswer((_) async => const Right(CancelRideResult()));
   });
   tearDown(() => updates.close());
-  RideTrackingBloc build() =>
-      RideTrackingBloc(WatchRide(repository), CancelRide(repository), 'ride');
+  RideTrackingBloc build() => RideTrackingBloc(
+    WatchRide(repository),
+    CancelRide(repository),
+    'ride',
+    WatchDriverLocation(repository),
+    RideTrackingClock(),
+  );
   blocTest<RideTrackingBloc, RideTrackingState>(
     'searching to no drivers and retry retains draft',
     build: build,
@@ -84,9 +96,9 @@ void main() {
     ],
   );
   blocTest<RideTrackingBloc, RideTrackingState>(
-    'cancel flow waits for authoritative snapshot',
+    'arriving cancellation waits for authoritative snapshot',
     build: build,
-    seed: () => RideTrackingState(ride: rideWith(RideStatus.searching)),
+    seed: () => RideTrackingState(ride: rideWith(RideStatus.arriving)),
     act: (bloc) => bloc.add(const RideCancelRequested()),
     expect: () => [
       isA<RideTrackingState>().having((s) => s.isCancelling, 'busy', true),

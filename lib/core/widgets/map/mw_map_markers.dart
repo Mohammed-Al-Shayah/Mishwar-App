@@ -6,6 +6,46 @@ import 'package:mishwar/core/theme/app_sizes.dart';
 
 /// Cached per pixel ratio, including simultaneous callers.
 abstract final class MwMapMarkers {
+  static final _cars = <(double, double), Future<BitmapDescriptor>>{};
+  static Future<BitmapDescriptor> car({required double pixelRatio}) =>
+      _cars.putIfAbsent((
+        pixelRatio,
+        AppSizes.carMarker,
+      ), () => _drawCar(pixelRatio));
+  static Future<BitmapDescriptor> _drawCar(double ratio) async {
+    final size = AppSizes.carMarker;
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder)..scale(ratio);
+    final body = Rect.fromLTWH(size * .25, size * .05, size * .5, size * .9);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(body, Radius.circular(size * .12)),
+      Paint()..color = AppColors.black,
+    );
+    for (final y in [.23, .66]) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(size * .32, size * y, size * .36, size * .15),
+          Radius.circular(size * .03),
+        ),
+        Paint()..color = AppColors.white,
+      );
+    }
+    final picture = recorder.endRecording();
+    final image = await picture.toImage(
+      (size * ratio).ceil(),
+      (size * ratio).ceil(),
+    );
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+    image.dispose();
+    picture.dispose();
+    return BitmapDescriptor.bytes(
+      bytes!.buffer.asUint8List(),
+      imagePixelRatio: ratio,
+      width: size,
+      height: size,
+    );
+  }
+
   static final _cache = <(bool, double, double), Future<BitmapDescriptor>>{};
   static Future<BitmapDescriptor> square({
     required bool pickup,

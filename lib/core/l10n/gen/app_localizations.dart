@@ -985,6 +985,114 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'ابدأ المشوار'**
   String get tripStart;
+
+  /// No description provided for @riderEta.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائق بيوصل خلال {minutes} د'**
+  String riderEta(int minutes);
+
+  /// No description provided for @riderArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائق وصل — هو بانتظارك'**
+  String get riderArrived;
+
+  /// No description provided for @riderArrival.
+  ///
+  /// In ar, this message translates to:
+  /// **'بتوصل الساعة {time}'**
+  String riderArrival(String time);
+
+  /// No description provided for @riderWaiting.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظارك منذ {minutes} د'**
+  String riderWaiting(int minutes);
+
+  /// No description provided for @riderRedispatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائق لغى، بندوّر على سائق ثاني'**
+  String get riderRedispatched;
+
+  /// No description provided for @riderCancelConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأكد بدك تلغي المشوار؟ السائق بالطريق'**
+  String get riderCancelConfirm;
+
+  /// No description provided for @riderContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا، كمّل'**
+  String get riderContinue;
+
+  /// No description provided for @riderCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال'**
+  String get riderCall;
+
+  /// No description provided for @riderShare.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاركة'**
+  String get riderShare;
+
+  /// No description provided for @riderSafety.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأمان'**
+  String get riderSafety;
+
+  /// No description provided for @riderRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'★ {rating}'**
+  String riderRating(String rating);
+
+  /// No description provided for @riderVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{make} {model} · {color}'**
+  String riderVehicle(String make, String model, String color);
+
+  /// No description provided for @riderCash.
+  ///
+  /// In ar, this message translates to:
+  /// **'كاش'**
+  String get riderCash;
+
+  /// No description provided for @riderCashNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ادفع للسائق كاش'**
+  String get riderCashNote;
+
+  /// No description provided for @riderCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت!'**
+  String get riderCompleted;
+
+  /// No description provided for @riderDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم'**
+  String get riderDone;
+
+  /// No description provided for @riderRecenter.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجّع الخريطة'**
+  String get riderRecenter;
+
+  /// No description provided for @riderCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء المشوار'**
+  String get riderCancel;
 }
 
 class _AppLocalizationsDelegate

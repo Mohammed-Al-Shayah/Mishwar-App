@@ -57,6 +57,7 @@ void main() {
         },
       },
       'riderInfo': {'name': 'Rider', 'phone': '+962780000001'},
+      'acceptedAt': time,
       'arrivingAt': time,
       'arrivedAt': time,
       'startedAt': time,
@@ -66,6 +67,7 @@ void main() {
     expect(RideModel.fromJson(model.toJson()), model);
     final entity = model.toEntity();
     expect(entity.driverInfo!.name, 'Driver');
+    expect(entity.acceptedAt, time.toDate().toUtc());
     expect(entity.driverInfo!.phone, '+962780000002');
     expect(entity.driverInfo!.rating, 4.8);
     expect(entity.driverInfo!.vehicle!.type, VehicleType.comfort);

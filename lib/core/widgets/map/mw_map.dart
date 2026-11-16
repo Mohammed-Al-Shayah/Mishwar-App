@@ -58,9 +58,11 @@ class MwMap extends StatefulWidget {
     this.permissionGranted = false,
     this.padding = EdgeInsets.zero,
     this.onMapCreated,
+    this.onUserInteraction,
     this.mapBuilder,
     super.key,
   });
+  final VoidCallback? onUserInteraction;
   final Set<Polyline> polylines;
   final Set<Marker> markers;
   final Set<Circle> circles;
@@ -95,26 +97,29 @@ class _MwMapState extends State<MwMap> {
       future: _styles,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const MwMapPlaceholder();
-        return GoogleMap(
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(31.9539, 35.9106),
-            zoom: 13,
-          ),
-          style: snapshot
-              .data![Theme.of(context).brightness == Brightness.dark ? 1 : 0],
-          myLocationEnabled: widget.permissionGranted,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          mapToolbarEnabled: false,
-          compassEnabled: false,
-          padding: widget.padding,
-          polylines: widget.polylines,
-          markers: widget.markers,
-          circles: widget.circles,
-          onMapCreated: (controller) => widget.onMapCreated?.call(
-            MwMapController(
-              controller,
-              reduceMotion: MediaQuery.disableAnimationsOf(context),
+        return Listener(
+          onPointerMove: (_) => widget.onUserInteraction?.call(),
+          child: GoogleMap(
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(31.9539, 35.9106),
+              zoom: 13,
+            ),
+            style: snapshot
+                .data![Theme.of(context).brightness == Brightness.dark ? 1 : 0],
+            myLocationEnabled: widget.permissionGranted,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            mapToolbarEnabled: false,
+            compassEnabled: false,
+            padding: widget.padding,
+            polylines: widget.polylines,
+            markers: widget.markers,
+            circles: widget.circles,
+            onMapCreated: (controller) => widget.onMapCreated?.call(
+              MwMapController(
+                controller,
+                reduceMotion: MediaQuery.disableAnimationsOf(context),
+              ),
             ),
           ),
         );

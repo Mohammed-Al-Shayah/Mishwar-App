@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 /// Phosphor regular glyphs from the bundled, licensed font.
 @staticIconProvider
 abstract final class AppIcons {
+  static const share = IconData(0xe408, fontFamily: 'PhosphorRegular');
+  static const shield = IconData(0xe40a, fontFamily: 'PhosphorRegular');
   static const phone = IconData(0xe3b8, fontFamily: 'PhosphorRegular');
   static const more = IconData(0xe1fe, fontFamily: 'PhosphorRegular');
   static const back = IconData(

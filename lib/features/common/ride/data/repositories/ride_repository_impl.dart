@@ -6,6 +6,7 @@ import 'package:mishwar/features/common/places/data/callable_failure.dart';
 import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
+import 'package:mishwar/features/common/ride/domain/entities/driver_live_location.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart';
@@ -124,6 +125,12 @@ class RideRepositoryImpl implements RideRepository {
     }
   }
 
+  @override
+  Stream<Either<Failure, DriverLiveLocation>> watchDriverLocation(
+    String rideId,
+  ) => _stream(
+    () => _source.watchDriverLocation(rideId).map((model) => model.toEntity()),
+  );
   @override
   Stream<Either<Failure, RideEntity>> watchRide(String id) =>
       _stream(() => _source.watch(id).map((model) => model.toEntity()));

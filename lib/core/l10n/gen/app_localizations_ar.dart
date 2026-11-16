@@ -486,4 +486,68 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tripStart => 'ابدأ المشوار';
+
+  @override
+  String riderEta(int minutes) {
+    return 'السائق بيوصل خلال $minutes د';
+  }
+
+  @override
+  String get riderArrived => 'السائق وصل — هو بانتظارك';
+
+  @override
+  String riderArrival(String time) {
+    return 'بتوصل الساعة $time';
+  }
+
+  @override
+  String riderWaiting(int minutes) {
+    return 'بانتظارك منذ $minutes د';
+  }
+
+  @override
+  String get riderRedispatched => 'السائق لغى، بندوّر على سائق ثاني';
+
+  @override
+  String get riderCancelConfirm => 'متأكد بدك تلغي المشوار؟ السائق بالطريق';
+
+  @override
+  String get riderContinue => 'لا، كمّل';
+
+  @override
+  String get riderCall => 'اتصال';
+
+  @override
+  String get riderShare => 'مشاركة';
+
+  @override
+  String get riderSafety => 'الأمان';
+
+  @override
+  String riderRating(String rating) {
+    return '★ $rating';
+  }
+
+  @override
+  String riderVehicle(String make, String model, String color) {
+    return '$make $model · $color';
+  }
+
+  @override
+  String get riderCash => 'كاش';
+
+  @override
+  String get riderCashNote => 'ادفع للسائق كاش';
+
+  @override
+  String get riderCompleted => 'وصلت!';
+
+  @override
+  String get riderDone => 'تم';
+
+  @override
+  String get riderRecenter => 'رجّع الخريطة';
+
+  @override
+  String get riderCancel => 'إلغاء المشوار';
 }

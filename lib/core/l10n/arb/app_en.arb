@@ -257,7 +257,84 @@
   "tripWaiting": "Waiting for the rider",
   "tripTooFar": "You need to be near the pickup point",
   "tripStart": "Start trip",
-  "@tripWaitingTime": {"placeholders":{"time":{"type":"String"}}},
-  "@tripRating": {"placeholders":{"rating":{"type":"String"}}},
-  "@tripPrice": {"placeholders":{"amount":{"type":"String"}}}
+  "@tripWaitingTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@tripRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "@tripPrice": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "riderEta": "Driver arrives in {minutes} min",
+  "@riderEta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "riderArrived": "Your driver has arrived ? waiting for you",
+  "riderArrival": "Arriving at {time}",
+  "@riderArrival": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "riderWaiting": "Waiting for {minutes} min",
+  "@riderWaiting": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "riderRedispatched": "Your driver cancelled. Finding another driver",
+  "riderCancelConfirm": "Cancel this trip? Your driver is on the way",
+  "riderContinue": "No, continue",
+  "riderCall": "Call",
+  "riderShare": "Share",
+  "riderSafety": "Safety",
+  "riderRating": "★ {rating}",
+  "@riderRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "riderVehicle": "{make} {model} · {color}",
+  "@riderVehicle": {
+    "placeholders": {
+      "make": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "riderCash": "Cash",
+  "riderCashNote": "Pay your driver in cash",
+  "riderCompleted": "You’ve arrived!",
+  "riderDone": "Done",
+  "riderRecenter": "Recenter",
+  "riderCancel": "Cancel trip"
 }

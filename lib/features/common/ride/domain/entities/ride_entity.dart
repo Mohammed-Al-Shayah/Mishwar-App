@@ -31,6 +31,7 @@ class RideEntity extends Equatable {
     this.driverId,
     this.driverInfo,
     this.riderInfo,
+    this.acceptedAt,
     this.arrivingAt,
     this.arrivedAt,
     this.startedAt,
@@ -47,6 +48,7 @@ class RideEntity extends Equatable {
   final String? driverId;
   final RidePartyInfo? driverInfo;
   final RidePartyInfo? riderInfo;
+  final DateTime? acceptedAt;
   final DateTime? arrivingAt;
   final DateTime? arrivedAt;
   final DateTime? startedAt;
@@ -71,6 +73,7 @@ class RideEntity extends Equatable {
     driverId,
     driverInfo,
     riderInfo,
+    acceptedAt,
     arrivingAt,
     arrivedAt,
     startedAt,

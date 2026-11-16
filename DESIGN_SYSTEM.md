@@ -44,6 +44,8 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 ## 3. Typography
 
 - Font: **IBM Plex Sans Arabic** (bundled assets, weights 400/500/600/700). Prices/times with `FontFeature.tabularFigures()`.
+- Prices ("JD 4.70"), plates and phone numbers render **LTR inside RTL screens but stay at the layout start edge**: wrap the LTR `Text` in `Align(alignment: AlignmentDirectional.centerStart)` (or put it in a Row) — never a bare `Text(textDirection: ltr)` in a stretched Column, which pushes it to the left edge in Arabic.
+- Status colours (cash, positive, negative) are used for small marks (dots, icons, borders), never as a fill behind normal text.
 - Sizes via `.sp`.
 
 | Token | Size / LH | Weight | Use |

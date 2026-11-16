@@ -115,4 +115,30 @@ void main() {
     expect((await repository.goOffline()).isLeft(), isTrue);
     verifyNever(() => document.update(any()));
   });
+  test(
+    'trip location writes only the live channel and server timestamp',
+    () async {
+      when(() => firestore.doc('rides/ride/live/driver')).thenReturn(document);
+      when(() => document.set(any())).thenAnswer((_) async {});
+      expect(
+        await repository.publishTripLocation('ride', point, heading: 90),
+        const Right<dynamic, dynamic>(unit),
+      );
+      final data =
+          verify(() => document.set(captureAny())).captured.single
+              as Map<String, dynamic>;
+      expect(data, {
+        'geopoint': const GeoPoint(31.9539, 35.9106),
+        'heading': 90.0,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      when(() => document.set(any())).thenThrow(
+        FirebaseException(plugin: 'firestore', code: 'permission-denied'),
+      );
+      expect(
+        (await repository.publishTripLocation('ride', point)).isLeft(),
+        isTrue,
+      );
+    },
+  );
 }

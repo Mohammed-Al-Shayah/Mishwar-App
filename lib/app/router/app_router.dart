@@ -38,6 +38,7 @@ import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
+import 'package:mishwar/features/rider/ride/presentation/ride_summary_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/ride_tracking_screen.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
@@ -56,12 +57,18 @@ String? sessionRedirect(
     SessionNeedsName() => '/auth/name',
     SessionNeedsRole() => '/role',
     SessionReady(:final user, :final driver) =>
-      user.role != UserRole.driver
+      user.role == UserRole.rider &&
+              location == '/rider' &&
+              user.pendingRatingRideId != null
+          ? '/rider/ride/${user.pendingRatingRideId}/summary'
+          : user.role != UserRole.driver
           ? (user.role == UserRole.rider &&
                     ((location == '/rider/search' &&
                             extra is DestinationSearchParams) ||
                         (location == '/rider/confirm' && extra is RideDraft) ||
-                        RegExp(r'^/rider/ride/[^/]+$').hasMatch(location))
+                        RegExp(
+                          r'^/rider/ride/[^/]+(/summary)?$',
+                        ).hasMatch(location))
                 ? location
                 : '/rider')
           : switch (driver?.status) {
@@ -145,6 +152,17 @@ GoRouter createAppRouter(
       routes: [
         GoRoute(
           path: 'ride/:rideId',
+          routes: [
+            GoRoute(
+              path: 'summary',
+              builder: (_, state) => BlocProvider(
+                create: (_) => getIt<RideTrackingBloc>(
+                  param1: state.pathParameters['rideId'],
+                ),
+                child: const RideSummaryScreen(),
+              ),
+            ),
+          ],
           builder: (_, state) => BlocProvider(
             create: (_) =>
                 getIt<RideTrackingBloc>(param1: state.pathParameters['rideId']),

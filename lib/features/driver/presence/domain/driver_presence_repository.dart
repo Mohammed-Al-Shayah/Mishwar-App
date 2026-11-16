@@ -8,6 +8,11 @@ abstract class DriverPresenceRepository {
     GeoPointValue point, {
     double? heading,
   });
+  Future<Either<Failure, Unit>> publishTripLocation(
+    String rideId,
+    GeoPointValue point, {
+    double? heading,
+  });
   Future<Either<Failure, Unit>> goOffline();
   Future<Either<Failure, Unit>> updateLocation(
     GeoPointValue point, {
