@@ -399,7 +399,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 **معيار القبول:** على الـ Emulator، راكب بيطلب، والسائق الأقرب بيوصله الطلب وبيقبله، والراكب بيشوف معلومات السائق.
 
 ### المرحلة 4 — تنفيذ المشوار
-- [ ] **T4.1** Callable `updateRideStatus` (arriving / arrived / in_progress / completed) مع التحقق من الانتقال الصحيح
+- [x] **T4.1** Callable `updateRideStatus` (arriving / arrived / in_progress / completed) مع التحقق من الانتقال الصحيح
 - [ ] **T4.2** تتبع السائق لحظياً عند الراكب (Marker متحرك + تدوير)
 - [ ] **T4.3** شاشات السائق: وصلت، بدء، إنهاء، وفتح Google Maps
 - [ ] **T4.4** الإلغاء من الطرفين + القواعد

@@ -1,7 +1,8 @@
 // Probes Firestore/Storage emulator rules as a signed-in driver. Emulators only.
-const AUTH = 'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1';
-const FS = 'http://127.0.0.1:8080/v1/projects/demo-mishwar/databases/(default)/documents';
-const ST = 'http://127.0.0.1:9199/v0/b/demo-mishwar.appspot.com/o';
+const authHost = `http://127.0.0.1:${process.env.RULES_AUTH_PORT ?? 9099}`;
+const AUTH = authHost + '/identitytoolkit.googleapis.com/v1';
+const FS = `http://127.0.0.1:${process.env.RULES_FIRESTORE_PORT ?? 8080}/v1/projects/demo-mishwar/databases/(default)/documents`;
+const ST = `http://127.0.0.1:${process.env.RULES_STORAGE_PORT ?? 9199}/v0/b/demo-mishwar.appspot.com/o`;
 const KEY = 'demo-api-key';
 // A fresh number per run keeps the probe repeatable against a running emulator.
 const phone = process.argv[2] ?? `+96278${String(Math.floor(Math.random() * 1e7)).padStart(7, '0')}`;
@@ -10,7 +11,7 @@ const post = (url, body) =>
   fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then((r) => r.json());
 
 const { sessionInfo } = await post(`${AUTH}/accounts:sendVerificationCode?key=${KEY}`, { phoneNumber: phone });
-const codes = await fetch('http://127.0.0.1:9099/emulator/v1/projects/demo-mishwar/verificationCodes').then((r) => r.json());
+const codes = await fetch(authHost + '/emulator/v1/projects/demo-mishwar/verificationCodes').then((r) => r.json());
 const code = codes.verificationCodes.find((c) => c.sessionInfo === sessionInfo).code;
 const { idToken: token, localId: uid } = await post(`${AUTH}/accounts:signInWithPhoneNumber?key=${KEY}`, { sessionInfo, code });
 console.log('uid', uid);
@@ -33,8 +34,12 @@ const ownerSeed = (path, fields) => fetch(FS + '/' + path, {
 }).then((r) => r.status);
 const ownRide = { riderId: s(uid), status: s('searching'), fare: { mapValue: { fields: { estimated: { doubleValue: 2.5 } } } } };
 const checks = [
+  ['cannot create user with pending rating', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('rider'), pendingRatingRideId: s('forged') })],
   ['cannot create user with activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('rider'), activeRideId: s('forged') })],
   ['seed rider via Admin SDK equivalent', 200, () => ownerSeed('users/' + uid, { role: s('rider') })],
+  ['cannot set pending rating', 403, () => fsReq('PATCH', 'users/' + uid, { pendingRatingRideId: s('forged') }, ['pendingRatingRideId'])],
+  ['seed pending rating', 200, () => ownerSeed('users/' + uid, { role: s('rider'), pendingRatingRideId: s('server') })],
+  ['cannot delete pending rating', 403, () => fsReq('PATCH', 'users/' + uid, {}, ['pendingRatingRideId'])],
   ['cannot set activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { activeRideId: s('forged') }, ['activeRideId'])],
   ['cannot create ride', 403, () => fsReq('PATCH', 'rides/forged-' + uid, ownRide)],
   ['seed own ride via Admin SDK equivalent', 200, () => ownerSeed('rides/own-' + uid, ownRide)],
@@ -47,9 +52,11 @@ const checks = [
   ['cannot clear activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, {}, ['activeRideId'])],
   ['create driver doc as APPROVED', 403, () => fsReq('PATCH', `drivers/${uid}`, { ...base, status: s('approved') })],
   ['cannot create driver with offer even null', 403, () => fsReq('PATCH', `drivers/${uid}`, { ...base, status: s('pending'), offer: { nullValue: null } })],
+  ...['pendingRatingRideId', 'cancelCount'].map(field => ['cannot create driver with ' + field, 403, () => fsReq('PATCH', `drivers/${uid}`, { ...base, status: s('pending'), [field]: s('forged') })]),
   ['create driver doc as pending', 200, () => fsReq('PATCH', `drivers/${uid}`, { ...base, status: s('pending') })],
   ['self-approve', 403, () => fsReq('PATCH', `drivers/${uid}`, { status: s('approved') }, ['status'])],
   ['go online while pending', 403, () => fsReq('PATCH', `drivers/${uid}`, { isOnline: { booleanValue: true } }, ['isOnline'])],
+  ...['pendingRatingRideId', 'cancelCount'].map(field => ['pending cannot set ' + field, 403, () => fsReq('PATCH', `drivers/${uid}`, { [field]: s('forged') }, [field])]),
   ['pending cannot write offer', 403, () => fsReq('PATCH', `drivers/${uid}`, { offer: { nullValue: null } }, ['offer'])],
   ['edit vehicle while pending', 200, () => fsReq('PATCH', `drivers/${uid}`, { vehicle }, ['vehicle'])],
   ['delete application', 403, () => fsReq('DELETE', `drivers/${uid}`)],
@@ -88,6 +95,13 @@ checks.push(
   ['pending presence denied', 403, () => presence(true)],
   ['seed approved driver', 200, () => ownerSeed('drivers/' + uid, { ...base, status: s('approved') })],
   ['approved goes online with location', 200, () => presence(true)],
+  ...['pendingRatingRideId', 'cancelCount'].map(field => ['presence cannot set ' + field, 403, () => presence(true, { [field]: s('forged') })]),
+  ['seed earnings', 200, () => ownerSeed(`drivers/${uid}/earnings/2026-11-17`, { total: { doubleValue: 3 }, trips: { integerValue: '1' } })],
+  ['owner reads earnings', 200, () => fsReq('GET', `drivers/${uid}/earnings/2026-11-17`)],
+  ['foreign earnings denied', 403, () => fsReq('GET', 'drivers/someoneElse/earnings/2026-11-17')],
+  ['earnings create denied', 403, () => fsReq('PATCH', `drivers/${uid}/earnings/forged`, { total: { doubleValue: 100 } })],
+  ['earnings update denied', 403, () => fsReq('PATCH', `drivers/${uid}/earnings/2026-11-17`, { total: { doubleValue: 100 } }, ['total'])],
+  ['earnings delete denied', 403, () => fsReq('DELETE', `drivers/${uid}/earnings/2026-11-17`)],
   ['approved cannot write own offer', 403, () => presence(true, { offer: { mapValue: { fields: { rideId: s('forged') } } } })],
   ['approved updates location', 200, () => presence(true, { location: { mapValue: { fields: { geohash: s('sv9twm84r'), geopoint: { geoPointValue: { latitude: 31.954, longitude: 35.911 } } } } }, heading: { doubleValue: 180 } })],
   ['approved goes offline', 200, () => presence(false)],

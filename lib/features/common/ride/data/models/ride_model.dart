@@ -1,7 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mishwar/core/firebase/converters.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_party_info.dart';
 import 'package:mishwar/features/common/route/data/models/route_models.dart';
+import 'package:mishwar/features/common/user/data/models/vehicle_model.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
@@ -64,6 +66,12 @@ abstract class RideModel with _$RideModel {
     required RideFareModel fare,
     @TimestampConverter() required DateTime createdAt,
     String? driverId,
+    RidePartyInfoModel? driverInfo,
+    RidePartyInfoModel? riderInfo,
+    @TimestampConverter() DateTime? arrivingAt,
+    @TimestampConverter() DateTime? arrivedAt,
+    @TimestampConverter() DateTime? startedAt,
+    @TimestampConverter() DateTime? completedAt,
     RouteModel? route,
     String? cancelledBy,
     @TimestampConverter() DateTime? searchExpiresAt,
@@ -85,6 +93,12 @@ abstract class RideModel with _$RideModel {
       id: id,
       riderId: riderId,
       driverId: driverId,
+      driverInfo: driverInfo?.toEntity(),
+      riderInfo: riderInfo?.toEntity(),
+      arrivingAt: arrivingAt,
+      arrivedAt: arrivedAt,
+      startedAt: startedAt,
+      completedAt: completedAt,
       status: status,
       vehicleType: vehicleType,
       pickup: pickup.toEntity(),
@@ -101,4 +115,26 @@ abstract class RideModel with _$RideModel {
       offerDistanceMeters: offerDistanceMeters,
     );
   }
+}
+
+@freezed
+abstract class RidePartyInfoModel with _$RidePartyInfoModel {
+  // Freezed forwards this annotation to its generated implementation.
+  // ignore: invalid_annotation_target
+  @JsonSerializable(explicitToJson: true)
+  const factory RidePartyInfoModel({
+    required String name,
+    required String phone,
+    @Default(5.0) double rating,
+    VehicleModel? vehicle,
+  }) = _RidePartyInfoModel;
+  const RidePartyInfoModel._();
+  factory RidePartyInfoModel.fromJson(Map<String, dynamic> json) =>
+      _$RidePartyInfoModelFromJson(json);
+  RidePartyInfo toEntity() => RidePartyInfo(
+    name: name,
+    phone: phone,
+    rating: rating,
+    vehicle: vehicle?.toEntity(),
+  );
 }

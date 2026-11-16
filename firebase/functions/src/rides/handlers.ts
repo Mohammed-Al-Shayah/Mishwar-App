@@ -50,14 +50,30 @@ export function rideId(value: unknown) {
   if (id.includes('/')) v.invalid();
   return id;
 }
-export async function cancelRideHandler(request: CallableRequest, db: Firestore) {
+export async function cancelRideHandler(request: CallableRequest, db: Firestore, deps?: MatchingDeps) {
   authenticated(request);
   const ref = db.doc(`rides/${rideId(request.data)}`);
-  await db.runTransaction(async (tx) => {
+  const redispatched = await db.runTransaction(async (tx) => {
     const ride = await tx.get(ref);
     if (!ride.exists) throw new HttpsError('not-found', 'Ride not found.');
     const data = ride.data()!;
-    if (data.riderId !== request.auth!.uid) throw new HttpsError('permission-denied', 'Only the rider can cancel.');
+    const uid = request.auth!.uid;
+    if (data.driverId === uid && data.riderId !== uid) {
+      if (!['accepted', 'arriving', 'arrived'].includes(data.status)) {
+        throw new HttpsError('failed-precondition', 'Ride cannot be cancelled.', { reason: 'invalid-transition' });
+      }
+      if (!deps) throw new HttpsError('internal', 'Matching dependencies required.');
+      const driverRef = db.doc(`drivers/${uid}`);
+      const driver = (await tx.get(driverRef)).data();
+      if (driver?.currentRideId !== ref.id) throw new HttpsError('failed-precondition', 'Ride is not active.', { reason: 'invalid-transition' });
+      tx.update(ref, { status: 'searching', driverId: null, driverInfo: FieldValue.delete(),
+        acceptedAt: FieldValue.delete(), arrivingAt: FieldValue.delete(), arrivedAt: FieldValue.delete(),
+        declinedBy: FieldValue.arrayUnion(uid), searchExpiresAt: Timestamp.fromMillis(deps.now().toMillis() + 120000),
+        offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
+      tx.update(driverRef, { currentRideId: null, cancelCount: (driver.cancelCount ?? 0) + 1 });
+      return true;
+    }
+    if (data.riderId !== uid) throw new HttpsError('permission-denied', 'Ride participant required.');
     const userRef = db.doc(`users/${data.riderId}`);
     const user = await tx.get(userRef);
     if (data.status !== 'cancelled' && !cancellable.includes(data.status)) throw new HttpsError('failed-precondition', 'Ride cannot be cancelled.');
@@ -69,8 +85,10 @@ export async function cancelRideHandler(request: CallableRequest, db: Firestore)
     if (assigned?.data()?.currentRideId === ref.id) tx.update(assigned.ref, { currentRideId: null });
     // A repeated cancellation must never clear a newer ride.
     if (user.data()?.activeRideId === ref.id) tx.update(userRef, { activeRideId: FieldValue.delete() });
+    return false;
   });
-  return { ok: true };
+  if (redispatched) await dispatchRide(db, ref.id, deps!);
+  return { ok: true, redispatched };
 }
 export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp.now(), deps?: MatchingDeps) {
   while (true) {
@@ -94,7 +112,7 @@ export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp
     const searching = await db.collection('rides').where('status', '==', 'searching').get();
     for (const ride of searching.docs) {
       const data = ride.data();
-      if (data.searchExpiresAt.toMillis() > now.toMillis() &&
+      if (data.searchExpiresAt?.toMillis?.() > now.toMillis() &&
           data.createdAt?.toMillis() < now.toMillis() - 20000 && !offerIsLive(data, now)) {
         await dispatchRide(db, ride.id, deps);
       }

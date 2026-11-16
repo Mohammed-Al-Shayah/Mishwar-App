@@ -18,7 +18,13 @@ export async function acceptRideHandler(request: CallableRequest, db: Firestore,
     if (!ride.offerExpiresAt || ride.offerExpiresAt.toMillis() <= deps.now().toMillis()) precondition('offer-expired');
     if (!driver || driver.status !== 'approved' || driver.isOnline !== true || driver.currentRideId) precondition('driver-busy');
     if (driver.offer?.rideId !== id) precondition('not-offered');
-    tx.update(ref, { status: 'accepted', driverId: uid, acceptedAt: FieldValue.serverTimestamp(),
+    const driverUser = (await tx.get(db.doc(`users/${uid}`))).data();
+    const riderUser = (await tx.get(db.doc(`users/${ride.riderId}`))).data();
+    if (!driverUser || !riderUser) throw new HttpsError('failed-precondition', 'Party profile unavailable.');
+    const party = (user: typeof driverUser) => ({ name: user.name ?? '', phone: user.phone ?? null, rating: user.rating ?? 5.0 });
+    const { type, make, model, color, plate } = driver.vehicle;
+    tx.update(ref, { driverInfo: { ...party(driverUser), vehicle: { type, make, model, color, plate } },
+      riderInfo: party(riderUser), status: 'accepted', driverId: uid, acceptedAt: FieldValue.serverTimestamp(),
       offeredTo: null, offerExpiresAt: null });
     tx.update(driverRef, { currentRideId: id, offer: null });
   });

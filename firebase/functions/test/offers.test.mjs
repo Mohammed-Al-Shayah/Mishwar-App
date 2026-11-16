@@ -18,6 +18,8 @@ test('accept atomically assigns ride and driver with server timestamp', async ()
   const r = h.db.records.get('rides/x'), d = h.db.records.get('drivers/a');
   assert.equal(r.status, 'accepted'); assert.equal(r.driverId, 'a');
   assert.deepEqual(r.acceptedAt, ts(1000)); assert.equal(r.offeredTo, null);
+  assert.deepEqual(r.driverInfo, { name: 'Driver A', phone: '+962780000002', rating: 5, vehicle: h.db.records.get('drivers/a').vehicle });
+  assert.deepEqual(r.riderInfo, { name: 'Rider', phone: '+962780000001', rating: 5 });
   assert.equal(r.offerExpiresAt, null); assert.equal(d.currentRideId, 'x'); assert.equal(d.offer, null);
 });
 test('accept after expiry including exact boundary fails without mutations', async () => {
@@ -81,4 +83,12 @@ test('callables require authentication and validate ride ids', async () => {
       await assert.rejects(handler(request('a', rideId), h.db, h.deps), (e) => e.code === 'invalid-argument');
     }
   }
+});
+
+test('party snapshots preserve ratings and exclude private fields', async () => {
+  const h = await offered();
+  Object.assign(h.db.records.get('users/rider'), { rating: 4.3, fcmToken: 'private' });
+  await acceptRideHandler(request('a'), h.db, h.deps);
+  assert.equal(h.db.records.get('rides/x').riderInfo.rating, 4.3);
+  assert.equal(h.db.records.get('rides/x').riderInfo.fcmToken, undefined);
 });

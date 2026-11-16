@@ -48,6 +48,28 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
     json['createdAt'] as Timestamp,
   ),
   driverId: json['driverId'] as String?,
+  driverInfo: json['driverInfo'] == null
+      ? null
+      : RidePartyInfoModel.fromJson(json['driverInfo'] as Map<String, dynamic>),
+  riderInfo: json['riderInfo'] == null
+      ? null
+      : RidePartyInfoModel.fromJson(json['riderInfo'] as Map<String, dynamic>),
+  arrivingAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['arrivingAt'],
+    const TimestampConverter().fromJson,
+  ),
+  arrivedAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['arrivedAt'],
+    const TimestampConverter().fromJson,
+  ),
+  startedAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['startedAt'],
+    const TimestampConverter().fromJson,
+  ),
+  completedAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['completedAt'],
+    const TimestampConverter().fromJson,
+  ),
   route: json['route'] == null
       ? null
       : RouteModel.fromJson(json['route'] as Map<String, dynamic>),
@@ -74,6 +96,24 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
       'fare': instance.fare.toJson(),
       'createdAt': const TimestampConverter().toJson(instance.createdAt),
       'driverId': instance.driverId,
+      'driverInfo': instance.driverInfo?.toJson(),
+      'riderInfo': instance.riderInfo?.toJson(),
+      'arrivingAt': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.arrivingAt,
+        const TimestampConverter().toJson,
+      ),
+      'arrivedAt': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.arrivedAt,
+        const TimestampConverter().toJson,
+      ),
+      'startedAt': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.startedAt,
+        const TimestampConverter().toJson,
+      ),
+      'completedAt': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.completedAt,
+        const TimestampConverter().toJson,
+      ),
       'route': instance.route?.toJson(),
       'cancelledBy': instance.cancelledBy,
       'searchExpiresAt': _$JsonConverterToJson<Timestamp, DateTime>(
@@ -102,3 +142,21 @@ Json? _$JsonConverterToJson<Json, Value>(
   Value? value,
   Json? Function(Value value) toJson,
 ) => value == null ? null : toJson(value);
+
+_RidePartyInfoModel _$RidePartyInfoModelFromJson(Map<String, dynamic> json) =>
+    _RidePartyInfoModel(
+      name: json['name'] as String,
+      phone: json['phone'] as String,
+      rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
+      vehicle: json['vehicle'] == null
+          ? null
+          : VehicleModel.fromJson(json['vehicle'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$RidePartyInfoModelToJson(_RidePartyInfoModel instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'phone': instance.phone,
+      'rating': instance.rating,
+      'vehicle': instance.vehicle?.toJson(),
+    };

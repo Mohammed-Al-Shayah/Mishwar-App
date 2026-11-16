@@ -18,6 +18,7 @@ class DriverEntity extends Equatable {
     required this.status,
     required this.isOnline,
     required this.vehicle,
+    this.pendingRatingRideId,
     this.licensePhotoPath,
     this.rejectionReason,
     this.currentRideId,
@@ -29,6 +30,7 @@ class DriverEntity extends Equatable {
   final String? licensePhotoPath;
   final String? rejectionReason;
   final String id;
+  final String? pendingRatingRideId;
   final DriverStatus status;
   final bool isOnline;
   final String? currentRideId;
@@ -43,6 +45,7 @@ class DriverEntity extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    pendingRatingRideId,
     status,
     isOnline,
     currentRideId,

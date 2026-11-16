@@ -128,3 +128,10 @@ test('expiry clears driver offer; safety net redispatches only old unexpired sea
   assert.equal(h.db.records.get('rides/live').offeredTo, 'z');
   assert.equal(h.tasks.length, 1);
 });
+test('malformed searching ride (no deadline / pickup) is ignored, never throws', async () => {
+  const h = harness({ 'rides/x': ride({ searchExpiresAt: undefined }), 'drivers/a': driver() });
+  delete h.db.records.get('rides/x').searchExpiresAt;
+  await dispatchRide(h.db, 'x', h.deps);
+  assert.equal(h.db.records.get('rides/x').offeredTo, null);
+  await expireSearchingRidesHandler(h.db, h.deps.now(), h.deps);
+});

@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/places/data/callable_failure.dart';
 import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart';
+import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
+import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart';
@@ -47,11 +49,36 @@ class RideRepositoryImpl implements RideRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> cancelRide(String id) async {
+  Future<Either<Failure, CancelRideResult>> cancelRide(String id) async {
     try {
-      await _source.cancel(id);
+      return Right(CancelRideResult(redispatched: await _source.cancel(id)));
+    } on Object catch (error) {
+      return Left(callableFailure(error));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateStatus(
+    String rideId,
+    RideStatus status,
+  ) async {
+    try {
+      await _source.updateStatus(
+        rideId,
+        const RideStatusConverter().toJson(status),
+      );
       return const Right(unit);
     } on Object catch (error) {
+      if (error is FirebaseFunctionsException &&
+          error.code == 'failed-precondition' &&
+          error.details is Map) {
+        final reason = switch ((error.details as Map)['reason']) {
+          'too-far' => RideActionFailureReason.tooFar,
+          'invalid-transition' => RideActionFailureReason.invalidTransition,
+          _ => null,
+        };
+        if (reason != null) return Left(RideActionFailure(reason));
+      }
       return Left(callableFailure(error));
     }
   }

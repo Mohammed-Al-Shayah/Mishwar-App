@@ -30,10 +30,10 @@ service cloud.firestore {
       allow create: if isOwner() && validClientRole() && validPushToken()
         && (!('fcmToken' in request.resource.data)
           || request.resource.data.fcmTokenUpdatedAt == request.time)
-        && !('activeRideId' in request.resource.data);
+        && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId']);
       allow update: if isOwner()
         && validClientRole() && validPushUpdate()
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId'])
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data
             && request.resource.data.role == resource.data.role));
@@ -60,7 +60,7 @@ service cloud.firestore {
         && request.resource.data.status == 'pending'
         && request.resource.data.isOnline == false
         && !('offer' in request.resource.data)
-        && !('currentRideId' in request.resource.data);
+        && !request.resource.data.keys().hasAny(['currentRideId', 'pendingRatingRideId', 'cancelCount']);
       allow update: if isOwner() && validApplication()
         && resource.data.status in ['pending', 'rejected']
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
@@ -87,6 +87,10 @@ service cloud.firestore {
           || !('currentRideId' in resource.data)
           || resource.data.currentRideId == null);
       allow delete: if false;
+      match /earnings/{day} {
+        allow read: if isOwner();
+        allow write: if false;
+      }
     }
 
     match /rides/{rideId} {

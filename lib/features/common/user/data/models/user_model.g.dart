@@ -18,6 +18,7 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
     json['role'],
     unknownValue: JsonKey.nullForUndefinedEnumValue,
   ),
+  pendingRatingRideId: json['pendingRatingRideId'] as String?,
   photoUrl: json['photoUrl'] as String?,
   rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
   ratingCount: (json['ratingCount'] as num?)?.toInt() ?? 0,
