@@ -12,6 +12,33 @@ class MwMapController {
   MwMapController(this._controller, {this.reduceMotion = false});
   final GoogleMapController _controller;
   final bool reduceMotion;
+
+  /// Map padding is supplied to MwMap; this is additional edge clearance.
+  Future<void> fitBounds(List<GeoPointValue> points, double padding) {
+    if (points.isEmpty) return Future.value();
+    var south = points.first.lat;
+    var north = south;
+    var west = points.first.lng;
+    var east = west;
+    for (final point in points) {
+      if (point.lat < south) south = point.lat;
+      if (point.lat > north) north = point.lat;
+      if (point.lng < west) west = point.lng;
+      if (point.lng > east) east = point.lng;
+    }
+    if (south == north && west == east) return animateTo(points.first);
+    final update = CameraUpdate.newLatLngBounds(
+      LatLngBounds(
+        southwest: LatLng(south, west),
+        northeast: LatLng(north, east),
+      ),
+      padding,
+    );
+    return reduceMotion
+        ? _controller.moveCamera(update)
+        : _controller.animateCamera(update);
+  }
+
   Future<void> animateTo(GeoPointValue point, {double zoom = 16}) {
     final update = CameraUpdate.newLatLngZoom(
       LatLng(point.lat, point.lng),
@@ -25,12 +52,16 @@ class MwMapController {
 
 class MwMap extends StatefulWidget {
   const MwMap({
+    this.polylines = const {},
+    this.markers = const {},
     this.permissionGranted = false,
     this.padding = EdgeInsets.zero,
     this.onMapCreated,
     this.mapBuilder,
     super.key,
   });
+  final Set<Polyline> polylines;
+  final Set<Marker> markers;
   final bool permissionGranted;
   final EdgeInsets padding;
   final ValueChanged<MwMapController>? onMapCreated;
@@ -75,6 +106,8 @@ class _MwMapState extends State<MwMap> {
           mapToolbarEnabled: false,
           compassEnabled: false,
           padding: widget.padding,
+          polylines: widget.polylines,
+          markers: widget.markers,
           onMapCreated: (controller) => widget.onMapCreated?.call(
             MwMapController(
               controller,

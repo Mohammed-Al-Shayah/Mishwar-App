@@ -127,5 +127,48 @@
         "type": "String"
       }
     }
+  },
+  "economyTagline": "رحلات بأسعار معقولة",
+  "comfortTagline": "سيارات أحدث ومساحة أكبر",
+  "vanTagline": "حتى 6 ركاب",
+  "cashPayment": "كاش",
+  "confirmRetry": "حاول مرة ثانية",
+  "chooseVehicle": "اختر {vehicle}",
+  "tripPill": "{minutes} د · {destination}",
+  "arrivalDuration": "{time} · {minutes} دقيقة",
+  "fareJod": "JD {amount}",
+  "@chooseVehicle": {
+    "placeholders": {
+      "vehicle": {
+        "type": "String"
+      }
+    }
+  },
+  "@tripPill": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "@arrivalDuration": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@fareJod": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   }
 }

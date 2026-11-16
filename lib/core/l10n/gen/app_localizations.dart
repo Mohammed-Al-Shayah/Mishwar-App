@@ -613,6 +613,60 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'{make} {model} · {color}'**
   String vehicleSummary(String make, String model, String color);
+
+  /// No description provided for @economyTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'رحلات بأسعار معقولة'**
+  String get economyTagline;
+
+  /// No description provided for @comfortTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيارات أحدث ومساحة أكبر'**
+  String get comfortTagline;
+
+  /// No description provided for @vanTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'حتى 6 ركاب'**
+  String get vanTagline;
+
+  /// No description provided for @cashPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'كاش'**
+  String get cashPayment;
+
+  /// No description provided for @confirmRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاول مرة ثانية'**
+  String get confirmRetry;
+
+  /// No description provided for @chooseVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر {vehicle}'**
+  String chooseVehicle(String vehicle);
+
+  /// No description provided for @tripPill.
+  ///
+  /// In ar, this message translates to:
+  /// **'{minutes} د · {destination}'**
+  String tripPill(int minutes, String destination);
+
+  /// No description provided for @arrivalDuration.
+  ///
+  /// In ar, this message translates to:
+  /// **'{time} · {minutes} دقيقة'**
+  String arrivalDuration(String time, int minutes);
+
+  /// No description provided for @fareJod.
+  ///
+  /// In ar, this message translates to:
+  /// **'JD {amount}'**
+  String fareJod(String amount);
 }
 
 class _AppLocalizationsDelegate

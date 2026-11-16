@@ -277,4 +277,39 @@ class AppLocalizationsAr extends AppLocalizations {
   String vehicleSummary(String make, String model, String color) {
     return '$make $model · $color';
   }
+
+  @override
+  String get economyTagline => 'رحلات بأسعار معقولة';
+
+  @override
+  String get comfortTagline => 'سيارات أحدث ومساحة أكبر';
+
+  @override
+  String get vanTagline => 'حتى 6 ركاب';
+
+  @override
+  String get cashPayment => 'كاش';
+
+  @override
+  String get confirmRetry => 'حاول مرة ثانية';
+
+  @override
+  String chooseVehicle(String vehicle) {
+    return 'اختر $vehicle';
+  }
+
+  @override
+  String tripPill(int minutes, String destination) {
+    return '$minutes د · $destination';
+  }
+
+  @override
+  String arrivalDuration(String time, int minutes) {
+    return '$time · $minutes دقيقة';
+  }
+
+  @override
+  String fareJod(String amount) {
+    return 'JD $amount';
+  }
 }

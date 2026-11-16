@@ -127,5 +127,48 @@
         "type": "String"
       }
     }
+  },
+  "economyTagline": "Affordable rides",
+  "comfortTagline": "Newer cars and more space",
+  "vanTagline": "Up to 6 passengers",
+  "cashPayment": "Cash",
+  "confirmRetry": "Try again",
+  "chooseVehicle": "Choose {vehicle}",
+  "tripPill": "{minutes} min · {destination}",
+  "arrivalDuration": "{time} · {minutes} minutes",
+  "fareJod": "JD {amount}",
+  "@chooseVehicle": {
+    "placeholders": {
+      "vehicle": {
+        "type": "String"
+      }
+    }
+  },
+  "@tripPill": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "@arrivalDuration": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@fareJod": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   }
 }

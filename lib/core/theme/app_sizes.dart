@@ -1,6 +1,14 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get vehicleWidth => 70.w;
+  static double get vehicleHeight => 34.h;
+  static double get pinSize => 12.r;
+  static double get pinStroke => 2.r;
+  static double get pinInner => 4.r;
+  static const confirmSheetFraction = 0.58;
+  static const vehicleSelectionDuration = Duration(milliseconds: 200);
+  static const routeWidth = 4;
   static double get timelineMark => 8.r;
   static double get timelineLine => 1.5.w;
   static double get timelineHeight => 40.h;

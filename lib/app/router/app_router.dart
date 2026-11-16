@@ -24,7 +24,8 @@ import 'package:mishwar/features/driver/home/presentation/driver_home_placeholde
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
-import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_placeholder.dart';
+import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
+import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
@@ -135,8 +136,14 @@ GoRouter createAppRouter(
         ),
         GoRoute(
           path: 'confirm',
-          builder: (_, state) =>
-              RideConfirmPlaceholder(draft: state.extra! as RideDraft),
+          builder: (_, state) => BlocProvider(
+            create: (_) =>
+                getIt<RideConfirmCubit>(param1: state.extra! as RideDraft),
+            child: RideConfirmScreen(
+              draft: state.extra! as RideDraft,
+              mapBuilder: riderMapBuilder,
+            ),
+          ),
         ),
       ],
       builder: (_, _) => BlocProvider(
