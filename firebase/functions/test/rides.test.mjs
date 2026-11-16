@@ -1,50 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { FieldValue, Timestamp, GeoPoint } from 'firebase-admin/firestore';
+import { Timestamp, GeoPoint } from 'firebase-admin/firestore';
 import { requestRideHandler, cancelRideHandler, expireSearchingRidesHandler, activeStatuses } from '../lib/rides/handlers.js';
 
-// Atomic, serialized in-memory transactions, including queries and transforms.
-class FakeFirestore {
-  records = new Map(); sequence = 0; queue = Promise.resolve();
-  constructor(seed = {}) { for (const [path, data] of Object.entries(seed)) this.records.set(path, data); }
-  doc(path) { return { path, id: path.split('/').at(-1), get: async () => this.snapshot(path) }; }
-  snapshot(path) { const data = this.records.get(path); return { id: path.split('/').at(-1), ref: this.doc(path), exists: !!data, data: () => data }; }
-  collection(name) {
-    const query = (filters = [], count = Infinity) => ({
-      where: (field, op, value) => query([...filters, [field, op, value]], count),
-      limit: (n) => query(filters, n),
-      get: async () => {
-        const docs = [...this.records.keys()].filter((path) => path.startsWith(name + '/')).map((path) => this.snapshot(path))
-          .filter((doc) => filters.every(([field, op, value]) => {
-            const actual = doc.data()[field];
-            return op === '==' ? actual === value : op === 'in' ? value.includes(actual) : actual?.toMillis() < value.toMillis();
-          })).slice(0, count);
-        return { docs, empty: docs.length === 0 };
-      },
-      doc: () => this.doc(name + '/ride-' + ++this.sequence),
-    });
-    return query();
-  }
-  runTransaction(body) {
-    const result = this.queue.then(async () => {
-      const writes = [];
-      const tx = { get: (ref) => ref.get(), create: (ref, data) => writes.push([ref, data]),
-        update: (ref, data) => writes.push([ref, data]) };
-      const result = await body(tx);
-      for (const [ref, data] of writes) {
-        const next = { ...this.records.get(ref.path) };
-        for (const [key, value] of Object.entries(data)) {
-          if (value?.isEqual?.(FieldValue.delete())) delete next[key];
-          else next[key] = value?.isEqual?.(FieldValue.serverTimestamp()) ? Timestamp.fromMillis(1000) : value;
-        }
-        this.records.set(ref.path, next);
-      }
-      return result;
-    });
-    this.queue = result.catch(() => {});
-    return result;
-  }
-}
+import { FakeFirestore } from './fake-firestore.mjs';
 const point = { lat: 31.95, lng: 35.91, name: 'Place', address: 'Address' };
 const input = { pickup: point, dropoff: { ...point, lat: 32 }, vehicleType: 'economy', paymentMethod: 'cash' };
 const req = (data = input, uid = 'rider') => ({ auth: { uid }, data });

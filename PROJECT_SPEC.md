@@ -391,8 +391,8 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 
 ### المرحلة 3 — السائق والتوزيع
 - [x] **T3.1** زر متصل وغير متصل + إرسال الموقع كل 5 ثواني (geohash)
-- [ ] **T3.2** Cloud Function `onRideCreated` (Matching) + المهلة + الانتقال للسائق اللي بعده
-- [ ] **T3.3** Callable `acceptRide` / `declineRide` (Transaction)
+- [x] **T3.2** Cloud Function `onRideCreated` (Matching) + المهلة + الانتقال للسائق اللي بعده
+- [x] **T3.3** Callable `acceptRide` / `declineRide` (Transaction)
 - [ ] **T3.4** Bottom sheet الطلب الجديد مع العداد
 - [ ] **T3.5** إشعارات FCM للطلبات الجديدة
 

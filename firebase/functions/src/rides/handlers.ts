@@ -4,6 +4,7 @@ import { fareEstimatesHandler } from '../getFareEstimates.js';
 import { authenticated } from '../lib/maps.js';
 import * as v from '../lib/validate.js';
 import { type VehicleType } from '../pricing.js';
+import { dispatchRide, offeredDriver, offerIsLive, type MatchingDeps } from './matching.js';
 
 export const activeStatuses = ['searching', 'accepted', 'arriving', 'arrived', 'in_progress'];
 const cancellable = ['searching', 'accepted', 'arriving', 'arrived'];
@@ -35,7 +36,8 @@ export async function requestRideHandler(request: CallableRequest, db: Firestore
       riderId: uid, driverId: null, status: 'searching', vehicleType,
       pickup: storedPlace(pickup), dropoff: storedPlace(dropoff), route: estimates.route,
       fare: { estimated, final: null, currency: 'JOD' }, paymentMethod: 'cash',
-      offeredTo: null, declinedBy: [], createdAt: FieldValue.serverTimestamp(),
+      offeredTo: null, offerExpiresAt: null, offerSeq: 0, offerDistanceMeters: null,
+      declinedBy: [], createdAt: FieldValue.serverTimestamp(),
       searchExpiresAt: Timestamp.fromMillis(now().toMillis() + 120000),
     });
     // This document also serializes concurrent requests from the same rider.
@@ -43,7 +45,7 @@ export async function requestRideHandler(request: CallableRequest, db: Firestore
   });
   return { rideId: rideRef.id };
 }
-function rideId(value: unknown) {
+export function rideId(value: unknown) {
   const id = v.string(v.object(value).rideId, 1, 1500);
   if (id.includes('/')) v.invalid();
   return id;
@@ -59,16 +61,21 @@ export async function cancelRideHandler(request: CallableRequest, db: Firestore)
     const userRef = db.doc(`users/${data.riderId}`);
     const user = await tx.get(userRef);
     if (data.status !== 'cancelled' && !cancellable.includes(data.status)) throw new HttpsError('failed-precondition', 'Ride cannot be cancelled.');
-    if (data.status !== 'cancelled') tx.update(ref, { status: 'cancelled', cancelledBy: 'rider', cancelledAt: FieldValue.serverTimestamp() });
+    const offered = await offeredDriver(db, tx, data);
+    const assigned = data.driverId ? await tx.get(db.doc(`drivers/${data.driverId}`)) : undefined;
+    if (data.status !== 'cancelled') tx.update(ref, { status: 'cancelled', cancelledBy: 'rider', cancelledAt: FieldValue.serverTimestamp(),
+      offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
+    if (offered?.data()?.offer?.rideId === ref.id) tx.update(offered.ref, { offer: null });
+    if (assigned?.data()?.currentRideId === ref.id) tx.update(assigned.ref, { currentRideId: null });
     // A repeated cancellation must never clear a newer ride.
     if (user.data()?.activeRideId === ref.id) tx.update(userRef, { activeRideId: FieldValue.delete() });
   });
   return { ok: true };
 }
-export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp.now()) {
+export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp.now(), deps?: MatchingDeps) {
   while (true) {
     const page = await db.collection('rides').where('status', '==', 'searching').where('searchExpiresAt', '<', now).limit(200).get();
-    if (page.empty) return;
+    if (page.empty) break;
     for (const document of page.docs) {
       await db.runTransaction(async (tx) => {
         const ride = await tx.get(document.ref);
@@ -76,9 +83,21 @@ export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp
         if (!data || data.status !== 'searching' || data.searchExpiresAt.toMillis() >= now.toMillis()) return;
         const userRef = db.doc(`users/${data.riderId}`);
         const user = await tx.get(userRef);
-        tx.update(document.ref, { status: 'no_drivers' });
+        const offered = await offeredDriver(db, tx, data);
+        tx.update(document.ref, { status: 'no_drivers', offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
+        if (offered?.data()?.offer?.rideId === document.id) tx.update(offered.ref, { offer: null });
         if (user.data()?.activeRideId === document.id) tx.update(userRef, { activeRideId: FieldValue.delete() });
       });
+    }
+  }
+  if (deps) {
+    const searching = await db.collection('rides').where('status', '==', 'searching').get();
+    for (const ride of searching.docs) {
+      const data = ride.data();
+      if (data.searchExpiresAt.toMillis() > now.toMillis() &&
+          data.createdAt?.toMillis() < now.toMillis() - 20000 && !offerIsLive(data, now)) {
+        await dispatchRide(db, ride.id, deps);
+      }
     }
   }
 }

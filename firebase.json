@@ -12,6 +12,7 @@
     ]
   },
   "emulators": {
+    "tasks": { "port": 9499 },
     "auth": {
       "port": 9099
     },
