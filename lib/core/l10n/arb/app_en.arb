@@ -199,5 +199,41 @@
   "driverEarnings": "Today's earnings",
   "driverEarningsAmount": "JD 0.00",
   "driverTrackingTitle": "Mishwar - you are online",
-  "driverTrackingText": "Updating your location to receive nearby ride requests"
+  "driverTrackingText": "Updating your location to receive nearby ride requests",
+  "offerSeconds": "{seconds} s",
+  "offerPickupDistance": "{minutes} min · {km} km to rider",
+  "offerTripDistance": "{minutes} min · {km} km",
+  "offerAccept": "Accept",
+  "offerDecline": "Decline",
+  "offerLost": "Offer gone",
+  "driverHeadingToPickup": "On the way to pickup",
+  "offerNotOffered": "This ride is no longer offered to you",
+  "offerDriverBusy": "You already have a ride",
+  "@offerSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@offerPickupDistance": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "@offerTripDistance": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  }
 }

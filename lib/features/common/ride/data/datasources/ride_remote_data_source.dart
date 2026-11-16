@@ -19,6 +19,14 @@ class RideRemoteDataSource {
     await _functions.httpsCallable('cancelRide').call<void>({'rideId': id});
   }
 
+  Future<void> accept(String id) async {
+    await _functions.httpsCallable('acceptRide').call<void>({'rideId': id});
+  }
+
+  Future<void> decline(String id) async {
+    await _functions.httpsCallable('declineRide').call<void>({'rideId': id});
+  }
+
   Stream<RideModel> watch(String id) =>
       _firestore.collection('rides').doc(id).snapshots().map((snapshot) {
         final data = snapshot.data();

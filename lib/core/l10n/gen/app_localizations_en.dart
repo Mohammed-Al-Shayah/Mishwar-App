@@ -391,4 +391,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get driverTrackingText =>
       'Updating your location to receive nearby ride requests';
+
+  @override
+  String offerSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String offerPickupDistance(int minutes, String km) {
+    return '$minutes min · $km km to rider';
+  }
+
+  @override
+  String offerTripDistance(int minutes, String km) {
+    return '$minutes min · $km km';
+  }
+
+  @override
+  String get offerAccept => 'Accept';
+
+  @override
+  String get offerDecline => 'Decline';
+
+  @override
+  String get offerLost => 'Offer gone';
+
+  @override
+  String get driverHeadingToPickup => 'On the way to pickup';
+
+  @override
+  String get offerNotOffered => 'This ride is no longer offered to you';
+
+  @override
+  String get offerDriverBusy => 'You already have a ride';
 }

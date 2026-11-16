@@ -37,8 +37,12 @@ import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart'
 import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
+import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
+    as offer;
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+import '../features/driver/offer/driver_offer_bloc_test.dart'
+    show MockOfferBloc;
 import '../features/driver/presence/driver_home_screen_test.dart'
     show MockPresenceBloc;
 import '../helpers/location_mocks.dart';
@@ -53,7 +57,10 @@ class MockWatchAuth extends Mock implements WatchAuthState {}
 class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
-  setUpAll(() => registerFallbackValue(const GoOnlinePressed()));
+  setUpAll(() {
+    registerFallbackValue(const GoOnlinePressed());
+    registerFallbackValue(const offer.Started('u'));
+  });
   for (final role in UserRole.values) {
     testWidgets('complete sign-in, name, ${role.name} and sign-out flow', (
       tester,
@@ -120,6 +127,13 @@ void main() {
         initialState: const DriverPresenceState(),
       );
       getIt.registerFactory<DriverPresenceBloc>(() => presence);
+      final offerBloc = MockOfferBloc();
+      whenListen(
+        offerBloc,
+        const Stream<offer.DriverOfferState>.empty(),
+        initialState: const offer.DriverOfferState(),
+      );
+      getIt.registerFactory<offer.DriverOfferBloc>(() => offerBloc);
       final location = MockLocationRepository();
       when(location.checkPermission).thenAnswer(
         (_) async => const Right(LocationPermissionStatus.deniedForever),

@@ -8,8 +8,12 @@ import 'package:mishwar/core/l10n/gen/app_localizations_ar.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations_en.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
+import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
+    as offer;
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../offer/driver_offer_bloc_test.dart' show MockOfferBloc;
 
 class MockPresenceBloc
     extends MockBloc<DriverPresenceEvent, DriverPresenceState>
@@ -30,7 +34,18 @@ Widget wrap(Widget child, {String language = 'ar'}) => ScreenUtilInit(
       ),
       child: child!,
     ),
-    home: child,
+    home: BlocProvider<offer.DriverOfferBloc>(
+      create: (_) {
+        final bloc = MockOfferBloc();
+        whenListen(
+          bloc,
+          const Stream<offer.DriverOfferState>.empty(),
+          initialState: const offer.DriverOfferState(),
+        );
+        return bloc;
+      },
+      child: child,
+    ),
   ),
 );
 Widget map(BuildContext context) =>

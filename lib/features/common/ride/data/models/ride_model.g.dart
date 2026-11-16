@@ -56,6 +56,11 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
     json['searchExpiresAt'],
     const TimestampConverter().fromJson,
   ),
+  offerExpiresAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['offerExpiresAt'],
+    const TimestampConverter().fromJson,
+  ),
+  offerDistanceMeters: (json['offerDistanceMeters'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
@@ -75,6 +80,11 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
         instance.searchExpiresAt,
         const TimestampConverter().toJson,
       ),
+      'offerExpiresAt': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.offerExpiresAt,
+        const TimestampConverter().toJson,
+      ),
+      'offerDistanceMeters': instance.offerDistanceMeters,
     };
 
 const _$VehicleTypeEnumMap = {

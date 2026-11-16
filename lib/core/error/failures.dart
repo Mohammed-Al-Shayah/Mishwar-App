@@ -81,3 +81,12 @@ final class ActiveRideFailure extends Failure {
   @override
   List<Object> get props => [activeRideId];
 }
+
+enum OfferFailureReason { expired, notOffered, driverBusy }
+
+final class OfferFailure extends Failure {
+  const OfferFailure(this.reason) : super('offer');
+  final OfferFailureReason reason;
+  @override
+  List<Object> get props => [reason];
+}

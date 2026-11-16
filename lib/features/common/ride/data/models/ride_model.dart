@@ -67,6 +67,8 @@ abstract class RideModel with _$RideModel {
     RouteModel? route,
     String? cancelledBy,
     @TimestampConverter() DateTime? searchExpiresAt,
+    @TimestampConverter() DateTime? offerExpiresAt,
+    int? offerDistanceMeters,
   }) = _RideModel;
   const RideModel._();
   factory RideModel.fromJson(Map<String, dynamic> json) =>
@@ -95,6 +97,8 @@ abstract class RideModel with _$RideModel {
       cancelledBy: cancelledBy,
       createdAt: createdAt,
       searchExpiresAt: searchExpiresAt,
+      offerExpiresAt: offerExpiresAt,
+      offerDistanceMeters: offerDistanceMeters,
     );
   }
 }

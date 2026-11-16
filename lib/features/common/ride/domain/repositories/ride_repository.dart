@@ -10,6 +10,8 @@ abstract class RideRepository {
     VehicleType vehicleType,
   );
   Future<Either<Failure, Unit>> cancelRide(String id);
+  Future<Either<Failure, Unit>> acceptRide(String id);
+  Future<Either<Failure, Unit>> declineRide(String id);
   Stream<Either<Failure, RideEntity>> watchRide(String id);
   Stream<Either<Failure, String?>> watchActiveRideId(String uid);
 }

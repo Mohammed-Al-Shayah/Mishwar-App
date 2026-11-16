@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DriverModel {
 
-@JsonKey(includeToJson: false) String get id;@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus get status; bool get isOnline; VehicleModel get vehicle; String? get licensePhotoPath; String? get rejectionReason; String? get currentRideId; DriverLocationModel? get location; double get heading;@TimestampConverter() DateTime? get lastSeenAt;
+@JsonKey(includeToJson: false) String get id;@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus get status; bool get isOnline; VehicleModel get vehicle; String? get licensePhotoPath; String? get rejectionReason; String? get currentRideId; DriverOfferModel? get offer; DriverLocationModel? get location; double get heading;@TimestampConverter() DateTime? get lastSeenAt;
 /// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DriverModelCopyWith<DriverModel> get copyWith => _$DriverModelCopyWithImpl<Driv
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.licensePhotoPath, licensePhotoPath) || other.licensePhotoPath == licensePhotoPath)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.licensePhotoPath, licensePhotoPath) || other.licensePhotoPath == licensePhotoPath)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.offer, offer) || other.offer == offer)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,licensePhotoPath,rejectionReason,currentRideId,location,heading,lastSeenAt);
+int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,licensePhotoPath,rejectionReason,currentRideId,offer,location,heading,lastSeenAt);
 
 @override
 String toString() {
-  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, licensePhotoPath: $licensePhotoPath, rejectionReason: $rejectionReason, currentRideId: $currentRideId, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
+  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, licensePhotoPath: $licensePhotoPath, rejectionReason: $rejectionReason, currentRideId: $currentRideId, offer: $offer, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $DriverModelCopyWith<$Res>  {
   factory $DriverModelCopyWith(DriverModel value, $Res Function(DriverModel) _then) = _$DriverModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? licensePhotoPath, String? rejectionReason, String? currentRideId, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
+@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? licensePhotoPath, String? rejectionReason, String? currentRideId, DriverOfferModel? offer, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
 });
 
 
-$VehicleModelCopyWith<$Res> get vehicle;$DriverLocationModelCopyWith<$Res>? get location;
+$VehicleModelCopyWith<$Res> get vehicle;$DriverOfferModelCopyWith<$Res>? get offer;$DriverLocationModelCopyWith<$Res>? get location;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$DriverModelCopyWithImpl<$Res>
 
 /// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? licensePhotoPath = freezed,Object? rejectionReason = freezed,Object? currentRideId = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? licensePhotoPath = freezed,Object? rejectionReason = freezed,Object? currentRideId = freezed,Object? offer = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as bool,vehicle: null == vehicle ? _self.vehicle : vehicle // ignore: cast_nulla
 as VehicleModel,licensePhotoPath: freezed == licensePhotoPath ? _self.licensePhotoPath : licensePhotoPath // ignore: cast_nullable_to_non_nullable
 as String?,rejectionReason: freezed == rejectionReason ? _self.rejectionReason : rejectionReason // ignore: cast_nullable_to_non_nullable
 as String?,currentRideId: freezed == currentRideId ? _self.currentRideId : currentRideId // ignore: cast_nullable_to_non_nullable
-as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,offer: freezed == offer ? _self.offer : offer // ignore: cast_nullable_to_non_nullable
+as DriverOfferModel?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as DriverLocationModel?,heading: null == heading ? _self.heading : heading // ignore: cast_nullable_to_non_nullable
 as double,lastSeenAt: freezed == lastSeenAt ? _self.lastSeenAt : lastSeenAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -88,6 +89,18 @@ $VehicleModelCopyWith<$Res> get vehicle {
   
   return $VehicleModelCopyWith<$Res>(_self.vehicle, (value) {
     return _then(_self.copyWith(vehicle: value));
+  });
+}/// Create a copy of DriverModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DriverOfferModelCopyWith<$Res>? get offer {
+    if (_self.offer == null) {
+    return null;
+  }
+
+  return $DriverOfferModelCopyWith<$Res>(_self.offer!, (value) {
+    return _then(_self.copyWith(offer: value));
   });
 }/// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
@@ -183,10 +196,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverOfferModel? offer,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DriverModel() when $default != null:
-return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
+return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.offer,_that.location,_that.heading,_that.lastSeenAt);case _:
   return orElse();
 
 }
@@ -204,10 +217,10 @@ return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.license
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverOfferModel? offer,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)  $default,) {final _that = this;
 switch (_that) {
 case _DriverModel():
-return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
+return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.offer,_that.location,_that.heading,_that.lastSeenAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -224,10 +237,10 @@ return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.license
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id, @JsonKey(unknownEnumValue: DriverStatus.pending)  DriverStatus status,  bool isOnline,  VehicleModel vehicle,  String? licensePhotoPath,  String? rejectionReason,  String? currentRideId,  DriverOfferModel? offer,  DriverLocationModel? location,  double heading, @TimestampConverter()  DateTime? lastSeenAt)?  $default,) {final _that = this;
 switch (_that) {
 case _DriverModel() when $default != null:
-return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.location,_that.heading,_that.lastSeenAt);case _:
+return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.licensePhotoPath,_that.rejectionReason,_that.currentRideId,_that.offer,_that.location,_that.heading,_that.lastSeenAt);case _:
   return null;
 
 }
@@ -239,7 +252,7 @@ return $default(_that.id,_that.status,_that.isOnline,_that.vehicle,_that.license
 
 @JsonSerializable(explicitToJson: true)
 class _DriverModel extends DriverModel {
-  const _DriverModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(unknownEnumValue: DriverStatus.pending) required this.status, required this.isOnline, required this.vehicle, this.licensePhotoPath, this.rejectionReason, this.currentRideId, this.location, this.heading = 0, @TimestampConverter() this.lastSeenAt}): super._();
+  const _DriverModel({@JsonKey(includeToJson: false) required this.id, @JsonKey(unknownEnumValue: DriverStatus.pending) required this.status, required this.isOnline, required this.vehicle, this.licensePhotoPath, this.rejectionReason, this.currentRideId, this.offer, this.location, this.heading = 0, @TimestampConverter() this.lastSeenAt}): super._();
   factory _DriverModel.fromJson(Map<String, dynamic> json) => _$DriverModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
@@ -249,6 +262,7 @@ class _DriverModel extends DriverModel {
 @override final  String? licensePhotoPath;
 @override final  String? rejectionReason;
 @override final  String? currentRideId;
+@override final  DriverOfferModel? offer;
 @override final  DriverLocationModel? location;
 @override@JsonKey() final  double heading;
 @override@TimestampConverter() final  DateTime? lastSeenAt;
@@ -266,16 +280,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.licensePhotoPath, licensePhotoPath) || other.licensePhotoPath == licensePhotoPath)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriverModel&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.isOnline, isOnline) || other.isOnline == isOnline)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.licensePhotoPath, licensePhotoPath) || other.licensePhotoPath == licensePhotoPath)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.currentRideId, currentRideId) || other.currentRideId == currentRideId)&&(identical(other.offer, offer) || other.offer == offer)&&(identical(other.location, location) || other.location == location)&&(identical(other.heading, heading) || other.heading == heading)&&(identical(other.lastSeenAt, lastSeenAt) || other.lastSeenAt == lastSeenAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,licensePhotoPath,rejectionReason,currentRideId,location,heading,lastSeenAt);
+int get hashCode => Object.hash(runtimeType,id,status,isOnline,vehicle,licensePhotoPath,rejectionReason,currentRideId,offer,location,heading,lastSeenAt);
 
 @override
 String toString() {
-  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, licensePhotoPath: $licensePhotoPath, rejectionReason: $rejectionReason, currentRideId: $currentRideId, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
+  return 'DriverModel(id: $id, status: $status, isOnline: $isOnline, vehicle: $vehicle, licensePhotoPath: $licensePhotoPath, rejectionReason: $rejectionReason, currentRideId: $currentRideId, offer: $offer, location: $location, heading: $heading, lastSeenAt: $lastSeenAt)';
 }
 
 
@@ -286,11 +300,11 @@ abstract mixin class _$DriverModelCopyWith<$Res> implements $DriverModelCopyWith
   factory _$DriverModelCopyWith(_DriverModel value, $Res Function(_DriverModel) _then) = __$DriverModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? licensePhotoPath, String? rejectionReason, String? currentRideId, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
+@JsonKey(includeToJson: false) String id,@JsonKey(unknownEnumValue: DriverStatus.pending) DriverStatus status, bool isOnline, VehicleModel vehicle, String? licensePhotoPath, String? rejectionReason, String? currentRideId, DriverOfferModel? offer, DriverLocationModel? location, double heading,@TimestampConverter() DateTime? lastSeenAt
 });
 
 
-@override $VehicleModelCopyWith<$Res> get vehicle;@override $DriverLocationModelCopyWith<$Res>? get location;
+@override $VehicleModelCopyWith<$Res> get vehicle;@override $DriverOfferModelCopyWith<$Res>? get offer;@override $DriverLocationModelCopyWith<$Res>? get location;
 
 }
 /// @nodoc
@@ -303,7 +317,7 @@ class __$DriverModelCopyWithImpl<$Res>
 
 /// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? licensePhotoPath = freezed,Object? rejectionReason = freezed,Object? currentRideId = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? isOnline = null,Object? vehicle = null,Object? licensePhotoPath = freezed,Object? rejectionReason = freezed,Object? currentRideId = freezed,Object? offer = freezed,Object? location = freezed,Object? heading = null,Object? lastSeenAt = freezed,}) {
   return _then(_DriverModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -312,7 +326,8 @@ as bool,vehicle: null == vehicle ? _self.vehicle : vehicle // ignore: cast_nulla
 as VehicleModel,licensePhotoPath: freezed == licensePhotoPath ? _self.licensePhotoPath : licensePhotoPath // ignore: cast_nullable_to_non_nullable
 as String?,rejectionReason: freezed == rejectionReason ? _self.rejectionReason : rejectionReason // ignore: cast_nullable_to_non_nullable
 as String?,currentRideId: freezed == currentRideId ? _self.currentRideId : currentRideId // ignore: cast_nullable_to_non_nullable
-as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,offer: freezed == offer ? _self.offer : offer // ignore: cast_nullable_to_non_nullable
+as DriverOfferModel?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as DriverLocationModel?,heading: null == heading ? _self.heading : heading // ignore: cast_nullable_to_non_nullable
 as double,lastSeenAt: freezed == lastSeenAt ? _self.lastSeenAt : lastSeenAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -327,6 +342,18 @@ $VehicleModelCopyWith<$Res> get vehicle {
   
   return $VehicleModelCopyWith<$Res>(_self.vehicle, (value) {
     return _then(_self.copyWith(vehicle: value));
+  });
+}/// Create a copy of DriverModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DriverOfferModelCopyWith<$Res>? get offer {
+    if (_self.offer == null) {
+    return null;
+  }
+
+  return $DriverOfferModelCopyWith<$Res>(_self.offer!, (value) {
+    return _then(_self.copyWith(offer: value));
   });
 }/// Create a copy of DriverModel
 /// with the given fields replaced by the non-null parameter values.
@@ -603,6 +630,275 @@ class __$DriverLocationModelCopyWithImpl<$Res>
 geopoint: null == geopoint ? _self.geopoint : geopoint // ignore: cast_nullable_to_non_nullable
 as GeoPointValue,geohash: null == geohash ? _self.geohash : geohash // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$DriverOfferModel {
+
+ String get rideId;@TimestampConverter() DateTime get expiresAt; int get seq;
+/// Create a copy of DriverOfferModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DriverOfferModelCopyWith<DriverOfferModel> get copyWith => _$DriverOfferModelCopyWithImpl<DriverOfferModel>(this as DriverOfferModel, _$identity);
+
+  /// Serializes this DriverOfferModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DriverOfferModel&&(identical(other.rideId, rideId) || other.rideId == rideId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.seq, seq) || other.seq == seq));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,rideId,expiresAt,seq);
+
+@override
+String toString() {
+  return 'DriverOfferModel(rideId: $rideId, expiresAt: $expiresAt, seq: $seq)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DriverOfferModelCopyWith<$Res>  {
+  factory $DriverOfferModelCopyWith(DriverOfferModel value, $Res Function(DriverOfferModel) _then) = _$DriverOfferModelCopyWithImpl;
+@useResult
+$Res call({
+ String rideId,@TimestampConverter() DateTime expiresAt, int seq
+});
+
+
+
+
+}
+/// @nodoc
+class _$DriverOfferModelCopyWithImpl<$Res>
+    implements $DriverOfferModelCopyWith<$Res> {
+  _$DriverOfferModelCopyWithImpl(this._self, this._then);
+
+  final DriverOfferModel _self;
+  final $Res Function(DriverOfferModel) _then;
+
+/// Create a copy of DriverOfferModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? rideId = null,Object? expiresAt = null,Object? seq = null,}) {
+  return _then(_self.copyWith(
+rideId: null == rideId ? _self.rideId : rideId // ignore: cast_nullable_to_non_nullable
+as String,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [DriverOfferModel].
+extension DriverOfferModelPatterns on DriverOfferModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DriverOfferModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DriverOfferModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DriverOfferModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _DriverOfferModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DriverOfferModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DriverOfferModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String rideId, @TimestampConverter()  DateTime expiresAt,  int seq)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DriverOfferModel() when $default != null:
+return $default(_that.rideId,_that.expiresAt,_that.seq);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String rideId, @TimestampConverter()  DateTime expiresAt,  int seq)  $default,) {final _that = this;
+switch (_that) {
+case _DriverOfferModel():
+return $default(_that.rideId,_that.expiresAt,_that.seq);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String rideId, @TimestampConverter()  DateTime expiresAt,  int seq)?  $default,) {final _that = this;
+switch (_that) {
+case _DriverOfferModel() when $default != null:
+return $default(_that.rideId,_that.expiresAt,_that.seq);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _DriverOfferModel extends DriverOfferModel {
+  const _DriverOfferModel({required this.rideId, @TimestampConverter() required this.expiresAt, required this.seq}): super._();
+  factory _DriverOfferModel.fromJson(Map<String, dynamic> json) => _$DriverOfferModelFromJson(json);
+
+@override final  String rideId;
+@override@TimestampConverter() final  DateTime expiresAt;
+@override final  int seq;
+
+/// Create a copy of DriverOfferModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DriverOfferModelCopyWith<_DriverOfferModel> get copyWith => __$DriverOfferModelCopyWithImpl<_DriverOfferModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DriverOfferModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DriverOfferModel&&(identical(other.rideId, rideId) || other.rideId == rideId)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.seq, seq) || other.seq == seq));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,rideId,expiresAt,seq);
+
+@override
+String toString() {
+  return 'DriverOfferModel(rideId: $rideId, expiresAt: $expiresAt, seq: $seq)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DriverOfferModelCopyWith<$Res> implements $DriverOfferModelCopyWith<$Res> {
+  factory _$DriverOfferModelCopyWith(_DriverOfferModel value, $Res Function(_DriverOfferModel) _then) = __$DriverOfferModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String rideId,@TimestampConverter() DateTime expiresAt, int seq
+});
+
+
+
+
+}
+/// @nodoc
+class __$DriverOfferModelCopyWithImpl<$Res>
+    implements _$DriverOfferModelCopyWith<$Res> {
+  __$DriverOfferModelCopyWithImpl(this._self, this._then);
+
+  final _DriverOfferModel _self;
+  final $Res Function(_DriverOfferModel) _then;
+
+/// Create a copy of DriverOfferModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? rideId = null,Object? expiresAt = null,Object? seq = null,}) {
+  return _then(_DriverOfferModel(
+rideId: null == rideId ? _self.rideId : rideId // ignore: cast_nullable_to_non_nullable
+as String,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

@@ -384,4 +384,37 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get driverTrackingText =>
       'نحدّث موقعك لاستقبال طلبات المشاوير القريبة';
+
+  @override
+  String offerSeconds(int seconds) {
+    return '$seconds ث';
+  }
+
+  @override
+  String offerPickupDistance(int minutes, String km) {
+    return '$minutes د · $km كم لعند الراكب';
+  }
+
+  @override
+  String offerTripDistance(int minutes, String km) {
+    return '$minutes د · $km كم';
+  }
+
+  @override
+  String get offerAccept => 'قبول';
+
+  @override
+  String get offerDecline => 'رفض';
+
+  @override
+  String get offerLost => 'راح الطلب';
+
+  @override
+  String get driverHeadingToPickup => 'رايح لعند الراكب';
+
+  @override
+  String get offerNotOffered => 'الطلب مش معروض إلك';
+
+  @override
+  String get offerDriverBusy => 'عندك مشوار حالي';
 }

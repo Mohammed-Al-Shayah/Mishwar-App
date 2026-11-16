@@ -32,11 +32,62 @@ Map<String, dynamic> rideJson() => {
   'route': {'polyline': 'abc', 'distanceMeters': 5000, 'durationSeconds': 600},
   'fare': {'estimated': 2.55, 'final': null, 'currency': 'JOD'},
   'createdAt': Timestamp.fromDate(DateTime.utc(2026)),
+  'offerExpiresAt': Timestamp.fromDate(DateTime.utc(2026, 1, 1, 0, 0, 15)),
+  'offerDistanceMeters': 1200,
   'searchExpiresAt': Timestamp.fromDate(
     DateTime.utc(2026).add(const Duration(minutes: 2)),
   ),
 };
 void main() {
+  test('accept and decline map success and offer failures', () async {
+    final source = MockSource();
+    final repository = RideRepositoryImpl(source);
+    when(() => source.accept('ride')).thenAnswer((_) async {});
+    when(() => source.decline('ride')).thenAnswer((_) async {});
+    expect(
+      await repository.acceptRide('ride'),
+      const Right<Failure, Unit>(unit),
+    );
+    expect(
+      await repository.declineRide('ride'),
+      const Right<Failure, Unit>(unit),
+    );
+    for (final entry in {
+      'offer-expired': OfferFailureReason.expired,
+      'not-offered': OfferFailureReason.notOffered,
+      'driver-busy': OfferFailureReason.driverBusy,
+    }.entries) {
+      when(() => source.accept('ride')).thenThrow(
+        FirebaseFunctionsException(
+          code: 'failed-precondition',
+          message: 'Offer rejected',
+          details: {'reason': entry.key},
+        ),
+      );
+      expect(
+        await repository.acceptRide('ride'),
+        Left<Failure, Unit>(OfferFailure(entry.value)),
+      );
+    }
+    when(
+      () => source.accept('ride'),
+    ).thenThrow(
+      FirebaseFunctionsException(code: 'unavailable', message: 'Offline'),
+    );
+    when(
+      () => source.decline('ride'),
+    ).thenThrow(
+      FirebaseFunctionsException(code: 'unavailable', message: 'Offline'),
+    );
+    expect(
+      (await repository.acceptRide('ride')).getLeft().toNullable(),
+      isA<NetworkFailure>(),
+    );
+    expect(
+      (await repository.declineRide('ride')).getLeft().toNullable(),
+      isA<NetworkFailure>(),
+    );
+  });
   test(
     'Firestore ride round-trip preserves nested data, timestamps and fils',
     () {
@@ -44,6 +95,8 @@ void main() {
       expect(RideModel.fromJson(model.toJson()), model);
       final entity = model.toEntity();
       expect(entity.fareEstimatedFils, 2550);
+      expect(entity.offerDistanceMeters, 1200);
+      expect(entity.offerExpiresAt, DateTime.utc(2026, 1, 1, 0, 0, 15));
       expect(entity.fareFinalFils, isNull);
       expect(entity.pickup.location.lat, 31.95);
       expect(entity.route!.durationSeconds, 600);

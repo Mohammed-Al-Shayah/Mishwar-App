@@ -199,5 +199,41 @@
   "driverEarnings": "أرباح اليوم",
   "driverEarningsAmount": "JD 0.00",
   "driverTrackingTitle": "مشوار — أنت متصل",
-  "driverTrackingText": "نحدّث موقعك لاستقبال طلبات المشاوير القريبة"
+  "driverTrackingText": "نحدّث موقعك لاستقبال طلبات المشاوير القريبة",
+  "offerSeconds": "{seconds} ث",
+  "offerPickupDistance": "{minutes} د · {km} كم لعند الراكب",
+  "offerTripDistance": "{minutes} د · {km} كم",
+  "offerAccept": "قبول",
+  "offerDecline": "رفض",
+  "offerLost": "راح الطلب",
+  "driverHeadingToPickup": "رايح لعند الراكب",
+  "offerNotOffered": "الطلب مش معروض إلك",
+  "offerDriverBusy": "عندك مشوار حالي",
+  "@offerSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@offerPickupDistance": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "@offerTripDistance": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  }
 }

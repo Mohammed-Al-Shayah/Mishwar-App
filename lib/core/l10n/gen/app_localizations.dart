@@ -805,6 +805,60 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'نحدّث موقعك لاستقبال طلبات المشاوير القريبة'**
   String get driverTrackingText;
+
+  /// No description provided for @offerSeconds.
+  ///
+  /// In ar, this message translates to:
+  /// **'{seconds} ث'**
+  String offerSeconds(int seconds);
+
+  /// No description provided for @offerPickupDistance.
+  ///
+  /// In ar, this message translates to:
+  /// **'{minutes} د · {km} كم لعند الراكب'**
+  String offerPickupDistance(int minutes, String km);
+
+  /// No description provided for @offerTripDistance.
+  ///
+  /// In ar, this message translates to:
+  /// **'{minutes} د · {km} كم'**
+  String offerTripDistance(int minutes, String km);
+
+  /// No description provided for @offerAccept.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول'**
+  String get offerAccept;
+
+  /// No description provided for @offerDecline.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض'**
+  String get offerDecline;
+
+  /// No description provided for @offerLost.
+  ///
+  /// In ar, this message translates to:
+  /// **'راح الطلب'**
+  String get offerLost;
+
+  /// No description provided for @driverHeadingToPickup.
+  ///
+  /// In ar, this message translates to:
+  /// **'رايح لعند الراكب'**
+  String get driverHeadingToPickup;
+
+  /// No description provided for @offerNotOffered.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلب مش معروض إلك'**
+  String get offerNotOffered;
+
+  /// No description provided for @offerDriverBusy.
+  ///
+  /// In ar, this message translates to:
+  /// **'عندك مشوار حالي'**
+  String get offerDriverBusy;
 }
 
 class _AppLocalizationsDelegate

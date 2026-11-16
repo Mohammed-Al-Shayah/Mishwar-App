@@ -26,6 +26,11 @@ String failureMessage(BuildContext context, Failure failure) {
     ValidationFailure(field: 'photo') => l10n.errorPhotoRequired,
     ValidationFailure(message: 'name-required') => l10n.errorNameRequired,
     ValidationFailure() => l10n.errorNameLength,
+    OfferFailure(:final reason) => switch (reason) {
+      OfferFailureReason.expired => l10n.offerLost,
+      OfferFailureReason.notOffered => l10n.offerNotOffered,
+      OfferFailureReason.driverBusy => l10n.offerDriverBusy,
+    },
     NetworkFailure() => l10n.errorNetwork,
     _ => l10n.errorGeneric,
   };

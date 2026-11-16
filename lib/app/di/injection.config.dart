@@ -85,8 +85,12 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart'
     as _i422;
 import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart'
     as _i118;
+import 'package:mishwar/features/common/ride/domain/usecases/accept_ride.dart'
+    as _i851;
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart'
     as _i72;
+import 'package:mishwar/features/common/ride/domain/usecases/decline_ride.dart'
+    as _i100;
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart'
     as _i892;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart'
@@ -125,6 +129,8 @@ import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart'
     as _i291;
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart'
     as _i106;
+import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
+    as _i804;
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart'
     as _i396;
 import 'package:mishwar/features/driver/presence/data/driver_location_source.dart'
@@ -170,6 +176,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
     gh.lazySingleton<_i766.GeolocatorClient>(() => _i766.GeolocatorClient());
     gh.lazySingleton<_i304.FareCalculator>(() => const _i304.FareCalculator());
+    gh.lazySingleton<_i804.OfferScheduler>(() => _i804.OfferScheduler());
     gh.lazySingleton<_i27.DriverLocationSource>(
       () => _i27.DriverLocationSource(),
     );
@@ -318,8 +325,14 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i584.WatchAuthState(gh<_i290.AuthRepository>()),
     );
     gh.factory<_i520.RoleCubit>(() => _i520.RoleCubit(gh<_i600.SetUserRole>()));
+    gh.lazySingleton<_i851.AcceptRide>(
+      () => _i851.AcceptRide(gh<_i118.RideRepository>()),
+    );
     gh.lazySingleton<_i72.CancelRide>(
       () => _i72.CancelRide(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i100.DeclineRide>(
+      () => _i100.DeclineRide(gh<_i118.RideRepository>()),
     );
     gh.lazySingleton<_i892.RequestRide>(
       () => _i892.RequestRide(gh<_i118.RideRepository>()),
@@ -375,6 +388,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i693.NameCubit>(
       () => _i693.NameCubit(gh<_i801.CreateUserProfile>()),
+    );
+    gh.factory<_i804.DriverOfferBloc>(
+      () => _i804.DriverOfferBloc(
+        gh<_i291.WatchDriver>(),
+        gh<_i263.WatchRide>(),
+        gh<_i851.AcceptRide>(),
+        gh<_i100.DeclineRide>(),
+        gh<_i804.OfferScheduler>(),
+      ),
     );
     gh.factory<_i964.PhoneCubit>(() => _i964.PhoneCubit(gh<_i563.SendOtp>()));
     gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
