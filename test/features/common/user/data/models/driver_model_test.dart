@@ -32,9 +32,16 @@ void main() {
     ),
     heading: 90,
     lastSeenAt: DateTime.utc(2026),
+    offer: DriverOfferModel(
+      rideId: 'ride',
+      expiresAt: DateTime.utc(2026, 1, 1, 0, 0, 15),
+      seq: 2,
+    ),
   );
   test('round trip retains nested Firestore fields and entities', () {
     final json = model.toJson();
+    expect(model.toEntity().offer?.seq, 2);
+    expect((json['offer'] as Map)['expiresAt'], isA<Timestamp>());
     expect(DriverModel.fromJson({...json, 'id': model.id}), model);
     expect(json['location'], {
       'geopoint': const GeoPoint(31, 35),

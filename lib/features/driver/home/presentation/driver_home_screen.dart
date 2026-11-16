@@ -12,6 +12,9 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
+import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
+    as offer;
+import 'package:mishwar/features/driver/offer/presentation/driver_offer_sheet.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 
 class DriverHomeScreen extends StatelessWidget {
@@ -107,6 +110,7 @@ class _DriverHomeState extends State<_DriverHome> {
     listener: (_, _) => _recenter(),
     builder: (context, state) {
       final l10n = context.l10n;
+      final offerState = context.watch<offer.DriverOfferBloc>().state;
       return Scaffold(
         body: Stack(
           children: [
@@ -166,20 +170,21 @@ class _DriverHomeState extends State<_DriverHome> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        MwMapFab(
-                          icon: AppIcons.recenter,
-                          label: l10n.recenterMap,
-                          onPressed: state.lastFix == null ? null : _recenter,
-                        ),
-                      ],
+                  if (!offerState.showing)
+                    Padding(
+                      padding: EdgeInsets.all(AppSpacing.md),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          MwMapFab(
+                            icon: AppIcons.recenter,
+                            label: l10n.recenterMap,
+                            onPressed: state.lastFix == null ? null : _recenter,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  if (!state.isOnline)
+                  if (!state.isOnline && !offerState.showing)
                     Padding(
                       padding: EdgeInsets.only(bottom: AppSpacing.xl),
                       child: SizedBox(
@@ -198,6 +203,7 @@ class _DriverHomeState extends State<_DriverHome> {
                         ),
                       ),
                     ),
+                  const DriverOfferOverlay(),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -241,7 +247,7 @@ class _DriverHomeState extends State<_DriverHome> {
                                     ],
                                   ),
                                 ),
-                                if (state.isOnline) ...[
+                                if (state.isOnline && !offerState.showing) ...[
                                   SizedBox(width: AppSpacing.xs),
                                   FilledButton.tonal(
                                     key: const Key('driver_stop'),

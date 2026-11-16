@@ -1,6 +1,10 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get offerButtonHeight => 56.h;
+  static double get countdownHeight => 4.h;
+  static const contentDuration = Duration(milliseconds: 250);
+  static const offerSheetFraction = 0.7;
   static double get driverStart => 72.r;
   static const driverPulseDuration = Duration(seconds: 2);
   static double get driverBarClearance => 180.h;

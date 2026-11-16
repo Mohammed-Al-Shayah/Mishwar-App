@@ -21,6 +21,7 @@ abstract class DriverModel with _$DriverModel {
     String? licensePhotoPath,
     String? rejectionReason,
     String? currentRideId,
+    DriverOfferModel? offer,
     DriverLocationModel? location,
     @Default(0) double heading,
     @TimestampConverter() DateTime? lastSeenAt,
@@ -40,6 +41,9 @@ abstract class DriverModel with _$DriverModel {
     status: entity.status,
     isOnline: entity.isOnline,
     currentRideId: entity.currentRideId,
+    offer: entity.offer == null
+        ? null
+        : DriverOfferModel.fromEntity(entity.offer!),
     vehicle: VehicleModel.fromEntity(entity.vehicle),
     location: entity.location == null
         ? null
@@ -54,6 +58,7 @@ abstract class DriverModel with _$DriverModel {
     status: status,
     isOnline: isOnline,
     currentRideId: currentRideId,
+    offer: offer?.toEntity(),
     vehicle: vehicle.toEntity(),
     location: location?.toEntity(),
     heading: heading,
@@ -74,4 +79,23 @@ abstract class DriverLocationModel with _$DriverLocationModel {
       DriverLocationModel(geopoint: entity.point, geohash: entity.geohash);
   DriverLocation toEntity() =>
       DriverLocation(point: geopoint, geohash: geohash);
+}
+
+@freezed
+abstract class DriverOfferModel with _$DriverOfferModel {
+  const factory DriverOfferModel({
+    required String rideId,
+    @TimestampConverter() required DateTime expiresAt,
+    required int seq,
+  }) = _DriverOfferModel;
+  const DriverOfferModel._();
+  factory DriverOfferModel.fromJson(Map<String, dynamic> json) =>
+      _$DriverOfferModelFromJson(json);
+  factory DriverOfferModel.fromEntity(DriverOffer offer) => DriverOfferModel(
+    rideId: offer.rideId,
+    expiresAt: offer.expiresAt,
+    seq: offer.seq,
+  );
+  DriverOffer toEntity() =>
+      DriverOffer(rideId: rideId, expiresAt: expiresAt, seq: seq);
 }

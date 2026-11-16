@@ -393,7 +393,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - [x] **T3.1** زر متصل وغير متصل + إرسال الموقع كل 5 ثواني (geohash)
 - [x] **T3.2** Cloud Function `onRideCreated` (Matching) + المهلة + الانتقال للسائق اللي بعده
 - [x] **T3.3** Callable `acceptRide` / `declineRide` (Transaction)
-- [ ] **T3.4** Bottom sheet الطلب الجديد مع العداد
+- [x] **T3.4** Bottom sheet الطلب الجديد مع العداد
 - [ ] **T3.5** إشعارات FCM للطلبات الجديدة
 
 **معيار القبول:** على الـ Emulator، راكب بيطلب، والسائق الأقرب بيوصله الطلب وبيقبله، والراكب بيشوف معلومات السائق.

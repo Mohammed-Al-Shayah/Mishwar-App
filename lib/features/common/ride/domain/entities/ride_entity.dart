@@ -32,6 +32,8 @@ class RideEntity extends Equatable {
     this.fareFinalFils,
     this.cancelledBy,
     this.searchExpiresAt,
+    this.offerExpiresAt,
+    this.offerDistanceMeters,
   });
   final String id;
   final String riderId;
@@ -46,6 +48,8 @@ class RideEntity extends Equatable {
   final String? cancelledBy;
   final DateTime createdAt;
   final DateTime? searchExpiresAt;
+  final DateTime? offerExpiresAt;
+  final int? offerDistanceMeters;
   RideDraft get draft => RideDraft(pickup: pickup, dropoff: dropoff);
   @override
   List<Object?> get props => [
@@ -62,5 +66,7 @@ class RideEntity extends Equatable {
     cancelledBy,
     createdAt,
     searchExpiresAt,
+    offerExpiresAt,
+    offerDistanceMeters,
   ];
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,9 +19,13 @@ import 'package:mishwar/features/common/auth/presentation/session/session_cubit.
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
+import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
+    as offer;
+import 'package:mishwar/features/driver/offer/presentation/driver_ride_placeholder.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
@@ -59,7 +64,12 @@ String? sessionRedirect(
                 : '/rider')
           : switch (driver?.status) {
               null => '/driver/onboarding',
-              DriverStatus.approved => '/driver',
+              DriverStatus.approved =>
+                location == '/driver' && driver?.currentRideId != null
+                    ? '/driver/ride/${driver!.currentRideId}'
+                    : RegExp(r'^/driver/ride/[^/]+$').hasMatch(location)
+                    ? location
+                    : '/driver',
               DriverStatus.rejected when location == '/driver/onboarding' =>
                 '/driver/onboarding',
               _ => '/driver/pending',
@@ -195,11 +205,25 @@ GoRouter createAppRouter(
     ),
     GoRoute(
       path: '/driver',
+      routes: [
+        GoRoute(
+          path: 'ride/:rideId',
+          builder: (_, state) => DriverRidePlaceholder(
+            rideId: state.pathParameters['rideId']!,
+            watchRide: getIt<WatchRide>(),
+          ),
+        ),
+      ],
       builder: (_, _) => BlocProvider(
-        create: (_) => getIt<DriverPresenceBloc>(),
-        child: DriverHomeScreen(
-          uid: (session.state as SessionReady).user.id,
-          mapBuilder: driverMapBuilder,
+        create: (_) =>
+            getIt<offer.DriverOfferBloc>()
+              ..add(offer.Started((session.state as SessionReady).user.id)),
+        child: BlocProvider(
+          create: (_) => getIt<DriverPresenceBloc>(),
+          child: DriverHomeScreen(
+            uid: (session.state as SessionReady).user.id,
+            mapBuilder: driverMapBuilder,
+          ),
         ),
       ),
     ),

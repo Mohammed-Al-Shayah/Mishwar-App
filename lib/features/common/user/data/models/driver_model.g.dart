@@ -18,6 +18,9 @@ _DriverModel _$DriverModelFromJson(Map<String, dynamic> json) => _DriverModel(
   licensePhotoPath: json['licensePhotoPath'] as String?,
   rejectionReason: json['rejectionReason'] as String?,
   currentRideId: json['currentRideId'] as String?,
+  offer: json['offer'] == null
+      ? null
+      : DriverOfferModel.fromJson(json['offer'] as Map<String, dynamic>),
   location: json['location'] == null
       ? null
       : DriverLocationModel.fromJson(json['location'] as Map<String, dynamic>),
@@ -36,6 +39,7 @@ Map<String, dynamic> _$DriverModelToJson(_DriverModel instance) =>
       'licensePhotoPath': instance.licensePhotoPath,
       'rejectionReason': instance.rejectionReason,
       'currentRideId': instance.currentRideId,
+      'offer': instance.offer?.toJson(),
       'location': instance.location?.toJson(),
       'heading': instance.heading,
       'lastSeenAt': _$JsonConverterToJson<Timestamp, DateTime>(
@@ -75,3 +79,19 @@ Map<String, dynamic> _$DriverLocationModelToJson(
   'geopoint': const GeoPointConverter().toJson(instance.geopoint),
   'geohash': instance.geohash,
 };
+
+_DriverOfferModel _$DriverOfferModelFromJson(Map<String, dynamic> json) =>
+    _DriverOfferModel(
+      rideId: json['rideId'] as String,
+      expiresAt: const TimestampConverter().fromJson(
+        json['expiresAt'] as Timestamp,
+      ),
+      seq: (json['seq'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$DriverOfferModelToJson(_DriverOfferModel instance) =>
+    <String, dynamic>{
+      'rideId': instance.rideId,
+      'expiresAt': const TimestampConverter().toJson(instance.expiresAt),
+      'seq': instance.seq,
+    };

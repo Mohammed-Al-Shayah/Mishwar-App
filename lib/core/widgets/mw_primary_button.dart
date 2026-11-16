@@ -7,15 +7,17 @@ class MwPrimaryButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.isLoading = false,
+    this.height,
     super.key,
   });
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final double? height;
   @override
   Widget build(BuildContext context) => SizedBox(
     width: double.infinity,
-    height: AppSizes.buttonHeight,
+    height: height ?? AppSizes.buttonHeight,
     child: FilledButton(
       onPressed: isLoading ? null : onPressed,
       style: isLoading

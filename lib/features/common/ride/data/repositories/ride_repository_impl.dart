@@ -56,6 +56,37 @@ class RideRepositoryImpl implements RideRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, Unit>> acceptRide(String id) async {
+    try {
+      await _source.accept(id);
+      return const Right(unit);
+    } on Object catch (error) {
+      if (error is FirebaseFunctionsException &&
+          error.code == 'failed-precondition' &&
+          error.details is Map) {
+        final reason = switch ((error.details as Map)['reason']) {
+          'offer-expired' => OfferFailureReason.expired,
+          'not-offered' => OfferFailureReason.notOffered,
+          'driver-busy' => OfferFailureReason.driverBusy,
+          _ => null,
+        };
+        if (reason != null) return Left(OfferFailure(reason));
+      }
+      return Left(callableFailure(error));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> declineRide(String id) async {
+    try {
+      await _source.decline(id);
+      return const Right(unit);
+    } on Object catch (error) {
+      return Left(callableFailure(error));
+    }
+  }
+
   Stream<Either<Failure, T>> _stream<T>(Stream<T> Function() source) async* {
     try {
       await for (final value in source()) {

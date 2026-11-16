@@ -24,6 +24,7 @@ class DriverEntity extends Equatable {
     this.location,
     this.heading = 0,
     this.lastSeenAt,
+    this.offer,
   });
   final String? licensePhotoPath;
   final String? rejectionReason;
@@ -35,6 +36,7 @@ class DriverEntity extends Equatable {
   final DriverLocation? location;
   final double heading;
   final DateTime? lastSeenAt;
+  final DriverOffer? offer;
 
   bool get canGoOnline =>
       status == DriverStatus.approved && currentRideId == null;
@@ -48,7 +50,21 @@ class DriverEntity extends Equatable {
     location,
     heading,
     lastSeenAt,
+    offer,
     licensePhotoPath,
     rejectionReason,
   ];
+}
+
+class DriverOffer extends Equatable {
+  const DriverOffer({
+    required this.rideId,
+    required this.expiresAt,
+    required this.seq,
+  });
+  final String rideId;
+  final DateTime expiresAt;
+  final int seq;
+  @override
+  List<Object> get props => [rideId, expiresAt, seq];
 }
