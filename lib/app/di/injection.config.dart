@@ -13,6 +13,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:cloud_functions/cloud_functions.dart' as _i809;
 import 'package:firebase_auth/firebase_auth.dart' as _i59;
+import 'package:firebase_messaging/firebase_messaging.dart' as _i892;
 import 'package:firebase_storage/firebase_storage.dart' as _i457;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
@@ -65,6 +66,16 @@ import 'package:mishwar/features/common/location/domain/usecases/request_locatio
     as _i605;
 import 'package:mishwar/features/common/location/domain/usecases/watch_position.dart'
     as _i365;
+import 'package:mishwar/features/common/notifications/domain/push_repository.dart'
+    as _i43;
+import 'package:mishwar/features/common/notifications/domain/push_token_sync.dart'
+    as _i768;
+import 'package:mishwar/features/common/notifications/domain/usecases/register_push_token.dart'
+    as _i126;
+import 'package:mishwar/features/common/notifications/domain/usecases/unregister_push_token.dart'
+    as _i282;
+import 'package:mishwar/features/common/notifications/domain/usecases/watch_push_routes.dart'
+    as _i897;
 import 'package:mishwar/features/common/places/data/datasources/places_remote_data_source.dart'
     as _i29;
 import 'package:mishwar/features/common/places/data/repositories/places_repository_impl.dart'
@@ -171,6 +182,8 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.auth);
+    gh.lazySingleton<_i892.FirebaseMessaging>(() => firebaseModule.messaging);
+    gh.lazySingleton<_i43.PushRepository>(() => firebaseModule.pushRepository);
     gh.lazySingleton<_i457.FirebaseStorage>(() => firebaseModule.storage);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
@@ -181,6 +194,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i27.DriverLocationSource(),
     );
     gh.lazySingleton<_i262.PresenceScheduler>(() => _i262.PresenceScheduler());
+    gh.lazySingleton<_i897.WatchPushRoutes>(
+      () => _i897.WatchPushRoutes(gh<_i43.PushRepository>()),
+    );
+    gh.lazySingleton<_i897.GetInitialPushRoute>(
+      () => _i897.GetInitialPushRoute(gh<_i43.PushRepository>()),
+    );
     gh.lazySingleton<_i327.DriverRemoteDataSource>(
       () => _i327.DriverRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
@@ -315,9 +334,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i563.SendOtp>(
       () => _i563.SendOtp(gh<_i290.AuthRepository>()),
     );
-    gh.lazySingleton<_i442.SignOut>(
-      () => _i442.SignOut(gh<_i290.AuthRepository>()),
-    );
     gh.lazySingleton<_i454.VerifyOtp>(
       () => _i454.VerifyOtp(gh<_i290.AuthRepository>()),
     );
@@ -325,6 +341,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i584.WatchAuthState(gh<_i290.AuthRepository>()),
     );
     gh.factory<_i520.RoleCubit>(() => _i520.RoleCubit(gh<_i600.SetUserRole>()));
+    gh.lazySingleton<_i768.PushTokenSync>(
+      () => _i768.PushTokenSync(
+        gh<_i43.PushRepository>(),
+        gh<_i290.AuthRepository>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i851.AcceptRide>(
       () => _i851.AcceptRide(gh<_i118.RideRepository>()),
     );
@@ -357,26 +380,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i682.OpenLocationSettings>(),
       ),
     );
-    gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));
     gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
       (draft, _) => _i934.RideConfirmCubit(
         gh<_i598.GetFareEstimates>(),
         gh<_i892.RequestRide>(),
         draft,
-      ),
-    );
-    gh.factory<_i562.DriverPresenceBloc>(
-      () => _i562.DriverPresenceBloc(
-        gh<_i291.WatchDriver>(),
-        gh<_i524.CheckLocationPermission>(),
-        gh<_i605.RequestLocationPermission>(),
-        gh<_i107.CurrentPosition>(),
-        gh<_i89.GoOnline>(),
-        gh<_i247.GoOffline>(),
-        gh<_i587.UpdateDriverLocation>(),
-        gh<_i653.WatchDriverLocation>(),
-        gh<_i916.OpenAppSettings>(),
-        gh<_i262.PresenceScheduler>(),
       ),
     );
     gh.lazySingleton<_i838.SessionCubit>(
@@ -399,6 +407,35 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i964.PhoneCubit>(() => _i964.PhoneCubit(gh<_i563.SendOtp>()));
+    gh.lazySingleton<_i126.RegisterPushToken>(
+      () => _i126.RegisterPushToken(
+        gh<_i43.PushRepository>(),
+        gh<_i768.PushTokenSync>(),
+        gh<_i290.AuthRepository>(),
+      ),
+    );
+    gh.factory<_i562.DriverPresenceBloc>(
+      () => _i562.DriverPresenceBloc(
+        gh<_i291.WatchDriver>(),
+        gh<_i524.CheckLocationPermission>(),
+        gh<_i605.RequestLocationPermission>(),
+        gh<_i107.CurrentPosition>(),
+        gh<_i89.GoOnline>(),
+        gh<_i247.GoOffline>(),
+        gh<_i587.UpdateDriverLocation>(),
+        gh<_i653.WatchDriverLocation>(),
+        gh<_i916.OpenAppSettings>(),
+        gh<_i262.PresenceScheduler>(),
+        gh<_i126.RegisterPushToken>(),
+      ),
+    );
+    gh.lazySingleton<_i282.UnregisterPushToken>(
+      () => _i282.UnregisterPushToken(
+        gh<_i43.PushRepository>(),
+        gh<_i290.AuthRepository>(),
+        gh<_i768.PushTokenSync>(),
+      ),
+    );
     gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
       (rideId, _) => _i893.RideTrackingBloc(
         gh<_i263.WatchRide>(),
@@ -406,6 +443,13 @@ extension GetItInjectableX on _i174.GetIt {
         rideId,
       ),
     );
+    gh.lazySingleton<_i442.SignOut>(
+      () => _i442.SignOut(
+        gh<_i290.AuthRepository>(),
+        gh<_i282.UnregisterPushToken>(),
+      ),
+    );
+    gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));
     return this;
   }
 }

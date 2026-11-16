@@ -13,11 +13,26 @@ service cloud.firestore {
           || request.resource.data.role in ['rider', 'driver'];
       }
 
+      function validPushToken() {
+        let data = request.resource.data;
+        return (!('fcmToken' in data)
+            || (data.fcmToken is string && data.fcmToken.size() <= 4096))
+          && (!('fcmTokenUpdatedAt' in data)
+            || data.fcmTokenUpdatedAt == request.time);
+      }
+      function validPushUpdate() {
+        let changed = request.resource.data.diff(resource.data).affectedKeys();
+        return !changed.hasAny(['fcmToken', 'fcmTokenUpdatedAt'])
+          || (validPushToken()
+            && request.resource.data.fcmTokenUpdatedAt == request.time);
+      }
       allow read: if isOwner();
-      allow create: if isOwner() && validClientRole()
+      allow create: if isOwner() && validClientRole() && validPushToken()
+        && (!('fcmToken' in request.resource.data)
+          || request.resource.data.fcmTokenUpdatedAt == request.time)
         && !('activeRideId' in request.resource.data);
       allow update: if isOwner()
-        && validClientRole()
+        && validClientRole() && validPushUpdate()
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data

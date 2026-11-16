@@ -1,5 +1,8 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
+import { getMessaging } from 'firebase-admin/messaging';
+import { info } from 'firebase-functions/logger';
+import { sendOfferNotification } from '../notifications/send_offer_notification.js';
 import { onCall } from 'firebase-functions/v2/https';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
@@ -13,7 +16,9 @@ const matchingDeps: MatchingDeps = {
   now: () => Timestamp.now(),
   enqueue: (data, scheduleDelaySeconds) => getFunctions()
     .taskQueue('locations/europe-west1/functions/offerTimeout').enqueue(data, { scheduleDelaySeconds }),
-  notify: async () => {}, // T3.5 supplies FCM.
+  notify: (uid, rideId) => sendOfferNotification(getFirestore(), {
+    send: (message) => getMessaging().send(message),
+  }, uid, rideId, info),
 };
 export const onRideCreated = onDocumentCreated({ region: 'europe-west1', document: 'rides/{rideId}' },
   (event) => dispatchRide(getFirestore(), event.params.rideId, matchingDeps));

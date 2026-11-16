@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,6 +26,7 @@ import 'package:mishwar/features/common/auth/presentation/cubit/role_cubit.dart'
 import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
+import 'package:mishwar/features/common/notifications/domain/usecases/unregister_push_token.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
@@ -41,6 +43,7 @@ import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_blo
     as offer;
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../features/driver/offer/driver_offer_bloc_test.dart'
     show MockOfferBloc;
 import '../features/driver/presence/driver_home_screen_test.dart'
@@ -56,6 +59,8 @@ class MockWatchAuth extends Mock implements WatchAuthState {}
 
 class MockUserRepository extends Mock implements UserRepository {}
 
+class MockUnregisterPushToken extends Mock implements UnregisterPushToken {}
+
 void main() {
   setUpAll(() {
     registerFallbackValue(const GoOnlinePressed());
@@ -70,6 +75,10 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       final auth = MockAuthRepository();
+      final unregister = MockUnregisterPushToken();
+      when(
+        () => unregister(const NoParams()),
+      ).thenAnswer((_) async => const Right(unit));
       final users = MockUserRepository();
       final authEvents =
           StreamController<Either<Failure, AuthUser?>>.broadcast();
@@ -119,7 +128,7 @@ void main() {
         )
         ..registerFactory(() => NameCubit(CreateUserProfile(users)))
         ..registerFactory(() => RoleCubit(SetUserRole(users)))
-        ..registerFactory(() => HomeCubit(SignOut(auth)));
+        ..registerFactory(() => HomeCubit(SignOut(auth, unregister)));
       final presence = MockPresenceBloc();
       whenListen(
         presence,
@@ -226,7 +235,7 @@ void main() {
         final homeContext = tester.element(find.text(l10n.driverOffline));
         expect(Theme.of(homeContext).brightness, Brightness.dark);
         // Account controls arrive in T5; auth events still redirect this home.
-        await SignOut(auth)(const NoParams());
+        await SignOut(auth, unregister)(const NoParams());
       } else {
         await tester.tap(find.byKey(const Key('sign_out')));
       }

@@ -1,15 +1,18 @@
 import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/core/usecase/usecase.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/location/domain/repositories/location_repository.dart';
 import 'package:mishwar/features/common/location/domain/usecases/check_location_permission.dart';
 import 'package:mishwar/features/common/location/domain/usecases/current_position.dart';
 import 'package:mishwar/features/common/location/domain/usecases/open_app_settings.dart';
 import 'package:mishwar/features/common/location/domain/usecases/request_location_permission.dart';
+import 'package:mishwar/features/common/notifications/domain/usecases/register_push_token.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
@@ -24,6 +27,8 @@ import 'package:mishwar/features/driver/presence/domain/usecases/watch_driver_lo
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/presence_scheduler.dart';
 import 'package:mocktail/mocktail.dart';
+
+class MockRegisterPushToken extends Mock implements RegisterPushToken {}
 
 class MockDriver extends Mock implements DriverRepository {}
 
@@ -82,6 +87,9 @@ class Harness {
       () =>
           tracking.watch(notificationTitle: 'Title', notificationText: 'Text'),
     ).thenAnswer((_) => fixes.stream);
+    when(
+      () => registerPush(const NoParams()),
+    ).thenAnswer((_) async => const Right(unit));
     bloc = DriverPresenceBloc(
       WatchDriver(drivers),
       CheckLocationPermission(location),
@@ -93,8 +101,10 @@ class Harness {
       WatchDriverLocation(tracking),
       OpenAppSettings(location),
       scheduler ?? PresenceScheduler(),
+      registerPush,
     );
   }
+  final registerPush = MockRegisterPushToken();
   final drivers = MockDriver();
   final location = MockLocation();
   final presence = MockPresence();
@@ -129,6 +139,31 @@ class Harness {
 void main() {
   setUpAll(() => registerFallbackValue(point));
   late Harness h;
+  test(
+    'push registration runs once across online toggles and is non-fatal',
+    () => fakeAsync((fake) {
+      final h = Harness(scheduler: FakeScheduler(fake));
+      when(
+        () => h.registerPush(const NoParams()),
+      ).thenAnswer((_) async => const Left(ServerFailure('push')));
+      h.online(fake);
+      expect(h.bloc.state.isOnline, isTrue);
+      h.bloc.add(const GoOfflinePressed());
+      fake.flushMicrotasks();
+      when(
+        () => h.tracking.watch(
+          notificationTitle: 'Title',
+          notificationText: 'Text',
+        ),
+      ).thenAnswer((_) => const Stream<Either<Failure, DriverFix>>.empty());
+      h.bloc.add(const GoOnlinePressed());
+      fake.flushMicrotasks();
+      expect(h.bloc.state.isOnline, isTrue);
+      verify(() => h.registerPush(const NoParams())).called(1);
+      unawaited(h.close());
+      fake.flushMicrotasks();
+    }),
+  );
   blocTest<DriverPresenceBloc, DriverPresenceState>(
     'online flow uses permission then position then presence',
     build: () {
