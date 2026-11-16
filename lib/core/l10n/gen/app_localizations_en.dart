@@ -424,4 +424,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offerDriverBusy => 'You already have a ride';
+
+  @override
+  String get tripOnTrip => 'On the way to the destination';
+
+  @override
+  String get tripCancel => 'Cancel trip';
+
+  @override
+  String get tripCashPrompt => 'Collect cash from the rider';
+
+  @override
+  String get tripCall => 'Call rider';
+
+  @override
+  String get tripNavigate => 'Google Maps';
+
+  @override
+  String tripPrice(String amount) {
+    return 'JD $amount';
+  }
+
+  @override
+  String get tripToPickup => 'Heading to the rider';
+
+  @override
+  String get tripArrived => 'I have arrived';
+
+  @override
+  String get tripCompleteConfirm => 'Reached the destination?';
+
+  @override
+  String get tripCashCollected => 'Cash collected';
+
+  @override
+  String get tripComplete => 'End trip';
+
+  @override
+  String tripWaitingTime(String time) {
+    return 'Waiting for $time';
+  }
+
+  @override
+  String get tripRedispatched => 'The trip is going to another driver';
+
+  @override
+  String get tripCancelled => 'This trip was cancelled';
+
+  @override
+  String get tripNo => 'No';
+
+  @override
+  String tripRating(String rating) {
+    return '$rating';
+  }
+
+  @override
+  String get tripCancelConfirm =>
+      'Are you sure? This trip will go to another driver';
+
+  @override
+  String get tripMore => 'More options';
+
+  @override
+  String get tripWaiting => 'Waiting for the rider';
+
+  @override
+  String get tripTooFar => 'You need to be near the pickup point';
+
+  @override
+  String get tripStart => 'Start trip';
 }

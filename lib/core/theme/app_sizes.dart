@@ -1,6 +1,9 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get tripActionCircle => 48.r;
+  static const tripSheetFraction = 0.44;
+  static const tripTopFraction = 0.28;
   static double get offerButtonHeight => 56.h;
   static double get countdownHeight => 4.h;
   static const contentDuration = Duration(milliseconds: 250);

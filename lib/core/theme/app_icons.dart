@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 /// Phosphor regular glyphs from the bundled, licensed font.
 @staticIconProvider
 abstract final class AppIcons {
+  static const phone = IconData(0xe3b8, fontFamily: 'PhosphorRegular');
+  static const more = IconData(0xe1fe, fontFamily: 'PhosphorRegular');
   static const back = IconData(
     0xe058,
     fontFamily: 'PhosphorRegular',
@@ -16,7 +18,7 @@ abstract final class AppIcons {
   static const search = IconData(0xe30c, fontFamily: 'PhosphorRegular');
   static const caretDown = IconData(0xe136, fontFamily: 'PhosphorRegular');
   static const clock = IconData(0xe19a, fontFamily: 'PhosphorRegular');
-  static const camera = IconData(0xe0fa, fontFamily: 'PhosphorRegular');
+  static const camera = IconData(0xe10e, fontFamily: 'PhosphorRegular');
   static const image = IconData(0xe2ca, fontFamily: 'PhosphorRegular');
   static const person = IconData(0xe3a8, fontFamily: 'PhosphorRegular');
   static const user = IconData(0xe4c2, fontFamily: 'PhosphorRegular');
@@ -28,4 +30,5 @@ abstract final class AppIcons {
     matchTextDirection: true,
   );
   static const car = IconData(0xe112, fontFamily: 'PhosphorRegular');
+  static const star = IconData(0xe46a, fontFamily: 'PhosphorRegular');
 }

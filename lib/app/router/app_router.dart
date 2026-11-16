@@ -19,17 +19,19 @@ import 'package:mishwar/features/common/auth/presentation/session/session_cubit.
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
-import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
+import 'package:mishwar/features/driver/home/presentation/driver_shell.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
     as offer;
-import 'package:mishwar/features/driver/offer/presentation/driver_ride_placeholder.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
+import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart'
+    as trip;
+import 'package:mishwar/features/driver/trip/presentation/driver_trip_screen.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
@@ -203,29 +205,40 @@ GoRouter createAppRouter(
         child: const DriverPendingScreen(),
       ),
     ),
-    GoRoute(
-      path: '/driver',
+    ShellRoute(
+      builder: (_, _, child) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (_) =>
+                getIt<offer.DriverOfferBloc>()
+                  ..add(offer.Started((session.state as SessionReady).user.id)),
+          ),
+          BlocProvider(create: (_) => getIt<DriverPresenceBloc>()),
+        ],
+        child: DriverShell(
+          uid: (session.state as SessionReady).user.id,
+          child: child,
+        ),
+      ),
       routes: [
         GoRoute(
-          path: 'ride/:rideId',
-          builder: (_, state) => DriverRidePlaceholder(
-            rideId: state.pathParameters['rideId']!,
-            watchRide: getIt<WatchRide>(),
-          ),
-        ),
-      ],
-      builder: (_, _) => BlocProvider(
-        create: (_) =>
-            getIt<offer.DriverOfferBloc>()
-              ..add(offer.Started((session.state as SessionReady).user.id)),
-        child: BlocProvider(
-          create: (_) => getIt<DriverPresenceBloc>(),
-          child: DriverHomeScreen(
+          path: '/driver',
+          builder: (_, _) => DriverHomeScreen(
             uid: (session.state as SessionReady).user.id,
             mapBuilder: driverMapBuilder,
           ),
         ),
-      ),
+        GoRoute(
+          path: '/driver/ride/:rideId',
+          builder: (_, state) => BlocProvider(
+            create: (_) => getIt<trip.DriverTripBloc>(
+              param1: state.pathParameters['rideId'],
+            ),
+            child: DriverTripScreen(mapBuilder: driverMapBuilder),
+          ),
+        ),
+      ],
     ),
   ],
 );

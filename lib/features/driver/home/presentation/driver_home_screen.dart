@@ -38,22 +38,6 @@ class _DriverHome extends StatefulWidget {
 
 class _DriverHomeState extends State<_DriverHome> {
   MwMapController? _map;
-  bool _started = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_started) {
-      _started = true;
-      context.read<DriverPresenceBloc>().add(
-        Started(
-          uid: widget.uid,
-          notificationTitle: context.l10n.driverTrackingTitle,
-          notificationText: context.l10n.driverTrackingText,
-        ),
-      );
-    }
-  }
-
   void _recenter() {
     final fix = context.read<DriverPresenceBloc>().state.lastFix;
     if (fix != null) unawaited(_map?.animateTo(fix.point));

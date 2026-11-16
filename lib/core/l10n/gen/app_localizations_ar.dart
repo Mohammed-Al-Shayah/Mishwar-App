@@ -417,4 +417,73 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get offerDriverBusy => 'عندك مشوار حالي';
+
+  @override
+  String get tripOnTrip => 'بالطريق للوجهة';
+
+  @override
+  String get tripCancel => 'إلغاء المشوار';
+
+  @override
+  String get tripCashPrompt => 'استلم كاش من الراكب';
+
+  @override
+  String get tripCall => 'اتصل بالراكب';
+
+  @override
+  String get tripNavigate => 'خرائط Google';
+
+  @override
+  String tripPrice(String amount) {
+    return 'JD $amount';
+  }
+
+  @override
+  String get tripToPickup => 'رايح لعند الراكب';
+
+  @override
+  String get tripArrived => 'وصلت';
+
+  @override
+  String get tripCompleteConfirm => 'وصلت للوجهة؟';
+
+  @override
+  String get tripCashCollected => 'استلمت المبلغ';
+
+  @override
+  String get tripComplete => 'إنهاء المشوار';
+
+  @override
+  String tripWaitingTime(String time) {
+    return 'بتستنى من $time';
+  }
+
+  @override
+  String get tripRedispatched => 'المشوار راح لسائق ثاني';
+
+  @override
+  String get tripCancelled => 'تم إلغاء المشوار';
+
+  @override
+  String get tripNo => 'لا';
+
+  @override
+  String tripRating(String rating) {
+    return '$rating';
+  }
+
+  @override
+  String get tripCancelConfirm => 'متأكد؟ رح يروح المشوار لسائق ثاني';
+
+  @override
+  String get tripMore => 'خيارات إضافية';
+
+  @override
+  String get tripWaiting => 'بانتظار الراكب';
+
+  @override
+  String get tripTooFar => 'لازم تكون قريب من نقطة الانطلاق';
+
+  @override
+  String get tripStart => 'ابدأ المشوار';
 }

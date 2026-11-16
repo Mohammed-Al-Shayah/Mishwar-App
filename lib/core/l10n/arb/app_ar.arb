@@ -235,5 +235,29 @@
         "type": "String"
       }
     }
-  }
+  },
+  "tripOnTrip": "بالطريق للوجهة",
+  "tripCancel": "إلغاء المشوار",
+  "tripCashPrompt": "استلم كاش من الراكب",
+  "tripCall": "اتصل بالراكب",
+  "tripNavigate": "خرائط Google",
+  "tripPrice": "JD {amount}",
+  "tripToPickup": "رايح لعند الراكب",
+  "tripArrived": "وصلت",
+  "tripCompleteConfirm": "وصلت للوجهة؟",
+  "tripCashCollected": "استلمت المبلغ",
+  "tripComplete": "إنهاء المشوار",
+  "tripWaitingTime": "بتستنى من {time}",
+  "tripRedispatched": "المشوار راح لسائق ثاني",
+  "tripCancelled": "تم إلغاء المشوار",
+  "tripNo": "لا",
+  "tripRating": "{rating}",
+  "tripCancelConfirm": "متأكد؟ رح يروح المشوار لسائق ثاني",
+  "tripMore": "خيارات إضافية",
+  "tripWaiting": "بانتظار الراكب",
+  "tripTooFar": "لازم تكون قريب من نقطة الانطلاق",
+  "tripStart": "ابدأ المشوار",
+  "@tripWaitingTime": {"placeholders":{"time":{"type":"String"}}},
+  "@tripRating": {"placeholders":{"rating":{"type":"String"}}},
+  "@tripPrice": {"placeholders":{"amount":{"type":"String"}}}
 }
