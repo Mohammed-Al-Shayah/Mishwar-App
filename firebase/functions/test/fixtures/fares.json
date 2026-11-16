@@ -1,0 +1,100 @@
+[
+  {
+    "name": "economy short minimum",
+    "vehicleType": "economy",
+    "distanceMeters": 100,
+    "durationSeconds": 60,
+    "expectedFils": 1500
+  },
+  {
+    "name": "comfort zero",
+    "vehicleType": "comfort",
+    "distanceMeters": 0,
+    "durationSeconds": 0,
+    "expectedFils": 2500
+  },
+  {
+    "name": "van minimum",
+    "vehicleType": "van",
+    "distanceMeters": 1000,
+    "durationSeconds": 60,
+    "expectedFils": 3000
+  },
+  {
+    "name": "economy long",
+    "vehicleType": "economy",
+    "distanceMeters": 40000,
+    "durationSeconds": 3600,
+    "expectedFils": 15500
+  },
+  {
+    "name": "comfort long",
+    "vehicleType": "comfort",
+    "distanceMeters": 40000,
+    "durationSeconds": 3600,
+    "expectedFils": 23000
+  },
+  {
+    "name": "van long",
+    "vehicleType": "van",
+    "distanceMeters": 40000,
+    "durationSeconds": 3600,
+    "expectedFils": 27800
+  },
+  {
+    "name": "half up x.x25",
+    "vehicleType": "economy",
+    "distanceMeters": 6750,
+    "durationSeconds": 0,
+    "expectedFils": 2550
+  },
+  {
+    "name": "half up x.x75",
+    "vehicleType": "economy",
+    "distanceMeters": 6250,
+    "durationSeconds": 0,
+    "expectedFils": 2400
+  },
+  {
+    "name": "below tie",
+    "vehicleType": "economy",
+    "distanceMeters": 6749,
+    "durationSeconds": 0,
+    "expectedFils": 2500
+  },
+  {
+    "name": "above tie",
+    "vehicleType": "economy",
+    "distanceMeters": 6751,
+    "durationSeconds": 0,
+    "expectedFils": 2550
+  },
+  {
+    "name": "fractional seconds tie",
+    "vehicleType": "economy",
+    "distanceMeters": 6000,
+    "durationSeconds": 30,
+    "expectedFils": 2350
+  },
+  {
+    "name": "fractional route duration",
+    "vehicleType": "comfort",
+    "distanceMeters": 10000,
+    "durationSeconds": 123.5,
+    "expectedFils": 5450
+  },
+  {
+    "name": "zero economy",
+    "vehicleType": "economy",
+    "distanceMeters": 0,
+    "durationSeconds": 0,
+    "expectedFils": 1500
+  },
+  {
+    "name": "zero van",
+    "vehicleType": "van",
+    "distanceMeters": 0,
+    "durationSeconds": 0,
+    "expectedFils": 3000
+  }
+]
