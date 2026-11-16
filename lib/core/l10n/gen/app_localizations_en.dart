@@ -9,6 +9,26 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get planRide => 'Plan your ride';
+
+  @override
+  String get currentLocation => 'Your current location';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
+  String get searchPlacesHint => 'Enter a place or street name';
+
+  @override
+  String noPlacesFound(String query) {
+    return 'No results for “$query”';
+  }
+
+  @override
+  String get chooseRide => 'Choose a ride';
+
+  @override
   String get whereTo => 'Where to?';
 
   @override

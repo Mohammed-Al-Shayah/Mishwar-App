@@ -1,4 +1,18 @@
 {
+  "planRide": "Plan your ride",
+  "currentLocation": "Your current location",
+  "clearSearch": "Clear search",
+  "searchPlacesHint": "Enter a place or street name",
+  "noPlacesFound": "No results for “{query}”",
+  "chooseRide": "Choose a ride",
+  "@noPlacesFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+
   "whereTo": "Where to?",
   "scheduleLater": "Later",
   "mapMobileOnly": "The map is available in the mobile app",

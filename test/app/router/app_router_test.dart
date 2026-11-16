@@ -4,10 +4,13 @@ import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
+import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
+import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 
 void main() {
   final user = UserEntity(
@@ -16,6 +19,35 @@ void main() {
     phone: '+962791234567',
     createdAt: DateTime.utc(2026),
   );
+  const stop = RideStop(
+    name: 'Place',
+    address: 'Street',
+    location: GeoPointValue(31, 35),
+  );
+  const draft = RideDraft(pickup: stop, dropoff: stop);
+  for (final path in ['/rider/search', '/rider/confirm']) {
+    final extra = path == '/rider/search'
+        ? const DestinationSearchParams()
+        : draft;
+    test('$path requires valid extra and ready rider session', () {
+      final rider = SessionReady(user.copyWith(role: UserRole.rider));
+      expect(sessionRedirect(rider, path, extra: extra), isNull);
+      expect(sessionRedirect(rider, path), '/rider');
+      expect(sessionRedirect(rider, path, extra: 'invalid'), '/rider');
+      expect(
+        sessionRedirect(const SessionSignedOut(), path, extra: extra),
+        '/auth/phone',
+      );
+      expect(
+        sessionRedirect(
+          SessionReady(user.copyWith(role: UserRole.driver)),
+          path,
+          extra: extra,
+        ),
+        '/driver/onboarding',
+      );
+    });
+  }
   const otp = OtpSession(phone: '+962791234567');
   final table = <SessionState, String>{
     const SessionUnknown(): '/splash',

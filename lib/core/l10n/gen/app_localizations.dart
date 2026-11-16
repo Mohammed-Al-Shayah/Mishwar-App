@@ -98,6 +98,42 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
+  /// No description provided for @planRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'خطّط مشوارك'**
+  String get planRide;
+
+  /// No description provided for @currentLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقعك الحالي'**
+  String get currentLocation;
+
+  /// No description provided for @clearSearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح البحث'**
+  String get clearSearch;
+
+  /// No description provided for @searchPlacesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب اسم مكان أو شارع'**
+  String get searchPlacesHint;
+
+  /// No description provided for @noPlacesFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما لقينا نتائج لـ “{query}”'**
+  String noPlacesFound(String query);
+
+  /// No description provided for @chooseRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الرحلة'**
+  String get chooseRide;
+
   /// No description provided for @whereTo.
   ///
   /// In ar, this message translates to:
