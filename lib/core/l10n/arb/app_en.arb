@@ -187,5 +187,17 @@
         "type": "String"
       }
     }
-  }
+  },
+  "driverStart": "Start",
+  "driverOffline": "You are offline",
+  "driverOfflineHint": "Go online to receive ride requests",
+  "driverOnline": "You are online",
+  "driverOnlineHint": "Looking for nearby requests...",
+  "driverStop": "Stop",
+  "driverStopConfirm": "Stop receiving ride requests?",
+  "driverKeepOnline": "Stay online",
+  "driverEarnings": "Today's earnings",
+  "driverEarningsAmount": "JD 0.00",
+  "driverTrackingTitle": "Mishwar - you are online",
+  "driverTrackingText": "Updating your location to receive nearby ride requests"
 }

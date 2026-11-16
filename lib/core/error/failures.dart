@@ -38,6 +38,10 @@ sealed class Failure extends Equatable {
   List<Object> get props => [message];
 }
 
+final class PermissionFailure extends Failure {
+  const PermissionFailure(super.message);
+}
+
 final class ServerFailure extends Failure {
   const ServerFailure(super.message);
 }

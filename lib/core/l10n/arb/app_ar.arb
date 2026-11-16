@@ -187,5 +187,17 @@
         "type": "String"
       }
     }
-  }
+  },
+  "driverStart": "ابدأ",
+  "driverOffline": "أنت غير متصل",
+  "driverOfflineHint": "اتصل عشان تستقبل طلبات",
+  "driverOnline": "أنت متصل",
+  "driverOnlineHint": "بندوّر على طلبات قريبة…",
+  "driverStop": "إنهاء",
+  "driverStopConfirm": "بدك توقف استقبال الطلبات؟",
+  "driverKeepOnline": "خليك متصل",
+  "driverEarnings": "أرباح اليوم",
+  "driverEarningsAmount": "JD 0.00",
+  "driverTrackingTitle": "مشوار — أنت متصل",
+  "driverTrackingText": "نحدّث موقعك لاستقبال طلبات المشاوير القريبة"
 }

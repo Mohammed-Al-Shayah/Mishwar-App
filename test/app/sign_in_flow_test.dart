@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -35,7 +36,11 @@ import 'package:mishwar/features/common/user/domain/usecases/create_user_profile
 import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart';
+import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
+import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+import '../features/driver/presence/driver_home_screen_test.dart'
+    show MockPresenceBloc;
 import '../helpers/location_mocks.dart';
 import '../helpers/ride_mocks.dart';
 
@@ -48,6 +53,7 @@ class MockWatchAuth extends Mock implements WatchAuthState {}
 class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
+  setUpAll(() => registerFallbackValue(const GoOnlinePressed()));
   for (final role in UserRole.values) {
     testWidgets('complete sign-in, name, ${role.name} and sign-out flow', (
       tester,
@@ -107,6 +113,13 @@ void main() {
         ..registerFactory(() => NameCubit(CreateUserProfile(users)))
         ..registerFactory(() => RoleCubit(SetUserRole(users)))
         ..registerFactory(() => HomeCubit(SignOut(auth)));
+      final presence = MockPresenceBloc();
+      whenListen(
+        presence,
+        const Stream<DriverPresenceState>.empty(),
+        initialState: const DriverPresenceState(),
+      );
+      getIt.registerFactory<DriverPresenceBloc>(() => presence);
       final location = MockLocationRepository();
       when(location.checkPermission).thenAnswer(
         (_) async => const Right(LocationPermissionStatus.deniedForever),
@@ -148,6 +161,7 @@ void main() {
         session,
         refresh,
         riderMapBuilder: (_) => const MwMapPlaceholder(),
+        driverMapBuilder: (_) => const MwMapPlaceholder(),
       );
       addTearDown(() {
         router.dispose();
@@ -190,14 +204,18 @@ void main() {
       await tester.pumpAndSettle();
       final l10n = AppLocalizationsAr();
       expect(
-        find.text(role == UserRole.rider ? l10n.whereTo : l10n.driverMode),
+        find.text(role == UserRole.rider ? l10n.whereTo : l10n.driverOffline),
         role == UserRole.rider ? findsNWidgets(2) : findsOneWidget,
       );
-      final homeContext = tester.element(find.byKey(const Key('sign_out')));
       if (role == UserRole.driver) {
+        expect(find.byType(DriverHomeScreen), findsOneWidget);
+        final homeContext = tester.element(find.text(l10n.driverOffline));
         expect(Theme.of(homeContext).brightness, Brightness.dark);
+        // Account controls arrive in T5; auth events still redirect this home.
+        await SignOut(auth)(const NoParams());
+      } else {
+        await tester.tap(find.byKey(const Key('sign_out')));
       }
-      await tester.tap(find.byKey(const Key('sign_out')));
       await tester.pumpAndSettle();
       expect(find.text(l10n.phoneTitle), findsOneWidget);
       verify(() => users.setRole('u', role)).called(1);

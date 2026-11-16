@@ -3,7 +3,8 @@ const AUTH = 'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1';
 const FS = 'http://127.0.0.1:8080/v1/projects/demo-mishwar/databases/(default)/documents';
 const ST = 'http://127.0.0.1:9199/v0/b/demo-mishwar.appspot.com/o';
 const KEY = 'demo-api-key';
-const phone = process.argv[2] ?? '+962781111111';
+// A fresh number per run keeps the probe repeatable against a running emulator.
+const phone = process.argv[2] ?? `+96278${String(Math.floor(Math.random() * 1e7)).padStart(7, '0')}`;
 
 const post = (url, body) =>
   fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then((r) => r.json());
@@ -56,6 +57,40 @@ const checks = [
   ['upload to another uid', 403, () => upload('drivers/other/x.jpg', 'image/jpeg')],
   ['upload a non-image', 403, () => upload(`drivers/${uid}/evil.exe`, 'application/octet-stream')],
 ];
+// Commit transforms resolve to request.time, like FieldValue.serverTimestamp().
+const presence = async (online, extra = {}, target = uid, serverTime = true, onlyFlag = false) => {
+  const fields = onlyFlag ? { isOnline: { booleanValue: online } } : {
+    isOnline: { booleanValue: online },
+    location: { mapValue: { fields: { geohash: s('sv9twm84q'), geopoint: { geoPointValue: { latitude: 31.9539, longitude: 35.9106 } } } } },
+    heading: { doubleValue: 90 },
+    ...extra,
+  };
+  if (!serverTime) fields.lastSeenAt = { timestampValue: '2020-01-01T00:00:00Z' };
+  return fetch(FS + ':commit', {
+    method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ writes: [{
+      update: { name: 'projects/demo-mishwar/databases/(default)/documents/drivers/' + target, fields },
+      updateMask: { fieldPaths: Object.keys(fields) },
+      ...(serverTime ? { updateTransforms: [{ fieldPath: 'lastSeenAt', setToServerValue: 'REQUEST_TIME' }] } : {}),
+    }] }),
+  }).then(r => r.status);
+};
+checks.push(
+  ['pending presence denied', 403, () => presence(true)],
+  ['seed approved driver', 200, () => ownerSeed('drivers/' + uid, { ...base, status: s('approved') })],
+  ['approved goes online with location', 200, () => presence(true)],
+  ['approved updates location', 200, () => presence(true, { location: { mapValue: { fields: { geohash: s('sv9twm84r'), geopoint: { geoPointValue: { latitude: 31.954, longitude: 35.911 } } } } }, heading: { doubleValue: 180 } })],
+  ['approved goes offline', 200, () => presence(false)],
+  ['offline merge with only isOnline', 200, () => presence(false, {}, uid, true, true)],
+  ['presence cannot change status', 403, () => presence(true, { status: s('suspended') })],
+  ['presence cannot assign ride', 403, () => presence(true, { currentRideId: s('forged') })],
+  ['presence cannot change vehicle', 403, () => presence(true, { vehicle: { mapValue: { fields: { ...vehicle.mapValue.fields, make: s('Forged') } } } })],
+  ['presence rejects client timestamp', 403, () => presence(true, {}, uid, false)],
+  ['seed another approved driver', 200, () => ownerSeed('drivers/other-presence', { ...base, status: s('approved') })],
+  ['presence cannot write another uid', 403, () => presence(true, {}, 'other-presence')],
+  ['seed current ride as owner', 200, () => ownerSeed('drivers/' + uid, { ...base, status: s('approved'), currentRideId: s('server-ride') })],
+  ['cannot go online with assigned ride', 403, () => presence(true)],
+);
 let failed = 0;
 for (const [name, want, run] of checks) {
   const got = await run();

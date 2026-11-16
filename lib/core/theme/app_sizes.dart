@@ -1,6 +1,9 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get driverStart => 72.r;
+  static const driverPulseDuration = Duration(seconds: 2);
+  static double get driverBarClearance => 180.h;
   static const searchPulseDuration = Duration(seconds: 2);
   static const searchSubtitleDuration = Duration(seconds: 3);
   static const searchRingRadiusMeters = 180.0;

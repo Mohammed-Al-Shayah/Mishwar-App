@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIBackgroundModes</key>
+	<array><string>location</string></array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>نستخدم موقع السائق بالخلفية ليستقبل طلبات المشاوير القريبة وهو متصل. Drivers use background location while online to receive nearby ride requests.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>نستخدم موقعك لتحديد نقطة انطلاقك على الخريطة. We use your location to show your pickup point on the map.</string>
 	<key>NSCameraUsageDescription</key>

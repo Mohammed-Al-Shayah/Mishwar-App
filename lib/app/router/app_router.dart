@@ -20,10 +20,11 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
-import 'package:mishwar/features/driver/home/presentation/driver_home_placeholder.dart';
+import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
+import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
@@ -83,6 +84,7 @@ GoRouter createAppRouter(
   SessionCubit session,
   SessionRouterRefresh refresh, {
   WidgetBuilder? riderMapBuilder,
+  WidgetBuilder? driverMapBuilder,
 }) => GoRouter(
   initialLocation: '/splash',
   refreshListenable: refresh,
@@ -194,8 +196,11 @@ GoRouter createAppRouter(
     GoRoute(
       path: '/driver',
       builder: (_, _) => BlocProvider(
-        create: (_) => getIt<HomeCubit>(),
-        child: const DriverHomePlaceholder(),
+        create: (_) => getIt<DriverPresenceBloc>(),
+        child: DriverHomeScreen(
+          uid: (session.state as SessionReady).user.id,
+          mapBuilder: driverMapBuilder,
+        ),
       ),
     ),
   ],
