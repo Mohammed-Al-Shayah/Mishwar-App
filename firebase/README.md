@@ -95,7 +95,7 @@ It only stops Java/Node processes whose command line references the Firebase emu
 `europe-west1`. Matching offers one driver 15 seconds, queues its timeout after
 16 seconds, and retries an empty search after 10 seconds while time remains.
 The minute scheduler expires searches and recovers searches with lost tasks.
-FCM is a no-op hook until T3.5; the driver offer UI belongs to T3.4.
+FCM sends best-effort notifications for offers; the emulator logs offer delivery.
 
 Build in `firebase/functions` with `npm run build`, then from the repo root:
 
@@ -139,3 +139,13 @@ driver offers, and driver assignments remain server-owned. Pending/rejected
 application updates only allow their existing application fields (including the
 existing rejected-to-pending resubmission); approved presence updates cannot
 change status, offers, or assignments.
+
+## Push notifications (T3.5)
+
+Functions emulator runs log `[fcm:emulator] offer <rideId> → <uid>` without FCM.
+Real Android/iOS delivery needs a real Firebase project and device. iOS also
+needs a real APNs authentication key uploaded to Firebase, Push Notifications
+capability and an `aps-environment` entitlement matching the provisioning
+profile (development or production). No entitlements files are added yet.
+Notification taps open /driver; Firestore remains the source of offer details.
+Foreground messages and the background handler do nothing. Web skips messaging.

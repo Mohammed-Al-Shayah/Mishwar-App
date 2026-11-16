@@ -1,13 +1,16 @@
 import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/core/usecase/usecase.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/location/domain/usecases/check_location_permission.dart';
 import 'package:mishwar/features/common/location/domain/usecases/current_position.dart';
 import 'package:mishwar/features/common/location/domain/usecases/open_app_settings.dart';
 import 'package:mishwar/features/common/location/domain/usecases/request_location_permission.dart';
+import 'package:mishwar/features/common/notifications/domain/usecases/register_push_token.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/driver/presence/domain/driver_fix.dart';
@@ -111,6 +114,7 @@ class DriverPresenceBloc
     this._watchLocation,
     this._settings,
     this._scheduler,
+    this._registerPushToken,
   ) : super(const DriverPresenceState()) {
     // One queue for all event types prevents heartbeat/toggle writes from racing.
     on<DriverPresenceEvent>(
@@ -141,6 +145,8 @@ class DriverPresenceBloc
   bool _closing = false;
   bool _tickQueued = false;
   bool _intentOnline = false;
+  bool _pushRequested = false;
+  final RegisterPushToken _registerPushToken;
 
   Future<void> openSettings() => _settings();
   void _add(DriverPresenceEvent event) {
@@ -243,6 +249,10 @@ class DriverPresenceBloc
     _lastSent = _scheduler.now();
     _track();
     emit(_state(PresenceStatus.online, online: true));
+    if (!_pushRequested) {
+      _pushRequested = true;
+      await _registerPushToken(const NoParams());
+    }
   }
 
   Future<void> _handle(

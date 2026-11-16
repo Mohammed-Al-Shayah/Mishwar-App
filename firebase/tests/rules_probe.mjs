@@ -101,6 +101,25 @@ checks.push(
   ['seed current ride as owner', 200, () => ownerSeed('drivers/' + uid, { ...base, status: s('approved'), currentRideId: s('server-ride') })],
   ['cannot go online with assigned ride', 403, () => presence(true)],
 );
+const pushToken = async (value, target = uid, serverTime = true) => fetch(FS + ':commit', {
+  method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ writes: [{
+    update: { name: 'projects/demo-mishwar/databases/(default)/documents/users/' + target,
+      fields: { ...(value === undefined ? {} : { fcmToken: value }),
+        ...(!serverTime ? { fcmTokenUpdatedAt: { timestampValue: '2020-01-01T00:00:00Z' } } : {}) } },
+    updateMask: { fieldPaths: ['fcmToken', ...(!serverTime ? ['fcmTokenUpdatedAt'] : [])] },
+    ...(serverTime ? { updateTransforms: [{ fieldPath: 'fcmTokenUpdatedAt', setToServerValue: 'REQUEST_TIME' }] } : {}),
+  }] }),
+}).then(r => r.status);
+checks.push(
+  ['own push token allowed', 200, () => pushToken(s('test-token'))],
+  ['foreign push token denied', 403, () => pushToken(s('test-token'), 'someoneElse')],
+  ['non-string push token denied', 403, () => pushToken({ integerValue: '123' })],
+  ['oversized push token denied', 403, () => pushToken(s('x'.repeat(4097)))],
+  ['client token timestamp denied', 403, () => pushToken(s('test-token'), uid, false)],
+  ['push write cannot change role', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('driver') }, ['role'])],
+  ['push token deletion allowed', 200, () => pushToken(undefined)],
+);
 let failed = 0;
 for (const [name, want, run] of checks) {
   const got = await run();
