@@ -12,7 +12,6 @@
       }
     }
   },
-
   "whereTo": "وين رايح؟",
   "scheduleLater": "لاحقاً",
   "mapMobileOnly": "الخريطة متاحة على تطبيق الموبايل",
@@ -167,6 +166,24 @@
   "@fareJod": {
     "placeholders": {
       "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "searchingTitle": "بندوّر على أقرب سائق…",
+  "searchingQuick": "عادة بياخذ أقل من دقيقة",
+  "searchingVehicle": "منلاقيلك سيارة {vehicleName}",
+  "searchingNearby": "بنتواصل مع السائقين القريبين",
+  "rideCancel": "إلغاء الطلب",
+  "rideCancelTitle": "متأكد بدك تلغي؟",
+  "rideKeepSearching": "لا، كمّل",
+  "rideNoDrivers": "ما لقينا سائق قريب",
+  "rideTryAgain": "حاول مرة ثانية",
+  "rideBack": "رجوع",
+  "rideAccepted": "لقينا سائق!",
+  "@searchingVehicle": {
+    "placeholders": {
+      "vehicleName": {
         "type": "String"
       }
     }

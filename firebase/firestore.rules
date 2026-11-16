@@ -14,9 +14,11 @@ service cloud.firestore {
       }
 
       allow read: if isOwner();
-      allow create: if isOwner() && validClientRole();
+      allow create: if isOwner() && validClientRole()
+        && !('activeRideId' in request.resource.data);
       allow update: if isOwner()
         && validClientRole()
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data
             && request.resource.data.role == resource.data.role));
@@ -51,6 +53,11 @@ service cloud.firestore {
           || (resource.data.status == 'rejected'
             && request.resource.data.status == 'pending'));
       allow delete: if false;
+    }
+
+    match /rides/{rideId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.riderId;
+      allow create, update, delete: if false;
     }
 
     match /{document=**} {

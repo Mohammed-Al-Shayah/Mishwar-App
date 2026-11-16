@@ -17,6 +17,7 @@ import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../helpers/ride_mocks.dart';
 import 'ride_confirm_cubit_test.dart'
     show MockRouteRepository, draft, estimates, stubSuccess;
 
@@ -61,12 +62,16 @@ Future<void> pumpConfirm(
 }
 
 void main() {
-  testWidgets('prices, selection border, button and confirmation stub', (
+  testWidgets('prices, selection and inline request error', (
     tester,
   ) async {
     final repository = MockRouteRepository();
     stubSuccess(repository);
-    final cubit = RideConfirmCubit(GetFareEstimates(repository), draft);
+    final cubit = RideConfirmCubit(
+      GetFareEstimates(repository),
+      requestRideStub(),
+      draft,
+    );
     await pumpConfirm(tester, cubit);
     await tester.pumpAndSettle();
     expect(find.byType(MwVehicleRow), findsNWidgets(3));
@@ -122,7 +127,11 @@ void main() {
     await tester.pump();
     expect(
       cubit.state,
-      isA<RideConfirmRequested>().having((s) => s.fareFils, 'fare', 5800),
+      isA<RideConfirmLoaded>().having(
+        (s) => s.requestFailure,
+        'error',
+        isA<ServerFailure>(),
+      ),
     );
     expect(find.byType(MwVehicleRow), findsNWidgets(3));
   });
@@ -135,7 +144,11 @@ void main() {
         destination: draft.dropoff.location,
       ),
     ).thenAnswer((_) => pending.future);
-    final cubit = RideConfirmCubit(GetFareEstimates(repository), draft);
+    final cubit = RideConfirmCubit(
+      GetFareEstimates(repository),
+      requestRideStub(),
+      draft,
+    );
     await pumpConfirm(tester, cubit);
     expect(find.byType(MwSkeleton), findsNWidgets(3));
     expect(
@@ -153,7 +166,11 @@ void main() {
         destination: draft.dropoff.location,
       ),
     ).thenAnswer((_) async => const Left(ServerFailure('offline')));
-    final cubit = RideConfirmCubit(GetFareEstimates(repository), draft);
+    final cubit = RideConfirmCubit(
+      GetFareEstimates(repository),
+      requestRideStub(),
+      draft,
+    );
     await pumpConfirm(tester, cubit);
     await tester.pumpAndSettle();
     expect(find.byType(MwVehicleRow), findsNothing);
@@ -169,7 +186,11 @@ void main() {
     ) async {
       final repository = MockRouteRepository();
       stubSuccess(repository);
-      final cubit = RideConfirmCubit(GetFareEstimates(repository), draft);
+      final cubit = RideConfirmCubit(
+        GetFareEstimates(repository),
+        requestRideStub(),
+        draft,
+      );
       await pumpConfirm(tester, cubit, scale: 1.3, language: language);
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(const ValueKey(VehicleType.van)));

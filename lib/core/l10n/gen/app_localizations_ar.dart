@@ -312,4 +312,39 @@ class AppLocalizationsAr extends AppLocalizations {
   String fareJod(String amount) {
     return 'JD $amount';
   }
+
+  @override
+  String get searchingTitle => 'بندوّر على أقرب سائق…';
+
+  @override
+  String get searchingQuick => 'عادة بياخذ أقل من دقيقة';
+
+  @override
+  String searchingVehicle(String vehicleName) {
+    return 'منلاقيلك سيارة $vehicleName';
+  }
+
+  @override
+  String get searchingNearby => 'بنتواصل مع السائقين القريبين';
+
+  @override
+  String get rideCancel => 'إلغاء الطلب';
+
+  @override
+  String get rideCancelTitle => 'متأكد بدك تلغي؟';
+
+  @override
+  String get rideKeepSearching => 'لا، كمّل';
+
+  @override
+  String get rideNoDrivers => 'ما لقينا سائق قريب';
+
+  @override
+  String get rideTryAgain => 'حاول مرة ثانية';
+
+  @override
+  String get rideBack => 'رجوع';
+
+  @override
+  String get rideAccepted => 'لقينا سائق!';
 }

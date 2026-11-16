@@ -114,7 +114,9 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
       if (state is RideConfirmLoaded && state is! RideConfirmRequested) {
         _fit(state);
       }
-      // T2.5 consumes RideConfirmRequested to request the ride.
+      if (state is RideConfirmRequested) {
+        context.go('/rider/ride/${state.rideId}');
+      }
     },
     builder: (context, state) => Scaffold(
       body: LayoutBuilder(
@@ -321,7 +323,15 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                             ),
                           ),
                           const MwPaymentRow(),
+                          if (loaded?.requestFailure != null)
+                            Text(
+                              failureMessage(context, loaded!.requestFailure!),
+                              style: AppTextStyles.footnote.copyWith(
+                                color: context.colors.negative,
+                              ),
+                            ),
                           MwPrimaryButton(
+                            isLoading: loaded?.isRequesting ?? false,
                             label: loaded == null
                                 ? context.l10n.chooseRide
                                 : context.l10n.chooseVehicle(

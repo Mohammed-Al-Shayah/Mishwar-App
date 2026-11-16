@@ -48,6 +48,25 @@ void main() {
       );
     });
   }
+  test('tracking route requires a ready rider and no draft extra', () {
+    const path = '/rider/ride/ride-id';
+    expect(
+      sessionRedirect(SessionReady(user.copyWith(role: UserRole.rider)), path),
+      isNull,
+    );
+    expect(sessionRedirect(const SessionSignedOut(), path), '/auth/phone');
+    expect(
+      sessionRedirect(SessionReady(user.copyWith(role: UserRole.driver)), path),
+      '/driver/onboarding',
+    );
+    expect(
+      sessionRedirect(
+        SessionReady(user.copyWith(role: UserRole.rider)),
+        '/rider/ride/',
+      ),
+      '/rider',
+    );
+  });
   const otp = OtpSession(phone: '+962791234567');
   final table = <SessionState, String>{
     const SessionUnknown(): '/splash',
