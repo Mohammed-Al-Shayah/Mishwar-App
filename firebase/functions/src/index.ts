@@ -13,4 +13,4 @@ export { placesAutocomplete } from './placesAutocomplete.js';
 export { placeDetails } from './placeDetails.js';
 export { getRoute } from './getRoute.js';
 export { getFareEstimates } from './getFareEstimates.js';
-export { requestRide, cancelRide, expireSearchingRides } from './rides/index.js';
+export { requestRide, cancelRide, expireSearchingRides, onRideCreated, offerTimeout, acceptRide, declineRide } from './rides/index.js';

@@ -44,6 +44,7 @@ service cloud.firestore {
       allow create: if isOwner() && validApplication()
         && request.resource.data.status == 'pending'
         && request.resource.data.isOnline == false
+        && !('offer' in request.resource.data)
         && !('currentRideId' in request.resource.data);
       allow update: if isOwner() && validApplication()
         && resource.data.status in ['pending', 'rejected']
@@ -74,7 +75,9 @@ service cloud.firestore {
     }
 
     match /rides/{rideId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.riderId;
+      allow read: if request.auth != null && (request.auth.uid == resource.data.riderId
+        || resource.data.get('driverId', null) == request.auth.uid
+        || resource.data.get('offeredTo', null) == request.auth.uid);
       allow create, update, delete: if false;
     }
 

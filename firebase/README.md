@@ -88,3 +88,54 @@ powershell -File firebase/scripts/stop-emulators.ps1
 ```
 
 It only stops Java/Node processes whose command line references the Firebase emulator binaries.
+
+## Matching and offers (T3.2 / T3.3)
+
+`onRideCreated`, `offerTimeout`, `acceptRide`, and `declineRide` run in
+`europe-west1`. Matching offers one driver 15 seconds, queues its timeout after
+16 seconds, and retries an empty search after 10 seconds while time remains.
+The minute scheduler expires searches and recovers searches with lost tasks.
+FCM is a no-op hook until T3.5; the driver offer UI belongs to T3.4.
+
+Build in `firebase/functions` with `npm run build`, then from the repo root:
+
+```sh
+firebase emulators:start --project demo-mishwar --only auth,firestore,functions,storage
+```
+
+Firebase CLI starts Eventarc and Cloud Tasks alongside Functions. `firebase.json`
+pins Tasks to port 9499. The Functions emulator supplies
+`CLOUD_TASKS_EMULATOR_HOST=127.0.0.1:9499` to the Admin SDK; this routes
+`getFunctions().taskQueue('locations/europe-west1/functions/offerTimeout')`
+`.enqueue(data, {scheduleDelaySeconds})` locally without production credentials.
+For a separate local Node process, set this environment variable explicitly.
+The SDK sends `{data: {rideId, seq}}` to the task endpoint. Timeout tasks with an
+old sequence do nothing. Duplicate tasks are safe through transactional checks.
+
+With emulators running, run these from the repo root:
+
+```sh
+node firebase/tests/rules_probe.mjs
+node firebase/tests/tasks_probe.mjs
+```
+
+The task probe uses an isolated emulator queue and loopback HTTP receiver to
+verify Admin SDK enqueue, payload wrapping, and the requested 16-second ETA on port 9499.
+It does not load Functions or read secret files. Pure matching/offer tests use
+the serialized in-memory Firestore fake; they never contact Google APIs.
+
+The installed Tasks emulator delivers scheduled tasks immediately: it preserves
+the schedule in `X-CloudTasks-TaskETA` but does not wait for it. A premature
+timeout correctly leaves a live offer unchanged. Invoke `expireSearchingRides`
+locally to exercise the scheduler safety net; the deployed scheduler runs every
+minute. To exercise the 15-second handoff directly,
+POST `{"data":{"rideId":"YOUR_LOCAL_RIDE_ID","seq":1}}` to
+`http://127.0.0.1:5001/demo-mishwar/europe-west1/offerTimeout` after the offer
+expires, using its actual offerSeq. Production Cloud Tasks honors scheduling;
+the fake-clock unit tests verify the exact expiry and retry boundaries.
+
+Ride reads allow the rider, assigned driver, or offered driver. All ride writes,
+driver offers, and driver assignments remain server-owned. Pending/rejected
+application updates only allow their existing application fields (including the
+existing rejected-to-pending resubmission); approved presence updates cannot
+change status, offers, or assignments.
