@@ -347,4 +347,41 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rideAccepted => 'لقينا سائق!';
+
+  @override
+  String get driverStart => 'ابدأ';
+
+  @override
+  String get driverOffline => 'أنت غير متصل';
+
+  @override
+  String get driverOfflineHint => 'اتصل عشان تستقبل طلبات';
+
+  @override
+  String get driverOnline => 'أنت متصل';
+
+  @override
+  String get driverOnlineHint => 'بندوّر على طلبات قريبة…';
+
+  @override
+  String get driverStop => 'إنهاء';
+
+  @override
+  String get driverStopConfirm => 'بدك توقف استقبال الطلبات؟';
+
+  @override
+  String get driverKeepOnline => 'خليك متصل';
+
+  @override
+  String get driverEarnings => 'أرباح اليوم';
+
+  @override
+  String get driverEarningsAmount => 'JD 0.00';
+
+  @override
+  String get driverTrackingTitle => 'مشوار — أنت متصل';
+
+  @override
+  String get driverTrackingText =>
+      'نحدّث موقعك لاستقبال طلبات المشاوير القريبة';
 }

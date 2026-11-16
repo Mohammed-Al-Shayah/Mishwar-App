@@ -733,6 +733,78 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لقينا سائق!'**
   String get rideAccepted;
+
+  /// No description provided for @driverStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ'**
+  String get driverStart;
+
+  /// No description provided for @driverOffline.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت غير متصل'**
+  String get driverOffline;
+
+  /// No description provided for @driverOfflineHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل عشان تستقبل طلبات'**
+  String get driverOfflineHint;
+
+  /// No description provided for @driverOnline.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت متصل'**
+  String get driverOnline;
+
+  /// No description provided for @driverOnlineHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'بندوّر على طلبات قريبة…'**
+  String get driverOnlineHint;
+
+  /// No description provided for @driverStop.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنهاء'**
+  String get driverStop;
+
+  /// No description provided for @driverStopConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدك توقف استقبال الطلبات؟'**
+  String get driverStopConfirm;
+
+  /// No description provided for @driverKeepOnline.
+  ///
+  /// In ar, this message translates to:
+  /// **'خليك متصل'**
+  String get driverKeepOnline;
+
+  /// No description provided for @driverEarnings.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرباح اليوم'**
+  String get driverEarnings;
+
+  /// No description provided for @driverEarningsAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'JD 0.00'**
+  String get driverEarningsAmount;
+
+  /// No description provided for @driverTrackingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشوار — أنت متصل'**
+  String get driverTrackingTitle;
+
+  /// No description provided for @driverTrackingText.
+  ///
+  /// In ar, this message translates to:
+  /// **'نحدّث موقعك لاستقبال طلبات المشاوير القريبة'**
+  String get driverTrackingText;
 }
 
 class _AppLocalizationsDelegate

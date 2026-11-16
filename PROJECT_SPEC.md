@@ -390,7 +390,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 **معيار القبول:** بينعمل مستند `rides` بحالة `searching` والمسار مرسوم صح.
 
 ### المرحلة 3 — السائق والتوزيع
-- [ ] **T3.1** زر متصل وغير متصل + إرسال الموقع كل 5 ثواني (geohash)
+- [x] **T3.1** زر متصل وغير متصل + إرسال الموقع كل 5 ثواني (geohash)
 - [ ] **T3.2** Cloud Function `onRideCreated` (Matching) + المهلة + الانتقال للسائق اللي بعده
 - [ ] **T3.3** Callable `acceptRide` / `declineRide` (Transaction)
 - [ ] **T3.4** Bottom sheet الطلب الجديد مع العداد

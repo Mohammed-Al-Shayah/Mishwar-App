@@ -1,0 +1,50 @@
+[
+  {
+    "lat": 57.64911,
+    "lng": 10.40744,
+    "precision": 11,
+    "hash": "u4pruydqqvj"
+  },
+  {
+    "lat": 31.9539,
+    "lng": 35.9106,
+    "precision": 9,
+    "hash": "sv9tc1j2c"
+  },
+  {
+    "lat": 31.955,
+    "lng": 35.912,
+    "precision": 9,
+    "hash": "sv9tc1nr6"
+  },
+  {
+    "lat": 31.95,
+    "lng": 35.9,
+    "precision": 6,
+    "hash": "sv9tbb"
+  },
+  {
+    "lat": 0,
+    "lng": -73,
+    "precision": 9,
+    "hash": "6rupfzgpb"
+  },
+  {
+    "lat": 0,
+    "lng": 0,
+    "precision": 9,
+    "hash": "7zzzzzzzz"
+  },
+  {
+    "lat": -33.8688,
+    "lng": 151.2093,
+    "precision": 9,
+    "hash": "r3gx2f77b"
+  },
+  {
+    "lat": -90,
+    "lng": -180,
+    "precision": 12,
+    "hash": "000000000000"
+  }
+]

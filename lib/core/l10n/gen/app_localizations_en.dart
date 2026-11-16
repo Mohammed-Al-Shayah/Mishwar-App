@@ -354,4 +354,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rideAccepted => 'We found a driver!';
+
+  @override
+  String get driverStart => 'Start';
+
+  @override
+  String get driverOffline => 'You are offline';
+
+  @override
+  String get driverOfflineHint => 'Go online to receive ride requests';
+
+  @override
+  String get driverOnline => 'You are online';
+
+  @override
+  String get driverOnlineHint => 'Looking for nearby requests...';
+
+  @override
+  String get driverStop => 'Stop';
+
+  @override
+  String get driverStopConfirm => 'Stop receiving ride requests?';
+
+  @override
+  String get driverKeepOnline => 'Stay online';
+
+  @override
+  String get driverEarnings => 'Today\'s earnings';
+
+  @override
+  String get driverEarningsAmount => 'JD 0.00';
+
+  @override
+  String get driverTrackingTitle => 'Mishwar - you are online';
+
+  @override
+  String get driverTrackingText =>
+      'Updating your location to receive nearby ride requests';
 }

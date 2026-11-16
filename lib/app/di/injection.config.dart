@@ -127,6 +127,26 @@ import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart'
     as _i106;
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart'
     as _i396;
+import 'package:mishwar/features/driver/presence/data/driver_location_source.dart'
+    as _i27;
+import 'package:mishwar/features/driver/presence/data/driver_presence_repository_impl.dart'
+    as _i319;
+import 'package:mishwar/features/driver/presence/data/driver_tracking_repository_impl.dart'
+    as _i879;
+import 'package:mishwar/features/driver/presence/domain/driver_presence_repository.dart'
+    as _i726;
+import 'package:mishwar/features/driver/presence/domain/usecases/go_offline.dart'
+    as _i247;
+import 'package:mishwar/features/driver/presence/domain/usecases/go_online.dart'
+    as _i89;
+import 'package:mishwar/features/driver/presence/domain/usecases/update_driver_location.dart'
+    as _i587;
+import 'package:mishwar/features/driver/presence/domain/usecases/watch_driver_location.dart'
+    as _i653;
+import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart'
+    as _i562;
+import 'package:mishwar/features/driver/presence/presentation/bloc/presence_scheduler.dart'
+    as _i262;
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart'
     as _i934;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
@@ -150,6 +170,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
     gh.lazySingleton<_i766.GeolocatorClient>(() => _i766.GeolocatorClient());
     gh.lazySingleton<_i304.FareCalculator>(() => const _i304.FareCalculator());
+    gh.lazySingleton<_i27.DriverLocationSource>(
+      () => _i27.DriverLocationSource(),
+    );
+    gh.lazySingleton<_i262.PresenceScheduler>(() => _i262.PresenceScheduler());
     gh.lazySingleton<_i327.DriverRemoteDataSource>(
       () => _i327.DriverRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
@@ -170,6 +194,27 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i243.AuthRemoteDataSource>(
       () => _i243.AuthRemoteDataSourceImpl(gh<_i59.FirebaseAuth>()),
+    );
+    gh.lazySingleton<_i726.DriverPresenceRepository>(
+      () => _i319.DriverPresenceRepositoryImpl(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+      ),
+    );
+    gh.lazySingleton<_i247.GoOffline>(
+      () => _i247.GoOffline(gh<_i726.DriverPresenceRepository>()),
+    );
+    gh.lazySingleton<_i89.GoOnline>(
+      () => _i89.GoOnline(gh<_i726.DriverPresenceRepository>()),
+    );
+    gh.lazySingleton<_i587.UpdateDriverLocation>(
+      () => _i587.UpdateDriverLocation(gh<_i726.DriverPresenceRepository>()),
+    );
+    gh.lazySingleton<_i726.DriverTrackingRepository>(
+      () => _i879.DriverTrackingRepositoryImpl(gh<_i27.DriverLocationSource>()),
+    );
+    gh.lazySingleton<_i653.WatchDriverLocation>(
+      () => _i653.WatchDriverLocation(gh<_i726.DriverTrackingRepository>()),
     );
     gh.lazySingleton<_i101.LocationDataSource>(
       () => _i101.LocationDataSource(gh<_i766.GeolocatorClient>()),
@@ -305,6 +350,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i598.GetFareEstimates>(),
         gh<_i892.RequestRide>(),
         draft,
+      ),
+    );
+    gh.factory<_i562.DriverPresenceBloc>(
+      () => _i562.DriverPresenceBloc(
+        gh<_i291.WatchDriver>(),
+        gh<_i524.CheckLocationPermission>(),
+        gh<_i605.RequestLocationPermission>(),
+        gh<_i107.CurrentPosition>(),
+        gh<_i89.GoOnline>(),
+        gh<_i247.GoOffline>(),
+        gh<_i587.UpdateDriverLocation>(),
+        gh<_i653.WatchDriverLocation>(),
+        gh<_i916.OpenAppSettings>(),
+        gh<_i262.PresenceScheduler>(),
       ),
     );
     gh.lazySingleton<_i838.SessionCubit>(

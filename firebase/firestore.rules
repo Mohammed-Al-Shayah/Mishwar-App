@@ -52,6 +52,24 @@ service cloud.firestore {
         && (request.resource.data.status == resource.data.status
           || (resource.data.status == 'rejected'
             && request.resource.data.status == 'pending'));
+      // Approved drivers may update presence only; assignments stay server-owned.
+      allow update: if isOwner() && resource.data.status == 'approved'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['isOnline', 'location', 'heading', 'lastSeenAt'])
+        && request.resource.data.isOnline is bool
+        && request.resource.data.location is map
+        && request.resource.data.location.geohash is string
+        && request.resource.data.location.geohash.size() >= 1
+        && request.resource.data.location.geohash.size() <= 12
+        && request.resource.data.location.geopoint is latlng
+        && (!('heading' in request.resource.data)
+          || (request.resource.data.heading is number
+            && request.resource.data.heading >= 0
+            && request.resource.data.heading <= 360))
+        && request.resource.data.lastSeenAt == request.time
+        && (!request.resource.data.isOnline
+          || !('currentRideId' in resource.data)
+          || resource.data.currentRideId == null);
       allow delete: if false;
     }
 
