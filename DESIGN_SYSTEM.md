@@ -138,6 +138,14 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 
 ---
 
+
+### History, receipts and earnings
+
+- History uses the standard 40 icon circle, headline destination, footnote date/status and tabular LTR fare. Only cancelled status text uses negative.
+- Receipts are map-free lists: date, shared stop timeline, participant and vehicle, rating, fare/payment rows and a title2 total. Rider receipts end with the rebook primary button.
+- Driver earnings uses the dark theme, a largeTitle selected-day total and seven bars in text-primary (selected) / text-secondary (unselected). Chart height is 144 via ScreenUtil; values and day initials use caption typography. Each entire bar column is selectable and exposes its full date and amount to accessibility.
+- Loading, empty and retry states use existing skeleton, text and button tokens.
+
 ## 10. Review checklist
 
 - [ ] Only theme tokens + ScreenUtil — no raw hex/sizes in widgets.

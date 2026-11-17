@@ -375,4 +375,81 @@
   "ratingTagOnTime": "On time",
   "ratingTagRespectful": "Respectful",
   "ratingTagRude": "Rude"
+,
+  "navHome": "Home",
+  "navAccount": "Account",
+  "historyTitle": "Activity",
+  "historyEmptyTitle": "No trips yet",
+  "historyEmptyBody": "Your past trips will appear here after your first ride.",
+  "historyCancelled": "Cancelled",
+  "historyNoDrivers": "No drivers available",
+  "historyStatusSuffix": " · {status}",
+  "@historyStatusSuffix": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "historyRoute": "{pickup} → {dropoff}",
+  "@historyRoute": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      },
+      "dropoff": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptTitle": "Trip receipt",
+  "receiptFare": "Fare",
+  "receiptPayment": "Payment",
+  "receiptTotal": "Total",
+  "receiptYourRating": "Your rating",
+  "receiptStars": "{stars} stars",
+  "@receiptStars": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptVehicle": "{make} {model} · {color}",
+  "@receiptVehicle": {
+    "placeholders": {
+      "make": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptRebook": "Request this trip again",
+  "earningsTitle": "Earnings",
+  "earningsTrips": "{count} trips",
+  "@earningsTrips": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earningsDayTrips": "This day's trips",
+  "earningsNoTrips": "No trips on this day",
+  "earningsBarLabel": "{day}, JD {amount}",
+  "@earningsBarLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

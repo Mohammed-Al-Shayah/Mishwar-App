@@ -1195,6 +1195,138 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'غير محترم'**
   String get ratingTagRude;
+
+  /// No description provided for @navHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرئيسية'**
+  String get navHome;
+
+  /// No description provided for @navAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get navAccount;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'النشاط'**
+  String get historyTitle;
+
+  /// No description provided for @historyEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما عندك مشاوير لسا'**
+  String get historyEmptyTitle;
+
+  /// No description provided for @historyEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاويرك السابقة رح تظهر هون بعد أول مشوار.'**
+  String get historyEmptyBody;
+
+  /// No description provided for @historyCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغي'**
+  String get historyCancelled;
+
+  /// No description provided for @historyNoDrivers.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما توفر سائقين'**
+  String get historyNoDrivers;
+
+  /// No description provided for @historyStatusSuffix.
+  ///
+  /// In ar, this message translates to:
+  /// **' · {status}'**
+  String historyStatusSuffix(String status);
+
+  /// No description provided for @historyRoute.
+  ///
+  /// In ar, this message translates to:
+  /// **'{pickup} ← {dropoff}'**
+  String historyRoute(String pickup, String dropoff);
+
+  /// No description provided for @receiptTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتورة المشوار'**
+  String get receiptTitle;
+
+  /// No description provided for @receiptFare.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأجرة'**
+  String get receiptFare;
+
+  /// No description provided for @receiptPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة الدفع'**
+  String get receiptPayment;
+
+  /// No description provided for @receiptTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع'**
+  String get receiptTotal;
+
+  /// No description provided for @receiptYourRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييمك'**
+  String get receiptYourRating;
+
+  /// No description provided for @receiptStars.
+  ///
+  /// In ar, this message translates to:
+  /// **'{stars} نجوم'**
+  String receiptStars(int stars);
+
+  /// No description provided for @receiptVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{make} {model} · {color}'**
+  String receiptVehicle(String make, String model, String color);
+
+  /// No description provided for @receiptRebook.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب نفس المشوار'**
+  String get receiptRebook;
+
+  /// No description provided for @earningsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأرباح'**
+  String get earningsTitle;
+
+  /// No description provided for @earningsTrips.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} مشاوير'**
+  String earningsTrips(int count);
+
+  /// No description provided for @earningsDayTrips.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاوير هذا اليوم'**
+  String get earningsDayTrips;
+
+  /// No description provided for @earningsNoTrips.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما في مشاوير بهذا اليوم'**
+  String get earningsNoTrips;
+
+  /// No description provided for @earningsBarLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'{day}، JD {amount}'**
+  String earningsBarLabel(String day, String amount);
 }
 
 class _AppLocalizationsDelegate

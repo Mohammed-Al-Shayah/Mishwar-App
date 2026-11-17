@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_pill.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
     as offer;
 import 'package:mishwar/features/driver/offer/presentation/driver_offer_sheet.dart';
@@ -126,24 +128,7 @@ class _DriverHomeState extends State<_DriverHome> {
                         horizontal: AppSpacing.xl,
                         vertical: AppSpacing.xs,
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            l10n.driverEarningsAmount,
-                            textDirection: TextDirection.ltr,
-                            style: context.textStyles.titleLarge?.copyWith(
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            l10n.driverEarnings,
-                            style: context.textStyles.bodySmall,
-                          ),
-                        ],
-                      ),
+                      child: const DriverEarningsPill(),
                     ),
                   ),
                 ),

@@ -607,4 +607,82 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ratingTagRude => 'غير محترم';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navAccount => 'الحساب';
+
+  @override
+  String get historyTitle => 'النشاط';
+
+  @override
+  String get historyEmptyTitle => 'ما عندك مشاوير لسا';
+
+  @override
+  String get historyEmptyBody => 'مشاويرك السابقة رح تظهر هون بعد أول مشوار.';
+
+  @override
+  String get historyCancelled => 'ملغي';
+
+  @override
+  String get historyNoDrivers => 'ما توفر سائقين';
+
+  @override
+  String historyStatusSuffix(String status) {
+    return ' · $status';
+  }
+
+  @override
+  String historyRoute(String pickup, String dropoff) {
+    return '$pickup ← $dropoff';
+  }
+
+  @override
+  String get receiptTitle => 'فاتورة المشوار';
+
+  @override
+  String get receiptFare => 'الأجرة';
+
+  @override
+  String get receiptPayment => 'طريقة الدفع';
+
+  @override
+  String get receiptTotal => 'المجموع';
+
+  @override
+  String get receiptYourRating => 'تقييمك';
+
+  @override
+  String receiptStars(int stars) {
+    return '$stars نجوم';
+  }
+
+  @override
+  String receiptVehicle(String make, String model, String color) {
+    return '$make $model · $color';
+  }
+
+  @override
+  String get receiptRebook => 'اطلب نفس المشوار';
+
+  @override
+  String get earningsTitle => 'الأرباح';
+
+  @override
+  String earningsTrips(int count) {
+    return '$count مشاوير';
+  }
+
+  @override
+  String get earningsDayTrips => 'مشاوير هذا اليوم';
+
+  @override
+  String get earningsNoTrips => 'ما في مشاوير بهذا اليوم';
+
+  @override
+  String earningsBarLabel(String day, String amount) {
+    return '$day، JD $amount';
+  }
 }

@@ -5,9 +5,16 @@ import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.
 import 'package:mishwar/features/common/ride/domain/entities/driver_live_location.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_history.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
 abstract class RideRepository {
+  Future<Either<Failure, RideHistoryPage>> history({
+    required RideParty party,
+    required String uid,
+    HistoryCursor? after,
+    int limit = 20,
+  });
   Future<Either<Failure, Unit>> rateRide(
     String rideId,
     int stars,

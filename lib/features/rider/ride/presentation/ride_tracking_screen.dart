@@ -16,12 +16,12 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/mw_driver_card.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
+import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 import 'package:mishwar/features/rider/ride/presentation/rider_trip_map.dart';
-import 'package:mishwar/features/rider/ride/presentation/trip_stops.dart';
 
 class RideTrackingScreen extends StatefulWidget {
   const RideTrackingScreen({

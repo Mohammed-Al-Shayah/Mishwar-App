@@ -375,4 +375,81 @@
   "ratingTagOnTime": "على الموعد",
   "ratingTagRespectful": "محترم",
   "ratingTagRude": "غير محترم"
+,
+  "navHome": "الرئيسية",
+  "navAccount": "الحساب",
+  "historyTitle": "النشاط",
+  "historyEmptyTitle": "ما عندك مشاوير لسا",
+  "historyEmptyBody": "مشاويرك السابقة رح تظهر هون بعد أول مشوار.",
+  "historyCancelled": "ملغي",
+  "historyNoDrivers": "ما توفر سائقين",
+  "historyStatusSuffix": " · {status}",
+  "@historyStatusSuffix": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "historyRoute": "{pickup} ← {dropoff}",
+  "@historyRoute": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      },
+      "dropoff": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptTitle": "فاتورة المشوار",
+  "receiptFare": "الأجرة",
+  "receiptPayment": "طريقة الدفع",
+  "receiptTotal": "المجموع",
+  "receiptYourRating": "تقييمك",
+  "receiptStars": "{stars} نجوم",
+  "@receiptStars": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptVehicle": "{make} {model} · {color}",
+  "@receiptVehicle": {
+    "placeholders": {
+      "make": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptRebook": "اطلب نفس المشوار",
+  "earningsTitle": "الأرباح",
+  "earningsTrips": "{count} مشاوير",
+  "@earningsTrips": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earningsDayTrips": "مشاوير هذا اليوم",
+  "earningsNoTrips": "ما في مشاوير بهذا اليوم",
+  "earningsBarLabel": "{day}، JD {amount}",
+  "@earningsBarLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

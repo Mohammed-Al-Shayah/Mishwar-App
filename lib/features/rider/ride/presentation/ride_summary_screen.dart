@@ -5,11 +5,11 @@ import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
+import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/rating/presentation/rating_exit.dart';
 import 'package:mishwar/features/common/rating/presentation/rating_form.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
-import 'package:mishwar/features/rider/ride/presentation/trip_stops.dart';
 
 class RideSummaryScreen extends StatefulWidget {
   const RideSummaryScreen({super.key});

@@ -1,0 +1,189 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mishwar/core/l10n/failure_message.dart';
+import 'package:mishwar/core/l10n/l10n.dart';
+import 'package:mishwar/core/theme/app_sizes.dart';
+import 'package:mishwar/core/theme/app_spacing.dart';
+import 'package:mishwar/core/theme/app_text_styles.dart';
+import 'package:mishwar/core/theme/app_theme.dart';
+import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/mw_star_rating.dart';
+import 'package:mishwar/core/widgets/trip_stops.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/presentation/history_widgets.dart';
+import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
+
+class RideReceiptScreen extends StatelessWidget {
+  const RideReceiptScreen({
+    required this.rideId,
+    this.driver = false,
+    super.key,
+  });
+  final String rideId;
+  final bool driver;
+  @override
+  Widget build(BuildContext context) => driver
+      ? Theme(
+          data: AppTheme.dark(),
+          child: _Receipt(rideId: rideId, driver: true),
+        )
+      : _Receipt(rideId: rideId, driver: false);
+}
+
+class _Receipt extends StatelessWidget {
+  const _Receipt({required this.rideId, required this.driver});
+  final String rideId;
+  final bool driver;
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(context.l10n.receiptTitle)),
+    body: BlocBuilder<RideReceiptCubit, RideReceiptState>(
+      builder: (context, state) {
+        final ride = state.ride;
+        if (state.failure != null) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(failureMessage(context, state.failure!)),
+                TextButton(
+                  onPressed: () =>
+                      context.read<RideReceiptCubit>().load(rideId),
+                  child: Text(context.l10n.retryLabel),
+                ),
+              ],
+            ),
+          );
+        }
+        if (ride == null) {
+          return Padding(
+            padding: EdgeInsets.all(AppSpacing.md),
+            child: const HistorySkeleton(),
+          );
+        }
+        return RideReceiptContent(ride: ride, driver: driver);
+      },
+    ),
+  );
+}
+
+class RideReceiptContent extends StatelessWidget {
+  const RideReceiptContent({
+    required this.ride,
+    this.driver = false,
+    super.key,
+  });
+  final RideEntity ride;
+  final bool driver;
+  @override
+  Widget build(BuildContext context) {
+    final party = driver ? ride.riderInfo : ride.driverInfo;
+    final vehicle = ride.driverInfo?.vehicle;
+    final rating = driver ? ride.riderRating : ride.driverRating;
+    return ListView(
+      padding: EdgeInsets.all(AppSpacing.md),
+      children: [
+        Text(
+          historyDate(context, ride.createdAt),
+          style: AppTextStyles.tabular(AppTextStyles.footnote),
+        ),
+        SizedBox(height: AppSpacing.md),
+        TripStops(ride: ride),
+        SizedBox(height: AppSpacing.lg),
+        if (party != null) Text(party.name, style: AppTextStyles.headline),
+        if (vehicle != null) ...[
+          Text(
+            context.l10n.receiptVehicle(
+              vehicle.make,
+              vehicle.model,
+              vehicle.color,
+            ),
+            style: AppTextStyles.body,
+          ),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(
+              vehicle.plate,
+              textDirection: TextDirection.ltr,
+              style: AppTextStyles.tabular(AppTextStyles.title2),
+            ),
+          ),
+        ],
+        if (rating != null) ...[
+          SizedBox(height: AppSpacing.md),
+          Text(context.l10n.receiptYourRating, style: AppTextStyles.footnote),
+          Semantics(
+            label: context.l10n.receiptStars(rating),
+            child: ExcludeSemantics(
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: MwStarDisplay(value: rating, size: AppSizes.icon),
+              ),
+            ),
+          ),
+        ],
+        SizedBox(height: AppSpacing.lg),
+        if (ride.status == RideStatus.noDrivers)
+          Text(context.l10n.historyNoDrivers, style: AppTextStyles.body)
+        else ...[
+          _fareRow(context, context.l10n.receiptFare, ridePrice(context, ride)),
+          _fareRow(
+            context,
+            context.l10n.receiptPayment,
+            context.l10n.cashPayment,
+            price: false,
+          ),
+          Divider(height: AppSpacing.xl),
+          _fareRow(
+            context,
+            context.l10n.receiptTotal,
+            ridePrice(context, ride),
+            total: true,
+          ),
+        ],
+        if (ride.status == RideStatus.cancelled)
+          Text(
+            context.l10n.historyCancelled,
+            style: AppTextStyles.footnote.copyWith(
+              color: context.colors.negative,
+            ),
+          ),
+        if (!driver) ...[
+          SizedBox(height: AppSpacing.xl),
+          FilledButton(
+            onPressed: () => context.push('/rider/confirm', extra: ride.draft),
+            child: Text(context.l10n.receiptRebook),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _fareRow(
+    BuildContext context,
+    String label,
+    String value, {
+    bool total = false,
+    bool price = true,
+  }) => Padding(
+    padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: total ? AppTextStyles.title2 : AppTextStyles.body,
+          ),
+        ),
+        Text(
+          value,
+          textDirection: price ? TextDirection.ltr : null,
+          style: AppTextStyles.tabular(
+            total ? AppTextStyles.title2 : AppTextStyles.headline,
+          ),
+        ),
+      ],
+    ),
+  );
+}

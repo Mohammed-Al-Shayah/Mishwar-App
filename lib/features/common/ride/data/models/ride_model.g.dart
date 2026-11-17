@@ -47,6 +47,12 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
   createdAt: const TimestampConverter().fromJson(
     json['createdAt'] as Timestamp,
   ),
+  driverRating: json['driverRating'] == null
+      ? null
+      : RideRatingModel.fromJson(json['driverRating'] as Map<String, dynamic>),
+  riderRating: json['riderRating'] == null
+      ? null
+      : RideRatingModel.fromJson(json['riderRating'] as Map<String, dynamic>),
   driverId: json['driverId'] as String?,
   driverInfo: json['driverInfo'] == null
       ? null
@@ -99,6 +105,8 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
       'dropoff': instance.dropoff.toJson(),
       'fare': instance.fare.toJson(),
       'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'driverRating': instance.driverRating?.toJson(),
+      'riderRating': instance.riderRating?.toJson(),
       'driverId': instance.driverId,
       'driverInfo': instance.driverInfo?.toJson(),
       'riderInfo': instance.riderInfo?.toJson(),
@@ -168,3 +176,9 @@ Map<String, dynamic> _$RidePartyInfoModelToJson(_RidePartyInfoModel instance) =>
       'rating': instance.rating,
       'vehicle': instance.vehicle?.toJson(),
     };
+
+_RideRatingModel _$RideRatingModelFromJson(Map<String, dynamic> json) =>
+    _RideRatingModel(stars: (json['stars'] as num).toInt());
+
+Map<String, dynamic> _$RideRatingModelToJson(_RideRatingModel instance) =>
+    <String, dynamic>{'stars': instance.stars};

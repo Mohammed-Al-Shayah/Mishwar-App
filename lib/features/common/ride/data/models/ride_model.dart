@@ -65,6 +65,8 @@ abstract class RideModel with _$RideModel {
     required RidePlaceModel dropoff,
     required RideFareModel fare,
     @TimestampConverter() required DateTime createdAt,
+    RideRatingModel? driverRating,
+    RideRatingModel? riderRating,
     String? driverId,
     RidePartyInfoModel? driverInfo,
     RidePartyInfoModel? riderInfo,
@@ -91,6 +93,8 @@ abstract class RideModel with _$RideModel {
       throw const FormatException('Invalid fare');
     }
     return RideEntity(
+      driverRating: driverRating?.stars,
+      riderRating: riderRating?.stars,
       id: id,
       riderId: riderId,
       driverId: driverId,
@@ -139,4 +143,11 @@ abstract class RidePartyInfoModel with _$RidePartyInfoModel {
     rating: rating,
     vehicle: vehicle?.toEntity(),
   );
+}
+
+@freezed
+abstract class RideRatingModel with _$RideRatingModel {
+  const factory RideRatingModel({required int stars}) = _RideRatingModel;
+  factory RideRatingModel.fromJson(Map<String, dynamic> json) =>
+      _$RideRatingModelFromJson(json);
 }

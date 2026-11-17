@@ -617,4 +617,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ratingTagRude => 'Rude';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navAccount => 'Account';
+
+  @override
+  String get historyTitle => 'Activity';
+
+  @override
+  String get historyEmptyTitle => 'No trips yet';
+
+  @override
+  String get historyEmptyBody =>
+      'Your past trips will appear here after your first ride.';
+
+  @override
+  String get historyCancelled => 'Cancelled';
+
+  @override
+  String get historyNoDrivers => 'No drivers available';
+
+  @override
+  String historyStatusSuffix(String status) {
+    return ' · $status';
+  }
+
+  @override
+  String historyRoute(String pickup, String dropoff) {
+    return '$pickup → $dropoff';
+  }
+
+  @override
+  String get receiptTitle => 'Trip receipt';
+
+  @override
+  String get receiptFare => 'Fare';
+
+  @override
+  String get receiptPayment => 'Payment';
+
+  @override
+  String get receiptTotal => 'Total';
+
+  @override
+  String get receiptYourRating => 'Your rating';
+
+  @override
+  String receiptStars(int stars) {
+    return '$stars stars';
+  }
+
+  @override
+  String receiptVehicle(String make, String model, String color) {
+    return '$make $model · $color';
+  }
+
+  @override
+  String get receiptRebook => 'Request this trip again';
+
+  @override
+  String get earningsTitle => 'Earnings';
+
+  @override
+  String earningsTrips(int count) {
+    return '$count trips';
+  }
+
+  @override
+  String get earningsDayTrips => 'This day\'s trips';
+
+  @override
+  String get earningsNoTrips => 'No trips on this day';
+
+  @override
+  String earningsBarLabel(String day, String amount) {
+    return '$day, JD $amount';
+  }
 }

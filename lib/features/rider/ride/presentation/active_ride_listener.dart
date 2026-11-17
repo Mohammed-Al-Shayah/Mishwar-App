@@ -28,11 +28,9 @@ class _ActiveRideListenerState extends State<ActiveRideListener> {
           (result) => result.fold((_) {}, (id) {
             if (id == null) return;
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted &&
-                  GoRouter.of(
-                        context,
-                      ).routeInformationProvider.value.uri.path ==
-                      '/rider') {
+              if (!mounted) return;
+              final path = GoRouter.of(context).state.uri.path;
+              if (path == '/rider' || path.startsWith('/rider/history')) {
                 context.go('/rider/ride/$id');
               }
             });
