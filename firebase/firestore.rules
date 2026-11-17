@@ -19,9 +19,18 @@ service cloud.firestore {
       function validPushToken() {
         let data = request.resource.data;
         return (!('fcmToken' in data)
+            || data.fcmToken == null
             || (data.fcmToken is string && data.fcmToken.size() <= 4096))
           && (!('fcmTokenUpdatedAt' in data)
             || data.fcmTokenUpdatedAt == request.time);
+      }
+      function validProfile() {
+        let data = request.resource.data;
+        return (!('name' in data)
+            || (data.name is string && data.name.size() >= 2 && data.name.size() <= 40))
+          && (!('phone' in data) || (data.phone is string && data.phone.size() <= 20))
+          && (!('photoUrl' in data) || data.photoUrl == null
+            || (data.photoUrl is string && data.photoUrl.size() <= 2048));
       }
       function validPushUpdate() {
         let changed = request.resource.data.diff(resource.data).affectedKeys();
@@ -30,12 +39,17 @@ service cloud.firestore {
             && request.resource.data.fcmTokenUpdatedAt == request.time);
       }
       allow read: if isAdmin() || isOwner();
-      allow create: if !isAdmin() && isOwner() && validClientRole() && validPushToken()
-        && (!('fcmToken' in request.resource.data)
+      allow create: if !isAdmin() && isOwner() && validClientRole() && validProfile() && validPushToken()
+        && request.resource.data.keys().hasOnly(
+          ['name', 'phone', 'role', 'photoUrl', 'createdAt', 'fcmToken', 'fcmTokenUpdatedAt'])
+        && (!('createdAt' in request.resource.data) || request.resource.data.createdAt == request.time)
+        && (!('fcmToken' in request.resource.data) || request.resource.data.fcmToken == null
           || request.resource.data.fcmTokenUpdatedAt == request.time)
         && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting']);
       allow update: if !isAdmin() && isOwner()
-        && validClientRole() && validPushUpdate()
+        && validClientRole() && validProfile() && validPushUpdate()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['name', 'phone', 'photoUrl', 'role', 'fcmToken', 'fcmTokenUpdatedAt'])
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data
@@ -48,18 +62,27 @@ service cloud.firestore {
       function isOwner() {
         return request.auth != null && request.auth.uid == uid;
       }
-      function nonEmpty(value) { return value is string && value.size() > 0; }
+      function boundedString(value, maximum) {
+        return value is string && value.size() > 0 && value.size() <= maximum;
+      }
       function validApplication() {
         let data = request.resource.data;
         return data.vehicle is map
+          && data.vehicle.keys().hasOnly(['type', 'make', 'model', 'color', 'plate'])
           && data.vehicle.type in ['economy', 'comfort', 'van']
-          && nonEmpty(data.vehicle.make) && nonEmpty(data.vehicle.model)
-          && nonEmpty(data.vehicle.color) && nonEmpty(data.vehicle.plate)
+          && boundedString(data.vehicle.make, 40) && boundedString(data.vehicle.model, 40)
+          && boundedString(data.vehicle.color, 40) && boundedString(data.vehicle.plate, 15)
           && data.licensePhotoPath is string
-          && data.licensePhotoPath.matches('^drivers/' + uid + '/.+');
+          && data.licensePhotoPath.size() <= 1024
+          && data.licensePhotoPath.matches('^drivers/[^/]+/[^/]+$')
+          && data.licensePhotoPath.split('/')[1] == uid;
       }
       allow read: if isAdmin() || isOwner();
       allow create: if !isAdmin() && isOwner() && validApplication()
+        && request.resource.data.keys().hasOnly(
+          ['vehicle', 'licensePhotoPath', 'status', 'isOnline', 'createdAt', 'updatedAt'])
+        && (!('createdAt' in request.resource.data) || request.resource.data.createdAt == request.time)
+        && (!('updatedAt' in request.resource.data) || request.resource.data.updatedAt == request.time)
         && request.resource.data.status == 'pending'
         && request.resource.data.isOnline == false
         && !('offer' in request.resource.data)
@@ -68,6 +91,8 @@ service cloud.firestore {
         && resource.data.status in ['pending', 'rejected']
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
           ['vehicle', 'licensePhotoPath', 'updatedAt', 'status'])
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['updatedAt'])
+          || request.resource.data.updatedAt == request.time)
         && (request.resource.data.status == resource.data.status
           || (resource.data.status == 'rejected'
             && request.resource.data.status == 'pending'));
@@ -77,6 +102,7 @@ service cloud.firestore {
           ['isOnline', 'location', 'heading', 'lastSeenAt'])
         && request.resource.data.isOnline is bool
         && request.resource.data.location is map
+        && request.resource.data.location.keys().hasOnly(['geohash', 'geopoint'])
         && request.resource.data.location.geohash is string
         && request.resource.data.location.geohash.size() >= 1
         && request.resource.data.location.geohash.size() <= 12
@@ -98,9 +124,14 @@ service cloud.firestore {
     }
 
     match /rides/{rideId} {
-      allow read: if isAdmin() || (request.auth != null && (request.auth.uid == resource.data.riderId
+      allow get: if isAdmin() || (request.auth != null && (request.auth.uid == resource.data.riderId
         || resource.data.get('driverId', null) == request.auth.uid
         || resource.data.get('offeredTo', null) == request.auth.uid));
+      // Rules are not filters: history queries must prove one of these equalities.
+      // Offers are fetched by document ID, never by a client collection query.
+      allow list: if isAdmin() || (request.auth != null
+        && (resource.data.riderId == request.auth.uid
+          || resource.data.get('driverId', null) == request.auth.uid));
       allow create, update, delete: if false;
       match /live/driver {
         function ride() { return get(/databases/$(database)/documents/rides/$(rideId)).data; }

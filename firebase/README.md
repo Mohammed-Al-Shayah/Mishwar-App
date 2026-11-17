@@ -1,4 +1,4 @@
-# Local security checks (T1.5)
+# Firebase development and security checks
 
 ## Admin web workspace (T5.3)
 
@@ -31,63 +31,90 @@ denied even for admin-owned profiles. Existing non-admin ownership rules and
 pricing-read behavior are retained. Deploy the two added composite indexes for
 driver status/date and ride status/date queries with the rules.
 
-With Auth/Firestore/Storage emulators at 9099/8080/9199, run:
+## Automated security rules suite (T5.4)
 
-```powershell
+With the existing demo-mishwar Firestore (8080) and Storage (9199) emulators
+running on loopback, run from the repository root:
+
+```sh
+npm --prefix firebase/tests install
+npm --prefix firebase/tests test
+```
+
+On Windows with PowerShell script execution disabled, use npm.cmd. If the
+standard npm cache is unavailable, add --cache firebase/tests/node_modules/.npm-cache
+to the install command. The lockfile pins rules-unit-testing v4 and Firebase v11.
+The gRPC override keeps Firebase v11's transitive gRPC dependency on a patched
+version; npm install reports zero dependency vulnerabilities.
+The tests load the actual rules files using initializeTestEnvironment; they
+never deploy rules, use production endpoints, load Functions, or read secrets.
+Auth tokens/claims are mocked, so Auth is not required. Each test clears
+Firestore and seeds through withSecurityRulesDisabled. Storage tests also
+clear the bucket. **These commands erase local demo data.** Do not run manual
+probes or the app against that project while the suite is running.
+
+Node runs the seven test files in separate processes. A temporary OS-directory
+lock serializes rule uploads, fixture writes, and clears for the shared project.
+Cleanup releases the lock even after test failures; waiting fails after four
+minutes. After a forcibly terminated run, remove the stale directory named
+mishwar-demo-rules-tests.lock from your OS temporary directory only after
+checking no suite is still running. No emulator processes are managed.
+
+Separate CRUD tests cover anonymous, owner, unrelated, rider, assigned driver,
+offered driver and boolean admin contexts. Additional tests cover queries,
+terminal-status history pagination, earnings, resubmission, presence, live
+tracking, malformed fields, bounds and server-owned field deletion.
+The suite supersedes the Firestore/Storage checks in rules_probe.mjs and
+admin_probe.mjs. Both remain optional smoke checks:
+
+```sh
+node firebase/tests/rules_probe.mjs
 node firebase/tests/admin_probe.mjs
 ```
 
-This probe uses only loopback emulator endpoints and demo-mishwar. It checks
-admin reads of users, drivers, earnings, rides, live data, config and audit logs;
-denied admin writes; denied foreign non-admin reads; and admin license reads.
-It exits with code 2 when emulators are unreachable. It also exercises the grant
-CLI, removes its fixtures, and restores the previous emulator pricing document.
+The admin probe also checks the claim-grant CLI. tasks_probe.mjs remains a
+separate Cloud Tasks delivery integration check, outside security rules.
 
-Use only the Firebase Emulator Suite with a demo project:
+### Final client access matrix
 
-```sh
-firebase emulators:start --project demo-mishwar --only auth,firestore,storage
-```
+Admin means the boolean custom claim admin: true, never a profile role.
+Admin clients have read access only, including their own records. Cloud
+Functions/Admin SDK writes bypass these client rules.
 
-Firestore is on 8080; Storage is on 9199. Use two authenticated emulator users
-(A and B), plus an unauthenticated client. Seed review statuses using the
-emulator Admin SDK only.
+| Path | Get/read | List/query | Create | Update | Delete |
+|---|---|---|---|---|---|
+| users/{uid} | Owner, admin | Owner-constrained results, admin | Owner: profile allowlist, optional initial rider/driver role | Owner: profile/push allowlist; existing role immutable | Owner only before a role exists |
+| drivers/{uid} | Owner, admin (including missing own document) | Owner-constrained results, admin | Owner: pending offline application | Pending/rejected: application fields; rejected may resubmit. Approved: presence only | Denied |
+| drivers/{uid}/earnings/{day} | Owner, admin | Owner, admin | Denied | Denied | Denied |
+| rides/{rideId} | Rider, assigned driver, offered driver, admin | riderId == uid or driverId == uid; admin unrestricted | Denied | Denied | Denied |
+| rides/{rideId}/live/driver | Rider, assigned driver, admin | Same participants for this ride; admin | Assigned driver during accepted/arriving/arrived/in_progress | Same as create | Denied |
+| config/{id} | Admin | Admin | Denied | Denied | Denied |
+| adminLog/{id} | Admin | Admin | Denied | Denied | Denied |
+| Storage drivers/{uid}/{file}, one file segment | Owner, admin | Own folder, admin | Owner: image MIME type, strictly less than 5 MiB | Same as create, including metadata | Denied |
+| All other paths, including subcollections | Denied | Denied | Denied | Denied | Denied |
 
-Manual checklist for `firestore.rules` (automated rules tests are T5.4):
+Profile fields: name 2-40 characters, phone string at most 20, nullable photo
+URL at most 2048, nullable/absent FCM token or string at most 4096. Initial
+null token supports Flutter serialization; non-null token writes and changes
+or deletion require fcmTokenUpdatedAt == request.time. Profile fields are
+optional; first role selection happens after creation. Creation timestamps,
+when supplied, use server timestamps; createdAt cannot change later.
+Server-owned ratings, ride pointers and deletion flags cannot be added,
+changed or removed by clients.
 
-- [ ] A can read A's driver document, including a missing document; B and signed-out clients cannot.
-- [ ] A can create a pending application with isOnline=false, no currentRideId,
-      economy/comfort/van vehicle, non-empty string make/model/color/plate, and
-      licensePhotoPath beginning with drivers/A/.
-- [ ] Creation fails for another uid, approved/rejected/suspended status,
-      isOnline=true, any currentRideId (including null), invalid/missing vehicle
-      fields/type, or a missing/non-string/foreign license path.
-- [ ] Pending and rejected owners can edit only vehicle, licensePhotoPath, updatedAt.
-- [ ] Rejected owners can additionally change status to pending.
-- [ ] Pending cannot change to rejected; neither status can change to approved or suspended.
-- [ ] Editing isOnline, currentRideId, rejectionReason, createdAt, location, or any
-      other field is denied, including removal of those fields.
-- [ ] Approved and suspended applications cannot be edited by clients.
-- [ ] Driver deletion is denied for everyone.
-- [ ] Existing users ownership and immutable-role behavior is unchanged.
+Applications allow only known vehicle keys, economy/comfort/van type,
+nonempty make/model/color up to 40 and plate up to 15 characters. License
+paths are at most 1024 characters and name one direct file in the owner's
+folder, comparing the UID literally rather than interpolating it into a regex.
+Changed application timestamps require server timestamps. Presence
+requires boolean isOnline, a location map containing only geohash (1-12)
+and GeoPoint, optional numeric heading (0-360), and lastSeenAt == request.time.
+Busy drivers can heartbeat or go offline but cannot go back online while
+assigned. Live location requires GeoPoint, updatedAt == request.time and
+optional heading (0-360); offered drivers cannot read this channel.
 
-Storage checklist:
-
-- [ ] A can upload an image smaller than 5 MiB to drivers/A/license-file and read it.
-- [ ] Exactly 5 MiB, larger files, non-image content types, deletes, nested paths,
-      other users, signed-out clients, and all other paths are denied.
-
-## Automated rules probe
-
-With the emulators running (`firebase emulators:start`), run:
-
-```
-node firebase/tests/rules_probe.mjs +962781111199
-```
-
-It signs in a fresh phone user on the Auth emulator and checks 11 Firestore/Storage rules
-(self-approval, going online while pending, admin escalation, foreign uploads, non-image uploads, ...).
-Use a new phone number each run. Emulators only — it never talks to a real project.
+The catch-all deny remains last in both rules files. Future-phase collections
+(e.g. saved places) stay denied until their own tasks implement them.
 
 ## Places, routes and pricing (T2.1 / T2.3)
 
@@ -158,7 +185,7 @@ old sequence do nothing. Duplicate tasks are safe through transactional checks.
 With emulators running, run these from the repo root:
 
 ```sh
-node firebase/tests/rules_probe.mjs
+npm --prefix firebase/tests test
 node firebase/tests/tasks_probe.mjs
 ```
 

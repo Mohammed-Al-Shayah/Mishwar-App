@@ -1,0 +1,11 @@
+{
+  "name": "mishwar-rules-tests",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test rules/*.test.mjs" },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.0",
+    "firebase": "^11.0.0"
+  },
+  "overrides": { "@grpc/grpc-js": "^1.13.6" }
+}
