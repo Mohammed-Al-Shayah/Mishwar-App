@@ -778,4 +778,277 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountEnglish => 'English';
+
+  @override
+  String get adminOverview => 'Overview';
+
+  @override
+  String get adminDrivers => 'Drivers';
+
+  @override
+  String get adminRides => 'Rides';
+
+  @override
+  String get adminMap => 'Live map';
+
+  @override
+  String get adminPricing => 'Pricing';
+
+  @override
+  String get adminSignIn => 'Admin sign in';
+
+  @override
+  String get adminEmail => 'Email';
+
+  @override
+  String get adminPassword => 'Password';
+
+  @override
+  String get adminDenied => 'This account is not an admin';
+
+  @override
+  String get adminSignOut => 'Sign out';
+
+  @override
+  String get adminLargeScreen => 'Open on a larger screen';
+
+  @override
+  String get adminError => 'Request failed. Please try again.';
+
+  @override
+  String get adminRetry => 'Retry';
+
+  @override
+  String get adminEmpty => 'No results';
+
+  @override
+  String get adminOnline => 'Online drivers';
+
+  @override
+  String get adminActive => 'Active rides';
+
+  @override
+  String get adminTodayRides => 'Rides today';
+
+  @override
+  String get adminPendingApplications => 'Pending applications';
+
+  @override
+  String get adminLatest => 'Latest 10 rides';
+
+  @override
+  String get adminPending => 'Pending';
+
+  @override
+  String get adminApproved => 'Approved';
+
+  @override
+  String get adminSuspended => 'Suspended';
+
+  @override
+  String get adminRejected => 'Rejected';
+
+  @override
+  String get adminSearch => 'Search name, phone or plate';
+
+  @override
+  String get adminName => 'Name';
+
+  @override
+  String get adminPhone => 'Phone';
+
+  @override
+  String get adminVehicle => 'Vehicle';
+
+  @override
+  String get adminPlate => 'Plate';
+
+  @override
+  String get adminStatus => 'Status';
+
+  @override
+  String get adminRating => 'Rating';
+
+  @override
+  String get adminApplied => 'Applied';
+
+  @override
+  String get adminPrevious => 'Previous';
+
+  @override
+  String get adminNext => 'Next';
+
+  @override
+  String get adminTime => 'Time';
+
+  @override
+  String get adminRider => 'Rider';
+
+  @override
+  String get adminDriver => 'Driver';
+
+  @override
+  String get adminRoute => 'Pickup → dropoff';
+
+  @override
+  String get adminFare => 'Fare';
+
+  @override
+  String get adminAll => 'All';
+
+  @override
+  String get adminSearching => 'Searching';
+
+  @override
+  String get adminAccepted => 'Accepted';
+
+  @override
+  String get adminArriving => 'Arriving';
+
+  @override
+  String get adminArrived => 'Arrived';
+
+  @override
+  String get adminInProgress => 'In progress';
+
+  @override
+  String get adminCompleted => 'Completed';
+
+  @override
+  String get adminCancelled => 'Cancelled';
+
+  @override
+  String get adminNoDrivers => 'No drivers';
+
+  @override
+  String get adminToday => 'Today';
+
+  @override
+  String get adminWeek => '7 days';
+
+  @override
+  String get adminCustom => 'Custom range';
+
+  @override
+  String get adminApprove => 'Approve';
+
+  @override
+  String get adminReject => 'Reject';
+
+  @override
+  String get adminSuspend => 'Suspend';
+
+  @override
+  String get adminReactivate => 'Reactivate';
+
+  @override
+  String get adminReason => 'Reason (up to 200 characters)';
+
+  @override
+  String get adminConfirm => 'Confirm';
+
+  @override
+  String get adminDismiss => 'Back';
+
+  @override
+  String get adminCancelRide => 'Cancel ride';
+
+  @override
+  String get adminLicense => 'License photo';
+
+  @override
+  String get adminLicenseMissing => 'No license photo uploaded';
+
+  @override
+  String get adminHistory => 'History';
+
+  @override
+  String get adminCompletedTrips => 'Completed trips';
+
+  @override
+  String get adminCancellations => 'Cancellations';
+
+  @override
+  String get adminEstimated => 'Estimated fare';
+
+  @override
+  String get adminFinal => 'Final fare';
+
+  @override
+  String get adminTimeline => 'Timeline';
+
+  @override
+  String get adminRiderRating => 'Rider rating';
+
+  @override
+  String get adminDriverRating => 'Driver rating';
+
+  @override
+  String get adminClose => 'Close';
+
+  @override
+  String get adminMapFallback =>
+      'Map key unavailable. Driver coordinates are shown below.';
+
+  @override
+  String get adminMapFailed =>
+      'Map could not load. Driver coordinates are shown below.';
+
+  @override
+  String get adminFree => 'Free';
+
+  @override
+  String get adminBusy => 'On a ride';
+
+  @override
+  String get adminCoordinates => 'Coordinates';
+
+  @override
+  String get adminEconomy => 'Economy';
+
+  @override
+  String get adminComfort => 'Comfort';
+
+  @override
+  String get adminVan => 'Van';
+
+  @override
+  String get adminBase => 'Base';
+
+  @override
+  String get adminPerKm => 'Per km';
+
+  @override
+  String get adminPerMin => 'Per minute';
+
+  @override
+  String get adminMinimum => 'Minimum';
+
+  @override
+  String get adminPreview => 'Preview: 10 km / 20 min';
+
+  @override
+  String get adminSave => 'Save';
+
+  @override
+  String get adminRateInvalid =>
+      'Enter a value above 0 and up to 50, with at most 3 decimal places';
+
+  @override
+  String get adminUpdatedBy => 'Last updated by';
+
+  @override
+  String get adminUpdatedAt => 'Last updated at';
+
+  @override
+  String get adminSaved => 'Saved';
+
+  @override
+  String get adminCurrency => 'JOD';
+
+  @override
+  String get adminUnknown => '—';
+
+  @override
+  String get adminLanguage => 'Language';
 }

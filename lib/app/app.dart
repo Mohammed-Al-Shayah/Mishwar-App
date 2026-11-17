@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,6 +76,8 @@ class _MishwarAppState extends State<MishwarApp> {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
+      enableScaleWH: () => !kIsWeb,
+      enableScaleText: () => !kIsWeb,
       builder: (_, _) => BlocBuilder<SessionCubit, SessionState>(
         builder: (context, session) => BlocBuilder<LocaleCubit, Locale>(
           builder: (context, locale) => BlocBuilder<ThemeModeCubit, ThemeMode>(

@@ -1,6 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() { return request.auth != null && ('admin' in request.auth.token) && request.auth.token.admin == true; }
+    match /config/{id} { allow read: if isAdmin(); allow write: if false; }
+    match /adminLog/{id} { allow read: if isAdmin(); allow write: if false; }
     match /users/{uid} {
       function isOwner() {
         return request.auth != null && request.auth.uid == uid;
@@ -26,19 +29,19 @@ service cloud.firestore {
           || (validPushToken()
             && request.resource.data.fcmTokenUpdatedAt == request.time);
       }
-      allow read: if isOwner();
-      allow create: if isOwner() && validClientRole() && validPushToken()
+      allow read: if isAdmin() || isOwner();
+      allow create: if !isAdmin() && isOwner() && validClientRole() && validPushToken()
         && (!('fcmToken' in request.resource.data)
           || request.resource.data.fcmTokenUpdatedAt == request.time)
         && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting']);
-      allow update: if isOwner()
+      allow update: if !isAdmin() && isOwner()
         && validClientRole() && validPushUpdate()
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data
             && request.resource.data.role == resource.data.role));
       // Prevent deletion and recreation to change an existing role.
-      allow delete: if isOwner() && !('role' in resource.data);
+      allow delete: if !isAdmin() && isOwner() && !('role' in resource.data);
     }
 
     match /drivers/{uid} {
@@ -55,13 +58,13 @@ service cloud.firestore {
           && data.licensePhotoPath is string
           && data.licensePhotoPath.matches('^drivers/' + uid + '/.+');
       }
-      allow read: if isOwner();
-      allow create: if isOwner() && validApplication()
+      allow read: if isAdmin() || isOwner();
+      allow create: if !isAdmin() && isOwner() && validApplication()
         && request.resource.data.status == 'pending'
         && request.resource.data.isOnline == false
         && !('offer' in request.resource.data)
         && !request.resource.data.keys().hasAny(['currentRideId', 'pendingRatingRideId', 'cancelCount']);
-      allow update: if isOwner() && validApplication()
+      allow update: if !isAdmin() && isOwner() && validApplication()
         && resource.data.status in ['pending', 'rejected']
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
           ['vehicle', 'licensePhotoPath', 'updatedAt', 'status'])
@@ -69,7 +72,7 @@ service cloud.firestore {
           || (resource.data.status == 'rejected'
             && request.resource.data.status == 'pending'));
       // Approved drivers may update presence only; assignments stay server-owned.
-      allow update: if isOwner() && resource.data.status == 'approved'
+      allow update: if !isAdmin() && isOwner() && resource.data.status == 'approved'
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
           ['isOnline', 'location', 'heading', 'lastSeenAt'])
         && request.resource.data.isOnline is bool
@@ -89,21 +92,21 @@ service cloud.firestore {
           || resource.data.currentRideId == null);
       allow delete: if false;
       match /earnings/{day} {
-        allow read: if isOwner();
+        allow read: if isAdmin() || isOwner();
         allow write: if false;
       }
     }
 
     match /rides/{rideId} {
-      allow read: if request.auth != null && (request.auth.uid == resource.data.riderId
+      allow read: if isAdmin() || (request.auth != null && (request.auth.uid == resource.data.riderId
         || resource.data.get('driverId', null) == request.auth.uid
-        || resource.data.get('offeredTo', null) == request.auth.uid);
+        || resource.data.get('offeredTo', null) == request.auth.uid));
       allow create, update, delete: if false;
       match /live/driver {
         function ride() { return get(/databases/$(database)/documents/rides/$(rideId)).data; }
-        allow read: if request.auth != null
+        allow read: if isAdmin() || request.auth != null
           && request.auth.uid in [ride().riderId, ride().get('driverId', null)];
-        allow create, update: if request.auth != null
+        allow create, update: if !isAdmin() && request.auth != null
           && request.auth.uid == ride().get('driverId', null)
           && ride().status in ['accepted', 'arriving', 'arrived', 'in_progress']
           && request.resource.data.keys().hasOnly(['geopoint', 'heading', 'updatedAt'])

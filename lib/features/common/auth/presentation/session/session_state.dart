@@ -18,6 +18,13 @@ final class SessionSignedOut extends SessionState {
   const SessionSignedOut();
 }
 
+final class SessionWeb extends SessionState {
+  const SessionWeb(this.authUser);
+  final AuthUser authUser;
+  @override
+  List<Object?> get props => [authUser];
+}
+
 final class SessionNeedsName extends SessionState {
   const SessionNeedsName(this.authUser);
   final AuthUser authUser;

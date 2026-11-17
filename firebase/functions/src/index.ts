@@ -4,6 +4,8 @@ import { authenticated } from './lib/maps.js';
 
 initializeApp();
 
+export { reviewDriver, updatePricing, adminCancelRide } from './admin/index.js';
+
 export const ping = onCall({ region: 'europe-west1' }, (request) => {
   authenticated(request);
   return { ok: true, time: new Date().toISOString() };

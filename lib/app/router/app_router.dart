@@ -1,9 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mishwar/app/di/injection.dart';
+import 'package:mishwar/features/admin/domain/admin_repository.dart';
+import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
+import 'package:mishwar/features/admin/presentation/admin_login_screen.dart';
+import 'package:mishwar/features/admin/presentation/admin_screen.dart';
 import 'package:mishwar/features/common/account/presentation/account_cubit.dart';
 import 'package:mishwar/features/common/account/presentation/account_screen.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
@@ -60,8 +65,28 @@ String? sessionRedirect(
   SessionState session,
   String location, {
   Object? extra,
+  bool isWeb = kIsWeb,
 }) {
+  if (isWeb) {
+    final target = switch (session) {
+      SessionUnknown() || SessionError() => '/splash',
+      SessionWeb(:final authUser) =>
+        authUser.isAdmin
+            ? (location == '/admin' ||
+                      location.startsWith('/admin/') &&
+                          ![
+                            '/admin/sign-in',
+                            '/admin/denied',
+                          ].contains(location)
+                  ? location
+                  : '/admin')
+            : '/admin/denied',
+      _ => '/admin/sign-in',
+    };
+    return location == target ? null : target;
+  }
   final target = switch (session) {
+    SessionWeb() => '/auth/phone',
     SessionUnknown() || SessionError() => '/splash',
     SessionSignedOut() =>
       location == '/auth/otp' && extra is OtpSession
@@ -143,6 +168,39 @@ GoRouter createAppRouter(
   redirect: (_, state) =>
       sessionRedirect(session.state, state.uri.path, extra: state.extra),
   routes: [
+    GoRoute(
+      path: '/admin/sign-in',
+      builder: (_, _) => BlocProvider(
+        create: (_) => getIt<AdminLoginCubit>(),
+        child: const AdminLoginScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/admin/denied',
+      builder: (_, _) => BlocProvider(
+        create: (_) => getIt<AdminLoginCubit>(),
+        child: const AdminLoginScreen(denied: true),
+      ),
+    ),
+    for (final section in AdminSection.values)
+      GoRoute(
+        path: section == AdminSection.overview
+            ? '/admin'
+            : '/admin/${section.name}',
+        builder: (_, _) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<AdminLoginCubit>()),
+            BlocProvider(
+              create: (_) {
+                final cubit = getIt<AdminCubit>();
+                unawaited(cubit.start(section));
+                return cubit;
+              },
+            ),
+          ],
+          child: const AdminScreen(),
+        ),
+      ),
     GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
     GoRoute(
       path: '/auth/phone',
