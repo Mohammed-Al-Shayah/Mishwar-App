@@ -30,6 +30,14 @@ class RideRemoteDataSource {
     });
   }
 
+  Future<void> rate(Map<String, dynamic> data) async {
+    await _functions.httpsCallable('rateRide').call<void>(data);
+  }
+
+  Future<void> skipRating(String id) async {
+    await _functions.httpsCallable('skipRating').call<void>({'rideId': id});
+  }
+
   Future<void> accept(String id) async {
     await _functions.httpsCallable('acceptRide').call<void>({'rideId': id});
   }

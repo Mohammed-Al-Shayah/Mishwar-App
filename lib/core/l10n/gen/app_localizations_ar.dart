@@ -550,4 +550,61 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get riderCancel => 'إلغاء المشوار';
+
+  @override
+  String ratingRiderTitle(String name) {
+    return 'كيف كان مشوارك مع $name؟';
+  }
+
+  @override
+  String ratingDriverTitle(String name) {
+    return 'قيّم $name';
+  }
+
+  @override
+  String get ratingComment => 'بدك تضيف ملاحظة؟';
+
+  @override
+  String get ratingSubmit => 'إرسال';
+
+  @override
+  String get ratingSkip => 'تخطي';
+
+  @override
+  String ratingStars(int count) {
+    return '$count من 5';
+  }
+
+  @override
+  String get ratingTagSafeDriving => 'قيادة آمنة';
+
+  @override
+  String get ratingTagCleanCar => 'سيارة نظيفة';
+
+  @override
+  String get ratingTagFriendly => 'لطيف';
+
+  @override
+  String get ratingTagKnowsRoute => 'بعرف الطريق';
+
+  @override
+  String get ratingTagLate => 'متأخر';
+
+  @override
+  String get ratingTagFastDriving => 'قيادة سريعة';
+
+  @override
+  String get ratingTagDirtyCar => 'سيارة مش نظيفة';
+
+  @override
+  String get ratingTagLongerRoute => 'طريق أطول';
+
+  @override
+  String get ratingTagOnTime => 'على الموعد';
+
+  @override
+  String get ratingTagRespectful => 'محترم';
+
+  @override
+  String get ratingTagRude => 'غير محترم';
 }

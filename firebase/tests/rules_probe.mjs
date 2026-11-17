@@ -34,10 +34,12 @@ const ownerSeed = (path, fields) => fetch(FS + '/' + path, {
 }).then((r) => r.status);
 const ownRide = { riderId: s(uid), status: s('searching'), fare: { mapValue: { fields: { estimated: { doubleValue: 2.5 } } } } };
 const checks = [
+  ...['rating', 'ratingCount'].map(field => ['cannot create user with ' + field, 403, () => fsReq('PATCH', 'users/' + uid, { role: s('rider'), [field]: { integerValue: '5' } })]),
   ['cannot create user with pending rating', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('rider'), pendingRatingRideId: s('forged') })],
   ['cannot create user with activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { role: s('rider'), activeRideId: s('forged') })],
   ['seed rider via Admin SDK equivalent', 200, () => ownerSeed('users/' + uid, { role: s('rider') })],
   ['cannot set pending rating', 403, () => fsReq('PATCH', 'users/' + uid, { pendingRatingRideId: s('forged') }, ['pendingRatingRideId'])],
+  ...['rating', 'ratingCount'].map(field => ['cannot self-set ' + field, 403, () => fsReq('PATCH', 'users/' + uid, { [field]: { integerValue: '5' } }, [field])]),
   ['seed pending rating', 200, () => ownerSeed('users/' + uid, { role: s('rider'), pendingRatingRideId: s('server') })],
   ['cannot delete pending rating', 403, () => fsReq('PATCH', 'users/' + uid, {}, ['pendingRatingRideId'])],
   ['cannot set activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { activeRideId: s('forged') }, ['activeRideId'])],

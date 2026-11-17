@@ -17,8 +17,11 @@ import 'package:mishwar/features/common/auth/presentation/screens/role_screen.da
 import 'package:mishwar/features/common/auth/presentation/screens/splash_screen.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
+import 'package:mishwar/features/common/rating/domain/rating_tag.dart';
+import 'package:mishwar/features/common/rating/presentation/rating_cubit.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
@@ -29,6 +32,7 @@ import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onb
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_onboarding_screen.dart';
 import 'package:mishwar/features/driver/onboarding/presentation/screens/driver_pending_screen.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
+import 'package:mishwar/features/driver/rating/presentation/driver_rating_screen.dart';
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart'
     as trip;
 import 'package:mishwar/features/driver/trip/presentation/driver_trip_screen.dart';
@@ -74,9 +78,11 @@ String? sessionRedirect(
           : switch (driver?.status) {
               null => '/driver/onboarding',
               DriverStatus.approved =>
-                location == '/driver' && driver?.currentRideId != null
+                location == '/driver' && driver?.pendingRatingRideId != null
+                    ? '/driver/ride/${driver!.pendingRatingRideId}/rate'
+                    : location == '/driver' && driver?.currentRideId != null
                     ? '/driver/ride/${driver!.currentRideId}'
-                    : RegExp(r'^/driver/ride/[^/]+$').hasMatch(location)
+                    : RegExp(r'^/driver/ride/[^/]+(/rate)?$').hasMatch(location)
                     ? location
                     : '/driver',
               DriverStatus.rejected when location == '/driver/onboarding' =>
@@ -159,7 +165,13 @@ GoRouter createAppRouter(
                 create: (_) => getIt<RideTrackingBloc>(
                   param1: state.pathParameters['rideId'],
                 ),
-                child: const RideSummaryScreen(),
+                child: BlocProvider(
+                  create: (_) => getIt<RatingCubit>(
+                    param1: state.pathParameters['rideId'],
+                    param2: RatingSide.rider,
+                  ),
+                  child: const RideSummaryScreen(),
+                ),
               ),
             ),
           ],
@@ -249,6 +261,21 @@ GoRouter createAppRouter(
         ),
         GoRoute(
           path: '/driver/ride/:rideId',
+          routes: [
+            GoRoute(
+              path: 'rate',
+              builder: (_, state) => BlocProvider(
+                create: (_) => getIt<RatingCubit>(
+                  param1: state.pathParameters['rideId'],
+                  param2: RatingSide.driver,
+                ),
+                child: DriverRatingScreen(
+                  rideId: state.pathParameters['rideId']!,
+                  watchRide: getIt<WatchRide>(),
+                ),
+              ),
+            ),
+          ],
           builder: (_, state) => BlocProvider(
             create: (_) => getIt<trip.DriverTripBloc>(
               param1: state.pathParameters['rideId'],

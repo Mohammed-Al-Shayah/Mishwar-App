@@ -33,6 +33,47 @@ void main() {
       expect(sessionRedirect(pending, path), isNull);
     },
   );
+  test(
+    'driver pending rating reopens rate route and clears after session update',
+    () {
+      const vehicle = VehicleEntity(
+        type: VehicleType.economy,
+        make: 'Toyota',
+        model: 'Corolla',
+        color: 'White',
+        plate: '12-34567',
+      );
+      final ready = SessionReady(
+        user.copyWith(role: UserRole.driver),
+        driver: const DriverEntity(
+          id: 'u',
+          status: DriverStatus.approved,
+          isOnline: false,
+          vehicle: vehicle,
+          pendingRatingRideId: 'completed',
+        ),
+      );
+      expect(sessionRedirect(ready, '/driver'), '/driver/ride/completed/rate');
+      expect(sessionRedirect(ready, '/driver/ride/completed/rate'), isNull);
+      expect(
+        sessionRedirect(
+          const SessionSignedOut(),
+          '/driver/ride/completed/rate',
+        ),
+        '/auth/phone',
+      );
+      final cleared = SessionReady(
+        user.copyWith(role: UserRole.driver),
+        driver: const DriverEntity(
+          id: 'u',
+          status: DriverStatus.approved,
+          isOnline: false,
+          vehicle: vehicle,
+        ),
+      );
+      expect(sessionRedirect(cleared, '/driver'), isNull);
+    },
+  );
   const stop = RideStop(
     name: 'Place',
     address: 'Street',

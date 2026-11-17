@@ -336,5 +336,43 @@
   "riderCompleted": "You’ve arrived!",
   "riderDone": "Done",
   "riderRecenter": "Recenter",
-  "riderCancel": "Cancel trip"
+  "riderCancel": "Cancel trip",
+  "ratingRiderTitle": "How was your ride with {name}?",
+  "ratingDriverTitle": "Rate {name}",
+  "ratingComment": "Want to add a note?",
+  "ratingSubmit": "Send",
+  "ratingSkip": "Skip",
+  "ratingStars": "{count} out of 5",
+  "@ratingRiderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingDriverTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ratingTagSafeDriving": "Safe driving",
+  "ratingTagCleanCar": "Clean car",
+  "ratingTagFriendly": "Friendly",
+  "ratingTagKnowsRoute": "Knows the route",
+  "ratingTagLate": "Late",
+  "ratingTagFastDriving": "Fast driving",
+  "ratingTagDirtyCar": "Dirty car",
+  "ratingTagLongerRoute": "Longer route",
+  "ratingTagOnTime": "On time",
+  "ratingTagRespectful": "Respectful",
+  "ratingTagRude": "Rude"
 }

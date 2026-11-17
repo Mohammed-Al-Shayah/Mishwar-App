@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
-import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
+import 'package:mishwar/features/common/rating/presentation/rating_exit.dart';
+import 'package:mishwar/features/common/rating/presentation/rating_form.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 import 'package:mishwar/features/rider/ride/presentation/trip_stops.dart';
 
@@ -76,9 +76,11 @@ class _RideSummaryScreenState extends State<RideSummaryScreen> {
                 SizedBox(height: AppSpacing.xl),
                 TripStops(ride: ride),
                 SizedBox(height: AppSpacing.xl),
-                MwPrimaryButton(
-                  label: context.l10n.riderDone,
-                  onPressed: () => context.go('/rider'),
+                RatingExit(
+                  child: RatingForm(
+                    name: ride.driverInfo?.name ?? '',
+                    onDone: () => RatingExit.finish(context),
+                  ),
                 ),
               ],
             ),

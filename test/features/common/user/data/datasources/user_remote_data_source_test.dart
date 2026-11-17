@@ -75,8 +75,8 @@ void main() {
               as Map<String, dynamic>;
       expect(written['name'], 'Test User');
       expect(written['phone'], '+962791234567');
-      expect(written['rating'], 5.0);
-      expect(written['ratingCount'], 0);
+      expect(written.containsKey('rating'), isFalse);
+      expect(written.containsKey('ratingCount'), isFalse);
       expect(written['createdAt'], isA<FieldValue>());
       expect(written.containsKey('role'), isFalse);
       expect(written.containsKey('id'), isFalse);

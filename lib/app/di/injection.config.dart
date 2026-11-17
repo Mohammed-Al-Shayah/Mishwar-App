@@ -88,6 +88,11 @@ import 'package:mishwar/features/common/places/domain/usecases/search_places.dar
     as _i62;
 import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart'
     as _i304;
+import 'package:mishwar/features/common/rating/domain/rate_ride.dart' as _i899;
+import 'package:mishwar/features/common/rating/domain/rating_tag.dart' as _i176;
+import 'package:mishwar/features/common/rating/domain/skip_rating.dart' as _i29;
+import 'package:mishwar/features/common/rating/presentation/rating_cubit.dart'
+    as _i661;
 import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart'
     as _i747;
 import 'package:mishwar/features/common/ride/data/repositories/ride_repository_impl.dart'
@@ -363,6 +368,12 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i899.RateRide>(
+      () => _i899.RateRide(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i29.SkipRating>(
+      () => _i29.SkipRating(gh<_i118.RideRepository>()),
+    );
     gh.lazySingleton<_i851.AcceptRide>(
       () => _i851.AcceptRide(gh<_i118.RideRepository>()),
     );
@@ -451,6 +462,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i43.PushRepository>(),
         gh<_i768.PushTokenSync>(),
         gh<_i290.AuthRepository>(),
+      ),
+    );
+    gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(
+      (rideId, side) => _i661.RatingCubit(
+        gh<_i899.RateRide>(),
+        gh<_i29.SkipRating>(),
+        rideId,
+        side,
       ),
     );
     gh.lazySingleton<_i282.UnregisterPushToken>(

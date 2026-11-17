@@ -246,6 +246,12 @@ void main() {
             ),
             GoRoute(
               path: '/driver/ride/:id',
+              routes: [
+                GoRoute(
+                  path: 'rate',
+                  builder: (_, _) => const Scaffold(body: Text('rate')),
+                ),
+              ],
               builder: (_, _) => MultiBlocProvider(
                 providers: [
                   BlocProvider<DriverTripBloc>.value(value: bloc),
@@ -273,7 +279,10 @@ void main() {
         await tester.pumpAndSettle();
         controller.add(DriverTripState(ride: initial.ride, phase: phase));
         await tester.pumpAndSettle();
-        expect(router.routeInformationProvider.value.uri.path, '/driver');
+        expect(
+          router.routeInformationProvider.value.uri.path,
+          phase == TripPhase.done ? '/driver/ride/ride/rate' : '/driver',
+        );
         if (phase != TripPhase.done) {
           expect(
             find.text(

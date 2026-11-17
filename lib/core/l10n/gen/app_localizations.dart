@@ -1093,6 +1093,108 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إلغاء المشوار'**
   String get riderCancel;
+
+  /// No description provided for @ratingRiderTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف كان مشوارك مع {name}؟'**
+  String ratingRiderTitle(String name);
+
+  /// No description provided for @ratingDriverTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم {name}'**
+  String ratingDriverTitle(String name);
+
+  /// No description provided for @ratingComment.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدك تضيف ملاحظة؟'**
+  String get ratingComment;
+
+  /// No description provided for @ratingSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get ratingSubmit;
+
+  /// No description provided for @ratingSkip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطي'**
+  String get ratingSkip;
+
+  /// No description provided for @ratingStars.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} من 5'**
+  String ratingStars(int count);
+
+  /// No description provided for @ratingTagSafeDriving.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيادة آمنة'**
+  String get ratingTagSafeDriving;
+
+  /// No description provided for @ratingTagCleanCar.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيارة نظيفة'**
+  String get ratingTagCleanCar;
+
+  /// No description provided for @ratingTagFriendly.
+  ///
+  /// In ar, this message translates to:
+  /// **'لطيف'**
+  String get ratingTagFriendly;
+
+  /// No description provided for @ratingTagKnowsRoute.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعرف الطريق'**
+  String get ratingTagKnowsRoute;
+
+  /// No description provided for @ratingTagLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأخر'**
+  String get ratingTagLate;
+
+  /// No description provided for @ratingTagFastDriving.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيادة سريعة'**
+  String get ratingTagFastDriving;
+
+  /// No description provided for @ratingTagDirtyCar.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيارة مش نظيفة'**
+  String get ratingTagDirtyCar;
+
+  /// No description provided for @ratingTagLongerRoute.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريق أطول'**
+  String get ratingTagLongerRoute;
+
+  /// No description provided for @ratingTagOnTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'على الموعد'**
+  String get ratingTagOnTime;
+
+  /// No description provided for @ratingTagRespectful.
+  ///
+  /// In ar, this message translates to:
+  /// **'محترم'**
+  String get ratingTagRespectful;
+
+  /// No description provided for @ratingTagRude.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير محترم'**
+  String get ratingTagRude;
 }
 
 class _AppLocalizationsDelegate

@@ -36,3 +36,7 @@ export const expireSearchingRides = onSchedule({ region: 'europe-west1', schedul
 });
 
 export const updateRideStatus = onCall({ region: 'europe-west1' }, (request) => updateRideStatusHandler(request, getFirestore()));
+
+import { rateRideHandler, skipRatingHandler } from './ratings.js';
+export const rateRide = onCall({ region: 'europe-west1' }, request => rateRideHandler(request, getFirestore()));
+export const skipRating = onCall({ region: 'europe-west1' }, request => skipRatingHandler(request, getFirestore()));
