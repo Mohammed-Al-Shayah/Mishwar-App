@@ -560,4 +560,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get riderCancel => 'Cancel trip';
+
+  @override
+  String ratingRiderTitle(String name) {
+    return 'How was your ride with $name?';
+  }
+
+  @override
+  String ratingDriverTitle(String name) {
+    return 'Rate $name';
+  }
+
+  @override
+  String get ratingComment => 'Want to add a note?';
+
+  @override
+  String get ratingSubmit => 'Send';
+
+  @override
+  String get ratingSkip => 'Skip';
+
+  @override
+  String ratingStars(int count) {
+    return '$count out of 5';
+  }
+
+  @override
+  String get ratingTagSafeDriving => 'Safe driving';
+
+  @override
+  String get ratingTagCleanCar => 'Clean car';
+
+  @override
+  String get ratingTagFriendly => 'Friendly';
+
+  @override
+  String get ratingTagKnowsRoute => 'Knows the route';
+
+  @override
+  String get ratingTagLate => 'Late';
+
+  @override
+  String get ratingTagFastDriving => 'Fast driving';
+
+  @override
+  String get ratingTagDirtyCar => 'Dirty car';
+
+  @override
+  String get ratingTagLongerRoute => 'Longer route';
+
+  @override
+  String get ratingTagOnTime => 'On time';
+
+  @override
+  String get ratingTagRespectful => 'Respectful';
+
+  @override
+  String get ratingTagRude => 'Rude';
 }

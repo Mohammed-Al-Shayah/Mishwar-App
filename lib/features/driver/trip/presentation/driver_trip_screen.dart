@@ -494,7 +494,11 @@ class _TripViewState extends State<_TripView> {
               ),
             );
           }
-          context.go('/driver');
+          context.go(
+            state.phase == TripPhase.done
+                ? '/driver/ride/${state.ride!.id}/rate'
+                : '/driver',
+          );
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) _fit();

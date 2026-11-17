@@ -34,7 +34,10 @@ class UserRemoteDataSource {
       phone: phone,
       createdAt: DateTime.now().toUtc(),
     );
-    final data = model.toJson()..remove('role');
+    final data = model.toJson()
+      ..remove('role')
+      ..remove('rating')
+      ..remove('ratingCount');
     data['createdAt'] = FieldValue.serverTimestamp();
     // Retrying name submission must never overwrite an existing profile.
     await _firestore.runTransaction<void>((transaction) async {

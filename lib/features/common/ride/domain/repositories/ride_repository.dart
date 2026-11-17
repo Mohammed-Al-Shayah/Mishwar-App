@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/features/common/rating/domain/rating_tag.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/driver_live_location.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
@@ -7,6 +8,13 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
 abstract class RideRepository {
+  Future<Either<Failure, Unit>> rateRide(
+    String rideId,
+    int stars,
+    List<RatingTag> tags,
+    String comment,
+  );
+  Future<Either<Failure, Unit>> skipRating(String rideId);
   Future<Either<Failure, String>> requestRide(
     RideDraft draft,
     VehicleType vehicleType,

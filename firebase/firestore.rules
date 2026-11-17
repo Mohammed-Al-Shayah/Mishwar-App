@@ -30,10 +30,10 @@ service cloud.firestore {
       allow create: if isOwner() && validClientRole() && validPushToken()
         && (!('fcmToken' in request.resource.data)
           || request.resource.data.fcmTokenUpdatedAt == request.time)
-        && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId']);
+        && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount']);
       allow update: if isOwner()
         && validClientRole() && validPushUpdate()
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId'])
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data
             && request.resource.data.role == resource.data.role));

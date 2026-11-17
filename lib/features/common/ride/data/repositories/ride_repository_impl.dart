@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/places/data/callable_failure.dart';
+import 'package:mishwar/features/common/rating/domain/rating_tag.dart';
 import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
@@ -109,6 +110,40 @@ class RideRepositoryImpl implements RideRepository {
   Future<Either<Failure, Unit>> declineRide(String id) async {
     try {
       await _source.decline(id);
+      return const Right(unit);
+    } on Object catch (error) {
+      return Left(callableFailure(error));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> rateRide(
+    String rideId,
+    int stars,
+    List<RatingTag> tags,
+    String comment,
+  ) async {
+    try {
+      await _source.rate({
+        'rideId': rideId,
+        'stars': stars,
+        'tags': tags.map((t) => t.value).toList(),
+        'comment': comment,
+      });
+      return const Right(unit);
+    } on Object catch (error) {
+      if (error is FirebaseFunctionsException &&
+          error.code == 'already-exists') {
+        return const Left(RatingFailure.alreadyRated());
+      }
+      return Left(callableFailure(error));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> skipRating(String rideId) async {
+    try {
+      await _source.skipRating(rideId);
       return const Right(unit);
     } on Object catch (error) {
       return Left(callableFailure(error));

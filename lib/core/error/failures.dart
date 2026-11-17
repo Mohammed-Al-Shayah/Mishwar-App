@@ -99,3 +99,7 @@ final class RideActionFailure extends Failure {
   @override
   List<Object> get props => [reason];
 }
+
+final class RatingFailure extends Failure {
+  const RatingFailure.alreadyRated() : super('already-rated');
+}

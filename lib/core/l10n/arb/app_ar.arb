@@ -336,5 +336,43 @@
   "riderCompleted": "وصلت!",
   "riderDone": "تم",
   "riderRecenter": "رجّع الخريطة",
-  "riderCancel": "إلغاء المشوار"
+  "riderCancel": "إلغاء المشوار",
+  "ratingRiderTitle": "كيف كان مشوارك مع {name}؟",
+  "ratingDriverTitle": "قيّم {name}",
+  "ratingComment": "بدك تضيف ملاحظة؟",
+  "ratingSubmit": "إرسال",
+  "ratingSkip": "تخطي",
+  "ratingStars": "{count} من 5",
+  "@ratingRiderTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingDriverTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ratingTagSafeDriving": "قيادة آمنة",
+  "ratingTagCleanCar": "سيارة نظيفة",
+  "ratingTagFriendly": "لطيف",
+  "ratingTagKnowsRoute": "بعرف الطريق",
+  "ratingTagLate": "متأخر",
+  "ratingTagFastDriving": "قيادة سريعة",
+  "ratingTagDirtyCar": "سيارة مش نظيفة",
+  "ratingTagLongerRoute": "طريق أطول",
+  "ratingTagOnTime": "على الموعد",
+  "ratingTagRespectful": "محترم",
+  "ratingTagRude": "غير محترم"
 }

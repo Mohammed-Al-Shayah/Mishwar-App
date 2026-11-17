@@ -12,6 +12,12 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/mw_driver_card.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
+import 'package:mishwar/core/widgets/mw_star_rating.dart';
+import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
+import 'package:mishwar/features/common/rating/domain/rate_ride.dart';
+import 'package:mishwar/features/common/rating/domain/rating_tag.dart';
+import 'package:mishwar/features/common/rating/domain/skip_rating.dart';
+import 'package:mishwar/features/common/rating/presentation/rating_cubit.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
@@ -25,6 +31,7 @@ import 'package:mishwar/features/rider/ride/presentation/ride_summary_screen.dar
 import 'package:mishwar/features/rider/ride/presentation/ride_tracking_screen.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../helpers/rating_mocks.dart';
 import '../../../helpers/ride_mocks.dart';
 import '../../common/ride/ride_data_test.dart' show rideJson;
 import 'ride_tracking_bloc_test.dart' show rideWith;
@@ -63,7 +70,20 @@ Future<GoRouter> pumpTracking(
             WatchDriverLocation(repository),
             RideTrackingClock(),
           ),
-          child: const RideSummaryScreen(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<RatingCubit>(
+                create: (_) => RatingCubit(
+                  RateRide(repository),
+                  SkipRating(repository),
+                  'ride',
+                  RatingSide.rider,
+                ),
+              ),
+              BlocProvider<SessionCubit>(create: (_) => readyRatingSession()),
+            ],
+            child: const RideSummaryScreen(),
+          ),
         ),
       ),
       GoRoute(
@@ -206,7 +226,29 @@ void main() {
       expect(find.text('JD 5.25'), findsOneWidget);
       expect(find.text('Pickup'), findsOneWidget);
       expect(find.text('Dropoff'), findsOneWidget);
-      await tester.tap(find.byType(MwPrimaryButton));
+      final stars = tester.widget<MwStarRating>(find.byType(MwStarRating));
+      stars.onChanged!(5);
+      await tester.pumpAndSettle();
+      expect(
+        find.text(language == 'ar' ? 'سيارة نظيفة' : 'Clean car'),
+        findsOneWidget,
+      );
+      tester.widget<MwStarRating>(find.byType(MwStarRating)).onChanged!(2);
+      await tester.pumpAndSettle();
+      expect(
+        find.text(language == 'ar' ? 'سيارة مش نظيفة' : 'Dirty car'),
+        findsOneWidget,
+      );
+      expect(
+        find.text(language == 'ar' ? 'سيارة نظيفة' : 'Clean car'),
+        findsNothing,
+      );
+      when(
+        () => repository.skipRating('ride'),
+      ).thenAnswer((_) async => const Right(unit));
+      final skip = find.text(language == 'ar' ? 'تخطي' : 'Skip');
+      await tester.ensureVisible(skip);
+      await tester.tap(skip);
       await tester.pumpAndSettle();
       expect(router.routeInformationProvider.value.uri.path, '/rider');
     });

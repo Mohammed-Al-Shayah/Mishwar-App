@@ -1,6 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get ratingControlStar => 40.r;
   static double get driverAvatar => 56.r;
   static double get ratingStar => 11.r;
   static double get carMarker => 32.r;
