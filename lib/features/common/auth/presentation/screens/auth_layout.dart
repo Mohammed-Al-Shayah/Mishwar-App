@@ -3,6 +3,7 @@ import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/mw_logo.dart';
 
 class AuthLayout extends StatelessWidget {
   const AuthLayout({
@@ -29,12 +30,10 @@ class AuthLayout extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      title,
-                      style: wordmark
-                          ? context.textStyles.displayLarge
-                          : context.textStyles.headlineMedium,
-                    ),
+                    if (wordmark)
+                      MwWordmark(semanticLabel: title)
+                    else
+                      Text(title, style: context.textStyles.headlineMedium),
                     SizedBox(height: wordmark ? AppSpacing.xxl : AppSpacing.xl),
                     ...children,
                   ],

@@ -42,3 +42,8 @@ firebase/functions/.secret.local
 
 # Kotlin compiler caches
 android/.kotlin/
+
+# Release signing (owner-managed)
+android/key.properties
+*.jks
+*.keystore

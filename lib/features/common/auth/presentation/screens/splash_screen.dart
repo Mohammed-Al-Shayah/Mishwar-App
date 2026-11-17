@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
-import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/mw_logo.dart';
 import 'package:mishwar/features/common/auth/presentation/screens/auth_layout.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
@@ -19,10 +19,7 @@ class SplashScreen extends StatelessWidget {
             builder: (context, state) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  context.l10n.appName,
-                  style: context.textStyles.displayLarge,
-                ),
+                MwWordmark(semanticLabel: context.l10n.appName),
                 if (state case SessionError(:final failure)) ...[
                   FailureText(failure),
                   TextButton(
