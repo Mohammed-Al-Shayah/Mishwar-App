@@ -7,6 +7,8 @@ import 'package:mishwar/app/router/app_router.dart';
 import 'package:mishwar/app/router/push_router_binding.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
+import 'package:mishwar/core/settings/locale_cubit.dart';
+import 'package:mishwar/core/settings/theme_mode_cubit.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
@@ -16,11 +18,15 @@ import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 class MishwarApp extends StatefulWidget {
   const MishwarApp({
     this.router,
+    this.localeCubit,
+    this.themeModeCubit,
     this.sessionCubit,
     this.watchPushRoutes,
     this.initialPushRoute,
     super.key,
   });
+  final LocaleCubit? localeCubit;
+  final ThemeModeCubit? themeModeCubit;
   final WatchPushRoutes? watchPushRoutes;
   final GetInitialPushRoute? initialPushRoute;
   final GoRouter? router;
@@ -57,26 +63,37 @@ class _MishwarAppState extends State<MishwarApp> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocProvider.value(
-    value: _session,
+  Widget build(BuildContext context) => MultiBlocProvider(
+    providers: [
+      BlocProvider.value(value: _session),
+      BlocProvider(create: (_) => widget.localeCubit ?? getIt<LocaleCubit>()),
+      BlocProvider(
+        create: (_) => widget.themeModeCubit ?? getIt<ThemeModeCubit>(),
+      ),
+    ],
     child: ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, _) => BlocBuilder<SessionCubit, SessionState>(
-        builder: (context, session) => MaterialApp.router(
-          routerConfig: _router,
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light(),
-          darkTheme: AppTheme.dark(),
-          themeMode:
-              session is SessionReady && session.user.role == UserRole.driver
-              ? ThemeMode.dark
-              : ThemeMode.system,
-          locale: const Locale('ar'),
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          onGenerateTitle: (context) => context.l10n.appName,
+        builder: (context, session) => BlocBuilder<LocaleCubit, Locale>(
+          builder: (context, locale) => BlocBuilder<ThemeModeCubit, ThemeMode>(
+            builder: (context, mode) => MaterialApp.router(
+              routerConfig: _router,
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.light(),
+              darkTheme: AppTheme.dark(),
+              themeMode:
+                  session is SessionReady &&
+                      session.user.role == UserRole.driver
+                  ? ThemeMode.dark
+                  : mode,
+              locale: locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              onGenerateTitle: (context) => context.l10n.appName,
+            ),
+          ),
         ),
       ),
     ),

@@ -374,8 +374,7 @@
   "ratingTagLongerRoute": "طريق أطول",
   "ratingTagOnTime": "على الموعد",
   "ratingTagRespectful": "محترم",
-  "ratingTagRude": "غير محترم"
-,
+  "ratingTagRude": "غير محترم",
   "navHome": "الرئيسية",
   "navAccount": "الحساب",
   "historyTitle": "النشاط",
@@ -451,5 +450,32 @@
         "type": "String"
       }
     }
-  }
+  },
+  "accountProfile": "الملف الشخصي",
+  "accountLanguage": "اللغة",
+  "accountAppearance": "المظهر",
+  "accountSystem": "تلقائي",
+  "accountLight": "فاتح",
+  "accountDark": "غامق",
+  "accountDrive": "اشتغل سائق معنا",
+  "accountRide": "التبديل لوضع الراكب",
+  "accountVehicle": "السيارة",
+  "accountTerms": "الشروط والأحكام",
+  "accountPrivacy": "سياسة الخصوصية",
+  "accountAbout": "عن التطبيق",
+  "accountSave": "حفظ",
+  "accountCancel": "إلغاء",
+  "accountConfirm": "تأكيد",
+  "accountSwitchConfirm": "بدك تغيّر وضع الحساب؟",
+  "accountSignOutConfirm": "بدك تسجّل الخروج؟",
+  "accountDelete": "حذف الحساب",
+  "accountDeleteWarning": "حذف الحساب نهائي، وما بتقدر ترجّعه. رح نحذف ملفك وبيانات سيارتك، ونحتفظ بسجلات المشاوير بدون اسمك ورقمك.",
+  "accountDeletePrompt": "اكتب حذف للتأكيد",
+  "accountDeleteWord": "حذف",
+  "accountBusy": "خلّص المشوار الحالي أول",
+  "accountName": "الاسم",
+  "accountNameError": "الاسم لازم يكون من حرفين لـ ٤٠ حرف",
+  "accountVersion": "الإصدار",
+  "accountArabic": "العربية",
+  "accountEnglish": "English"
 }

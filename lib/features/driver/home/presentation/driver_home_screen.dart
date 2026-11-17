@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_icons.dart';
@@ -130,6 +131,19 @@ class _DriverHomeState extends State<_DriverHome> {
                       ),
                       child: const DriverEarningsPill(),
                     ),
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Align(
+                alignment: AlignmentDirectional.topStart,
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.md),
+                  child: MwMapFab(
+                    icon: AppIcons.person,
+                    label: l10n.navAccount,
+                    onPressed: () => context.go('/driver/account'),
                   ),
                 ),
               ),

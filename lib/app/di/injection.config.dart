@@ -18,6 +18,20 @@ import 'package:firebase_storage/firebase_storage.dart' as _i457;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:mishwar/core/di/register_module.dart' as _i398;
+import 'package:mishwar/core/settings/locale_cubit.dart' as _i159;
+import 'package:mishwar/core/settings/theme_mode_cubit.dart' as _i390;
+import 'package:mishwar/features/common/account/data/account_repository_impl.dart'
+    as _i42;
+import 'package:mishwar/features/common/account/domain/account_repository.dart'
+    as _i100;
+import 'package:mishwar/features/common/account/domain/delete_account.dart'
+    as _i776;
+import 'package:mishwar/features/common/account/domain/switch_role.dart'
+    as _i939;
+import 'package:mishwar/features/common/account/domain/update_name.dart'
+    as _i139;
+import 'package:mishwar/features/common/account/presentation/account_cubit.dart'
+    as _i777;
 import 'package:mishwar/features/common/auth/data/datasources/auth_remote_data_source.dart'
     as _i243;
 import 'package:mishwar/features/common/auth/data/repositories/auth_repository_impl.dart'
@@ -207,15 +221,20 @@ import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_cloc
     as _i569;
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart'
     as _i448;
+import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
-  _i174.GetIt init({
+  Future<_i174.GetIt> init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
-  }) {
+  }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final firebaseModule = _$FirebaseModule();
+    await gh.factoryAsync<_i460.SharedPreferences>(
+      () => firebaseModule.preferences,
+      preResolve: true,
+    );
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseModule.auth);
     gh.lazySingleton<_i892.FirebaseMessaging>(() => firebaseModule.messaging);
     gh.lazySingleton<_i43.PushRepository>(() => firebaseModule.pushRepository);
@@ -243,8 +262,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i457.FirebaseStorage>(),
       ),
     );
+    gh.lazySingleton<_i159.LocaleCubit>(
+      () => _i159.LocaleCubit(gh<_i460.SharedPreferences>()),
+    );
+    gh.lazySingleton<_i390.ThemeModeCubit>(
+      () => _i390.ThemeModeCubit(gh<_i460.SharedPreferences>()),
+    );
     gh.lazySingleton<_i95.DriverRepository>(
       () => _i251.DriverRepositoryImpl(gh<_i327.DriverRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i100.AccountRepository>(
+      () => _i42.AccountRepositoryImpl(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i809.FirebaseFunctions>(),
+      ),
     );
     gh.lazySingleton<_i587.SubmitDriverApplication>(
       () => _i587.SubmitDriverApplication(gh<_i95.DriverRepository>()),
@@ -311,6 +342,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
+    );
+    gh.lazySingleton<_i776.DeleteAccount>(
+      () => _i776.DeleteAccount(gh<_i100.AccountRepository>()),
+    );
+    gh.lazySingleton<_i939.SwitchRole>(
+      () => _i939.SwitchRole(gh<_i100.AccountRepository>()),
+    );
+    gh.lazySingleton<_i139.UpdateName>(
+      () => _i139.UpdateName(gh<_i100.AccountRepository>()),
     );
     gh.lazySingleton<_i695.UserRepository>(
       () => _i18.UserRepositoryImpl(gh<_i726.UserRemoteDataSource>()),
@@ -550,6 +590,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i442.SignOut(
         gh<_i290.AuthRepository>(),
         gh<_i282.UnregisterPushToken>(),
+      ),
+    );
+    gh.factory<_i777.AccountCubit>(
+      () => _i777.AccountCubit(
+        gh<_i106.WatchUser>(),
+        gh<_i291.WatchDriver>(),
+        gh<_i139.UpdateName>(),
+        gh<_i939.SwitchRole>(),
+        gh<_i776.DeleteAccount>(),
+        gh<_i442.SignOut>(),
       ),
     );
     gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));

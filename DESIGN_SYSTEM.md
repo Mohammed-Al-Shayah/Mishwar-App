@@ -146,6 +146,13 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 - Driver earnings uses the dark theme, a largeTitle selected-day total and seven bars in text-primary (selected) / text-secondary (unselected). Chart height is 144 via ScreenUtil; values and day initials use caption typography. Each entire bar column is selectable and exposes its full date and amount to accessibility.
 - Loading, empty and retry states use existing skeleton, text and button tokens.
 
+### Account and settings
+
+- Account header: 64 avatar circle with initial, title2 name, start-aligned LTR phone in footnote, and a pill with one filled star plus rating.
+- Settings use MwListRow icon circles and directional chevrons. Driver account stays dark; appearance selection affects rider mode.
+- Settings sheets use the standard grabber, centred headline, divider and scrollable content. Language and appearance choices use native radio rows.
+- Sign out uses a secondary button; account deletion uses negative text and two confirmation sheets, ending with a typed localized confirmation word.
+
 ## 10. Review checklist
 
 - [ ] Only theme tokens + ScreenUtil — no raw hex/sizes in widgets.

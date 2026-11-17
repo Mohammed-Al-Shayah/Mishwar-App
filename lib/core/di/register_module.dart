@@ -8,9 +8,13 @@ import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/firebase/firebase_env.dart';
 import 'package:mishwar/features/common/notifications/data/push_repository_impl.dart';
 import 'package:mishwar/features/common/notifications/domain/push_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @module
 abstract class FirebaseModule {
+  @preResolve
+  Future<SharedPreferences> get preferences => SharedPreferences.getInstance();
+
   @lazySingleton
   FirebaseAuth get auth => FirebaseAuth.instance;
 

@@ -9,8 +9,16 @@ import 'package:mishwar/app/di/injection.dart';
 import 'package:mishwar/app/router/app_router.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations_ar.dart';
+import 'package:mishwar/core/settings/locale_cubit.dart';
+import 'package:mishwar/core/settings/theme_mode_cubit.dart';
 import 'package:mishwar/core/usecase/usecase.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
+import 'package:mishwar/features/common/account/domain/account_repository.dart';
+import 'package:mishwar/features/common/account/domain/delete_account.dart';
+import 'package:mishwar/features/common/account/domain/switch_role.dart';
+import 'package:mishwar/features/common/account/domain/update_name.dart';
+import 'package:mishwar/features/common/account/presentation/account_cubit.dart';
+import 'package:mishwar/features/common/account/presentation/account_screen.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/domain/repositories/auth_repository.dart';
@@ -44,6 +52,7 @@ import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_blo
     as offer;
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/driver/offer/driver_offer_bloc_test.dart'
     show MockOfferBloc;
@@ -61,6 +70,8 @@ class MockWatchAuth extends Mock implements WatchAuthState {}
 class MockUserRepository extends Mock implements UserRepository {}
 
 class MockUnregisterPushToken extends Mock implements UnregisterPushToken {}
+
+class MockAccountRepository extends Mock implements AccountRepository {}
 
 void main() {
   setUpAll(() {
@@ -175,6 +186,24 @@ void main() {
         WatchUser(users),
         WatchDriver(drivers),
       );
+      final accountRepository = MockAccountRepository();
+      final nextRole = role == UserRole.rider
+          ? UserRole.driver
+          : UserRole.rider;
+      when(() => accountRepository.switchRole(nextRole)).thenAnswer((_) async {
+        profiles.add(Right(profile.copyWith(role: nextRole)));
+        return const Right(unit);
+      });
+      getIt.registerFactory(
+        () => AccountCubit(
+          WatchUser(users),
+          WatchDriver(drivers),
+          UpdateName(accountRepository),
+          SwitchRole(accountRepository),
+          DeleteAccount(accountRepository),
+          SignOut(auth, unregister),
+        ),
+      );
       addTearDown(() async {
         await session.close();
         await authEvents.close();
@@ -194,7 +223,12 @@ void main() {
         refresh.dispose();
       });
       await tester.pumpWidget(
-        MishwarApp(sessionCubit: session, router: router),
+        MishwarApp(
+          sessionCubit: session,
+          router: router,
+          localeCubit: LocaleCubit(await _preferences()),
+          themeModeCubit: ThemeModeCubit(await _preferences()),
+        ),
       );
       expect(find.byType(SplashScreen), findsOneWidget);
       authEvents.add(const Right(null));
@@ -237,11 +271,38 @@ void main() {
         expect(find.byType(DriverHomeScreen), findsOneWidget);
         final homeContext = tester.element(find.text(l10n.driverOffline));
         expect(Theme.of(homeContext).brightness, Brightness.dark);
-        // Account controls arrive in T5; auth events still redirect this home.
-        await SignOut(auth, unregister)(const NoParams());
-      } else {
-        await tester.tap(find.byKey(const Key('sign_out')));
       }
+      Future<void> openAccount(UserRole currentRole) async {
+        await tester.tap(
+          currentRole == UserRole.driver
+              ? find.byTooltip(l10n.navAccount)
+              : find.text(l10n.navAccount),
+        );
+        await tester.pump();
+        profiles.add(Right(profile.copyWith(role: currentRole)));
+        await tester.pumpAndSettle();
+        expect(find.byType(AccountScreen), findsOneWidget);
+      }
+
+      await openAccount(role);
+      final switchLabel = role == UserRole.rider
+          ? l10n.accountDrive
+          : l10n.accountRide;
+      await tester.scrollUntilVisible(find.text(switchLabel), 200);
+      await tester.tap(find.text(switchLabel));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.accountConfirm));
+      await tester.pumpAndSettle();
+      expect(
+        router.routeInformationProvider.value.uri.path,
+        nextRole == UserRole.driver ? '/driver' : '/rider',
+      );
+      if (nextRole == UserRole.rider) verify(presence.close).called(1);
+      await openAccount(nextRole);
+      await tester.scrollUntilVisible(find.text(l10n.signOutLabel), 200);
+      await tester.tap(find.text(l10n.signOutLabel));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.accountConfirm));
       await tester.pumpAndSettle();
       expect(find.text(l10n.phoneTitle), findsOneWidget);
       verify(() => users.setRole('u', role)).called(1);
@@ -249,4 +310,9 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
   }
+}
+
+Future<SharedPreferences> _preferences() async {
+  SharedPreferences.setMockInitialValues({});
+  return SharedPreferences.getInstance();
 }
