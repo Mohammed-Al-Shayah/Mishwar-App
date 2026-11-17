@@ -220,8 +220,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Stream<AuthUser?> authStateChanges() async* {
     try {
-      await for (final user in _auth.authStateChanges()) {
-        yield user == null ? null : _user(user);
+      await for (final user
+          in kIsWeb ? _auth.idTokenChanges() : _auth.authStateChanges()) {
+        if (user == null) {
+          yield null;
+        } else if (kIsWeb) {
+          final token = await user.getIdTokenResult();
+          yield AuthUser(
+            uid: user.uid,
+            phone: user.phoneNumber,
+            isAdmin: token.claims?['admin'] == true,
+          );
+        } else {
+          yield _user(user);
+        }
       }
     } on FirebaseAuthException catch (error) {
       throw _exception(error);

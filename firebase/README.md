@@ -1,5 +1,48 @@
 # Local security checks (T1.5)
 
+## Admin web workspace (T5.3)
+
+Enable Email/Password in Firebase Auth. Create the email/password user using
+the Auth emulator UI for local development. The web application uses email and
+password; mobile keeps phone OTP. A profile role never grants admin access.
+
+Grant the boolean custom claim from this CLI only:
+
+```powershell
+$env:FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099'
+$env:GCLOUD_PROJECT = 'demo-mishwar'
+node firebase/scripts/grant-admin.mjs admin@example.test
+```
+
+The script resolves Admin SDK from firebase/functions dependencies and preserves
+other custom claims. Outside the emulator it uses Application Default Credentials;
+it never reads repository secret files. Sign out and back in after granting or
+revoking claims to refresh the ID token. No app screen grants claims.
+
+Build web with `fvm flutter build web --release`. Optionally supply
+`--dart-define=MAPS_WEB_KEY=...` through your local environment/build pipeline.
+The app injects the Maps JS script at runtime; with no key or a loading failure,
+the live driver list shows coordinates. Restrict this browser key by HTTP referrer.
+
+`reviewDriver`, `updatePricing`, and `adminCancelRide` run in europe-west1,
+require `request.auth.token.admin === true`, and append transactionally to
+`adminLog`. Firestore and Storage grant admin reads only; client writes are
+denied even for admin-owned profiles. Existing non-admin ownership rules and
+pricing-read behavior are retained. Deploy the two added composite indexes for
+driver status/date and ride status/date queries with the rules.
+
+With Auth/Firestore/Storage emulators at 9099/8080/9199, run:
+
+```powershell
+node firebase/tests/admin_probe.mjs
+```
+
+This probe uses only loopback emulator endpoints and demo-mishwar. It checks
+admin reads of users, drivers, earnings, rides, live data, config and audit logs;
+denied admin writes; denied foreign non-admin reads; and admin license reads.
+It exits with code 2 when emulators are unreachable. It also exercises the grant
+CLI, removes its fixtures, and restores the previous emulator pricing document.
+
 Use only the Firebase Emulator Suite with a demo project:
 
 ```sh

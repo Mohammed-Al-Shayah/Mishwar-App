@@ -767,4 +767,277 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get accountEnglish => 'English';
+
+  @override
+  String get adminOverview => 'نظرة عامة';
+
+  @override
+  String get adminDrivers => 'السائقين';
+
+  @override
+  String get adminRides => 'المشاوير';
+
+  @override
+  String get adminMap => 'الخريطة المباشرة';
+
+  @override
+  String get adminPricing => 'الأسعار';
+
+  @override
+  String get adminSignIn => 'دخول الأدمن';
+
+  @override
+  String get adminEmail => 'البريد الإلكتروني';
+
+  @override
+  String get adminPassword => 'كلمة المرور';
+
+  @override
+  String get adminDenied => 'هاد الحساب مش أدمن';
+
+  @override
+  String get adminSignOut => 'تسجيل الخروج';
+
+  @override
+  String get adminLargeScreen => 'افتح من شاشة أكبر';
+
+  @override
+  String get adminError => 'تعذّر تنفيذ الطلب. حاول مرة ثانية.';
+
+  @override
+  String get adminRetry => 'حاول مرة ثانية';
+
+  @override
+  String get adminEmpty => 'ما في نتائج';
+
+  @override
+  String get adminOnline => 'السائقين المتصلين';
+
+  @override
+  String get adminActive => 'المشاوير الفعّالة';
+
+  @override
+  String get adminTodayRides => 'مشاوير اليوم';
+
+  @override
+  String get adminPendingApplications => 'طلبات بانتظار المراجعة';
+
+  @override
+  String get adminLatest => 'آخر 10 مشاوير';
+
+  @override
+  String get adminPending => 'بانتظار المراجعة';
+
+  @override
+  String get adminApproved => 'مقبولين';
+
+  @override
+  String get adminSuspended => 'موقوفين';
+
+  @override
+  String get adminRejected => 'مرفوضين';
+
+  @override
+  String get adminSearch => 'ابحث بالاسم، الجوال أو اللوحة';
+
+  @override
+  String get adminName => 'الاسم';
+
+  @override
+  String get adminPhone => 'الجوال';
+
+  @override
+  String get adminVehicle => 'السيارة';
+
+  @override
+  String get adminPlate => 'اللوحة';
+
+  @override
+  String get adminStatus => 'الحالة';
+
+  @override
+  String get adminRating => 'التقييم';
+
+  @override
+  String get adminApplied => 'تاريخ التقديم';
+
+  @override
+  String get adminPrevious => 'السابق';
+
+  @override
+  String get adminNext => 'التالي';
+
+  @override
+  String get adminTime => 'الوقت';
+
+  @override
+  String get adminRider => 'الراكب';
+
+  @override
+  String get adminDriver => 'السائق';
+
+  @override
+  String get adminRoute => 'الانطلاق ← الوجهة';
+
+  @override
+  String get adminFare => 'الأجرة';
+
+  @override
+  String get adminAll => 'الكل';
+
+  @override
+  String get adminSearching => 'جاري البحث';
+
+  @override
+  String get adminAccepted => 'مقبول';
+
+  @override
+  String get adminArriving => 'السائق بالطريق';
+
+  @override
+  String get adminArrived => 'السائق وصل';
+
+  @override
+  String get adminInProgress => 'جاري المشوار';
+
+  @override
+  String get adminCompleted => 'مكتمل';
+
+  @override
+  String get adminCancelled => 'ملغي';
+
+  @override
+  String get adminNoDrivers => 'ما في سائقين';
+
+  @override
+  String get adminToday => 'اليوم';
+
+  @override
+  String get adminWeek => '7 أيام';
+
+  @override
+  String get adminCustom => 'فترة مخصصة';
+
+  @override
+  String get adminApprove => 'موافقة';
+
+  @override
+  String get adminReject => 'رفض';
+
+  @override
+  String get adminSuspend => 'إيقاف';
+
+  @override
+  String get adminReactivate => 'إعادة تفعيل';
+
+  @override
+  String get adminReason => 'السبب (حتى 200 حرف)';
+
+  @override
+  String get adminConfirm => 'تأكيد';
+
+  @override
+  String get adminDismiss => 'رجوع';
+
+  @override
+  String get adminCancelRide => 'إلغاء المشوار';
+
+  @override
+  String get adminLicense => 'صورة الرخصة';
+
+  @override
+  String get adminLicenseMissing => 'ما في صورة رخصة مرفوعة';
+
+  @override
+  String get adminHistory => 'السجل';
+
+  @override
+  String get adminCompletedTrips => 'المشاوير المكتملة';
+
+  @override
+  String get adminCancellations => 'الإلغاءات';
+
+  @override
+  String get adminEstimated => 'الأجرة التقديرية';
+
+  @override
+  String get adminFinal => 'الأجرة النهائية';
+
+  @override
+  String get adminTimeline => 'التسلسل الزمني';
+
+  @override
+  String get adminRiderRating => 'تقييم الراكب';
+
+  @override
+  String get adminDriverRating => 'تقييم السائق';
+
+  @override
+  String get adminClose => 'إغلاق';
+
+  @override
+  String get adminMapFallback =>
+      'مفتاح الخريطة غير متوفر. مواقع السائقين معروضة بالقائمة.';
+
+  @override
+  String get adminMapFailed =>
+      'تعذّر تحميل الخريطة. مواقع السائقين معروضة بالقائمة.';
+
+  @override
+  String get adminFree => 'متاح';
+
+  @override
+  String get adminBusy => 'بمشوار';
+
+  @override
+  String get adminCoordinates => 'الإحداثيات';
+
+  @override
+  String get adminEconomy => 'اقتصادي';
+
+  @override
+  String get adminComfort => 'مريح';
+
+  @override
+  String get adminVan => 'فان';
+
+  @override
+  String get adminBase => 'الأساس';
+
+  @override
+  String get adminPerKm => 'لكل كم';
+
+  @override
+  String get adminPerMin => 'لكل دقيقة';
+
+  @override
+  String get adminMinimum => 'الحد الأدنى';
+
+  @override
+  String get adminPreview => 'تقدير 10 كم / 20 دقيقة';
+
+  @override
+  String get adminSave => 'حفظ';
+
+  @override
+  String get adminRateInvalid =>
+      'أدخل قيمة أكبر من 0 وحتى 50، بحد أقصى 3 منازل عشرية';
+
+  @override
+  String get adminUpdatedBy => 'آخر تعديل بواسطة';
+
+  @override
+  String get adminUpdatedAt => 'آخر تعديل بتاريخ';
+
+  @override
+  String get adminSaved => 'تم الحفظ';
+
+  @override
+  String get adminCurrency => 'د.أ';
+
+  @override
+  String get adminUnknown => '—';
+
+  @override
+  String get adminLanguage => 'اللغة';
 }

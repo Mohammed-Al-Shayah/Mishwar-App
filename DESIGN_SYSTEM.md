@@ -155,6 +155,18 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 
 ## 10. Review checklist
 
+### Admin web workspace (T5.3)
+
+- Light monochrome theme; desktop minimum width 1024 logical pixels. Smaller
+  windows show a localized larger-screen notice. The web workspace keeps native
+  proportions by disabling ScreenUtil scaling while retaining token dimensions.
+- Start sidebar 240, end detail panel 440, sign-in form maximum width 400.
+  Content uses 24 spacing, title1 page titles, 64 minimum table rows, flat
+  dividers and native monochrome filters. Tables scroll horizontally as needed.
+- Overview has four flat statistic tiles. Pricing uses a 3-by-4 editable grid,
+  144-wide inputs and one primary save button. License preview height 240;
+  live map height 480. Free drivers use a positive dot; busy drivers black.
+
 - [ ] Only theme tokens + ScreenUtil — no raw hex/sizes in widgets.
 - [ ] One primary button per screen; monochrome controls.
 - [ ] Sizes match section 4 (no text < 11, rows ≥ 64, buttons ≥ 52).

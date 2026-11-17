@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
@@ -57,6 +58,10 @@ class SessionCubit extends Cubit<SessionState> {
     unawaited(_profileSubscription?.cancel());
     if (user == null) {
       emit(const SessionSignedOut());
+      return;
+    }
+    if (kIsWeb) {
+      emit(SessionWeb(user));
       return;
     }
     if (state is! SessionUnknown) emit(const SessionUnknown());

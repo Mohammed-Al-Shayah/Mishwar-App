@@ -20,6 +20,13 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:mishwar/core/di/register_module.dart' as _i398;
 import 'package:mishwar/core/settings/locale_cubit.dart' as _i159;
 import 'package:mishwar/core/settings/theme_mode_cubit.dart' as _i390;
+import 'package:mishwar/features/admin/data/admin_remote_data_source.dart'
+    as _i409;
+import 'package:mishwar/features/admin/data/admin_repository_impl.dart'
+    as _i485;
+import 'package:mishwar/features/admin/domain/admin_repository.dart' as _i1005;
+import 'package:mishwar/features/admin/domain/admin_usecases.dart' as _i180;
+import 'package:mishwar/features/admin/presentation/admin_cubit.dart' as _i630;
 import 'package:mishwar/features/common/account/data/account_repository_impl.dart'
     as _i42;
 import 'package:mishwar/features/common/account/domain/account_repository.dart'
@@ -250,6 +257,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i262.PresenceScheduler>(() => _i262.PresenceScheduler());
     gh.lazySingleton<_i1059.TripTicker>(() => _i1059.TripTicker());
     gh.lazySingleton<_i569.RideTrackingClock>(() => _i569.RideTrackingClock());
+    gh.lazySingleton<_i409.AdminRemoteDataSource>(
+      () => _i409.AdminRemoteDataSource(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i59.FirebaseAuth>(),
+        gh<_i809.FirebaseFunctions>(),
+        gh<_i457.FirebaseStorage>(),
+      ),
+    );
     gh.lazySingleton<_i897.WatchPushRoutes>(
       () => _i897.WatchPushRoutes(gh<_i43.PushRepository>()),
     );
@@ -294,6 +309,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i974.FirebaseFirestore>(),
         gh<_i59.FirebaseAuth>(),
       ),
+    );
+    gh.lazySingleton<_i1005.AdminRepository>(
+      () => _i485.AdminRepositoryImpl(gh<_i409.AdminRemoteDataSource>()),
     );
     gh.lazySingleton<_i247.GoOffline>(
       () => _i247.GoOffline(gh<_i726.DriverPresenceRepository>()),
@@ -343,6 +361,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
     );
+    gh.lazySingleton<_i180.AdminSignIn>(
+      () => _i180.AdminSignIn(gh<_i1005.AdminRepository>()),
+    );
+    gh.lazySingleton<_i180.WatchAdminData>(
+      () => _i180.WatchAdminData(gh<_i1005.AdminRepository>()),
+    );
+    gh.lazySingleton<_i180.LoadAdminPage>(
+      () => _i180.LoadAdminPage(gh<_i1005.AdminRepository>()),
+    );
+    gh.lazySingleton<_i180.LoadAdminLicense>(
+      () => _i180.LoadAdminLicense(gh<_i1005.AdminRepository>()),
+    );
+    gh.lazySingleton<_i180.AdminAction>(
+      () => _i180.AdminAction(gh<_i1005.AdminRepository>()),
+    );
     gh.lazySingleton<_i776.DeleteAccount>(
       () => _i776.DeleteAccount(gh<_i100.AccountRepository>()),
     );
@@ -386,6 +419,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
+    );
+    gh.factory<_i630.AdminCubit>(
+      () => _i630.AdminCubit(
+        gh<_i180.WatchAdminData>(),
+        gh<_i180.LoadAdminPage>(),
+        gh<_i180.AdminAction>(),
+        gh<_i180.LoadAdminLicense>(),
+        gh<_i304.FareCalculator>(),
+      ),
     );
     gh.lazySingleton<_i118.RideRepository>(
       () => _i297.RideRepositoryImpl(gh<_i747.RideRemoteDataSource>()),
@@ -603,6 +645,9 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i104.HomeCubit>(() => _i104.HomeCubit(gh<_i442.SignOut>()));
+    gh.factory<_i630.AdminLoginCubit>(
+      () => _i630.AdminLoginCubit(gh<_i180.AdminSignIn>(), gh<_i442.SignOut>()),
+    );
     return this;
   }
 }

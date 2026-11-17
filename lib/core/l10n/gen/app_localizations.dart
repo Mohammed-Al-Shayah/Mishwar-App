@@ -1489,6 +1489,546 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'English'**
   String get accountEnglish;
+
+  /// No description provided for @adminOverview.
+  ///
+  /// In ar, this message translates to:
+  /// **'نظرة عامة'**
+  String get adminOverview;
+
+  /// No description provided for @adminDrivers.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائقين'**
+  String get adminDrivers;
+
+  /// No description provided for @adminRides.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشاوير'**
+  String get adminRides;
+
+  /// No description provided for @adminMap.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخريطة المباشرة'**
+  String get adminMap;
+
+  /// No description provided for @adminPricing.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسعار'**
+  String get adminPricing;
+
+  /// No description provided for @adminSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخول الأدمن'**
+  String get adminSignIn;
+
+  /// No description provided for @adminEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني'**
+  String get adminEmail;
+
+  /// No description provided for @adminPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور'**
+  String get adminPassword;
+
+  /// No description provided for @adminDenied.
+  ///
+  /// In ar, this message translates to:
+  /// **'هاد الحساب مش أدمن'**
+  String get adminDenied;
+
+  /// No description provided for @adminSignOut.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get adminSignOut;
+
+  /// No description provided for @adminLargeScreen.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح من شاشة أكبر'**
+  String get adminLargeScreen;
+
+  /// No description provided for @adminError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تنفيذ الطلب. حاول مرة ثانية.'**
+  String get adminError;
+
+  /// No description provided for @adminRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاول مرة ثانية'**
+  String get adminRetry;
+
+  /// No description provided for @adminEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما في نتائج'**
+  String get adminEmpty;
+
+  /// No description provided for @adminOnline.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائقين المتصلين'**
+  String get adminOnline;
+
+  /// No description provided for @adminActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشاوير الفعّالة'**
+  String get adminActive;
+
+  /// No description provided for @adminTodayRides.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاوير اليوم'**
+  String get adminTodayRides;
+
+  /// No description provided for @adminPendingApplications.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات بانتظار المراجعة'**
+  String get adminPendingApplications;
+
+  /// No description provided for @adminLatest.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر 10 مشاوير'**
+  String get adminLatest;
+
+  /// No description provided for @adminPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get adminPending;
+
+  /// No description provided for @adminApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقبولين'**
+  String get adminApproved;
+
+  /// No description provided for @adminSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقوفين'**
+  String get adminSuspended;
+
+  /// No description provided for @adminRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوضين'**
+  String get adminRejected;
+
+  /// No description provided for @adminSearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث بالاسم، الجوال أو اللوحة'**
+  String get adminSearch;
+
+  /// No description provided for @adminName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get adminName;
+
+  /// No description provided for @adminPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجوال'**
+  String get adminPhone;
+
+  /// No description provided for @adminVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'السيارة'**
+  String get adminVehicle;
+
+  /// No description provided for @adminPlate.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللوحة'**
+  String get adminPlate;
+
+  /// No description provided for @adminStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get adminStatus;
+
+  /// No description provided for @adminRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقييم'**
+  String get adminRating;
+
+  /// No description provided for @adminApplied.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ التقديم'**
+  String get adminApplied;
+
+  /// No description provided for @adminPrevious.
+  ///
+  /// In ar, this message translates to:
+  /// **'السابق'**
+  String get adminPrevious;
+
+  /// No description provided for @adminNext.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get adminNext;
+
+  /// No description provided for @adminTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوقت'**
+  String get adminTime;
+
+  /// No description provided for @adminRider.
+  ///
+  /// In ar, this message translates to:
+  /// **'الراكب'**
+  String get adminRider;
+
+  /// No description provided for @adminDriver.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائق'**
+  String get adminDriver;
+
+  /// No description provided for @adminRoute.
+  ///
+  /// In ar, this message translates to:
+  /// **'الانطلاق ← الوجهة'**
+  String get adminRoute;
+
+  /// No description provided for @adminFare.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأجرة'**
+  String get adminFare;
+
+  /// No description provided for @adminAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get adminAll;
+
+  /// No description provided for @adminSearching.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري البحث'**
+  String get adminSearching;
+
+  /// No description provided for @adminAccepted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقبول'**
+  String get adminAccepted;
+
+  /// No description provided for @adminArriving.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائق بالطريق'**
+  String get adminArriving;
+
+  /// No description provided for @adminArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'السائق وصل'**
+  String get adminArrived;
+
+  /// No description provided for @adminInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري المشوار'**
+  String get adminInProgress;
+
+  /// No description provided for @adminCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get adminCompleted;
+
+  /// No description provided for @adminCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغي'**
+  String get adminCancelled;
+
+  /// No description provided for @adminNoDrivers.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما في سائقين'**
+  String get adminNoDrivers;
+
+  /// No description provided for @adminToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get adminToday;
+
+  /// No description provided for @adminWeek.
+  ///
+  /// In ar, this message translates to:
+  /// **'7 أيام'**
+  String get adminWeek;
+
+  /// No description provided for @adminCustom.
+  ///
+  /// In ar, this message translates to:
+  /// **'فترة مخصصة'**
+  String get adminCustom;
+
+  /// No description provided for @adminApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'موافقة'**
+  String get adminApprove;
+
+  /// No description provided for @adminReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض'**
+  String get adminReject;
+
+  /// No description provided for @adminSuspend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيقاف'**
+  String get adminSuspend;
+
+  /// No description provided for @adminReactivate.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة تفعيل'**
+  String get adminReactivate;
+
+  /// No description provided for @adminReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'السبب (حتى 200 حرف)'**
+  String get adminReason;
+
+  /// No description provided for @adminConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get adminConfirm;
+
+  /// No description provided for @adminDismiss.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get adminDismiss;
+
+  /// No description provided for @adminCancelRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء المشوار'**
+  String get adminCancelRide;
+
+  /// No description provided for @adminLicense.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة الرخصة'**
+  String get adminLicense;
+
+  /// No description provided for @adminLicenseMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما في صورة رخصة مرفوعة'**
+  String get adminLicenseMissing;
+
+  /// No description provided for @adminHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل'**
+  String get adminHistory;
+
+  /// No description provided for @adminCompletedTrips.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشاوير المكتملة'**
+  String get adminCompletedTrips;
+
+  /// No description provided for @adminCancellations.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإلغاءات'**
+  String get adminCancellations;
+
+  /// No description provided for @adminEstimated.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأجرة التقديرية'**
+  String get adminEstimated;
+
+  /// No description provided for @adminFinal.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأجرة النهائية'**
+  String get adminFinal;
+
+  /// No description provided for @adminTimeline.
+  ///
+  /// In ar, this message translates to:
+  /// **'التسلسل الزمني'**
+  String get adminTimeline;
+
+  /// No description provided for @adminRiderRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييم الراكب'**
+  String get adminRiderRating;
+
+  /// No description provided for @adminDriverRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييم السائق'**
+  String get adminDriverRating;
+
+  /// No description provided for @adminClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get adminClose;
+
+  /// No description provided for @adminMapFallback.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتاح الخريطة غير متوفر. مواقع السائقين معروضة بالقائمة.'**
+  String get adminMapFallback;
+
+  /// No description provided for @adminMapFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل الخريطة. مواقع السائقين معروضة بالقائمة.'**
+  String get adminMapFailed;
+
+  /// No description provided for @adminFree.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح'**
+  String get adminFree;
+
+  /// No description provided for @adminBusy.
+  ///
+  /// In ar, this message translates to:
+  /// **'بمشوار'**
+  String get adminBusy;
+
+  /// No description provided for @adminCoordinates.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإحداثيات'**
+  String get adminCoordinates;
+
+  /// No description provided for @adminEconomy.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتصادي'**
+  String get adminEconomy;
+
+  /// No description provided for @adminComfort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مريح'**
+  String get adminComfort;
+
+  /// No description provided for @adminVan.
+  ///
+  /// In ar, this message translates to:
+  /// **'فان'**
+  String get adminVan;
+
+  /// No description provided for @adminBase.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأساس'**
+  String get adminBase;
+
+  /// No description provided for @adminPerKm.
+  ///
+  /// In ar, this message translates to:
+  /// **'لكل كم'**
+  String get adminPerKm;
+
+  /// No description provided for @adminPerMin.
+  ///
+  /// In ar, this message translates to:
+  /// **'لكل دقيقة'**
+  String get adminPerMin;
+
+  /// No description provided for @adminMinimum.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحد الأدنى'**
+  String get adminMinimum;
+
+  /// No description provided for @adminPreview.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقدير 10 كم / 20 دقيقة'**
+  String get adminPreview;
+
+  /// No description provided for @adminSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get adminSave;
+
+  /// No description provided for @adminRateInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل قيمة أكبر من 0 وحتى 50، بحد أقصى 3 منازل عشرية'**
+  String get adminRateInvalid;
+
+  /// No description provided for @adminUpdatedBy.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر تعديل بواسطة'**
+  String get adminUpdatedBy;
+
+  /// No description provided for @adminUpdatedAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر تعديل بتاريخ'**
+  String get adminUpdatedAt;
+
+  /// No description provided for @adminSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحفظ'**
+  String get adminSaved;
+
+  /// No description provided for @adminCurrency.
+  ///
+  /// In ar, this message translates to:
+  /// **'د.أ'**
+  String get adminCurrency;
+
+  /// No description provided for @adminUnknown.
+  ///
+  /// In ar, this message translates to:
+  /// **'—'**
+  String get adminUnknown;
+
+  /// No description provided for @adminLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get adminLanguage;
 }
 
 class _AppLocalizationsDelegate
