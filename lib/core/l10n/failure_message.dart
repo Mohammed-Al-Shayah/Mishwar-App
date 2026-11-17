@@ -20,6 +20,8 @@ String failureMessage(BuildContext context, Failure failure) {
       AuthFailureCode.quotaExceeded => l10n.errorQuota,
       AuthFailureCode.unknown => l10n.errorGeneric,
     },
+    ValidationFailure(field: 'saved-places-limit') => l10n.savedPlaceLimit,
+    ValidationFailure(field: 'saved-place') => l10n.savedPlaceInvalid,
     ValidationFailure(field: 'make' || 'model' || 'color') =>
       l10n.errorVehicleLength,
     ValidationFailure(field: 'plate') => l10n.errorPlateFormat,

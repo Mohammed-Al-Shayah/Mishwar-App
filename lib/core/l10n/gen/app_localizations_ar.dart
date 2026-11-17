@@ -1040,4 +1040,63 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminLanguage => 'اللغة';
+
+  @override
+  String get savedPlaces => 'الأماكن المحفوظة';
+
+  @override
+  String get savedPlaceHome => 'البيت';
+
+  @override
+  String get savedPlaceWork => 'الشغل';
+
+  @override
+  String get savedPlaceOther => 'مكان آخر';
+
+  @override
+  String get savedPlaceAddHome => 'أضف البيت';
+
+  @override
+  String get savedPlaceAddWork => 'أضف الشغل';
+
+  @override
+  String get savedPlaceTapToSet => 'اضغط عشان تحدد الموقع';
+
+  @override
+  String get savedPlaceAdd => 'إضافة مكان';
+
+  @override
+  String get savedPlaceEdit => 'تعديل المكان';
+
+  @override
+  String get savedPlaceType => 'النوع';
+
+  @override
+  String get savedPlaceName => 'اسم المكان';
+
+  @override
+  String get savedPlaceChooseLocation => 'اختر الموقع';
+
+  @override
+  String get savedPlaceDelete => 'حذف المكان';
+
+  @override
+  String savedPlaceDeleteConfirm(String name) {
+    return 'بدك تحذف \"$name\"؟';
+  }
+
+  @override
+  String get savedPlacesEmpty => 'ما عندك أماكن محفوظة';
+
+  @override
+  String get savedPlacesEmptyHint => 'احفظ البيت والشغل عشان توصلهم بضغطة وحدة';
+
+  @override
+  String get savedPlaceLimit => 'وصلت للحد الأقصى: 20 مكان';
+
+  @override
+  String get savedPlaceInvalid => 'تأكد من الاسم والموقع';
+
+  @override
+  String get recentPlaces => 'آخر الأماكن';
 }

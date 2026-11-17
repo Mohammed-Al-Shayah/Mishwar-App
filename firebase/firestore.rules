@@ -9,6 +9,25 @@ service cloud.firestore {
         return request.auth != null && request.auth.uid == uid;
       }
 
+      match /savedPlaces/{placeId} {
+        function validSavedPlace() {
+          let data = request.resource.data;
+          return data.keys().hasOnly(['label', 'name', 'address', 'geopoint', 'updatedAt'])
+            && data.keys().hasAll(['label', 'name', 'address', 'geopoint', 'updatedAt'])
+            && data.label in ['home', 'work', 'other']
+            && ((data.label == 'home' && placeId == 'home')
+              || (data.label == 'work' && placeId == 'work')
+              || (data.label == 'other' && !(placeId in ['home', 'work'])))
+            && data.name is string && data.name.size() >= 1 && data.name.size() <= 40
+            && data.address is string && data.address.size() <= 200
+            && data.geopoint is latlng
+            && data.updatedAt == request.time;
+        }
+        allow read: if isOwner() || isAdmin();
+        allow create, update: if isOwner() && !isAdmin() && validSavedPlace();
+        allow delete: if isOwner() && !isAdmin();
+      }
+
       // Clients may only self-assign rider or driver; admin is set server-side
       // via custom claims / Admin SDK, never from the app.
       function validClientRole() {

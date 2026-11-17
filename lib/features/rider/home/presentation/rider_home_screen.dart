@@ -14,14 +14,15 @@ import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
 import 'package:mishwar/core/widgets/mw_search_pill.dart';
-import 'package:mishwar/features/common/auth/presentation/cubit/form_state.dart';
-import 'package:mishwar/features/common/auth/presentation/cubit/home_cubit.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
+import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/rider/history/presentation/rider_bottom_nav.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
+import 'package:mishwar/features/rider/home/presentation/widgets/home_shortcuts.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 
 class RiderHomeScreen extends StatefulWidget {
@@ -83,7 +84,14 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
       ),
     );
     if (!mounted || details == null) return;
-    final pickup = context.read<RiderHomeCubit>().state.position ?? position;
+    await _chooseRide(details, fallback: position);
+  }
+
+  Future<void> _chooseRide(
+    PlaceDetails details, {
+    GeoPointValue? fallback,
+  }) async {
+    final pickup = context.read<RiderHomeCubit>().state.position ?? fallback;
     if (pickup == null) {
       // A real fix is required to create a ride draft.
       ScaffoldMessenger.of(context).showSnackBar(
@@ -104,6 +112,9 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
       ),
     );
   }
+
+  Future<void> _addSaved(SavedPlaceLabel label) =>
+      context.push<void>('/rider/places', extra: label);
 
   Future<void> _recenter() async {
     final cubit = context.read<RiderHomeCubit>();
@@ -195,6 +206,11 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                         ),
                         SizedBox(height: AppSpacing.md),
                         MwSearchPill(onTap: _searchDestination),
+                        SizedBox(height: AppSpacing.xs),
+                        HomeShortcuts(
+                          onPlace: (place) => unawaited(_chooseRide(place)),
+                          onAddSaved: (label) => unawaited(_addSaved(label)),
+                        ),
                         if (state.isLocating)
                           Padding(
                             padding: EdgeInsets.only(top: AppSpacing.sm),
@@ -250,26 +266,6 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                               color: context.colors.negative,
                             ),
                           ),
-                        BlocBuilder<HomeCubit, SubmissionState>(
-                          builder: (context, submission) => Column(
-                            children: [
-                              if (submission.failure != null)
-                                Text(
-                                  failureMessage(context, submission.failure!),
-                                  style: context.textStyles.bodySmall?.copyWith(
-                                    color: context.colors.negative,
-                                  ),
-                                ),
-                              TextButton(
-                                key: const Key('sign_out'),
-                                onPressed: submission.isLoading
-                                    ? null
-                                    : context.read<HomeCubit>().signOut,
-                                child: Text(context.l10n.signOutLabel),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),

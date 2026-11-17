@@ -150,6 +150,16 @@ import 'package:mishwar/features/common/route/domain/repositories/route_reposito
     as _i1040;
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart'
     as _i598;
+import 'package:mishwar/features/common/saved_places/data/saved_places_remote_data_source.dart'
+    as _i693;
+import 'package:mishwar/features/common/saved_places/data/saved_places_repository_impl.dart'
+    as _i574;
+import 'package:mishwar/features/common/saved_places/domain/saved_places_repository.dart'
+    as _i552;
+import 'package:mishwar/features/common/saved_places/domain/saved_places_usecases.dart'
+    as _i1039;
+import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart'
+    as _i806;
 import 'package:mishwar/features/common/user/data/datasources/driver_remote_data_source.dart'
     as _i327;
 import 'package:mishwar/features/common/user/data/datasources/user_remote_data_source.dart'
@@ -220,6 +230,8 @@ import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_c
     as _i934;
 import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart'
     as _i831;
+import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cubit.dart'
+    as _i969;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
     as _i786;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart'
@@ -346,6 +358,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1040.PlacesRepository>(
       () => _i692.PlacesRepositoryImpl(gh<_i29.PlacesRemoteDataSource>()),
     );
+    gh.lazySingleton<_i693.SavedPlacesRemoteDataSource>(
+      () => _i693.SavedPlacesRemoteDataSource(gh<_i974.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i726.UserRemoteDataSource>(
       () => _i726.UserRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
@@ -400,11 +415,31 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i300.LocationRepository>(
       () => _i578.LocationRepositoryImpl(gh<_i101.LocationDataSource>()),
     );
+    gh.lazySingleton<_i552.SavedPlacesRepository>(
+      () => _i574.SavedPlacesRepositoryImpl(
+        gh<_i693.SavedPlacesRemoteDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i393.GetPlaceDetails>(
       () => _i393.GetPlaceDetails(gh<_i1040.PlacesRepository>()),
     );
     gh.lazySingleton<_i62.SearchPlaces>(
       () => _i62.SearchPlaces(gh<_i1040.PlacesRepository>()),
+    );
+    gh.lazySingleton<_i1039.WatchSavedPlaces>(
+      () => _i1039.WatchSavedPlaces(gh<_i552.SavedPlacesRepository>()),
+    );
+    gh.lazySingleton<_i1039.UpsertSavedPlace>(
+      () => _i1039.UpsertSavedPlace(gh<_i552.SavedPlacesRepository>()),
+    );
+    gh.lazySingleton<_i1039.AddOtherSavedPlace>(
+      () => _i1039.AddOtherSavedPlace(gh<_i552.SavedPlacesRepository>()),
+    );
+    gh.lazySingleton<_i1039.RenameSavedPlace>(
+      () => _i1039.RenameSavedPlace(gh<_i552.SavedPlacesRepository>()),
+    );
+    gh.lazySingleton<_i1039.DeleteSavedPlace>(
+      () => _i1039.DeleteSavedPlace(gh<_i552.SavedPlacesRepository>()),
     );
     gh.factoryParam<
       _i448.DestinationSearchBloc,
@@ -431,6 +466,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i118.RideRepository>(
       () => _i297.RideRepositoryImpl(gh<_i747.RideRemoteDataSource>()),
+    );
+    gh.factory<_i806.SavedPlacesCubit>(
+      () => _i806.SavedPlacesCubit(
+        gh<_i1039.WatchSavedPlaces>(),
+        gh<_i1039.UpsertSavedPlace>(),
+        gh<_i1039.AddOtherSavedPlace>(),
+        gh<_i1039.RenameSavedPlace>(),
+        gh<_i1039.DeleteSavedPlace>(),
+      ),
     );
     gh.lazySingleton<_i801.CreateUserProfile>(
       () => _i801.CreateUserProfile(gh<_i695.UserRepository>()),
@@ -596,6 +640,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i831.RideHistoryCubit>(
       () => _i831.RideHistoryCubit(gh<_i811.GetRideHistory>()),
+    );
+    gh.factory<_i969.RecentPlacesCubit>(
+      () => _i969.RecentPlacesCubit(gh<_i811.GetRideHistory>()),
     );
     gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(
       (rideId, side) => _i661.RatingCubit(

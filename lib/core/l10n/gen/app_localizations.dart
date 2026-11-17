@@ -2029,6 +2029,120 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'اللغة'**
   String get adminLanguage;
+
+  /// No description provided for @savedPlaces.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأماكن المحفوظة'**
+  String get savedPlaces;
+
+  /// No description provided for @savedPlaceHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'البيت'**
+  String get savedPlaceHome;
+
+  /// No description provided for @savedPlaceWork.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشغل'**
+  String get savedPlaceWork;
+
+  /// No description provided for @savedPlaceOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكان آخر'**
+  String get savedPlaceOther;
+
+  /// No description provided for @savedPlaceAddHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف البيت'**
+  String get savedPlaceAddHome;
+
+  /// No description provided for @savedPlaceAddWork.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف الشغل'**
+  String get savedPlaceAddWork;
+
+  /// No description provided for @savedPlaceTapToSet.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط عشان تحدد الموقع'**
+  String get savedPlaceTapToSet;
+
+  /// No description provided for @savedPlaceAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة مكان'**
+  String get savedPlaceAdd;
+
+  /// No description provided for @savedPlaceEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل المكان'**
+  String get savedPlaceEdit;
+
+  /// No description provided for @savedPlaceType.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوع'**
+  String get savedPlaceType;
+
+  /// No description provided for @savedPlaceName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المكان'**
+  String get savedPlaceName;
+
+  /// No description provided for @savedPlaceChooseLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الموقع'**
+  String get savedPlaceChooseLocation;
+
+  /// No description provided for @savedPlaceDelete.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف المكان'**
+  String get savedPlaceDelete;
+
+  /// No description provided for @savedPlaceDeleteConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدك تحذف \"{name}\"؟'**
+  String savedPlaceDeleteConfirm(String name);
+
+  /// No description provided for @savedPlacesEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما عندك أماكن محفوظة'**
+  String get savedPlacesEmpty;
+
+  /// No description provided for @savedPlacesEmptyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ البيت والشغل عشان توصلهم بضغطة وحدة'**
+  String get savedPlacesEmptyHint;
+
+  /// No description provided for @savedPlaceLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت للحد الأقصى: 20 مكان'**
+  String get savedPlaceLimit;
+
+  /// No description provided for @savedPlaceInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكد من الاسم والموقع'**
+  String get savedPlaceInvalid;
+
+  /// No description provided for @recentPlaces.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر الأماكن'**
+  String get recentPlaces;
 }
 
 class _AppLocalizationsDelegate

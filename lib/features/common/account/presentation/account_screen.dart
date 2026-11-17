@@ -356,6 +356,12 @@ class _AccountBody extends StatelessWidget {
                     AppIcons.user,
                     () => _editName(context, user.name),
                   ),
+                  if (!driver)
+                    row(
+                      l10n.savedPlaces,
+                      AppIcons.house,
+                      () => context.push<void>('/rider/places'),
+                    ),
                   row(
                     l10n.accountLanguage,
                     AppIcons.globe,

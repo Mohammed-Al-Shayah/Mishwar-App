@@ -567,5 +567,31 @@
   "adminSaved": "تم الحفظ",
   "adminCurrency": "د.أ",
   "adminUnknown": "—",
-  "adminLanguage": "اللغة"
+  "adminLanguage": "اللغة",
+  "savedPlaces": "الأماكن المحفوظة",
+  "savedPlaceHome": "البيت",
+  "savedPlaceWork": "الشغل",
+  "savedPlaceOther": "مكان آخر",
+  "savedPlaceAddHome": "أضف البيت",
+  "savedPlaceAddWork": "أضف الشغل",
+  "savedPlaceTapToSet": "اضغط عشان تحدد الموقع",
+  "savedPlaceAdd": "إضافة مكان",
+  "savedPlaceEdit": "تعديل المكان",
+  "savedPlaceType": "النوع",
+  "savedPlaceName": "اسم المكان",
+  "savedPlaceChooseLocation": "اختر الموقع",
+  "savedPlaceDelete": "حذف المكان",
+  "savedPlaceDeleteConfirm": "بدك تحذف \"{name}\"؟",
+  "savedPlacesEmpty": "ما عندك أماكن محفوظة",
+  "savedPlacesEmptyHint": "احفظ البيت والشغل عشان توصلهم بضغطة وحدة",
+  "savedPlaceLimit": "وصلت للحد الأقصى: 20 مكان",
+  "savedPlaceInvalid": "تأكد من الاسم والموقع",
+  "recentPlaces": "آخر الأماكن",
+  "@savedPlaceDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

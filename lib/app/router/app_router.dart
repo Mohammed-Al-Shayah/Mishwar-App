@@ -31,6 +31,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_i
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_screen.dart';
+import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
+import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
@@ -52,8 +54,10 @@ import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_c
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart';
 import 'package:mishwar/features/rider/history/presentation/ride_history_screen.dart';
+import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
+import 'package:mishwar/features/rider/places/presentation/saved_places_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 import 'package:mishwar/features/rider/ride/presentation/ride_summary_screen.dart';
@@ -102,6 +106,7 @@ String? sessionRedirect(
           : user.role != UserRole.driver
           ? (user.role == UserRole.rider &&
                     ((location == '/rider/account' ||
+                            location == '/rider/places' ||
                             location == '/rider/history' ||
                             RegExp(
                               r'^/rider/history/[^/]+$',
@@ -316,11 +321,39 @@ GoRouter createAppRouter(
         ),
         GoRoute(
           path: 'search',
-          builder: (_, state) => BlocProvider(
-            create: (_) => getIt<DestinationSearchBloc>(
-              param1: state.extra! as DestinationSearchParams,
-            ),
+          builder: (_, state) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => getIt<DestinationSearchBloc>(
+                  param1: state.extra! as DestinationSearchParams,
+                ),
+              ),
+              BlocProvider(
+                create: (_) {
+                  final cubit = getIt<SavedPlacesCubit>();
+                  unawaited(
+                    cubit.start((session.state as SessionReady).user.id),
+                  );
+                  return cubit;
+                },
+              ),
+            ],
             child: const DestinationSearchScreen(),
+          ),
+        ),
+        GoRoute(
+          path: 'places',
+          builder: (_, state) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<SavedPlacesCubit>();
+              unawaited(cubit.start((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: SavedPlacesScreen(
+              openEditorFor: state.extra is SavedPlaceLabel
+                  ? state.extra! as SavedPlaceLabel
+                  : null,
+            ),
           ),
         ),
         GoRoute(
@@ -337,8 +370,24 @@ GoRouter createAppRouter(
       ],
       builder: (_, _) => BlocProvider(
         create: (_) => getIt<HomeCubit>(),
-        child: BlocProvider(
-          create: (_) => getIt<RiderHomeCubit>(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<RiderHomeCubit>()),
+            BlocProvider(
+              create: (_) {
+                final cubit = getIt<SavedPlacesCubit>();
+                unawaited(cubit.start((session.state as SessionReady).user.id));
+                return cubit;
+              },
+            ),
+            BlocProvider(
+              create: (_) {
+                final cubit = getIt<RecentPlacesCubit>();
+                unawaited(cubit.load((session.state as SessionReady).user.id));
+                return cubit;
+              },
+            ),
+          ],
           child: ActiveRideListener(
             watch: getIt<WatchActiveRideId>(),
             uid: (session.state as SessionReady).user.id,

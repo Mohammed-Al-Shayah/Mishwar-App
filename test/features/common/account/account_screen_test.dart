@@ -157,6 +157,10 @@ void main() {
           TextDirection.ltr,
         );
         expect(
+          find.text(l10n.savedPlaces),
+          driver ? findsNothing : findsOneWidget,
+        );
+        expect(
           find.text(l10n.accountAppearance),
           driver ? findsNothing : findsOneWidget,
         );
