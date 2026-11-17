@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mishwar/app/di/injection.dart';
+import 'package:mishwar/features/common/account/presentation/account_cubit.dart';
+import 'package:mishwar/features/common/account/presentation/account_screen.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/home_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/name_cubit.dart';
@@ -74,7 +76,8 @@ String? sessionRedirect(
           ? '/rider/ride/${user.pendingRatingRideId}/summary'
           : user.role != UserRole.driver
           ? (user.role == UserRole.rider &&
-                    ((location == '/rider/history' ||
+                    ((location == '/rider/account' ||
+                            location == '/rider/history' ||
                             RegExp(
                               r'^/rider/history/[^/]+$',
                             ).hasMatch(location)) ||
@@ -99,7 +102,8 @@ String? sessionRedirect(
                               location.startsWith('/driver/history/')) &&
                           driver?.currentRideId != null
                     ? '/driver/ride/${driver!.currentRideId}'
-                    : (location == '/driver/earnings' ||
+                    : (location == '/driver/account' ||
+                          location == '/driver/earnings' ||
                           RegExp(
                             r'^/driver/history/[^/]+$',
                           ).hasMatch(location) ||
@@ -179,6 +183,17 @@ GoRouter createAppRouter(
     GoRoute(
       path: '/rider',
       routes: [
+        GoRoute(
+          path: 'account',
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<AccountCubit>();
+              unawaited(cubit.start((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: const AccountScreen(),
+          ),
+        ),
         GoRoute(
           path: 'history',
           routes: [
@@ -312,6 +327,17 @@ GoRouter createAppRouter(
         ),
       ),
       routes: [
+        GoRoute(
+          path: '/driver/account',
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<AccountCubit>();
+              unawaited(cubit.start((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: const AccountScreen(driver: true),
+          ),
+        ),
         GoRoute(
           path: '/driver',
           builder: (_, _) => BlocProvider(

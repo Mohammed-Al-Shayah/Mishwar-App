@@ -696,4 +696,86 @@ class AppLocalizationsEn extends AppLocalizations {
   String earningsBarLabel(String day, String amount) {
     return '$day, JD $amount';
   }
+
+  @override
+  String get accountProfile => 'Profile';
+
+  @override
+  String get accountLanguage => 'Language';
+
+  @override
+  String get accountAppearance => 'Appearance';
+
+  @override
+  String get accountSystem => 'System';
+
+  @override
+  String get accountLight => 'Light';
+
+  @override
+  String get accountDark => 'Dark';
+
+  @override
+  String get accountDrive => 'Drive with us';
+
+  @override
+  String get accountRide => 'Switch to rider mode';
+
+  @override
+  String get accountVehicle => 'Vehicle';
+
+  @override
+  String get accountTerms => 'Terms and conditions';
+
+  @override
+  String get accountPrivacy => 'Privacy policy';
+
+  @override
+  String get accountAbout => 'About';
+
+  @override
+  String get accountSave => 'Save';
+
+  @override
+  String get accountCancel => 'Cancel';
+
+  @override
+  String get accountConfirm => 'Confirm';
+
+  @override
+  String get accountSwitchConfirm => 'Switch account mode?';
+
+  @override
+  String get accountSignOutConfirm => 'Sign out of your account?';
+
+  @override
+  String get accountDelete => 'Delete account';
+
+  @override
+  String get accountDeleteWarning =>
+      'Account deletion is permanent. Your profile and vehicle data will be removed. Ride records will be retained without your name or phone.';
+
+  @override
+  String get accountDeletePrompt => 'Type delete to confirm';
+
+  @override
+  String get accountDeleteWord => 'delete';
+
+  @override
+  String get accountBusy => 'Finish the current ride first';
+
+  @override
+  String get accountName => 'Name';
+
+  @override
+  String get accountNameError => 'Name must be 2-40 characters';
+
+  @override
+  String get accountVersion => 'Version';
+
+  @override
+  String get accountArabic => 'العربية';
+
+  @override
+  String get accountEnglish => 'English';
 }

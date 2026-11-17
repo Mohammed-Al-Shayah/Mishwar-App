@@ -44,15 +44,18 @@ class MwListRow extends StatelessWidget {
                 SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title, style: context.textStyles.titleMedium),
-                      Text(
-                        subtitle,
-                        style: context.textStyles.bodySmall?.copyWith(
-                          color: context.colors.textSecondary,
+                      // An empty subtitle collapses so the title centres.
+                      if (subtitle.isNotEmpty)
+                        Text(
+                          subtitle,
+                          style: context.textStyles.bodySmall?.copyWith(
+                            color: context.colors.textSecondary,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

@@ -19,6 +19,56 @@ void main() {
     phone: '+962791234567',
     createdAt: DateTime.utc(2026),
   );
+  test('account routes follow role changes and driver approval', () {
+    final rider = SessionReady(user.copyWith(role: UserRole.rider));
+    final driverUser = user.copyWith(role: UserRole.driver);
+    const vehicle = VehicleEntity(
+      type: VehicleType.economy,
+      make: 'Toyota',
+      model: 'Corolla',
+      color: 'White',
+      plate: '12-34567',
+    );
+    final approved = SessionReady(
+      driverUser,
+      driver: const DriverEntity(
+        id: 'u',
+        status: DriverStatus.approved,
+        isOnline: false,
+        vehicle: vehicle,
+      ),
+    );
+    final pending = SessionReady(
+      driverUser,
+      driver: const DriverEntity(
+        id: 'u',
+        status: DriverStatus.pending,
+        isOnline: false,
+        vehicle: vehicle,
+      ),
+    );
+    expect(sessionRedirect(rider, '/rider/account'), isNull);
+    expect(sessionRedirect(approved, '/driver/account'), isNull);
+    for (final oldPath in ['/rider/account', '/rider/history', '/rider']) {
+      expect(
+        sessionRedirect(SessionReady(driverUser), oldPath),
+        '/driver/onboarding',
+      );
+      expect(sessionRedirect(pending, oldPath), '/driver/pending');
+      expect(sessionRedirect(approved, oldPath), '/driver');
+    }
+    for (final oldPath in ['/driver/account', '/driver/earnings', '/driver']) {
+      expect(sessionRedirect(rider, oldPath), '/rider');
+    }
+    expect(
+      sessionRedirect(const SessionSignedOut(), '/rider/account'),
+      '/auth/phone',
+    );
+    expect(
+      sessionRedirect(const SessionSignedOut(), '/driver/account'),
+      '/auth/phone',
+    );
+  });
   test(
     'summary allows no active ride; pending rating redirects home',
     () {

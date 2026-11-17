@@ -374,8 +374,7 @@
   "ratingTagLongerRoute": "Longer route",
   "ratingTagOnTime": "On time",
   "ratingTagRespectful": "Respectful",
-  "ratingTagRude": "Rude"
-,
+  "ratingTagRude": "Rude",
   "navHome": "Home",
   "navAccount": "Account",
   "historyTitle": "Activity",
@@ -451,5 +450,32 @@
         "type": "String"
       }
     }
-  }
+  },
+  "accountProfile": "Profile",
+  "accountLanguage": "Language",
+  "accountAppearance": "Appearance",
+  "accountSystem": "System",
+  "accountLight": "Light",
+  "accountDark": "Dark",
+  "accountDrive": "Drive with us",
+  "accountRide": "Switch to rider mode",
+  "accountVehicle": "Vehicle",
+  "accountTerms": "Terms and conditions",
+  "accountPrivacy": "Privacy policy",
+  "accountAbout": "About",
+  "accountSave": "Save",
+  "accountCancel": "Cancel",
+  "accountConfirm": "Confirm",
+  "accountSwitchConfirm": "Switch account mode?",
+  "accountSignOutConfirm": "Sign out of your account?",
+  "accountDelete": "Delete account",
+  "accountDeleteWarning": "Account deletion is permanent. Your profile and vehicle data will be removed. Ride records will be retained without your name or phone.",
+  "accountDeletePrompt": "Type delete to confirm",
+  "accountDeleteWord": "delete",
+  "accountBusy": "Finish the current ride first",
+  "accountName": "Name",
+  "accountNameError": "Name must be 2-40 characters",
+  "accountVersion": "Version",
+  "accountArabic": "العربية",
+  "accountEnglish": "English"
 }

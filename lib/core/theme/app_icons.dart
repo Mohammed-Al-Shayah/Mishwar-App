@@ -33,4 +33,8 @@ abstract final class AppIcons {
   );
   static const car = IconData(0xe112, fontFamily: 'PhosphorRegular');
   static const star = IconData(0xe46a, fontFamily: 'PhosphorRegular');
+  static const globe = IconData(0xe288, fontFamily: 'PhosphorRegular');
+  static const appearance = IconData(0xe18c, fontFamily: 'PhosphorRegular');
+  static const info = IconData(0xe2ce, fontFamily: 'PhosphorRegular');
+  static const switchMode = IconData(0xe756, fontFamily: 'PhosphorRegular');
 }

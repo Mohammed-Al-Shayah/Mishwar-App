@@ -32,6 +32,23 @@ export class FakeFirestore {
     });
     return query();
   }
+  batch() {
+    const writes = [];
+    const batch = {
+      update: (ref, data) => { writes.push(() => {
+        const next = { ...this.records.get(ref.path) };
+        for (const [key, value] of Object.entries(data)) {
+          const parts = key.split('.'); let target = next;
+          while (parts.length > 1) { const part = parts.shift(); target[part] = { ...target[part] }; target = target[part]; }
+          target[parts[0]] = value;
+        }
+        this.records.set(ref.path, next);
+      }); return batch; },
+      delete: ref => { writes.push(() => this.records.delete(ref.path)); return batch; },
+      commit: async () => { if (writes.length > 500) throw Error('Batch too large'); for (const write of writes) write(); },
+    };
+    return batch;
+  }
   runTransaction(body) {
     const result = this.queue.then(async () => {
       const writes = [];

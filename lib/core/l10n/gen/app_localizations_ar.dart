@@ -685,4 +685,86 @@ class AppLocalizationsAr extends AppLocalizations {
   String earningsBarLabel(String day, String amount) {
     return '$day، JD $amount';
   }
+
+  @override
+  String get accountProfile => 'الملف الشخصي';
+
+  @override
+  String get accountLanguage => 'اللغة';
+
+  @override
+  String get accountAppearance => 'المظهر';
+
+  @override
+  String get accountSystem => 'تلقائي';
+
+  @override
+  String get accountLight => 'فاتح';
+
+  @override
+  String get accountDark => 'غامق';
+
+  @override
+  String get accountDrive => 'اشتغل سائق معنا';
+
+  @override
+  String get accountRide => 'التبديل لوضع الراكب';
+
+  @override
+  String get accountVehicle => 'السيارة';
+
+  @override
+  String get accountTerms => 'الشروط والأحكام';
+
+  @override
+  String get accountPrivacy => 'سياسة الخصوصية';
+
+  @override
+  String get accountAbout => 'عن التطبيق';
+
+  @override
+  String get accountSave => 'حفظ';
+
+  @override
+  String get accountCancel => 'إلغاء';
+
+  @override
+  String get accountConfirm => 'تأكيد';
+
+  @override
+  String get accountSwitchConfirm => 'بدك تغيّر وضع الحساب؟';
+
+  @override
+  String get accountSignOutConfirm => 'بدك تسجّل الخروج؟';
+
+  @override
+  String get accountDelete => 'حذف الحساب';
+
+  @override
+  String get accountDeleteWarning =>
+      'حذف الحساب نهائي، وما بتقدر ترجّعه. رح نحذف ملفك وبيانات سيارتك، ونحتفظ بسجلات المشاوير بدون اسمك ورقمك.';
+
+  @override
+  String get accountDeletePrompt => 'اكتب حذف للتأكيد';
+
+  @override
+  String get accountDeleteWord => 'حذف';
+
+  @override
+  String get accountBusy => 'خلّص المشوار الحالي أول';
+
+  @override
+  String get accountName => 'الاسم';
+
+  @override
+  String get accountNameError => 'الاسم لازم يكون من حرفين لـ ٤٠ حرف';
+
+  @override
+  String get accountVersion => 'الإصدار';
+
+  @override
+  String get accountArabic => 'العربية';
+
+  @override
+  String get accountEnglish => 'English';
 }

@@ -1327,6 +1327,168 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'{day}، JD {amount}'**
   String earningsBarLabel(String day, String amount);
+
+  /// No description provided for @accountProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف الشخصي'**
+  String get accountProfile;
+
+  /// No description provided for @accountLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get accountLanguage;
+
+  /// No description provided for @accountAppearance.
+  ///
+  /// In ar, this message translates to:
+  /// **'المظهر'**
+  String get accountAppearance;
+
+  /// No description provided for @accountSystem.
+  ///
+  /// In ar, this message translates to:
+  /// **'تلقائي'**
+  String get accountSystem;
+
+  /// No description provided for @accountLight.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتح'**
+  String get accountLight;
+
+  /// No description provided for @accountDark.
+  ///
+  /// In ar, this message translates to:
+  /// **'غامق'**
+  String get accountDark;
+
+  /// No description provided for @accountDrive.
+  ///
+  /// In ar, this message translates to:
+  /// **'اشتغل سائق معنا'**
+  String get accountDrive;
+
+  /// No description provided for @accountRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'التبديل لوضع الراكب'**
+  String get accountRide;
+
+  /// No description provided for @accountVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'السيارة'**
+  String get accountVehicle;
+
+  /// No description provided for @accountTerms.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط والأحكام'**
+  String get accountTerms;
+
+  /// No description provided for @accountPrivacy.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get accountPrivacy;
+
+  /// No description provided for @accountAbout.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن التطبيق'**
+  String get accountAbout;
+
+  /// No description provided for @accountSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get accountSave;
+
+  /// No description provided for @accountCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get accountCancel;
+
+  /// No description provided for @accountConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get accountConfirm;
+
+  /// No description provided for @accountSwitchConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدك تغيّر وضع الحساب؟'**
+  String get accountSwitchConfirm;
+
+  /// No description provided for @accountSignOutConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدك تسجّل الخروج؟'**
+  String get accountSignOutConfirm;
+
+  /// No description provided for @accountDelete.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب'**
+  String get accountDelete;
+
+  /// No description provided for @accountDeleteWarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب نهائي، وما بتقدر ترجّعه. رح نحذف ملفك وبيانات سيارتك، ونحتفظ بسجلات المشاوير بدون اسمك ورقمك.'**
+  String get accountDeleteWarning;
+
+  /// No description provided for @accountDeletePrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب حذف للتأكيد'**
+  String get accountDeletePrompt;
+
+  /// No description provided for @accountDeleteWord.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف'**
+  String get accountDeleteWord;
+
+  /// No description provided for @accountBusy.
+  ///
+  /// In ar, this message translates to:
+  /// **'خلّص المشوار الحالي أول'**
+  String get accountBusy;
+
+  /// No description provided for @accountName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get accountName;
+
+  /// No description provided for @accountNameError.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم لازم يكون من حرفين لـ ٤٠ حرف'**
+  String get accountNameError;
+
+  /// No description provided for @accountVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار'**
+  String get accountVersion;
+
+  /// No description provided for @accountArabic.
+  ///
+  /// In ar, this message translates to:
+  /// **'العربية'**
+  String get accountArabic;
+
+  /// No description provided for @accountEnglish.
+  ///
+  /// In ar, this message translates to:
+  /// **'English'**
+  String get accountEnglish;
 }
 
 class _AppLocalizationsDelegate

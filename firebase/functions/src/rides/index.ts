@@ -13,7 +13,7 @@ import { dispatchRide, offerTimeoutHandler, type MatchingDeps, type OfferTask } 
 import { updateRideStatusHandler } from './lifecycle.js';
 import { acceptRideHandler, declineRideHandler } from './offers.js';
 
-const matchingDeps: MatchingDeps = {
+export const matchingDeps: MatchingDeps = {
   now: () => Timestamp.now(),
   enqueue: (data, scheduleDelaySeconds) => getFunctions()
     .taskQueue('locations/europe-west1/functions/offerTimeout').enqueue(data, { scheduleDelaySeconds }),

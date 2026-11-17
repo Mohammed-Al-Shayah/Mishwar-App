@@ -28,7 +28,7 @@ export async function requestRideHandler(request: CallableRequest, db: Firestore
   const rideRef = db.collection('rides').doc();
   await db.runTransaction(async (tx) => {
     const user = await tx.get(userRef);
-    if (user.data()?.role !== 'rider') throw new HttpsError('permission-denied', 'Rider role required.');
+    if (user.data()?.accountDeleting || user.data()?.role !== 'rider') throw new HttpsError('permission-denied', 'Rider role required.');
     const active = await tx.get(db.collection('rides').where('riderId', '==', uid).where('status', 'in', activeStatuses).limit(1));
     if (!active.empty) throw new HttpsError('failed-precondition', 'An active ride already exists.', { activeRideId: active.docs[0].id });
     const storedPlace = (p: ReturnType<typeof place>) => ({ name: p.name, address: p.address, geopoint: new GeoPoint(p.lat, p.lng) });

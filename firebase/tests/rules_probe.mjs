@@ -42,6 +42,7 @@ const checks = [
   ...['rating', 'ratingCount'].map(field => ['cannot self-set ' + field, 403, () => fsReq('PATCH', 'users/' + uid, { [field]: { integerValue: '5' } }, [field])]),
   ['seed pending rating', 200, () => ownerSeed('users/' + uid, { role: s('rider'), pendingRatingRideId: s('server') })],
   ['cannot delete pending rating', 403, () => fsReq('PATCH', 'users/' + uid, {}, ['pendingRatingRideId'])],
+  ['cannot set deletion marker', 403, () => fsReq('PATCH', 'users/' + uid, { accountDeleting: { booleanValue: true } }, ['accountDeleting'])],
   ['cannot set activeRideId', 403, () => fsReq('PATCH', 'users/' + uid, { activeRideId: s('forged') }, ['activeRideId'])],
   ['cannot create ride', 403, () => fsReq('PATCH', 'rides/forged-' + uid, ownRide)],
   ['seed own ride via Admin SDK equivalent', 200, () => ownerSeed('rides/own-' + uid, ownRide)],

@@ -8,6 +8,8 @@ import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations_ar.dart';
+import 'package:mishwar/core/settings/locale_cubit.dart';
+import 'package:mishwar/core/settings/theme_mode_cubit.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/mw_otp_input.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
@@ -17,6 +19,7 @@ import 'package:mishwar/features/common/auth/presentation/screens/phone_screen.d
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSendOtp extends Mock implements SendOtp {}
 
@@ -157,7 +160,12 @@ void main() {
       );
       addTearDown(router.dispose);
       await tester.pumpWidget(
-        MishwarApp(router: router, sessionCubit: session),
+        MishwarApp(
+          router: router,
+          sessionCubit: session,
+          localeCubit: LocaleCubit(await _preferences()),
+          themeModeCubit: ThemeModeCubit(await _preferences()),
+        ),
       );
       await tester.pumpAndSettle();
       expect(find.text('injected route'), findsOneWidget);
@@ -168,4 +176,9 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     },
   );
+}
+
+Future<SharedPreferences> _preferences() async {
+  SharedPreferences.setMockInitialValues({});
+  return SharedPreferences.getInstance();
 }
