@@ -1,0 +1,6 @@
+# Copy to key.properties; replace placeholders locally. Never commit that file.
+# Use forward slashes for an absolute Windows path.
+storeFile=C:/path/to/your/upload-keystore.jks
+storePassword=YOUR_STORE_PASSWORD
+keyAlias=upload
+keyPassword=YOUR_KEY_PASSWORD
