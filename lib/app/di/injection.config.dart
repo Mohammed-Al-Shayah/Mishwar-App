@@ -107,6 +107,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart'
     as _i72;
 import 'package:mishwar/features/common/ride/domain/usecases/decline_ride.dart'
     as _i100;
+import 'package:mishwar/features/common/ride/domain/usecases/get_ride_history.dart'
+    as _i811;
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart'
     as _i892;
 import 'package:mishwar/features/common/ride/domain/usecases/update_ride_status.dart'
@@ -117,6 +119,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_locati
     as _i787;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart'
     as _i263;
+import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart'
+    as _i60;
 import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
     as _i400;
 import 'package:mishwar/features/common/route/data/repositories/route_repository_impl.dart'
@@ -149,6 +153,20 @@ import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart'
     as _i291;
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart'
     as _i106;
+import 'package:mishwar/features/driver/earnings/data/earnings_remote_data_source.dart'
+    as _i1008;
+import 'package:mishwar/features/driver/earnings/data/earnings_repository_impl.dart'
+    as _i429;
+import 'package:mishwar/features/driver/earnings/domain/earnings_repository.dart'
+    as _i63;
+import 'package:mishwar/features/driver/earnings/domain/get_week_earnings.dart'
+    as _i942;
+import 'package:mishwar/features/driver/earnings/domain/watch_day_earnings.dart'
+    as _i48;
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart'
+    as _i371;
+import 'package:mishwar/features/driver/earnings/presentation/earnings_screen_cubit.dart'
+    as _i555;
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
     as _i804;
 import 'package:mishwar/features/driver/onboarding/presentation/cubit/driver_onboarding_cubit.dart'
@@ -179,6 +197,8 @@ import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.
     as _i1059;
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart'
     as _i934;
+import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart'
+    as _i831;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
     as _i786;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart'
@@ -280,6 +300,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i726.UserRemoteDataSource>(
       () => _i726.UserRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i1008.EarningsRemoteDataSource>(
+      () => _i1008.EarningsRemoteDataSource(gh<_i974.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i747.RideRemoteDataSource>(
       () => _i747.RideRemoteDataSource(
         gh<_i809.FirebaseFunctions>(),
@@ -297,6 +320,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i556.UploadLicensePhoto>(),
         gh<_i587.SubmitDriverApplication>(),
       ),
+    );
+    gh.lazySingleton<_i63.EarningsRepository>(
+      () => _i429.EarningsRepositoryImpl(gh<_i1008.EarningsRemoteDataSource>()),
     );
     gh.lazySingleton<_i300.LocationRepository>(
       () => _i578.LocationRepositoryImpl(gh<_i101.LocationDataSource>()),
@@ -383,6 +409,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i100.DeclineRide>(
       () => _i100.DeclineRide(gh<_i118.RideRepository>()),
     );
+    gh.lazySingleton<_i811.GetRideHistory>(
+      () => _i811.GetRideHistory(gh<_i118.RideRepository>()),
+    );
     gh.lazySingleton<_i892.RequestRide>(
       () => _i892.RequestRide(gh<_i118.RideRepository>()),
     );
@@ -401,6 +430,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryParam<_i267.OtpCubit, _i858.OtpSession, dynamic>(
       (session, _) =>
           _i267.OtpCubit(gh<_i454.VerifyOtp>(), gh<_i563.SendOtp>(), session),
+    );
+    gh.lazySingleton<_i942.GetWeekEarnings>(
+      () => _i942.GetWeekEarnings(gh<_i63.EarningsRepository>()),
+    );
+    gh.lazySingleton<_i48.WatchDayEarnings>(
+      () => _i48.WatchDayEarnings(gh<_i63.EarningsRepository>()),
     );
     gh.factory<_i786.RiderHomeCubit>(
       () => _i786.RiderHomeCubit(
@@ -430,6 +465,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1059.TripTicker>(),
       ),
     );
+    gh.factory<_i60.RideReceiptCubit>(
+      () => _i60.RideReceiptCubit(gh<_i263.WatchRide>()),
+    );
     gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
       (draft, _) => _i934.RideConfirmCubit(
         gh<_i598.GetFareEstimates>(),
@@ -456,13 +494,26 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i804.OfferScheduler>(),
       ),
     );
+    gh.factory<_i371.DriverEarningsCubit>(
+      () => _i371.DriverEarningsCubit(gh<_i48.WatchDayEarnings>()),
+    );
     gh.factory<_i964.PhoneCubit>(() => _i964.PhoneCubit(gh<_i563.SendOtp>()));
+    gh.factory<_i555.EarningsScreenCubit>(
+      () => _i555.EarningsScreenCubit(
+        gh<_i942.GetWeekEarnings>(),
+        gh<_i48.WatchDayEarnings>(),
+        gh<_i811.GetRideHistory>(),
+      ),
+    );
     gh.lazySingleton<_i126.RegisterPushToken>(
       () => _i126.RegisterPushToken(
         gh<_i43.PushRepository>(),
         gh<_i768.PushTokenSync>(),
         gh<_i290.AuthRepository>(),
       ),
+    );
+    gh.factory<_i831.RideHistoryCubit>(
+      () => _i831.RideHistoryCubit(gh<_i811.GetRideHistory>()),
     );
     gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(
       (rideId, side) => _i661.RatingCubit(

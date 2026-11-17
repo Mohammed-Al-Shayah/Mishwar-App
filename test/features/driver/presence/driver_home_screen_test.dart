@@ -7,6 +7,8 @@ import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations_ar.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations_en.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/features/driver/earnings/domain/daily_earnings.dart';
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
     as offer;
@@ -14,6 +16,22 @@ import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presen
 import 'package:mocktail/mocktail.dart';
 
 import '../offer/driver_offer_bloc_test.dart' show MockOfferBloc;
+
+class MockHomeEarnings extends MockCubit<DriverEarningsState>
+    implements DriverEarningsCubit {}
+
+MockHomeEarnings homeEarnings() {
+  final cubit = MockHomeEarnings();
+  whenListen(
+    cubit,
+    const Stream<DriverEarningsState>.empty(),
+    initialState: DriverEarningsState(
+      earnings: DailyEarnings(day: DateTime.utc(2026)),
+    ),
+  );
+  when(() => cubit.start(any())).thenAnswer((_) async {});
+  return cubit;
+}
 
 class MockPresenceBloc
     extends MockBloc<DriverPresenceEvent, DriverPresenceState>
@@ -44,7 +62,10 @@ Widget wrap(Widget child, {String language = 'ar'}) => ScreenUtilInit(
         );
         return bloc;
       },
-      child: child,
+      child: BlocProvider<DriverEarningsCubit>(
+        create: (_) => homeEarnings(),
+        child: child,
+      ),
     ),
   ),
 );

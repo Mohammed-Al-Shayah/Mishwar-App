@@ -12,6 +12,7 @@ import 'package:mishwar/features/common/ride/domain/usecases/update_ride_status.
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
     as offer;
@@ -26,6 +27,8 @@ import '../../features/driver/offer/driver_offer_bloc_test.dart'
 import '../../features/driver/offer/driver_offer_bloc_test.dart' show MockRides;
 import '../../features/driver/presence/driver_home_screen_test.dart'
     show MockPresenceBloc, map, size, wrap;
+import '../../features/driver/presence/driver_home_screen_test.dart'
+    show homeEarnings;
 import '../../features/driver/presence/driver_presence_bloc_test.dart'
     show driver;
 import '../../features/driver/trip/driver_trip_bloc_test.dart' show tripRide;
@@ -42,6 +45,8 @@ void main() {
       tester,
     ) async {
       size(tester);
+      getIt.registerFactory<DriverEarningsCubit>(homeEarnings);
+      addTearDown(() => getIt.unregister<DriverEarningsCubit>());
       final session = MockSession();
       final bloc = MockPresenceBloc();
       whenListen(

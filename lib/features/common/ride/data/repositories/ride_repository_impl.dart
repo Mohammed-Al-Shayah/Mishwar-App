@@ -10,6 +10,7 @@ import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.
 import 'package:mishwar/features/common/ride/domain/entities/driver_live_location.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_history.dart';
 import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
@@ -17,6 +18,27 @@ import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart
 class RideRepositoryImpl implements RideRepository {
   const RideRepositoryImpl(this._source);
   final RideRemoteDataSource _source;
+  @override
+  Future<Either<Failure, RideHistoryPage>> history({
+    required RideParty party,
+    required String uid,
+    HistoryCursor? after,
+    int limit = 20,
+  }) async {
+    try {
+      return Right(
+        await _source.history(
+          party: party,
+          uid: uid,
+          after: after,
+          limit: limit,
+        ),
+      );
+    } on Object catch (error) {
+      return Left(callableFailure(error));
+    }
+  }
+
   @override
   Future<Either<Failure, String>> requestRide(
     RideDraft draft,

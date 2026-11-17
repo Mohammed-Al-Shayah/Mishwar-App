@@ -22,8 +22,13 @@ import 'package:mishwar/features/common/rating/presentation/rating_cubit.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
+import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
+import 'package:mishwar/features/common/ride/presentation/ride_receipt_screen.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_screen.dart';
+import 'package:mishwar/features/driver/earnings/presentation/earnings_screen_cubit.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_shell.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
@@ -38,6 +43,8 @@ import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.
 import 'package:mishwar/features/driver/trip/presentation/driver_trip_screen.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
+import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart';
+import 'package:mishwar/features/rider/history/presentation/ride_history_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
@@ -62,12 +69,16 @@ String? sessionRedirect(
     SessionNeedsRole() => '/role',
     SessionReady(:final user, :final driver) =>
       user.role == UserRole.rider &&
-              location == '/rider' &&
+              (location == '/rider' || location.startsWith('/rider/history')) &&
               user.pendingRatingRideId != null
           ? '/rider/ride/${user.pendingRatingRideId}/summary'
           : user.role != UserRole.driver
           ? (user.role == UserRole.rider &&
-                    ((location == '/rider/search' &&
+                    ((location == '/rider/history' ||
+                            RegExp(
+                              r'^/rider/history/[^/]+$',
+                            ).hasMatch(location)) ||
+                        (location == '/rider/search' &&
                             extra is DestinationSearchParams) ||
                         (location == '/rider/confirm' && extra is RideDraft) ||
                         RegExp(
@@ -78,11 +89,23 @@ String? sessionRedirect(
           : switch (driver?.status) {
               null => '/driver/onboarding',
               DriverStatus.approved =>
-                location == '/driver' && driver?.pendingRatingRideId != null
+                (location == '/driver' ||
+                            location == '/driver/earnings' ||
+                            location.startsWith('/driver/history/')) &&
+                        driver?.pendingRatingRideId != null
                     ? '/driver/ride/${driver!.pendingRatingRideId}/rate'
-                    : location == '/driver' && driver?.currentRideId != null
+                    : (location == '/driver' ||
+                              location == '/driver/earnings' ||
+                              location.startsWith('/driver/history/')) &&
+                          driver?.currentRideId != null
                     ? '/driver/ride/${driver!.currentRideId}'
-                    : RegExp(r'^/driver/ride/[^/]+(/rate)?$').hasMatch(location)
+                    : (location == '/driver/earnings' ||
+                          RegExp(
+                            r'^/driver/history/[^/]+$',
+                          ).hasMatch(location) ||
+                          RegExp(
+                            r'^/driver/ride/[^/]+(/rate)?$',
+                          ).hasMatch(location))
                     ? location
                     : '/driver',
               DriverStatus.rejected when location == '/driver/onboarding' =>
@@ -156,6 +179,43 @@ GoRouter createAppRouter(
     GoRoute(
       path: '/rider',
       routes: [
+        GoRoute(
+          path: 'history',
+          routes: [
+            GoRoute(
+              path: ':rideId',
+              builder: (_, state) => BlocProvider(
+                create: (_) {
+                  final cubit = getIt<RideReceiptCubit>();
+                  unawaited(cubit.load(state.pathParameters['rideId']!));
+                  return cubit;
+                },
+                child: RideReceiptScreen(
+                  rideId: state.pathParameters['rideId']!,
+                ),
+              ),
+            ),
+          ],
+          builder: (_, _) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<HomeCubit>()),
+              BlocProvider(
+                create: (_) {
+                  final cubit = getIt<RideHistoryCubit>();
+                  unawaited(
+                    cubit.loadFirst((session.state as SessionReady).user.id),
+                  );
+                  return cubit;
+                },
+              ),
+            ],
+            child: ActiveRideListener(
+              watch: getIt<WatchActiveRideId>(),
+              uid: (session.state as SessionReady).user.id,
+              child: const RideHistoryScreen(),
+            ),
+          ),
+        ),
         GoRoute(
           path: 'ride/:rideId',
           routes: [
@@ -254,9 +314,43 @@ GoRouter createAppRouter(
       routes: [
         GoRoute(
           path: '/driver',
-          builder: (_, _) => DriverHomeScreen(
-            uid: (session.state as SessionReady).user.id,
-            mapBuilder: driverMapBuilder,
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<DriverEarningsCubit>();
+              unawaited(cubit.start((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: DriverHomeScreen(
+              uid: (session.state as SessionReady).user.id,
+              mapBuilder: driverMapBuilder,
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/driver/earnings',
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<EarningsScreenCubit>();
+              unawaited(cubit.load((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: DriverEarningsScreen(
+              uid: (session.state as SessionReady).user.id,
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/driver/history/:rideId',
+          builder: (_, state) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<RideReceiptCubit>();
+              unawaited(cubit.load(state.pathParameters['rideId']!));
+              return cubit;
+            },
+            child: RideReceiptScreen(
+              rideId: state.pathParameters['rideId']!,
+              driver: true,
+            ),
           ),
         ),
         GoRoute(

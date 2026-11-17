@@ -19,6 +19,7 @@ import 'package:mishwar/features/common/auth/presentation/cubit/home_cubit.dart'
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/rider/history/presentation/rider_bottom_nav.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
@@ -126,6 +127,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
     builder: (context, state) {
       _measureSheet();
       return Scaffold(
+        bottomNavigationBar: const RiderBottomNav(index: 0),
         body: Stack(
           children: [
             Positioned.fill(

@@ -38,6 +38,7 @@ import 'package:mishwar/features/common/user/domain/usecases/create_user_profile
 import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_driver.dart';
 import 'package:mishwar/features/common/user/domain/usecases/watch_user.dart';
+import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
 import 'package:mishwar/features/driver/home/presentation/driver_home_screen.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart'
     as offer;
@@ -47,7 +48,7 @@ import 'package:mocktail/mocktail.dart';
 import '../features/driver/offer/driver_offer_bloc_test.dart'
     show MockOfferBloc;
 import '../features/driver/presence/driver_home_screen_test.dart'
-    show MockPresenceBloc;
+    show MockPresenceBloc, homeEarnings;
 import '../helpers/location_mocks.dart';
 import '../helpers/ride_mocks.dart';
 
@@ -135,7 +136,9 @@ void main() {
         const Stream<DriverPresenceState>.empty(),
         initialState: const DriverPresenceState(),
       );
-      getIt.registerFactory<DriverPresenceBloc>(() => presence);
+      getIt
+        ..registerFactory<DriverPresenceBloc>(() => presence)
+        ..registerFactory<DriverEarningsCubit>(homeEarnings);
       final offerBloc = MockOfferBloc();
       whenListen(
         offerBloc,

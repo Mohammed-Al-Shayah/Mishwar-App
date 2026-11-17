@@ -119,3 +119,23 @@ class _FilledStarPainter extends CustomPainter {
   @override
   bool shouldRepaint(_FilledStarPainter old) => old.color != color;
 }
+
+/// Read-only stars (e.g. receipts): `value` filled, the rest light outlines.
+class MwStarDisplay extends StatelessWidget {
+  const MwStarDisplay({required this.value, required this.size, super.key});
+  final int value;
+  final double size;
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (var i = 1; i <= 5; i++)
+        value >= i
+            ? CustomPaint(
+                size: Size.square(size),
+                painter: _FilledStarPainter(context.colors.textPrimary),
+              )
+            : Icon(AppIcons.star, size: size, color: AppColors.grey300),
+    ],
+  );
+}
