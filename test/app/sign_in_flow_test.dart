@@ -60,6 +60,7 @@ import '../features/driver/presence/driver_home_screen_test.dart'
     show MockPresenceBloc, homeEarnings;
 import '../helpers/location_mocks.dart';
 import '../helpers/ride_mocks.dart';
+import '../helpers/saved_places_mocks.dart';
 
 class MockDriverRepository extends Mock implements DriverRepository {}
 
@@ -74,6 +75,7 @@ class MockUnregisterPushToken extends Mock implements UnregisterPushToken {}
 class MockAccountRepository extends Mock implements AccountRepository {}
 
 void main() {
+  setUp(registerSavedPlaces);
   setUpAll(() {
     registerFallbackValue(const GoOnlinePressed());
     registerFallbackValue(const offer.Started('u'));

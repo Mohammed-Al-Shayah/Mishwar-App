@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,20 +22,26 @@ import 'package:mishwar/features/common/places/domain/usecases/search_places.dar
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart';
+import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
+import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
+import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
+import 'package:mishwar/features/rider/places/presentation/saved_places_screen.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../features/rider/confirm/ride_confirm_cubit_test.dart'
     show MockRouteRepository, estimates;
 import '../../features/rider/search/destination_search_bloc_test.dart'
     show MockPlacesRepository, details, point, suggestion;
 import '../../helpers/ride_mocks.dart';
+import '../../helpers/saved_places_mocks.dart';
 
 class MockSession extends MockCubit<SessionState> implements SessionCubit {}
 
@@ -43,6 +51,7 @@ class MockRiderHome extends MockCubit<RiderHomeState>
     implements RiderHomeCubit {}
 
 void main() {
+  setUp(registerSavedPlaces);
   testWidgets('home search returns destination and pushes a ride draft', (
     tester,
   ) async {
@@ -50,6 +59,15 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
+    await getIt.unregister<SavedPlacesCubit>();
+    await getIt.unregister<RecentPlacesCubit>();
+    getIt
+      ..registerFactory<SavedPlacesCubit>(
+        () => savedCubit(places: [savedHome]),
+      )
+      ..registerFactory<RecentPlacesCubit>(
+        () => recentCubit(places: [savedOther.details]),
+      );
     final session = MockSession();
     final home = MockHome();
     final rider = MockRiderHome();
@@ -152,6 +170,19 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    unawaited(router.push<void>('/rider/places'));
+    await tester.pumpAndSettle();
+    expect(find.byType(SavedPlacesScreen), findsOneWidget);
+    expect(router.state.uri.path, '/rider/places');
+    router.pop();
+    await tester.pumpAndSettle();
+    unawaited(router.push<void>('/rider/places', extra: SavedPlaceLabel.home));
+    await tester.pumpAndSettle();
+    expect(find.byType(RadioListTile<SavedPlaceLabel>), findsNWidgets(3));
+    router.pop();
+    await tester.pumpAndSettle();
+    router.pop();
+    await tester.pumpAndSettle();
     for (final path in ['/rider/search', '/rider/confirm']) {
       router.go(path);
       await tester.pumpAndSettle();
@@ -181,5 +212,19 @@ void main() {
     await tester.tap(find.byType(MwMapFab));
     await tester.pumpAndSettle();
     expect(find.byType(MwSearchPill), findsOneWidget);
+    for (final key in ['home_shortcut_home', 'home_recent_park']) {
+      await tester.tap(find.byKey(Key(key)));
+      await tester.pumpAndSettle();
+      final direct = tester.widget<RideConfirmScreen>(
+        find.byType(RideConfirmScreen),
+      );
+      expect(direct.draft.pickup.location, point);
+      expect(
+        direct.draft.dropoff.location,
+        key == 'home_shortcut_home' ? savedHome.location : savedOther.location,
+      );
+      await tester.tap(find.byType(MwMapFab));
+      await tester.pumpAndSettle();
+    }
   });
 }

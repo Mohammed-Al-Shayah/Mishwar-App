@@ -1051,4 +1051,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminLanguage => 'Language';
+
+  @override
+  String get savedPlaces => 'Saved places';
+
+  @override
+  String get savedPlaceHome => 'Home';
+
+  @override
+  String get savedPlaceWork => 'Work';
+
+  @override
+  String get savedPlaceOther => 'Other';
+
+  @override
+  String get savedPlaceAddHome => 'Add home';
+
+  @override
+  String get savedPlaceAddWork => 'Add work';
+
+  @override
+  String get savedPlaceTapToSet => 'Tap to set the location';
+
+  @override
+  String get savedPlaceAdd => 'Add place';
+
+  @override
+  String get savedPlaceEdit => 'Edit place';
+
+  @override
+  String get savedPlaceType => 'Type';
+
+  @override
+  String get savedPlaceName => 'Place name';
+
+  @override
+  String get savedPlaceChooseLocation => 'Choose location';
+
+  @override
+  String get savedPlaceDelete => 'Delete place';
+
+  @override
+  String savedPlaceDeleteConfirm(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get savedPlacesEmpty => 'No saved places yet';
+
+  @override
+  String get savedPlacesEmptyHint =>
+      'Save home and work to get there in one tap';
+
+  @override
+  String get savedPlaceLimit => 'You reached the limit of 20 places';
+
+  @override
+  String get savedPlaceInvalid => 'Check the name and location';
+
+  @override
+  String get recentPlaces => 'Recent';
 }

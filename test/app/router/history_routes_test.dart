@@ -40,6 +40,7 @@ import '../../features/driver/presence/driver_presence_bloc_test.dart'
 import '../../features/history/history_data_cubit_test.dart';
 import '../../features/history/history_widgets_test.dart'
     show historySize, historyWrap;
+import '../../helpers/saved_places_mocks.dart';
 import 'rider_search_flow_test.dart' show MockHome, MockRiderHome;
 
 class MockHistorySession extends MockCubit<SessionState>
@@ -53,6 +54,7 @@ void main() {
     createdAt: DateTime.utc(2026),
   );
   tearDown(getIt.reset);
+  setUp(registerSavedPlaces);
   setUpAll(() {
     registerFallbackValue(DateTime.utc(2026));
     registerFallbackValue(const offer.Started('u'));
@@ -66,7 +68,11 @@ void main() {
       user.copyWith(role: UserRole.driver),
       driver: driver(),
     );
-    for (final path in ['/rider/history', '/rider/history/ride']) {
+    for (final path in [
+      '/rider/history',
+      '/rider/history/ride',
+      '/rider/places',
+    ]) {
       expect(sessionRedirect(rider, path), isNull);
       expect(sessionRedirect(approved, path), '/driver');
       expect(sessionRedirect(const SessionSignedOut(), path), '/auth/phone');
@@ -77,7 +83,7 @@ void main() {
           ),
           path,
         ),
-        '/rider/ride/pending/summary',
+        path == '/rider/places' ? null : '/rider/ride/pending/summary',
       );
     }
     for (final path in ['/driver/earnings', '/driver/history/ride']) {

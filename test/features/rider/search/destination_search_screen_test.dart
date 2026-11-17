@@ -12,12 +12,15 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/mw_list_row.dart';
 import 'package:mishwar/core/widgets/mw_skeleton.dart';
 import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
+import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
+import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_event.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_state.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../helpers/saved_places_mocks.dart';
 import 'destination_search_bloc_test.dart' show details, suggestion;
 
 class MockSearchBloc
@@ -35,6 +38,7 @@ void main() {
   Future<void> pump(
     WidgetTester tester,
     DestinationSearchState state, {
+    List<SavedPlace> saved = const [],
     String locale = 'en',
     bool dark = false,
     double scale = 1,
@@ -62,7 +66,10 @@ void main() {
           ),
           home: BlocProvider<DestinationSearchBloc>.value(
             value: bloc,
-            child: const DestinationSearchScreen(),
+            child: BlocProvider<SavedPlacesCubit>(
+              create: (_) => savedCubit(places: saved),
+              child: const DestinationSearchScreen(),
+            ),
           ),
         ),
       ),
@@ -90,6 +97,31 @@ void main() {
         expect(tester.takeException(), isNull);
       });
     }
+  }
+  for (final locale in ['ar', 'en']) {
+    testWidgets(
+      'saved section empty query and name/address filter $locale scale 1.3',
+      (tester) async {
+        await pump(
+          tester,
+          const DestinationIdle(),
+          saved: [savedHome, savedOther],
+          locale: locale,
+          scale: 1.3,
+        );
+        expect(find.text('Home street'), findsOneWidget);
+        expect(find.text('Park'), findsOneWidget);
+        await tester.enterText(find.byType(TextField), 'garden');
+        await tester.pump();
+        expect(find.text('Park'), findsOneWidget);
+        expect(find.text('Home street'), findsNothing);
+        await tester.enterText(find.byType(TextField), 'my HOUSE');
+        await tester.pump();
+        expect(find.text('Home street'), findsOneWidget);
+        expect(find.text('Park'), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
   testWidgets('empty state includes query', (tester) async {
     await pump(tester, const DestinationEmpty('Park'));
@@ -141,6 +173,10 @@ void main() {
   testWidgets('tapping suggestion resolves then pops PlaceDetails', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     whenListen(
       bloc,
       states.stream,
@@ -164,7 +200,10 @@ void main() {
           path: '/search',
           builder: (_, _) => BlocProvider<DestinationSearchBloc>.value(
             value: bloc,
-            child: const DestinationSearchScreen(),
+            child: BlocProvider<SavedPlacesCubit>(
+              create: (_) => savedCubit(places: [savedHome]),
+              child: const DestinationSearchScreen(),
+            ),
           ),
         ),
       ],
@@ -190,5 +229,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(result, details);
     expect(find.text('Open'), findsOneWidget);
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Home street'));
+    await tester.pumpAndSettle();
+    expect(result, savedHome.details);
   });
 }

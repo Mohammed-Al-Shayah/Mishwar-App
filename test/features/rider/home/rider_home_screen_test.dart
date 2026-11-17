@@ -21,6 +21,7 @@ import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart'
 import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/location_mocks.dart';
+import '../../../helpers/saved_places_mocks.dart';
 
 class MockSignOut extends Mock implements SignOut {}
 
@@ -98,8 +99,10 @@ void main() {
                     BlocProvider<RiderHomeCubit>.value(value: cubit),
                     BlocProvider<HomeCubit>.value(value: home),
                   ],
-                  child: RiderHomeScreen(
-                    mapBuilder: (_) => const MwMapPlaceholder(),
+                  child: savedProviders(
+                    RiderHomeScreen(
+                      mapBuilder: (_) => const MwMapPlaceholder(),
+                    ),
                   ),
                 ),
               ),
