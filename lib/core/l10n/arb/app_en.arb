@@ -864,10 +864,22 @@
   "parcelContinue": "Continue to destination",
   "parcelRequest": "Request delivery",
   "parcelCode": "Delivery code: {code} — give it to the recipient",
-  "@parcelCode": { "placeholders": { "code": { "type": "String" } } },
+  "@parcelCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "parcelSendCode": "Send code to recipient",
   "parcelSms": "Mishwar: your parcel delivery code is {code}",
-  "@parcelSms": { "placeholders": { "code": { "type": "String" } } },
+  "@parcelSms": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "parcelDeliver": "Deliver parcel",
   "parcelEnterCode": "Ask the recipient for their 4-digit delivery code",
   "parcelBadCode": "That code isn't right. Try again",
@@ -890,5 +902,120 @@
   "pickupConfirm": "Confirm pickup",
   "pickupFarWarning": "Pickup point is far from your location",
   "pickupEdit": "Edit pickup point",
-  "pickupGeneric": "Pickup point"
+  "pickupGeneric": "Pickup point",
+  "adminSettings": "Settings",
+  "adminPromos": "Promo codes",
+  "settingsCancellation": "Cancellation fee",
+  "settingsWaiting": "Waiting fee",
+  "settingsScheduling": "Scheduling",
+  "settingsAirport": "Airport",
+  "settingsAmount": "Amount (JD)",
+  "settingsAfterSeconds": "After seconds",
+  "settingsFreeMinutes": "Free minutes",
+  "settingsPerMinute": "Per minute (JD)",
+  "settingsMinLeadMinutes": "Minimum lead (minutes)",
+  "settingsMaxDaysAhead": "Days ahead",
+  "settingsDispatchBeforeMinutes": "Dispatch before (minutes)",
+  "settingsEconomy": "Economy (JD)",
+  "settingsComfort": "Comfort (JD)",
+  "settingsVan": "XL (JD)",
+  "settingsZone": "Airport bounding box (read only)",
+  "settingsPickupPoints": "Pickup points",
+  "settingsAddPoint": "Add point",
+  "settingsLatitude": "Latitude",
+  "settingsLongitude": "Longitude",
+  "promoType": "Discount type",
+  "promoPercent": "Percent",
+  "promoFixed": "Fixed amount",
+  "promoValue": "Discount value",
+  "promoMaxDiscount": "Maximum discount (JD, optional)",
+  "promoUsageLimit": "Total usage limit (optional)",
+  "promoPerUserLimit": "Per-user limit",
+  "promoValidFrom": "Valid from",
+  "promoUsed": "Used / limit",
+  "promoValidity": "Validity",
+  "promoPreview": "Ride JD 5.00 ? discount JD {discount}",
+  "@promoPreview": {
+    "placeholders": {
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLastEdit": "Last edited: {date}",
+  "@settingsLastEdit": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRange": "Enter a number between {min} and {max}",
+  "@settingsRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "promoMinimumFareLabel": "Minimum fare (JD, optional)",
+  "adminReports": "Reports",
+  "reportsRange": "Last {days} days",
+  "@reportsRange": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsRides": "Requested rides",
+  "reportsCompletedRate": "Completed rides %",
+  "reportsRevenue": "Revenue (JD)",
+  "reportsAverage": "Average fare (JD)",
+  "reportsCancellationRate": "Cancellation rate %",
+  "reportsPromoUses": "Promo uses",
+  "reportsExport": "Download CSV",
+  "reportsChart": "Rides: bars · Revenue: line",
+  "reportsTopPromos": "Top promo codes",
+  "reportsDay": "Day",
+  "reportsCompleted": "Completed",
+  "reportsDiscount": "Discounts (JD)",
+  "reportsRiderCancel": "Rider cancellations",
+  "reportsDriverCancel": "Driver cancellations",
+  "reportsSystemCancel": "System cancellations",
+  "reportsNoDrivers": "No drivers",
+  "reportsParcels": "Parcels",
+  "reportsAirport": "Airport",
+  "reportsScheduled": "Scheduled",
+  "reportsUses": "Uses",
+  "reportsTimezone": "Dates use Amman time. Events count on their own day; driver cancellations include re-dispatch.",
+  "reportsScale": "Bar scale: {rides} rides · Line scale: JD {revenue}",
+  "@reportsScale": {
+    "placeholders": {
+      "rides": {
+        "type": "String"
+      },
+      "revenue": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsChartDay": "{day}: {rides} rides, revenue JD {revenue}",
+  "@reportsChartDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "rides": {
+        "type": "String"
+      },
+      "revenue": {
+        "type": "String"
+      }
+    }
+  },
+  "promoCreateAdmin": "New code"
 }

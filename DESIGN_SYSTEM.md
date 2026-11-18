@@ -221,3 +221,16 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 - Vehicle prices carry a small monochrome fixed-airport-fare pill; traffic ETAs
   remain visible. Driver offers and trips show an airport chip and optional LTR
   flight number. Receipts add a standard fixed-fare airport row. Support text scale 1.3.
+
+### Admin settings and reports (T7.4–T7.5)
+
+- Settings keep flat, divided sections with title2 headings, token-sized fields,
+  a secondary save action per section and an audit timestamp footnote. Airport
+  bounds are read-only; pickup points use native list rows and a small editor.
+- Promo codes reuse the desktop table and 440-wide end panel, with native
+  switches, localized inline validation and a tabular fare example.
+- Reports use native 7/30/90-day segments, six flat KPI tiles, and the existing
+  144-high monochrome earnings bars with a text-primary revenue line. Each
+  series uses its own labeled scale; accessible copy provides daily values.
+  Daily tables scroll horizontally, and CSV export is a secondary action.
+- The sidebar navigation scrolls while language and sign-out stay visible.

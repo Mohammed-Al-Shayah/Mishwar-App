@@ -12,6 +12,9 @@ String adminTitle(BuildContext context, AdminSection section) =>
       AdminSection.map => context.l10n.adminMap,
       AdminSection.pricing => context.l10n.adminPricing,
       AdminSection.support => context.l10n.supportTitle,
+      AdminSection.settings => context.l10n.adminSettings,
+      AdminSection.reports => context.l10n.adminReports,
+      AdminSection.promos => context.l10n.adminPromos,
       AdminSection.content => context.l10n.adminContent,
     };
 String adminStatus(BuildContext context, String? value) => switch (value) {

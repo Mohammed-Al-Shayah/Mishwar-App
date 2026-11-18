@@ -1,10 +1,10 @@
-import { initializeApp } from 'firebase-admin/app';
+﻿import { initializeApp } from 'firebase-admin/app';
 import { onCall } from 'firebase-functions/v2/https';
 import { authenticated } from './lib/maps.js';
 
 initializeApp();
 
-export { reviewDriver, updatePricing, adminCancelRide, upsertBanner, deleteBanner, updateServices } from './admin/index.js';
+export { updateAppSettings, upsertPromo, setPromoActive, reviewDriver, updatePricing, adminCancelRide, upsertBanner, deleteBanner, updateServices } from './admin/index.js';
 
 export const ping = onCall({ region: 'europe-west1' }, (request) => {
   authenticated(request);
@@ -22,3 +22,5 @@ export { parcelPhotoUrl, adminCompleteParcel, cancellationQuote, scheduleRide, d
 export { validatePromo } from './promos/index.js';
 export { createShareLink, sharedTrip } from './safety/index.js';
 export { createSupportTicket, replySupportTicket, setSupportTicketStatus, onSupportMessageCreated } from './support/index.js';
+
+export { onRideStatsWritten } from './admin/stats.js';

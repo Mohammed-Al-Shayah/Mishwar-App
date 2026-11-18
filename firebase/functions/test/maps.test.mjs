@@ -78,12 +78,12 @@ test('all deployed callables require auth',async(context)=>{
  context.mock.method(globalThis,'fetch',()=>assert.fail('network called'));
  const callables=Object.entries(deployed).filter(([,value])=>value.__endpoint?.callableTrigger);
  assert.deepEqual(callables.map(([name])=>name).sort(),[
-  'acceptRide','adminCancelRide','adminCompleteParcel','cancelRide','cancellationQuote','createShareLink','createSupportTicket','declineRide','deleteAccount','deleteBanner','getFareEstimates','getRoute','parcelPhotoUrl','pickupSuggestions','ping','placeDetails','placesAutocomplete','rateRide','replySupportTicket','requestRide','reverseGeocode','reviewDriver','scheduleRide','setSupportTicketStatus','skipRating','switchRole','updatePricing','updateRideStatus','updateServices','upsertBanner','validatePromo',
+  'acceptRide','adminCancelRide','adminCompleteParcel','cancelRide','cancellationQuote','createShareLink','createSupportTicket','declineRide','deleteAccount','deleteBanner','getFareEstimates','getRoute','parcelPhotoUrl','pickupSuggestions','ping','placeDetails','placesAutocomplete','rateRide','replySupportTicket','requestRide','reverseGeocode','reviewDriver','scheduleRide','setPromoActive','setSupportTicketStatus','skipRating','switchRole','updateAppSettings','updatePricing','updateRideStatus','updateServices','upsertBanner','upsertPromo','validatePromo',
  ]);
  for(const [name,callable] of callables) {
   await assert.rejects(()=>callable.run({data:{}}),(error)=>{
    assert.ok(error instanceof HttpsError,name);
-   assert.equal(error.code,['adminCancelRide','reviewDriver','updatePricing','deleteBanner','updateServices','upsertBanner','replySupportTicket','setSupportTicketStatus'].includes(name) ? 'permission-denied' : 'unauthenticated',name);
+   assert.equal(error.code,['updateAppSettings','upsertPromo','setPromoActive','adminCancelRide','reviewDriver','updatePricing','deleteBanner','updateServices','upsertBanner','replySupportTicket','setSupportTicketStatus'].includes(name) ? 'permission-denied' : 'unauthenticated',name);
    return true;
   });
  }

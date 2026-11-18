@@ -212,6 +212,11 @@ service cloud.firestore {
       }
     }
 
+    match /stats/{document=**} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

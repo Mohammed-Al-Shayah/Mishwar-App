@@ -3162,6 +3162,372 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'???? ????????'**
   String get pickupGeneric;
+
+  /// No description provided for @adminSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات'**
+  String get adminSettings;
+
+  /// No description provided for @adminPromos.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكواد الخصم'**
+  String get adminPromos;
+
+  /// No description provided for @settingsCancellation.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم الإلغاء'**
+  String get settingsCancellation;
+
+  /// No description provided for @settingsWaiting.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم الانتظار'**
+  String get settingsWaiting;
+
+  /// No description provided for @settingsScheduling.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحجز المسبق'**
+  String get settingsScheduling;
+
+  /// No description provided for @settingsAirport.
+  ///
+  /// In ar, this message translates to:
+  /// **'المطار'**
+  String get settingsAirport;
+
+  /// No description provided for @settingsAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ (JD)'**
+  String get settingsAmount;
+
+  /// No description provided for @settingsAfterSeconds.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد كم ثانية؟'**
+  String get settingsAfterSeconds;
+
+  /// No description provided for @settingsFreeMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقائق الانتظار المجانية'**
+  String get settingsFreeMinutes;
+
+  /// No description provided for @settingsPerMinute.
+  ///
+  /// In ar, this message translates to:
+  /// **'لكل دقيقة (JD)'**
+  String get settingsPerMinute;
+
+  /// No description provided for @settingsMinLeadMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'أقل وقت قبل الحجز (دقيقة)'**
+  String get settingsMinLeadMinutes;
+
+  /// No description provided for @settingsMaxDaysAhead.
+  ///
+  /// In ar, this message translates to:
+  /// **'أبعد حجز (يوم)'**
+  String get settingsMaxDaysAhead;
+
+  /// No description provided for @settingsDispatchBeforeMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب قبل الموعد (دقيقة)'**
+  String get settingsDispatchBeforeMinutes;
+
+  /// No description provided for @settingsEconomy.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشوار X (JD)'**
+  String get settingsEconomy;
+
+  /// No description provided for @settingsComfort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مريح (JD)'**
+  String get settingsComfort;
+
+  /// No description provided for @settingsVan.
+  ///
+  /// In ar, this message translates to:
+  /// **'XL (JD)'**
+  String get settingsVan;
+
+  /// No description provided for @settingsZone.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدود منطقة المطار (للعرض بس)'**
+  String get settingsZone;
+
+  /// No description provided for @settingsPickupPoints.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقاط الانطلاق'**
+  String get settingsPickupPoints;
+
+  /// No description provided for @settingsAddPoint.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة نقطة'**
+  String get settingsAddPoint;
+
+  /// No description provided for @settingsLatitude.
+  ///
+  /// In ar, this message translates to:
+  /// **'خط العرض'**
+  String get settingsLatitude;
+
+  /// No description provided for @settingsLongitude.
+  ///
+  /// In ar, this message translates to:
+  /// **'خط الطول'**
+  String get settingsLongitude;
+
+  /// No description provided for @promoType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الخصم'**
+  String get promoType;
+
+  /// No description provided for @promoPercent.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة مئوية'**
+  String get promoPercent;
+
+  /// No description provided for @promoFixed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ ثابت'**
+  String get promoFixed;
+
+  /// No description provided for @promoValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيمة الخصم'**
+  String get promoValue;
+
+  /// No description provided for @promoMaxDiscount.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعلى خصم (JD، اختياري)'**
+  String get promoMaxDiscount;
+
+  /// No description provided for @promoUsageLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'حد الاستخدام الكلي (اختياري)'**
+  String get promoUsageLimit;
+
+  /// No description provided for @promoPerUserLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'حد الاستخدام للشخص'**
+  String get promoPerUserLimit;
+
+  /// No description provided for @promoValidFrom.
+  ///
+  /// In ar, this message translates to:
+  /// **'بداية الصلاحية'**
+  String get promoValidFrom;
+
+  /// No description provided for @promoUsed.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستخدم / الحد'**
+  String get promoUsed;
+
+  /// No description provided for @promoValidity.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصلاحية'**
+  String get promoValidity;
+
+  /// No description provided for @promoPreview.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشوار بـ JD 5.00 → خصم JD {discount}'**
+  String promoPreview(String discount);
+
+  /// No description provided for @settingsLastEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر تعديل: {date}'**
+  String settingsLastEdit(String date);
+
+  /// No description provided for @settingsRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخل رقم بين {min} و{max}'**
+  String settingsRange(String min, String max);
+
+  /// No description provided for @promoMinimumFareLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'أقل سعر مشوار (JD، اختياري)'**
+  String get promoMinimumFareLabel;
+
+  /// No description provided for @adminReports.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقارير'**
+  String get adminReports;
+
+  /// No description provided for @reportsRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر {days} أيام'**
+  String reportsRange(String days);
+
+  /// No description provided for @reportsRides.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشاوير المطلوبة'**
+  String get reportsRides;
+
+  /// No description provided for @reportsCompletedRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشاوير المكتملة %'**
+  String get reportsCompletedRate;
+
+  /// No description provided for @reportsRevenue.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإيراد (JD)'**
+  String get reportsRevenue;
+
+  /// No description provided for @reportsAverage.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط سعر المشوار (JD)'**
+  String get reportsAverage;
+
+  /// No description provided for @reportsCancellationRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الإلغاء %'**
+  String get reportsCancellationRate;
+
+  /// No description provided for @reportsPromoUses.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدامات الأكواد'**
+  String get reportsPromoUses;
+
+  /// No description provided for @reportsExport.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنزيل CSV'**
+  String get reportsExport;
+
+  /// No description provided for @reportsChart.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشاوير أعمدة · الإيراد خط'**
+  String get reportsChart;
+
+  /// No description provided for @reportsTopPromos.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكثر الأكواد استخداماً'**
+  String get reportsTopPromos;
+
+  /// No description provided for @reportsDay.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get reportsDay;
+
+  /// No description provided for @reportsCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكتملة'**
+  String get reportsCompleted;
+
+  /// No description provided for @reportsDiscount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصومات (JD)'**
+  String get reportsDiscount;
+
+  /// No description provided for @reportsRiderCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الراكب'**
+  String get reportsRiderCancel;
+
+  /// No description provided for @reportsDriverCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء السائق'**
+  String get reportsDriverCancel;
+
+  /// No description provided for @reportsSystemCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء النظام'**
+  String get reportsSystemCancel;
+
+  /// No description provided for @reportsNoDrivers.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدون سائق'**
+  String get reportsNoDrivers;
+
+  /// No description provided for @reportsParcels.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطرود'**
+  String get reportsParcels;
+
+  /// No description provided for @reportsAirport.
+  ///
+  /// In ar, this message translates to:
+  /// **'المطار'**
+  String get reportsAirport;
+
+  /// No description provided for @reportsScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحجوزة'**
+  String get reportsScheduled;
+
+  /// No description provided for @reportsUses.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاستخدامات'**
+  String get reportsUses;
+
+  /// No description provided for @reportsTimezone.
+  ///
+  /// In ar, this message translates to:
+  /// **'التواريخ بتوقيت عمّان. كل حدث محسوب بيومه، وإلغاء السائق بشمل إعادة إرسال الطلب.'**
+  String get reportsTimezone;
+
+  /// No description provided for @reportsScale.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعلى عمود: {rides} مشوار · أعلى خط: JD {revenue}'**
+  String reportsScale(String rides, String revenue);
+
+  /// No description provided for @reportsChartDay.
+  ///
+  /// In ar, this message translates to:
+  /// **'{day}: {rides} مشوار، إيراد JD {revenue}'**
+  String reportsChartDay(String day, String rides, String revenue);
+
+  /// No description provided for @promoCreateAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'كود جديد'**
+  String get promoCreateAdmin;
 }
 
 class _AppLocalizationsDelegate

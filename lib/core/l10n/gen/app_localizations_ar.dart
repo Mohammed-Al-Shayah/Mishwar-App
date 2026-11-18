@@ -1655,4 +1655,200 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pickupGeneric => '???? ????????';
+
+  @override
+  String get adminSettings => 'الإعدادات';
+
+  @override
+  String get adminPromos => 'أكواد الخصم';
+
+  @override
+  String get settingsCancellation => 'رسوم الإلغاء';
+
+  @override
+  String get settingsWaiting => 'رسوم الانتظار';
+
+  @override
+  String get settingsScheduling => 'الحجز المسبق';
+
+  @override
+  String get settingsAirport => 'المطار';
+
+  @override
+  String get settingsAmount => 'المبلغ (JD)';
+
+  @override
+  String get settingsAfterSeconds => 'بعد كم ثانية؟';
+
+  @override
+  String get settingsFreeMinutes => 'دقائق الانتظار المجانية';
+
+  @override
+  String get settingsPerMinute => 'لكل دقيقة (JD)';
+
+  @override
+  String get settingsMinLeadMinutes => 'أقل وقت قبل الحجز (دقيقة)';
+
+  @override
+  String get settingsMaxDaysAhead => 'أبعد حجز (يوم)';
+
+  @override
+  String get settingsDispatchBeforeMinutes => 'إرسال الطلب قبل الموعد (دقيقة)';
+
+  @override
+  String get settingsEconomy => 'مشوار X (JD)';
+
+  @override
+  String get settingsComfort => 'مريح (JD)';
+
+  @override
+  String get settingsVan => 'XL (JD)';
+
+  @override
+  String get settingsZone => 'حدود منطقة المطار (للعرض بس)';
+
+  @override
+  String get settingsPickupPoints => 'نقاط الانطلاق';
+
+  @override
+  String get settingsAddPoint => 'إضافة نقطة';
+
+  @override
+  String get settingsLatitude => 'خط العرض';
+
+  @override
+  String get settingsLongitude => 'خط الطول';
+
+  @override
+  String get promoType => 'نوع الخصم';
+
+  @override
+  String get promoPercent => 'نسبة مئوية';
+
+  @override
+  String get promoFixed => 'مبلغ ثابت';
+
+  @override
+  String get promoValue => 'قيمة الخصم';
+
+  @override
+  String get promoMaxDiscount => 'أعلى خصم (JD، اختياري)';
+
+  @override
+  String get promoUsageLimit => 'حد الاستخدام الكلي (اختياري)';
+
+  @override
+  String get promoPerUserLimit => 'حد الاستخدام للشخص';
+
+  @override
+  String get promoValidFrom => 'بداية الصلاحية';
+
+  @override
+  String get promoUsed => 'المستخدم / الحد';
+
+  @override
+  String get promoValidity => 'الصلاحية';
+
+  @override
+  String promoPreview(String discount) {
+    return 'مشوار بـ JD 5.00 → خصم JD $discount';
+  }
+
+  @override
+  String settingsLastEdit(String date) {
+    return 'آخر تعديل: $date';
+  }
+
+  @override
+  String settingsRange(String min, String max) {
+    return 'دخل رقم بين $min و$max';
+  }
+
+  @override
+  String get promoMinimumFareLabel => 'أقل سعر مشوار (JD، اختياري)';
+
+  @override
+  String get adminReports => 'التقارير';
+
+  @override
+  String reportsRange(String days) {
+    return 'آخر $days أيام';
+  }
+
+  @override
+  String get reportsRides => 'المشاوير المطلوبة';
+
+  @override
+  String get reportsCompletedRate => 'المشاوير المكتملة %';
+
+  @override
+  String get reportsRevenue => 'الإيراد (JD)';
+
+  @override
+  String get reportsAverage => 'متوسط سعر المشوار (JD)';
+
+  @override
+  String get reportsCancellationRate => 'نسبة الإلغاء %';
+
+  @override
+  String get reportsPromoUses => 'استخدامات الأكواد';
+
+  @override
+  String get reportsExport => 'تنزيل CSV';
+
+  @override
+  String get reportsChart => 'المشاوير أعمدة · الإيراد خط';
+
+  @override
+  String get reportsTopPromos => 'أكثر الأكواد استخداماً';
+
+  @override
+  String get reportsDay => 'اليوم';
+
+  @override
+  String get reportsCompleted => 'المكتملة';
+
+  @override
+  String get reportsDiscount => 'الخصومات (JD)';
+
+  @override
+  String get reportsRiderCancel => 'إلغاء الراكب';
+
+  @override
+  String get reportsDriverCancel => 'إلغاء السائق';
+
+  @override
+  String get reportsSystemCancel => 'إلغاء النظام';
+
+  @override
+  String get reportsNoDrivers => 'بدون سائق';
+
+  @override
+  String get reportsParcels => 'الطرود';
+
+  @override
+  String get reportsAirport => 'المطار';
+
+  @override
+  String get reportsScheduled => 'المحجوزة';
+
+  @override
+  String get reportsUses => 'الاستخدامات';
+
+  @override
+  String get reportsTimezone =>
+      'التواريخ بتوقيت عمّان. كل حدث محسوب بيومه، وإلغاء السائق بشمل إعادة إرسال الطلب.';
+
+  @override
+  String reportsScale(String rides, String revenue) {
+    return 'أعلى عمود: $rides مشوار · أعلى خط: JD $revenue';
+  }
+
+  @override
+  String reportsChartDay(String day, String rides, String revenue) {
+    return '$day: $rides مشوار، إيراد JD $revenue';
+  }
+
+  @override
+  String get promoCreateAdmin => 'كود جديد';
 }

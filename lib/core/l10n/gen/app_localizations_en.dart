@@ -1671,4 +1671,200 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pickupGeneric => 'Pickup point';
+
+  @override
+  String get adminSettings => 'Settings';
+
+  @override
+  String get adminPromos => 'Promo codes';
+
+  @override
+  String get settingsCancellation => 'Cancellation fee';
+
+  @override
+  String get settingsWaiting => 'Waiting fee';
+
+  @override
+  String get settingsScheduling => 'Scheduling';
+
+  @override
+  String get settingsAirport => 'Airport';
+
+  @override
+  String get settingsAmount => 'Amount (JD)';
+
+  @override
+  String get settingsAfterSeconds => 'After seconds';
+
+  @override
+  String get settingsFreeMinutes => 'Free minutes';
+
+  @override
+  String get settingsPerMinute => 'Per minute (JD)';
+
+  @override
+  String get settingsMinLeadMinutes => 'Minimum lead (minutes)';
+
+  @override
+  String get settingsMaxDaysAhead => 'Days ahead';
+
+  @override
+  String get settingsDispatchBeforeMinutes => 'Dispatch before (minutes)';
+
+  @override
+  String get settingsEconomy => 'Economy (JD)';
+
+  @override
+  String get settingsComfort => 'Comfort (JD)';
+
+  @override
+  String get settingsVan => 'XL (JD)';
+
+  @override
+  String get settingsZone => 'Airport bounding box (read only)';
+
+  @override
+  String get settingsPickupPoints => 'Pickup points';
+
+  @override
+  String get settingsAddPoint => 'Add point';
+
+  @override
+  String get settingsLatitude => 'Latitude';
+
+  @override
+  String get settingsLongitude => 'Longitude';
+
+  @override
+  String get promoType => 'Discount type';
+
+  @override
+  String get promoPercent => 'Percent';
+
+  @override
+  String get promoFixed => 'Fixed amount';
+
+  @override
+  String get promoValue => 'Discount value';
+
+  @override
+  String get promoMaxDiscount => 'Maximum discount (JD, optional)';
+
+  @override
+  String get promoUsageLimit => 'Total usage limit (optional)';
+
+  @override
+  String get promoPerUserLimit => 'Per-user limit';
+
+  @override
+  String get promoValidFrom => 'Valid from';
+
+  @override
+  String get promoUsed => 'Used / limit';
+
+  @override
+  String get promoValidity => 'Validity';
+
+  @override
+  String promoPreview(String discount) {
+    return 'Ride JD 5.00 ? discount JD $discount';
+  }
+
+  @override
+  String settingsLastEdit(String date) {
+    return 'Last edited: $date';
+  }
+
+  @override
+  String settingsRange(String min, String max) {
+    return 'Enter a number between $min and $max';
+  }
+
+  @override
+  String get promoMinimumFareLabel => 'Minimum fare (JD, optional)';
+
+  @override
+  String get adminReports => 'Reports';
+
+  @override
+  String reportsRange(String days) {
+    return 'Last $days days';
+  }
+
+  @override
+  String get reportsRides => 'Requested rides';
+
+  @override
+  String get reportsCompletedRate => 'Completed rides %';
+
+  @override
+  String get reportsRevenue => 'Revenue (JD)';
+
+  @override
+  String get reportsAverage => 'Average fare (JD)';
+
+  @override
+  String get reportsCancellationRate => 'Cancellation rate %';
+
+  @override
+  String get reportsPromoUses => 'Promo uses';
+
+  @override
+  String get reportsExport => 'Download CSV';
+
+  @override
+  String get reportsChart => 'Rides: bars · Revenue: line';
+
+  @override
+  String get reportsTopPromos => 'Top promo codes';
+
+  @override
+  String get reportsDay => 'Day';
+
+  @override
+  String get reportsCompleted => 'Completed';
+
+  @override
+  String get reportsDiscount => 'Discounts (JD)';
+
+  @override
+  String get reportsRiderCancel => 'Rider cancellations';
+
+  @override
+  String get reportsDriverCancel => 'Driver cancellations';
+
+  @override
+  String get reportsSystemCancel => 'System cancellations';
+
+  @override
+  String get reportsNoDrivers => 'No drivers';
+
+  @override
+  String get reportsParcels => 'Parcels';
+
+  @override
+  String get reportsAirport => 'Airport';
+
+  @override
+  String get reportsScheduled => 'Scheduled';
+
+  @override
+  String get reportsUses => 'Uses';
+
+  @override
+  String get reportsTimezone =>
+      'Dates use Amman time. Events count on their own day; driver cancellations include re-dispatch.';
+
+  @override
+  String reportsScale(String rides, String revenue) {
+    return 'Bar scale: $rides rides · Line scale: JD $revenue';
+  }
+
+  @override
+  String reportsChartDay(String day, String rides, String revenue) {
+    return '$day: $rides rides, revenue JD $revenue';
+  }
+
+  @override
+  String get promoCreateAdmin => 'New code';
 }

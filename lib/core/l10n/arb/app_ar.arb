@@ -909,5 +909,120 @@
   "pickupConfirm": "???? ????????",
   "pickupFarWarning": "???? ???????? ????? ?? ?????",
   "pickupEdit": "???? ???? ????????",
-  "pickupGeneric": "???? ????????"
+  "pickupGeneric": "???? ????????",
+  "adminSettings": "الإعدادات",
+  "adminPromos": "أكواد الخصم",
+  "settingsCancellation": "رسوم الإلغاء",
+  "settingsWaiting": "رسوم الانتظار",
+  "settingsScheduling": "الحجز المسبق",
+  "settingsAirport": "المطار",
+  "settingsAmount": "المبلغ (JD)",
+  "settingsAfterSeconds": "بعد كم ثانية؟",
+  "settingsFreeMinutes": "دقائق الانتظار المجانية",
+  "settingsPerMinute": "لكل دقيقة (JD)",
+  "settingsMinLeadMinutes": "أقل وقت قبل الحجز (دقيقة)",
+  "settingsMaxDaysAhead": "أبعد حجز (يوم)",
+  "settingsDispatchBeforeMinutes": "إرسال الطلب قبل الموعد (دقيقة)",
+  "settingsEconomy": "مشوار X (JD)",
+  "settingsComfort": "مريح (JD)",
+  "settingsVan": "XL (JD)",
+  "settingsZone": "حدود منطقة المطار (للعرض بس)",
+  "settingsPickupPoints": "نقاط الانطلاق",
+  "settingsAddPoint": "إضافة نقطة",
+  "settingsLatitude": "خط العرض",
+  "settingsLongitude": "خط الطول",
+  "promoType": "نوع الخصم",
+  "promoPercent": "نسبة مئوية",
+  "promoFixed": "مبلغ ثابت",
+  "promoValue": "قيمة الخصم",
+  "promoMaxDiscount": "أعلى خصم (JD، اختياري)",
+  "promoUsageLimit": "حد الاستخدام الكلي (اختياري)",
+  "promoPerUserLimit": "حد الاستخدام للشخص",
+  "promoValidFrom": "بداية الصلاحية",
+  "promoUsed": "المستخدم / الحد",
+  "promoValidity": "الصلاحية",
+  "promoPreview": "مشوار بـ JD 5.00 → خصم JD {discount}",
+  "@promoPreview": {
+    "placeholders": {
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLastEdit": "آخر تعديل: {date}",
+  "@settingsLastEdit": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRange": "دخل رقم بين {min} و{max}",
+  "@settingsRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "promoMinimumFareLabel": "أقل سعر مشوار (JD، اختياري)",
+  "adminReports": "التقارير",
+  "reportsRange": "آخر {days} أيام",
+  "@reportsRange": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsRides": "المشاوير المطلوبة",
+  "reportsCompletedRate": "المشاوير المكتملة %",
+  "reportsRevenue": "الإيراد (JD)",
+  "reportsAverage": "متوسط سعر المشوار (JD)",
+  "reportsCancellationRate": "نسبة الإلغاء %",
+  "reportsPromoUses": "استخدامات الأكواد",
+  "reportsExport": "تنزيل CSV",
+  "reportsChart": "المشاوير أعمدة · الإيراد خط",
+  "reportsTopPromos": "أكثر الأكواد استخداماً",
+  "reportsDay": "اليوم",
+  "reportsCompleted": "المكتملة",
+  "reportsDiscount": "الخصومات (JD)",
+  "reportsRiderCancel": "إلغاء الراكب",
+  "reportsDriverCancel": "إلغاء السائق",
+  "reportsSystemCancel": "إلغاء النظام",
+  "reportsNoDrivers": "بدون سائق",
+  "reportsParcels": "الطرود",
+  "reportsAirport": "المطار",
+  "reportsScheduled": "المحجوزة",
+  "reportsUses": "الاستخدامات",
+  "reportsTimezone": "التواريخ بتوقيت عمّان. كل حدث محسوب بيومه، وإلغاء السائق بشمل إعادة إرسال الطلب.",
+  "reportsScale": "أعلى عمود: {rides} مشوار · أعلى خط: JD {revenue}",
+  "@reportsScale": {
+    "placeholders": {
+      "rides": {
+        "type": "String"
+      },
+      "revenue": {
+        "type": "String"
+      }
+    }
+  },
+  "reportsChartDay": "{day}: {rides} مشوار، إيراد JD {revenue}",
+  "@reportsChartDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "rides": {
+        "type": "String"
+      },
+      "revenue": {
+        "type": "String"
+      }
+    }
+  },
+  "promoCreateAdmin": "كود جديد"
 }

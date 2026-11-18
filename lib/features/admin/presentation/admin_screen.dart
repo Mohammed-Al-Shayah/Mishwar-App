@@ -17,6 +17,9 @@ import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_labels.dart';
 import 'package:mishwar/features/admin/presentation/admin_live_map.dart';
 import 'package:mishwar/features/admin/presentation/admin_pricing.dart';
+import 'package:mishwar/features/admin/presentation/admin_promos.dart';
+import 'package:mishwar/features/admin/presentation/admin_reports_page.dart';
+import 'package:mishwar/features/admin/presentation/admin_settings.dart';
 import 'package:mishwar/features/admin/presentation/admin_support.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -65,17 +68,22 @@ class _AdminScreenState extends State<AdminScreen> {
                             style: AppTextStyles.largeTitle,
                           ),
                           SizedBox(height: AppSpacing.xxl),
-                          for (final section in AdminSection.values)
-                            ListTile(
-                              selected: state.section == section,
-                              title: Text(adminTitle(context, section)),
-                              onTap: () => context.go(
-                                section == AdminSection.overview
-                                    ? '/admin'
-                                    : '/admin/${section.name}',
-                              ),
+                          Expanded(
+                            child: ListView(
+                              children: [
+                                for (final section in AdminSection.values)
+                                  ListTile(
+                                    selected: state.section == section,
+                                    title: Text(adminTitle(context, section)),
+                                    onTap: () => context.go(
+                                      section == AdminSection.overview
+                                          ? '/admin'
+                                          : '/admin/${section.name}',
+                                    ),
+                                  ),
+                              ],
                             ),
-                          const Spacer(),
+                          ),
                           TextButton(
                             onPressed: () {
                               final cubit = context.read<LocaleCubit>();
@@ -149,6 +157,9 @@ class _AdminScreenState extends State<AdminScreen> {
                                 [
                                   AdminSection.content,
                                   AdminSection.support,
+                                  AdminSection.settings,
+                                  AdminSection.promos,
+                                  AdminSection.reports,
                                 ].contains(state.section)
                                 ? _body(context, state)
                                 : SingleChildScrollView(
@@ -349,6 +360,9 @@ class _AdminScreenState extends State<AdminScreen> {
       AdminSection.drivers => _drivers(context, state.entries),
       AdminSection.rides => _rides(context, state.entries),
       AdminSection.content => const AdminContent(),
+      AdminSection.settings => const AdminSettings(),
+      AdminSection.promos => const AdminPromos(),
+      AdminSection.reports => const AdminReportsPage(),
       AdminSection.support => AdminSupport(ticketId: widget.supportTicketId),
       AdminSection.map => AdminLiveMap(drivers: state.entries),
       AdminSection.pricing =>

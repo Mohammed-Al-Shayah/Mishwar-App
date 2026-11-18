@@ -24,11 +24,21 @@ import 'package:mishwar/features/admin/data/admin_remote_data_source.dart'
     as _i409;
 import 'package:mishwar/features/admin/data/admin_repository_impl.dart'
     as _i485;
+import 'package:mishwar/features/admin/data/management_repository_impl.dart'
+    as _i777;
+import 'package:mishwar/features/admin/data/reports_repository_impl.dart'
+    as _i466;
+import 'package:mishwar/features/admin/domain/admin_management.dart' as _i319;
+import 'package:mishwar/features/admin/domain/admin_reports.dart' as _i403;
 import 'package:mishwar/features/admin/domain/admin_repository.dart' as _i1005;
 import 'package:mishwar/features/admin/domain/admin_usecases.dart' as _i180;
 import 'package:mishwar/features/admin/presentation/admin_content_cubit.dart'
     as _i3;
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart' as _i630;
+import 'package:mishwar/features/admin/presentation/management_cubit.dart'
+    as _i673;
+import 'package:mishwar/features/admin/presentation/reports_cubit.dart'
+    as _i455;
 import 'package:mishwar/features/common/account/data/account_repository_impl.dart'
     as _i42;
 import 'package:mishwar/features/common/account/domain/account_repository.dart'
@@ -351,11 +361,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i897.GetInitialPushRoute>(
       () => _i897.GetInitialPushRoute(gh<_i43.PushRepository>()),
     );
+    gh.lazySingleton<_i403.ReportsRepository>(
+      () => _i466.ReportsRepositoryImpl(gh<_i974.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i327.DriverRemoteDataSource>(
       () => _i327.DriverRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
         gh<_i457.FirebaseStorage>(),
       ),
+    );
+    gh.lazySingleton<_i319.ManagementRepository>(
+      () => _i777.ManagementRepositoryImpl(gh<_i974.FirebaseFirestore>()),
     );
     gh.lazySingleton<_i435.ParcelRemoteDataSource>(
       () => _i435.ParcelRemoteDataSource(
@@ -457,6 +473,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1008.EarningsRemoteDataSource>(
       () => _i1008.EarningsRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i319.LoadManagement>(
+      () => _i319.LoadManagement(gh<_i319.ManagementRepository>()),
+    );
     gh.lazySingleton<_i788.ParcelRepository>(
       () => _i918.ParcelRepositoryImpl(gh<_i435.ParcelRemoteDataSource>()),
     );
@@ -478,6 +497,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
+    );
+    gh.lazySingleton<_i403.LoadReports>(
+      () => _i403.LoadReports(gh<_i403.ReportsRepository>()),
     );
     gh.lazySingleton<_i323.SafetyRepository>(
       () => _i534.SafetyRepositoryImpl(gh<_i775.SafetyRemoteDataSource>()),
@@ -550,6 +572,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i300.LocationRepository>(
       () => _i578.LocationRepositoryImpl(gh<_i101.LocationDataSource>()),
+    );
+    gh.factory<_i455.ReportsCubit>(
+      () => _i455.ReportsCubit(gh<_i403.LoadReports>()),
     );
     gh.lazySingleton<_i552.SavedPlacesRepository>(
       () => _i574.SavedPlacesRepositoryImpl(
@@ -638,6 +663,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i616.GetAirportConfig>(
       () => _i616.GetAirportConfig(gh<_i654.AppConfigRepository>()),
+    );
+    gh.factory<_i673.ManagementCubit>(
+      () => _i673.ManagementCubit(
+        gh<_i319.LoadManagement>(),
+        gh<_i180.AdminAction>(),
+      ),
     );
     gh.lazySingleton<_i801.CreateUserProfile>(
       () => _i801.CreateUserProfile(gh<_i695.UserRepository>()),

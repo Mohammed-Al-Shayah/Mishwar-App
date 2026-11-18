@@ -9,3 +9,7 @@ export const adminCancelRide = onCall({ region: 'europe-west1' }, request => adm
 export const upsertBanner = onCall({ region: 'europe-west1' }, request => upsertBannerHandler(request, getFirestore()));
 export const deleteBanner = onCall({ region: 'europe-west1' }, request => deleteBannerHandler(request, getFirestore()));
 export const updateServices = onCall({ region: 'europe-west1' }, request => updateServicesHandler(request, getFirestore()));
+import { updateAppSettingsHandler, upsertPromoHandler, setPromoActiveHandler } from './settings.js';
+export const updateAppSettings = onCall({ region: 'europe-west1' }, request => updateAppSettingsHandler(request, getFirestore()));
+export const upsertPromo = onCall({ region: 'europe-west1' }, request => upsertPromoHandler(request, getFirestore()));
+export const setPromoActive = onCall({ region: 'europe-west1' }, request => setPromoActiveHandler(request, getFirestore()));

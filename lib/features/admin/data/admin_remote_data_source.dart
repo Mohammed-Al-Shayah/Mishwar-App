@@ -106,7 +106,13 @@ class AdminRemoteDataSource {
   }
 
   Stream<AdminData> watch(AdminSection section) {
-    if ([AdminSection.content, AdminSection.support].contains(section)) {
+    if ([
+      AdminSection.content,
+      AdminSection.support,
+      AdminSection.settings,
+      AdminSection.promos,
+      AdminSection.reports,
+    ].contains(section)) {
       return Stream.value(AdminData());
     }
     if (section == AdminSection.map) {

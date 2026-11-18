@@ -10,6 +10,8 @@ import 'package:mishwar/features/admin/presentation/admin_content_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_login_screen.dart';
 import 'package:mishwar/features/admin/presentation/admin_screen.dart';
+import 'package:mishwar/features/admin/presentation/management_cubit.dart';
+import 'package:mishwar/features/admin/presentation/reports_cubit.dart';
 import 'package:mishwar/features/common/account/presentation/account_cubit.dart';
 import 'package:mishwar/features/common/account/presentation/account_screen.dart';
 import 'package:mishwar/features/common/app_config/domain/app_service.dart';
@@ -233,6 +235,22 @@ GoRouter createAppRouter(
                 },
               ),
             ],
+            if ([AdminSection.settings, AdminSection.promos].contains(section))
+              BlocProvider(
+                create: (_) {
+                  final cubit = getIt<ManagementCubit>();
+                  unawaited(cubit.load());
+                  return cubit;
+                },
+              ),
+            if (section == AdminSection.reports)
+              BlocProvider(
+                create: (_) {
+                  final cubit = getIt<ReportsCubit>();
+                  unawaited(cubit.load());
+                  return cubit;
+                },
+              ),
             if (section == AdminSection.content)
               BlocProvider(create: (_) => getIt<AdminContentCubit>()..start()),
             BlocProvider(

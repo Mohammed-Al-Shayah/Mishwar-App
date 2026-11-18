@@ -97,7 +97,7 @@ export async function cancelRideHandler(request: CallableRequest, db: Firestore,
       const driverRef = db.doc(`drivers/${uid}`);
       const driver = (await tx.get(driverRef)).data();
       if (driver?.currentRideId !== ref.id) throw new HttpsError('failed-precondition', 'Ride is not active.', { reason: 'invalid-transition' });
-      tx.update(ref, { status: 'searching', driverId: null, driverInfo: FieldValue.delete(),
+      tx.update(ref, { status: 'searching', driverCancelledAt: data.driverCancelledAt ?? deps.now(), driverId: null, driverInfo: FieldValue.delete(),
         acceptedAt: FieldValue.delete(), arrivingAt: FieldValue.delete(), arrivedAt: FieldValue.delete(),
         declinedBy: FieldValue.arrayUnion(uid), searchExpiresAt: Timestamp.fromMillis(deps.now().toMillis() + 120000),
         offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
@@ -150,7 +150,7 @@ export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp
         const userRef = db.doc(`users/${data.riderId}`);
         const user = await tx.get(userRef);
         const offered = await offeredDriver(db, tx, data);
-        tx.update(document.ref, { status: 'no_drivers', offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
+        tx.update(document.ref, { status: 'no_drivers', noDriversAt: now, offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
         if (offered?.data()?.offer?.rideId === document.id) tx.update(offered.ref, { offer: null });
         if (user.data()?.activeRideId === document.id) tx.update(userRef, { activeRideId: FieldValue.delete() });
       });

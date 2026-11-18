@@ -5,6 +5,7 @@ import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/charts/earnings_bar_painter.dart';
 import 'package:mishwar/features/driver/earnings/domain/daily_earnings.dart';
 
 class EarningsBarChart extends StatelessWidget {
@@ -78,29 +79,4 @@ class EarningsBarChart extends StatelessWidget {
       ],
     );
   }
-}
-
-class EarningsBarPainter extends CustomPainter {
-  const EarningsBarPainter({
-    required this.fraction,
-    required this.color,
-    required this.minimumHeight,
-  });
-  final double fraction;
-  final Color color;
-  final double minimumHeight;
-  @override
-  void paint(Canvas canvas, Size size) {
-    final height = (size.height * fraction).clamp(minimumHeight, size.height);
-    canvas.drawRect(
-      Rect.fromLTWH(0, size.height - height, size.width, height),
-      Paint()..color = color,
-    );
-  }
-
-  @override
-  bool shouldRepaint(EarningsBarPainter oldDelegate) =>
-      oldDelegate.fraction != fraction ||
-      oldDelegate.color != color ||
-      oldDelegate.minimumHeight != minimumHeight;
 }

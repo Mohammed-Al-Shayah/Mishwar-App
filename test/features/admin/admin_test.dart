@@ -9,12 +9,16 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/app/router/app_router.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
+import 'package:mishwar/features/admin/domain/admin_management.dart';
+import 'package:mishwar/features/admin/domain/admin_reports.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
 import 'package:mishwar/features/admin/domain/admin_usecases.dart';
 import 'package:mishwar/features/admin/presentation/admin_content_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_login_screen.dart';
 import 'package:mishwar/features/admin/presentation/admin_screen.dart';
+import 'package:mishwar/features/admin/presentation/management_cubit.dart';
+import 'package:mishwar/features/admin/presentation/reports_cubit.dart';
 import 'package:mishwar/features/common/app_config/domain/app_config_usecases.dart';
 import 'package:mishwar/features/common/app_config/domain/app_service.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
@@ -30,6 +34,10 @@ import '../app_config/app_config_test.dart' show MockConfigRepository;
 import '../support/support_test.dart' show MockSupport;
 
 class MockSignOut extends Mock implements SignOut {}
+
+class MockManagement extends Mock implements ManagementRepository {}
+
+class MockReports extends Mock implements ReportsRepository {}
 
 class TestAdminRepository implements AdminRepository {
   final queries = <AdminQuery>[];
@@ -283,6 +291,23 @@ void main() {
         )..start();
         addTearDown(content.close);
         final cubit = makeCubit(repo);
+        final managementRepo = MockManagement();
+        when(
+          managementRepo.load,
+        ).thenAnswer((_) async => Right(ManagementData()));
+        final management = ManagementCubit(
+          LoadManagement(managementRepo),
+          AdminAction(repo),
+        );
+        await management.load();
+        addTearDown(management.close);
+        final reportsRepo = MockReports();
+        when(() => reportsRepo.load(any())).thenAnswer(
+          (_) async => Right(ReportData([ReportDay(day: '2026-11-18')])),
+        );
+        final reports = ReportsCubit(LoadReports(reportsRepo));
+        await reports.load();
+        addTearDown(reports.close);
         final supportRepo = MockSupport();
         when(
           supportRepo.watchTickets,
@@ -308,6 +333,8 @@ void main() {
                 BlocProvider.value(value: cubit),
                 BlocProvider.value(value: content),
                 BlocProvider.value(value: support),
+                BlocProvider.value(value: management),
+                BlocProvider.value(value: reports),
                 BlocProvider(
                   create: (_) =>
                       AdminLoginCubit(AdminSignIn(repo), MockSignOut()),

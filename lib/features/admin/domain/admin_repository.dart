@@ -3,7 +3,18 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/pricing_table.dart';
 
-enum AdminSection { overview, drivers, rides, map, pricing, content, support }
+enum AdminSection {
+  overview,
+  drivers,
+  rides,
+  map,
+  pricing,
+  content,
+  support,
+  settings,
+  promos,
+  reports,
+}
 
 const adminActiveStatuses = [
   'searching',
