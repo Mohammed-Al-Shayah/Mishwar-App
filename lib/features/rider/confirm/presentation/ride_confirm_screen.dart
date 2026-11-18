@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,7 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
+import 'package:mishwar/features/rider/home/presentation/widgets/schedule_sheet.dart';
 
 class RideConfirmScreen extends StatefulWidget {
   const RideConfirmScreen({required this.draft, this.mapBuilder, super.key});
@@ -115,7 +117,14 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
         _fit(state);
       }
       if (state is RideConfirmRequested) {
-        context.go('/rider/ride/${state.rideId}');
+        if (widget.draft.scheduledFor != null) {
+          context.go('/rider/history');
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(context.l10n.scheduleSuccess)));
+        } else {
+          context.go('/rider/ride/${state.rideId}');
+        }
       }
     },
     builder: (context, state) => Scaffold(
@@ -132,7 +141,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
               : DateFormat.jm(
                   Localizations.localeOf(context).toString(),
                 ).format(
-                  _now.add(
+                  (widget.draft.scheduledFor ?? _now).add(
                     Duration(
                       milliseconds: (loaded.route.durationSeconds * 1000)
                           .round(),
@@ -322,6 +331,21 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                               ),
                             ),
                           ),
+                          if (widget.draft.scheduledFor != null)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.xs,
+                              ),
+                              child: Text(
+                                context.l10n.scheduledDeparture(
+                                  scheduledTime(
+                                    context,
+                                    widget.draft.scheduledFor!,
+                                  ),
+                                ),
+                                style: AppTextStyles.footnote,
+                              ),
+                            ),
                           const MwPaymentRow(),
                           if (loaded?.requestFailure != null)
                             Text(
@@ -334,6 +358,10 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                             isLoading: loaded?.isRequesting ?? false,
                             label: loaded == null
                                 ? context.l10n.chooseRide
+                                : widget.draft.scheduledFor != null
+                                ? context.l10n.scheduleVehicle(
+                                    _name(context, loaded.selected),
+                                  )
                                 : context.l10n.chooseVehicle(
                                     _name(context, loaded.selected),
                                   ),

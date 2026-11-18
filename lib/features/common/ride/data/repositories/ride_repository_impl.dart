@@ -19,6 +19,47 @@ class RideRepositoryImpl implements RideRepository {
   const RideRepositoryImpl(this._source);
   final RideRemoteDataSource _source;
   @override
+  Stream<Either<Failure, List<RideEntity>>> watchScheduledRides(String uid) =>
+      _stream(
+        () => _source
+            .scheduled(uid)
+            .map((models) => models.map((model) => model.toEntity()).toList()),
+      );
+  @override
+  Future<Either<Failure, String>> scheduleRide(
+    RideDraft draft,
+    VehicleType vehicleType,
+  ) async {
+    Map<String, dynamic> place(RideStop p) => {
+      'lat': p.location.lat,
+      'lng': p.location.lng,
+      'name': p.name,
+      'address': p.address,
+    };
+    try {
+      return Right(
+        await _source.schedule({
+          'pickup': place(draft.pickup),
+          'dropoff': place(draft.dropoff),
+          'vehicleType': vehicleType.name,
+          'paymentMethod': 'cash',
+          'scheduledFor': draft.scheduledFor?.toUtc().toIso8601String(),
+        }),
+      );
+    } on Object catch (error) {
+      if (error is FirebaseFunctionsException &&
+          error.code == 'failed-precondition' &&
+          error.details is Map &&
+          (error.details as Map)['reason'] == 'too-many-scheduled') {
+        return const Left(
+          SchedulingFailure(SchedulingFailureReason.tooManyScheduled),
+        );
+      }
+      return Left(callableFailure(error));
+    }
+  }
+
+  @override
   Future<Either<Failure, RideHistoryPage>> history({
     required RideParty party,
     required String uid,

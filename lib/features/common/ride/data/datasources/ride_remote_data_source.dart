@@ -45,6 +45,24 @@ class RideRemoteDataSource {
     );
   }
 
+  Stream<List<RideModel>> scheduled(String uid) => _firestore
+      .collection('rides')
+      .where('riderId', isEqualTo: uid)
+      .where('status', isEqualTo: 'scheduled')
+      .orderBy('scheduledFor')
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs
+            .map((doc) => RideModel.fromJson({...doc.data(), 'id': doc.id}))
+            .toList(),
+      );
+  Future<String> schedule(Map<String, dynamic> data) async {
+    final result = await _functions
+        .httpsCallable('scheduleRide')
+        .call<Map<String, dynamic>>(data);
+    return result.data['rideId'] as String;
+  }
+
   Future<String> request(Map<String, dynamic> data) async {
     final result = await _functions
         .httpsCallable('requestRide')

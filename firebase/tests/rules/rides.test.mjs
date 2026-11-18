@@ -58,3 +58,17 @@ test('live: admin assigned as driver still cannot write', async () => {
   const ref = doc(s.context('driver', { admin: true }).firestore(), 'rides/trip/live/driver');
   await assertFails(setDoc(ref, live()));
 });
+
+for (const actor of actors) test(`rides: scheduled list scoped to rider ${actor}`, async () => {
+  await s.seed({ 'rides/scheduled': { ...ride, status: 'scheduled', scheduledFor: now }, 'rides/foreign': { ...ride, status: 'scheduled', riderId: 'foreign', driverId: null, offeredTo: null, scheduledFor: now } });
+  const q = query(collection(s.db(actor), 'rides'), where('riderId', '==', 'rider'), where('status', '==', 'scheduled'), orderBy('scheduledFor'));
+  const result = getDocs(q);
+  if (['rider', 'admin'].includes(actor)) { const page = await assertSucceeds(result); assert.equal(page.size, 1); }
+  else await assertFails(result);
+});
+test('rides: scheduled status alone cannot list foreign rides; clients cannot schedule or cancel', async () => {
+  await s.seed({ 'rides/scheduled': { ...ride, status: 'scheduled', scheduledFor: now } });
+  await assertFails(getDocs(query(collection(s.db('rider'), 'rides'), where('status', '==', 'scheduled'))));
+  await assertFails(setDoc(doc(s.db('rider'), 'rides/new'), { ...ride, status: 'scheduled', scheduledFor: now }));
+  await assertFails(updateDoc(doc(s.db('rider'), 'rides/scheduled'), { status: 'cancelled' }));
+});

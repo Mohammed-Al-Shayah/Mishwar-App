@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/schedule_ride.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimate.dart';
 import 'package:mishwar/features/common/route/domain/entities/route_info.dart';
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart';
@@ -68,10 +69,12 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
   RideConfirmCubit(
     this._getFareEstimates,
     this._requestRide,
-    @factoryParam this.draft,
-  ) : super(const RideConfirmLoading());
+    @factoryParam this.draft, {
+    required this.scheduleRide,
+  }) : super(const RideConfirmLoading());
   final GetFareEstimates _getFareEstimates;
   final RequestRide _requestRide;
+  final ScheduleRide scheduleRide;
   final RideDraft draft;
   bool _fetching = false;
 
@@ -126,7 +129,9 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
         isRequesting: true,
       ),
     );
-    final result = await _requestRide(draft, current.selected);
+    final result = draft.scheduledFor == null
+        ? await _requestRide(draft, current.selected)
+        : await scheduleRide(draft, current.selected);
     if (isClosed) return;
     void requested(String id) => emit(
       RideConfirmRequested(

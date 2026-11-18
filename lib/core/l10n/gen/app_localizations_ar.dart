@@ -1099,4 +1099,57 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get recentPlaces => 'آخر الأماكن';
+
+  @override
+  String get scheduleTitle => 'متى بدك تطلع؟';
+
+  @override
+  String get scheduleToday => 'اليوم';
+
+  @override
+  String get scheduleTomorrow => 'بكرا';
+
+  @override
+  String get scheduleOtherDate => 'تاريخ آخر';
+
+  @override
+  String get scheduleWindow => 'احجز من 30 دقيقة لحد 30 يوم لقدام';
+
+  @override
+  String get scheduleConfirm => 'تأكيد الموعد';
+
+  @override
+  String get scheduleClear => 'إلغاء الموعد المحدد';
+
+  @override
+  String get scheduleSuccess => 'انحجز مشوارك';
+
+  @override
+  String scheduledDeparture(String time) {
+    return 'موعد الانطلاق · $time';
+  }
+
+  @override
+  String scheduleVehicle(String vehicle) {
+    return 'احجز $vehicle';
+  }
+
+  @override
+  String get scheduledSection => 'المجدولة';
+
+  @override
+  String get scheduledCancelTitle => 'بدك تلغي مشوارك المجدول؟';
+
+  @override
+  String get scheduledCancelConfirm => 'إلغاء المشوار';
+
+  @override
+  String get scheduledKeep => 'خلي المشوار';
+
+  @override
+  String get scheduledCancel => 'إلغاء';
+
+  @override
+  String get tooManyScheduled =>
+      'بتقدر تحجز 3 مشاوير مجدولة. إلغي واحد عشان تحجز مشوار جديد.';
 }

@@ -5,12 +5,12 @@ type Log = (message: string) => void;
 
 // Push is best-effort, including cleanup and logging failures.
 export async function sendOfferNotification(
-  db: Firestore, messaging: Pick<Messaging, 'send'>, uid: string, rideId: string, log: Log,
+  db: Firestore, messaging: Pick<Messaging, 'send'>, uid: string, rideId: string, log: Log, body?: string,
 ): Promise<void> {
   const safeLog = (message: string) => { try { log(message); } catch { /* Best effort. */ } };
   try {
     if (process.env.FUNCTIONS_EMULATOR === 'true') {
-      safeLog(`[fcm:emulator] offer ${rideId} → ${uid}`);
+      safeLog(`[fcm:emulator] ${body ? 'scheduled' : 'offer'} ${rideId} → ${uid}${body ? `: ${body}` : ''}`);
       return;
     }
     const userRef = db.doc(`users/${uid}`);
@@ -20,8 +20,8 @@ export async function sendOfferNotification(
     if (!ride) return;
     try {
       await messaging.send({
-        token, data: { type: 'ride_offer', rideId },
-        notification: { title: 'طلب مشوار جديد', body: `${ride.pickup.name} · JD ${ride.fare.estimated.toFixed(2)}` },
+        token, data: { type: body ? 'scheduled_ride' : 'ride_offer', rideId },
+        notification: { title: body ? 'مشوارك المجدول' : 'طلب مشوار جديد', body: body ?? `${ride.pickup.name} · JD ${ride.fare.estimated.toFixed(2)}` },
         android: { priority: 'high', ttl: 15000, notification: { channelId: 'ride_offers', sound: 'default' } },
         apns: { headers: { 'apns-priority': '10', 'apns-expiration': String(Math.floor(Date.now() / 1000) + 15) },
           payload: { aps: { sound: 'default' } } },

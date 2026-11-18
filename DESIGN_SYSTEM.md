@@ -132,6 +132,10 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 1. **Home:** large title "مشوار" · `MwSearchPill` with schedule · 2 recent `MwListRow` · "اقتراحات" + 4 `MwSuggestionTile` (رحلة، احجز، طرد، مطار) · `MwPromoCard` · `MwBottomNav`.
 2. **Choose ride:** map (top ~45%) with route, pins + labels, nearby cars, back FAB · sheet "اختر رحلة أو اسحب للمزيد" · 3 `MwVehicleRow` · `MwPaymentRow` · `MwButton.primary` "اختر مشوار X".
 3. **Schedule:** "متى تريد المغادرة؟" date/time wheel pickers, policy rows with icons, primary "حدّد موعد الانطلاق".
+   T6.2 uses a horizontal list of date chips, a native time wheel (216 high),
+   a departure summary, and the localized primary "تأكيد الموعد". The selected
+   time stays in the search pill with a clear action. Scheduled activity uses
+   the history row with departure date/time and a trailing cancel text button.
 4. **Pickup point:** map zoomed, suggested pickup dots (`info`), sheet "أكّد موقع الانطلاق" with address field + primary button.
 5. **On trip / safety:** driver card, safety toolkit list (share trip, emergency, trusted contacts).
 6. **Driver offer (dark):** countdown bar, price `largeTitle`, rider rating, pickup→drop rows, primary "قبول" (h 56).

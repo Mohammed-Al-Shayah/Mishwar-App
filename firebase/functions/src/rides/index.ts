@@ -40,3 +40,16 @@ export const updateRideStatus = onCall({ region: 'europe-west1' }, (request) => 
 import { rateRideHandler, skipRatingHandler } from './ratings.js';
 export const rateRide = onCall({ region: 'europe-west1' }, request => rateRideHandler(request, getFirestore()));
 export const skipRating = onCall({ region: 'europe-west1' }, request => skipRatingHandler(request, getFirestore()));
+
+import { scheduleRideHandler, schedulingReader, dispatchScheduledRidesHandler, scheduledMatching } from './scheduled.js';
+let readScheduling: ReturnType<typeof schedulingReader> | undefined;
+const scheduling = () => (readScheduling ??= schedulingReader(getFirestore()))();
+export const scheduleRide = onCall(mapsOptions, request => scheduleRideHandler(request, getFirestore(), mapsKey.value(), scheduling));
+export const dispatchScheduledRides = onSchedule({ region: 'europe-west1', schedule: 'every 1 minutes' }, async () => {
+  const db = getFirestore();
+  await dispatchScheduledRidesHandler(db, {
+    now: () => Timestamp.now(), config: scheduling,
+    notify: (uid, rideId, body) => sendOfferNotification(db, { send: message => getMessaging().send(message) }, uid, rideId, info, body),
+    dispatch: scheduledMatching(db, matchingDeps),
+  });
+});

@@ -1111,4 +1111,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentPlaces => 'Recent';
+
+  @override
+  String get scheduleTitle => 'When do you want to leave?';
+
+  @override
+  String get scheduleToday => 'Today';
+
+  @override
+  String get scheduleTomorrow => 'Tomorrow';
+
+  @override
+  String get scheduleOtherDate => 'Another date';
+
+  @override
+  String get scheduleWindow => 'Book from 30 minutes to 30 days ahead';
+
+  @override
+  String get scheduleConfirm => 'Confirm time';
+
+  @override
+  String get scheduleClear => 'Clear scheduled time';
+
+  @override
+  String get scheduleSuccess => 'Your ride is booked';
+
+  @override
+  String scheduledDeparture(String time) {
+    return 'Departure time · $time';
+  }
+
+  @override
+  String scheduleVehicle(String vehicle) {
+    return 'Book $vehicle';
+  }
+
+  @override
+  String get scheduledSection => 'Scheduled';
+
+  @override
+  String get scheduledCancelTitle => 'Cancel your scheduled ride?';
+
+  @override
+  String get scheduledCancelConfirm => 'Cancel ride';
+
+  @override
+  String get scheduledKeep => 'Keep ride';
+
+  @override
+  String get scheduledCancel => 'Cancel';
+
+  @override
+  String get tooManyScheduled =>
+      'You can have up to 3 scheduled rides. Cancel one to book another.';
 }

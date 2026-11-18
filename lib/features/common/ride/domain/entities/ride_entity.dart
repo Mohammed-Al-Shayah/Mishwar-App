@@ -28,6 +28,7 @@ class RideEntity extends Equatable {
     required this.dropoff,
     required this.fareEstimatedFils,
     required this.createdAt,
+    this.scheduledFor,
     this.driverRating,
     this.riderRating,
     this.driverId,
@@ -45,6 +46,7 @@ class RideEntity extends Equatable {
     this.offerExpiresAt,
     this.offerDistanceMeters,
   });
+  final DateTime? scheduledFor;
   final int? driverRating;
   final int? riderRating;
   final String id;
@@ -72,6 +74,7 @@ class RideEntity extends Equatable {
   RideDraft get draft => RideDraft(pickup: pickup, dropoff: dropoff);
   @override
   List<Object?> get props => [
+    scheduledFor,
     driverRating,
     riderRating,
     id,

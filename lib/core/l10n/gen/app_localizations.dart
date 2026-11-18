@@ -2143,6 +2143,102 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'آخر الأماكن'**
   String get recentPlaces;
+
+  /// No description provided for @scheduleTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'متى بدك تطلع؟'**
+  String get scheduleTitle;
+
+  /// No description provided for @scheduleToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get scheduleToday;
+
+  /// No description provided for @scheduleTomorrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'بكرا'**
+  String get scheduleTomorrow;
+
+  /// No description provided for @scheduleOtherDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ آخر'**
+  String get scheduleOtherDate;
+
+  /// No description provided for @scheduleWindow.
+  ///
+  /// In ar, this message translates to:
+  /// **'احجز من 30 دقيقة لحد 30 يوم لقدام'**
+  String get scheduleWindow;
+
+  /// No description provided for @scheduleConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الموعد'**
+  String get scheduleConfirm;
+
+  /// No description provided for @scheduleClear.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الموعد المحدد'**
+  String get scheduleClear;
+
+  /// No description provided for @scheduleSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'انحجز مشوارك'**
+  String get scheduleSuccess;
+
+  /// No description provided for @scheduledDeparture.
+  ///
+  /// In ar, this message translates to:
+  /// **'موعد الانطلاق · {time}'**
+  String scheduledDeparture(String time);
+
+  /// No description provided for @scheduleVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احجز {vehicle}'**
+  String scheduleVehicle(String vehicle);
+
+  /// No description provided for @scheduledSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجدولة'**
+  String get scheduledSection;
+
+  /// No description provided for @scheduledCancelTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدك تلغي مشوارك المجدول؟'**
+  String get scheduledCancelTitle;
+
+  /// No description provided for @scheduledCancelConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء المشوار'**
+  String get scheduledCancelConfirm;
+
+  /// No description provided for @scheduledKeep.
+  ///
+  /// In ar, this message translates to:
+  /// **'خلي المشوار'**
+  String get scheduledKeep;
+
+  /// No description provided for @scheduledCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get scheduledCancel;
+
+  /// No description provided for @tooManyScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'بتقدر تحجز 3 مشاوير مجدولة. إلغي واحد عشان تحجز مشوار جديد.'**
+  String get tooManyScheduled;
 }
 
 class _AppLocalizationsDelegate

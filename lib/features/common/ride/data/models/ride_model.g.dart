@@ -47,6 +47,10 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
   createdAt: const TimestampConverter().fromJson(
     json['createdAt'] as Timestamp,
   ),
+  scheduledFor: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['scheduledFor'],
+    const TimestampConverter().fromJson,
+  ),
   driverRating: json['driverRating'] == null
       ? null
       : RideRatingModel.fromJson(json['driverRating'] as Map<String, dynamic>),
@@ -105,6 +109,10 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
       'dropoff': instance.dropoff.toJson(),
       'fare': instance.fare.toJson(),
       'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'scheduledFor': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.scheduledFor,
+        const TimestampConverter().toJson,
+      ),
       'driverRating': instance.driverRating?.toJson(),
       'riderRating': instance.riderRating?.toJson(),
       'driverId': instance.driverId,

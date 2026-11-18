@@ -27,6 +27,7 @@ import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.d
 import 'package:mishwar/features/rider/history/presentation/ride_history_screen.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/ride_mocks.dart';
 import '../driver/presence/driver_home_screen_test.dart'
     as driver_test
     show wrap;
@@ -94,7 +95,11 @@ void main() {
         ).thenAnswer(
           (_) async => Right(RideHistoryPage(items: [historyRide('1')])),
         );
-        final cubit = RideHistoryCubit(GetRideHistory(repository));
+        final cubit = RideHistoryCubit(
+          GetRideHistory(repository),
+          watchScheduledRides: emptyScheduledRidesWatch(),
+          cancelRide: cancelRideStub(),
+        );
         addTearDown(() => tester.runAsync(cubit.close));
         await cubit.loadFirst('u');
         await tester.pumpWidget(
