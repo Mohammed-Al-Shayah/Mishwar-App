@@ -73,6 +73,7 @@ abstract class RideModel with _$RideModel {
     RidePromoModel? promo,
     RideRatingModel? driverRating,
     RideRatingModel? riderRating,
+    String? shareToken,
     String? driverId,
     RidePartyInfoModel? driverInfo,
     RidePartyInfoModel? riderInfo,
@@ -106,6 +107,7 @@ abstract class RideModel with _$RideModel {
       throw const FormatException('Invalid fare');
     }
     return RideEntity(
+      shareToken: shareToken,
       scheduledFor: scheduledFor,
       promoCode: promo?.code,
       promoApplied: promo?.applied,

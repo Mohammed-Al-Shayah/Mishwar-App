@@ -34,6 +34,9 @@ import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_i
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_screen.dart';
+import 'package:mishwar/features/common/safety/presentation/safety_screen.dart';
+import 'package:mishwar/features/common/safety/presentation/trip_safety_cubit.dart';
+import 'package:mishwar/features/common/safety/presentation/trusted_contacts_cubit.dart';
 import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
 import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
@@ -110,6 +113,7 @@ String? sessionRedirect(
           : user.role != UserRole.driver
           ? (user.role == UserRole.rider &&
                     ((location == '/rider/account' ||
+                            location == '/rider/safety' ||
                             location == '/rider/places' ||
                             location == '/rider/services' ||
                             location == '/rider/history' ||
@@ -138,6 +142,7 @@ String? sessionRedirect(
                           driver?.currentRideId != null
                     ? '/driver/ride/${driver!.currentRideId}'
                     : (location == '/driver/account' ||
+                          location == '/driver/safety' ||
                           location == '/driver/earnings' ||
                           RegExp(
                             r'^/driver/history/[^/]+$',
@@ -254,6 +259,17 @@ GoRouter createAppRouter(
       path: '/rider',
       routes: [
         GoRoute(
+          path: 'safety',
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<TrustedContactsCubit>();
+              unawaited(cubit.start((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: const SafetyScreen(),
+          ),
+        ),
+        GoRoute(
           path: 'services',
           builder: (_, _) => BlocProvider.value(
             value: getIt<AppConfigCubit>(),
@@ -330,7 +346,10 @@ GoRouter createAppRouter(
           builder: (_, state) => BlocProvider(
             create: (_) =>
                 getIt<RideTrackingBloc>(param1: state.pathParameters['rideId']),
-            child: RideTrackingScreen(mapBuilder: riderMapBuilder),
+            child: _tripSafetyScope(
+              session,
+              RideTrackingScreen(mapBuilder: riderMapBuilder),
+            ),
           ),
         ),
         GoRoute(
@@ -455,6 +474,17 @@ GoRouter createAppRouter(
       ),
       routes: [
         GoRoute(
+          path: '/driver/safety',
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<TrustedContactsCubit>();
+              unawaited(cubit.start((session.state as SessionReady).user.id));
+              return cubit;
+            },
+            child: const SafetyScreen(driver: true),
+          ),
+        ),
+        GoRoute(
           path: '/driver/account',
           builder: (_, _) => BlocProvider(
             create: (_) {
@@ -527,10 +557,28 @@ GoRouter createAppRouter(
             create: (_) => getIt<trip.DriverTripBloc>(
               param1: state.pathParameters['rideId'],
             ),
-            child: DriverTripScreen(mapBuilder: driverMapBuilder),
+            child: _tripSafetyScope(
+              session,
+              DriverTripScreen(mapBuilder: driverMapBuilder),
+            ),
           ),
         ),
       ],
     ),
   ],
 );
+
+Widget _tripSafetyScope(SessionCubit session, Widget child) =>
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) {
+            final cubit = getIt<TrustedContactsCubit>();
+            unawaited(cubit.start((session.state as SessionReady).user.id));
+            return cubit;
+          },
+        ),
+        BlocProvider(create: (_) => getIt<TripSafetyCubit>()),
+      ],
+      child: child,
+    );

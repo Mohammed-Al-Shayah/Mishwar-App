@@ -2605,6 +2605,149 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'عليك {amount} رسوم إلغاء، بتنضاف على مشوارك الجاي'**
   String cancellationBalanceInfo(String amount);
+
+  /// No description provided for @safetyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأمان'**
+  String get safetyTitle;
+
+  /// No description provided for @trustedContacts.
+  ///
+  /// In ar, this message translates to:
+  /// **'جهات الاتصال الموثوقة'**
+  String get trustedContacts;
+
+  /// No description provided for @contactsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف من تثق بهم'**
+  String get contactsEmpty;
+
+  /// No description provided for @contactsExplanation.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ حتى خمسة أشخاص لإرسال موقعك لهم عند الحاجة.'**
+  String get contactsExplanation;
+
+  /// No description provided for @contactAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة جهة اتصال'**
+  String get contactAdd;
+
+  /// No description provided for @contactEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل جهة الاتصال'**
+  String get contactEdit;
+
+  /// No description provided for @contactDelete.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف جهة الاتصال'**
+  String get contactDelete;
+
+  /// No description provided for @contactDeleteConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد حذف {name}؟'**
+  String contactDeleteConfirm(String name);
+
+  /// No description provided for @contactName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get contactName;
+
+  /// No description provided for @contactPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الجوال الأردني'**
+  String get contactPhone;
+
+  /// No description provided for @contactInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل اسماً من 1 إلى 40 حرفاً ورقم جوال أردني صحيح.'**
+  String get contactInvalid;
+
+  /// No description provided for @contactsLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك إضافة خمس جهات اتصال كحد أقصى.'**
+  String get contactsLimit;
+
+  /// No description provided for @emergencySettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعدادات الطوارئ'**
+  String get emergencySettings;
+
+  /// No description provided for @emergencyFootnote.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطوارئ في الأردن 911'**
+  String get emergencyFootnote;
+
+  /// No description provided for @safetyToolkit.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدوات الأمان'**
+  String get safetyToolkit;
+
+  /// No description provided for @emergencyCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل بالطوارئ (911)'**
+  String get emergencyCall;
+
+  /// No description provided for @emergencyConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد الاتصال بالطوارئ على 911؟'**
+  String get emergencyConfirm;
+
+  /// No description provided for @safetySms.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل موقعي لجهات الاتصال الموثوقة'**
+  String get safetySms;
+
+  /// No description provided for @safetyNoContacts.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف جهات اتصال من الأمان'**
+  String get safetyNoContacts;
+
+  /// No description provided for @safetyShare.
+  ///
+  /// In ar, this message translates to:
+  /// **'شارك تفاصيل المشوار'**
+  String get safetyShare;
+
+  /// No description provided for @shareTripText.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع مشواري مع {driver} على مشوار: {url}'**
+  String shareTripText(String driver, String url);
+
+  /// No description provided for @safetySmsBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنا بمشوار مع {driver} ({car} {plate}). موقعي: https://maps.google.com/?q={coordinates}'**
+  String safetySmsBody(
+    String driver,
+    String car,
+    String plate,
+    String coordinates,
+  );
+
+  /// No description provided for @safetyDriverSmsBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقعي: https://maps.google.com/?q={coordinates}'**
+  String safetyDriverSmsBody(String coordinates);
 }
 
 class _AppLocalizationsDelegate

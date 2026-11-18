@@ -20,6 +20,7 @@ import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
+import 'package:mishwar/features/common/safety/presentation/trip_safety_tools.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 import 'package:mishwar/features/rider/ride/presentation/rider_trip_map.dart';
@@ -28,9 +29,11 @@ class RideTrackingScreen extends StatefulWidget {
   const RideTrackingScreen({
     this.mapBuilder,
     this.launcher = launchRiderUri,
+    this.shareLauncher = shareTripText,
     super.key,
   });
   final RiderUriLauncher launcher;
+  final TripShareLauncher shareLauncher;
   final WidgetBuilder? mapBuilder;
   @override
   State<RideTrackingScreen> createState() => _RideTrackingScreenState();
@@ -284,6 +287,21 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                   child: MwDriverCard(
                                     driver: ride.driverInfo!,
                                     launcher: widget.launcher,
+                                    onShare: () => unawaited(
+                                      shareSafetyTrip(
+                                        context,
+                                        ride,
+                                        share: widget.shareLauncher,
+                                      ),
+                                    ),
+                                    onSafety: () => unawaited(
+                                      showTripSafety(
+                                        context,
+                                        ride: ride,
+                                        launcher: widget.launcher,
+                                        share: widget.shareLauncher,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               if (searching) ...[

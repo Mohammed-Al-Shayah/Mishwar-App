@@ -22,6 +22,8 @@ String failureMessage(BuildContext context, Failure failure) {
       AuthFailureCode.unknown => l10n.errorGeneric,
     },
     ValidationFailure(field: 'saved-places-limit') => l10n.savedPlaceLimit,
+    ValidationFailure(field: 'trusted-contacts-limit') => l10n.contactsLimit,
+    ValidationFailure(field: 'trusted-contact') => l10n.contactInvalid,
     ValidationFailure(field: 'saved-place') => l10n.savedPlaceInvalid,
     ValidationFailure(field: 'make' || 'model' || 'color') =>
       l10n.errorVehicleLength,

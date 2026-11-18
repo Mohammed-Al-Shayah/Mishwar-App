@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/core/validation/jordan_phone.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/domain/usecases/send_otp.dart';
 
@@ -16,12 +17,7 @@ class PhoneState extends Equatable {
   final bool isLoading;
   final Failure? failure;
   final OtpSession? session;
-  String? get normalizedPhone {
-    if (!RegExp(r'^0?7[0-9]{8}$').hasMatch(phone) || phone.endsWith('\n')) {
-      return null;
-    }
-    return '+962${phone.startsWith('0') ? phone.substring(1) : phone}';
-  }
+  String? get normalizedPhone => normalizeJordanPhone(phone);
 
   @override
   List<Object?> get props => [phone, isLoading, failure, session];

@@ -176,6 +176,18 @@ import 'package:mishwar/features/common/route/domain/repositories/route_reposito
     as _i1040;
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart'
     as _i598;
+import 'package:mishwar/features/common/safety/data/safety_remote_data_source.dart'
+    as _i775;
+import 'package:mishwar/features/common/safety/data/safety_repository_impl.dart'
+    as _i534;
+import 'package:mishwar/features/common/safety/domain/safety_repository.dart'
+    as _i323;
+import 'package:mishwar/features/common/safety/domain/safety_usecases.dart'
+    as _i342;
+import 'package:mishwar/features/common/safety/presentation/trip_safety_cubit.dart'
+    as _i924;
+import 'package:mishwar/features/common/safety/presentation/trusted_contacts_cubit.dart'
+    as _i574;
 import 'package:mishwar/features/common/saved_places/data/saved_places_remote_data_source.dart'
     as _i693;
 import 'package:mishwar/features/common/saved_places/data/saved_places_repository_impl.dart'
@@ -399,6 +411,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1008.EarningsRemoteDataSource>(
       () => _i1008.EarningsRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i775.SafetyRemoteDataSource>(
+      () => _i775.SafetyRemoteDataSource(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i809.FirebaseFunctions>(),
+      ),
+    );
     gh.lazySingleton<_i747.RideRemoteDataSource>(
       () => _i747.RideRemoteDataSource(
         gh<_i809.FirebaseFunctions>(),
@@ -411,6 +429,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
+    );
+    gh.lazySingleton<_i323.SafetyRepository>(
+      () => _i534.SafetyRepositoryImpl(gh<_i775.SafetyRemoteDataSource>()),
     );
     gh.lazySingleton<_i285.PromoRepository>(
       () => _i587.PromoRepositoryImpl(gh<_i585.PromoRemoteDataSource>()),
@@ -496,6 +517,18 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i290.AuthRepository>(
       () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i342.WatchTrustedContacts>(
+      () => _i342.WatchTrustedContacts(gh<_i323.SafetyRepository>()),
+    );
+    gh.lazySingleton<_i342.SaveTrustedContact>(
+      () => _i342.SaveTrustedContact(gh<_i323.SafetyRepository>()),
+    );
+    gh.lazySingleton<_i342.DeleteTrustedContact>(
+      () => _i342.DeleteTrustedContact(gh<_i323.SafetyRepository>()),
+    );
+    gh.lazySingleton<_i342.CreateShareLink>(
+      () => _i342.CreateShareLink(gh<_i323.SafetyRepository>()),
     );
     gh.factory<_i630.AdminCubit>(
       () => _i630.AdminCubit(
@@ -674,8 +707,21 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i291.WatchDriver>(),
       ),
     );
+    gh.factory<_i574.TrustedContactsCubit>(
+      () => _i574.TrustedContactsCubit(
+        gh<_i342.WatchTrustedContacts>(),
+        gh<_i342.SaveTrustedContact>(),
+        gh<_i342.DeleteTrustedContact>(),
+      ),
+    );
     gh.factory<_i693.NameCubit>(
       () => _i693.NameCubit(gh<_i801.CreateUserProfile>()),
+    );
+    gh.factory<_i924.TripSafetyCubit>(
+      () => _i924.TripSafetyCubit(
+        gh<_i342.CreateShareLink>(),
+        gh<_i107.CurrentPosition>(),
+      ),
     );
     gh.factory<_i804.DriverOfferBloc>(
       () => _i804.DriverOfferBloc(

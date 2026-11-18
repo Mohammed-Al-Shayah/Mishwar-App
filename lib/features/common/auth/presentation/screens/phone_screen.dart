@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_radius.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/validation/phone_input.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/mw_text_field.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/phone_cubit.dart';
@@ -57,10 +57,7 @@ class PhoneScreen extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   enabled: !state.isLoading,
                   autofillHints: const [AutofillHints.telephoneNumberNational],
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
+                  inputFormatters: jordanPhoneFormatters(),
                   onChanged: context.read<PhoneCubit>().phoneChanged,
                 ),
               ),

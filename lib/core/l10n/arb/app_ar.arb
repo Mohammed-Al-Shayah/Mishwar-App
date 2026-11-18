@@ -763,5 +763,68 @@
         "type": "String"
       }
     }
+  },
+  "safetyTitle": "الأمان",
+  "trustedContacts": "جهات الاتصال الموثوقة",
+  "contactsEmpty": "أضف من تثق بهم",
+  "contactsExplanation": "احفظ حتى خمسة أشخاص لإرسال موقعك لهم عند الحاجة.",
+  "contactAdd": "إضافة جهة اتصال",
+  "contactEdit": "تعديل جهة الاتصال",
+  "contactDelete": "حذف جهة الاتصال",
+  "contactDeleteConfirm": "هل تريد حذف {name}؟",
+  "@contactDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "contactName": "الاسم",
+  "contactPhone": "رقم الجوال الأردني",
+  "contactInvalid": "أدخل اسماً من 1 إلى 40 حرفاً ورقم جوال أردني صحيح.",
+  "contactsLimit": "يمكنك إضافة خمس جهات اتصال كحد أقصى.",
+  "emergencySettings": "إعدادات الطوارئ",
+  "emergencyFootnote": "رقم الطوارئ في الأردن 911",
+  "safetyToolkit": "أدوات الأمان",
+  "emergencyCall": "اتصل بالطوارئ (911)",
+  "emergencyConfirm": "هل تريد الاتصال بالطوارئ على 911؟",
+  "safetySms": "أرسل موقعي لجهات الاتصال الموثوقة",
+  "safetyNoContacts": "أضف جهات اتصال من الأمان",
+  "safetyShare": "شارك تفاصيل المشوار",
+  "shareTripText": "تابع مشواري مع {driver} على مشوار: {url}",
+  "@shareTripText": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "safetySmsBody": "أنا بمشوار مع {driver} ({car} {plate}). موقعي: https://maps.google.com/?q={coordinates}",
+  "@safetySmsBody": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "car": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      },
+      "coordinates": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyDriverSmsBody": "موقعي: https://maps.google.com/?q={coordinates}",
+  "@safetyDriverSmsBody": {
+    "placeholders": {
+      "coordinates": {
+        "type": "String"
+      }
+    }
   }
 }

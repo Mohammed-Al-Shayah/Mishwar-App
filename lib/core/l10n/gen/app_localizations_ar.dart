@@ -1355,4 +1355,88 @@ class AppLocalizationsAr extends AppLocalizations {
   String cancellationBalanceInfo(String amount) {
     return 'عليك $amount رسوم إلغاء، بتنضاف على مشوارك الجاي';
   }
+
+  @override
+  String get safetyTitle => 'الأمان';
+
+  @override
+  String get trustedContacts => 'جهات الاتصال الموثوقة';
+
+  @override
+  String get contactsEmpty => 'أضف من تثق بهم';
+
+  @override
+  String get contactsExplanation =>
+      'احفظ حتى خمسة أشخاص لإرسال موقعك لهم عند الحاجة.';
+
+  @override
+  String get contactAdd => 'إضافة جهة اتصال';
+
+  @override
+  String get contactEdit => 'تعديل جهة الاتصال';
+
+  @override
+  String get contactDelete => 'حذف جهة الاتصال';
+
+  @override
+  String contactDeleteConfirm(String name) {
+    return 'هل تريد حذف $name؟';
+  }
+
+  @override
+  String get contactName => 'الاسم';
+
+  @override
+  String get contactPhone => 'رقم الجوال الأردني';
+
+  @override
+  String get contactInvalid =>
+      'أدخل اسماً من 1 إلى 40 حرفاً ورقم جوال أردني صحيح.';
+
+  @override
+  String get contactsLimit => 'يمكنك إضافة خمس جهات اتصال كحد أقصى.';
+
+  @override
+  String get emergencySettings => 'إعدادات الطوارئ';
+
+  @override
+  String get emergencyFootnote => 'رقم الطوارئ في الأردن 911';
+
+  @override
+  String get safetyToolkit => 'أدوات الأمان';
+
+  @override
+  String get emergencyCall => 'اتصل بالطوارئ (911)';
+
+  @override
+  String get emergencyConfirm => 'هل تريد الاتصال بالطوارئ على 911؟';
+
+  @override
+  String get safetySms => 'أرسل موقعي لجهات الاتصال الموثوقة';
+
+  @override
+  String get safetyNoContacts => 'أضف جهات اتصال من الأمان';
+
+  @override
+  String get safetyShare => 'شارك تفاصيل المشوار';
+
+  @override
+  String shareTripText(String driver, String url) {
+    return 'تابع مشواري مع $driver على مشوار: $url';
+  }
+
+  @override
+  String safetySmsBody(
+    String driver,
+    String car,
+    String plate,
+    String coordinates,
+  ) {
+    return 'أنا بمشوار مع $driver ($car $plate). موقعي: https://maps.google.com/?q=$coordinates';
+  }
+
+  @override
+  String safetyDriverSmsBody(String coordinates) {
+    return 'موقعي: https://maps.google.com/?q=$coordinates';
+  }
 }

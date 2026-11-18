@@ -24,6 +24,7 @@ import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
+import 'package:mishwar/features/common/safety/presentation/trip_safety_tools.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart'
     as presence;
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart';
@@ -183,6 +184,7 @@ class _TripViewState extends State<_TripView> {
   }
 
   Future<void> _overflow() async {
+    final phase = context.read<DriverTripBloc>().state.phase;
     final cancel = await showModalBottomSheet<bool>(
       context: context,
       sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
@@ -191,18 +193,32 @@ class _TripViewState extends State<_TripView> {
       builder: (context) => SafeArea(
         child: Padding(
           padding: EdgeInsets.all(AppSpacing.md),
-          child: TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              context.l10n.tripCancel,
-              style: AppTextStyles.headline.copyWith(
-                color: context.colors.negative,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(AppIcons.shield),
+                title: Text(context.l10n.safetyTitle),
+                onTap: () => Navigator.pop(context, false),
               ),
-            ),
+              if (phase != TripPhase.onTrip)
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: Text(
+                    context.l10n.tripCancel,
+                    style: AppTextStyles.headline.copyWith(
+                      color: context.colors.negative,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
     );
+    if (mounted && cancel == false) {
+      await showTripSafety(context, launcher: widget.launcher, driver: true);
+    }
     if (mounted && cancel == true) await _confirm(cancel: true);
   }
 
@@ -594,7 +610,8 @@ class _TripViewState extends State<_TripView> {
                                       ),
                                     ),
                                     if (state.phase == TripPhase.toPickup ||
-                                        state.phase == TripPhase.waiting)
+                                        state.phase == TripPhase.waiting ||
+                                        state.phase == TripPhase.onTrip)
                                       Align(
                                         alignment:
                                             AlignmentDirectional.centerEnd,

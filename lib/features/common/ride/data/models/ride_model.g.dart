@@ -68,6 +68,7 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
   riderRating: json['riderRating'] == null
       ? null
       : RideRatingModel.fromJson(json['riderRating'] as Map<String, dynamic>),
+  shareToken: json['shareToken'] as String?,
   driverId: json['driverId'] as String?,
   driverInfo: json['driverInfo'] == null
       ? null
@@ -127,6 +128,7 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
       'promo': instance.promo?.toJson(),
       'driverRating': instance.driverRating?.toJson(),
       'riderRating': instance.riderRating?.toJson(),
+      'shareToken': instance.shareToken,
       'driverId': instance.driverId,
       'driverInfo': instance.driverInfo?.toJson(),
       'riderInfo': instance.riderInfo?.toJson(),

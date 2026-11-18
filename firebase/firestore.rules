@@ -2,6 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() { return request.auth != null && ('admin' in request.auth.token) && request.auth.token.admin == true; }
+    match /shares/{document=**} { allow read, write: if false; }
     match /promos/{document=**} { allow read: if isAdmin(); allow write: if false; }
     match /users/{uid}/meta/{document=**} { allow read, write: if false; }
     match /config/{id} { allow read: if isAdmin() || (id == 'app' && request.auth != null); allow write: if false; }
@@ -12,6 +13,20 @@ service cloud.firestore {
         return request.auth != null && request.auth.uid == uid;
       }
 
+      match /trustedContacts/{contactId} {
+        function validContact() {
+          let data = request.resource.data;
+          return data.keys().hasOnly(['name', 'phone', 'createdAt'])
+            && data.keys().hasAll(['name', 'phone', 'createdAt'])
+            && data.name is string && data.name.size() >= 1 && data.name.size() <= 40
+            && data.phone is string && data.phone.size() <= 20
+            && data.phone.matches('^[+][1-9][0-9]{1,14}$')
+            && data.createdAt == request.time;
+        }
+        allow read: if isOwner() || isAdmin();
+        allow create, update: if isOwner() && validContact();
+        allow delete: if isOwner();
+      }
       match /savedPlaces/{placeId} {
         function validSavedPlace() {
           let data = request.resource.data;

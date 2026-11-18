@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>تابع المشوار · مشوار</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#fff;color:#000;font:16px/1.5 'IBM Plex Sans Arabic',sans-serif}
+    main{max-width:640px;margin:auto}header,section{padding:16px}h1{font-size:24px;margin:0 0 8px}p{margin:8px 0}
+    #map{height:50vh;min-height:240px;background:#f3f3f3;direction:ltr}.leaflet-tile-pane{filter:grayscale(1)}
+    .row{padding:12px 0;border-bottom:1px solid #e2e2e2}.muted{color:#5e5e5e;font-size:13px}
+    #plate{font-size:18px;font-weight:600;direction:ltr;display:inline-block} .car{font-size:28px;filter:grayscale(1);transition:transform .5s linear}
+    a{color:inherit}#state{font-weight:600}#error{color:#5e5e5e}
+    /* Monochrome car marker: black dot with a white ring, like the app. */
+    .car { background: #000; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,.35); }
+  </style>
+</head>
+<body><main>
+  <header><h1>مشوار</h1><p id="state" role="status" aria-live="polite">جارٍ تحميل المشوار…</p><p id="error" role="status"></p></header>
+  <!-- Leaflet tiles misplace inside an RTL page; the map itself stays LTR. -->
+  <div id="map" dir="ltr" aria-label="موقع السيارة"></div>
+  <section>
+    <div class="row"><span id="driver"></span><p id="car"></p><span id="plate"></span></div>
+    <div class="row"><p id="pickup"></p><p id="dropoff"></p></div>
+    <p id="eta"></p><p id="updated" class="muted"></p>
+  </section>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+(() => {
+  const token = location.pathname.split('/').filter(Boolean)[1];
+  const valid = /^[A-Za-z0-9_-]{24}$/.test(token || '');
+  const el = id => document.getElementById(id);
+  const text = (id, value) => { el(id).textContent = value; };
+  let map, marker, poll, clock, updatedAt, terminal = false;
+  const finish = message => {
+    terminal = true; clearTimeout(poll); clearInterval(clock);
+    text('state', message); text('eta', ''); text('error', '');
+    if (marker) { marker.remove(); marker = null; }
+    if (message === 'انتهى الرابط') {
+      for (const id of ['driver','car','plate','pickup','dropoff','updated']) text(id, '');
+    }
+  };
+  const age = () => {
+    if (updatedAt) text('updated', 'آخر تحديث قبل ' + Math.max(0, Math.floor((Date.now() - updatedAt) / 1000)) + ' ث');
+  };
+  if (!valid) { finish('انتهى الرابط'); return; }
+  if (typeof L !== 'undefined') {
+    map = L.map('map').setView([31.95, 35.91], 13);
+    // Recalculate once layout settles so tiles cover the whole box.
+    setTimeout(() => map.invalidateSize(), 0);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 19,
+    }).addTo(map);
+  }
+  const statuses = { accepted: 'السائق في الطريق', arriving: 'السائق في الطريق', arrived: 'وصل السائق', in_progress: 'المشوار جارٍ' };
+  async function refresh() {
+    try {
+      const response = await fetch('/api/sharedTrip?t=' + encodeURIComponent(token), { cache: 'no-store', credentials: 'omit' });
+      if (response.status === 404 || response.status === 410) { finish('انتهى الرابط'); return; }
+      if (!response.ok) throw Error('unavailable');
+      const data = await response.json();
+      text('driver', data.driverFirstName);
+      text('car', [data.car.make, data.car.model, data.car.color].filter(Boolean).join(' '));
+      text('plate', data.car.plate);
+      text('pickup', 'من: ' + data.pickupName); text('dropoff', 'إلى: ' + data.dropoffName);
+      updatedAt = data.updatedAt; age(); text('error', '');
+      if (data.status === 'completed') { finish('وصل المشوار'); return; }
+      if (data.status === 'cancelled') { finish('انتهى الرابط'); return; }
+      text('state', statuses[data.status] || 'المشوار جارٍ');
+      text('eta', 'الوقت المتوقع: ' + data.etaMinutes + ' دقيقة');
+      if (map && data.driver && Number.isFinite(data.driver.lat) && Number.isFinite(data.driver.lng)) {
+        const point = [data.driver.lat, data.driver.lng];
+        if (!marker) marker = L.marker(point, { icon: L.divIcon({ className: 'car', html: '', iconSize: [18,18] }) }).addTo(map);
+        else marker.setLatLng(point);
+        map.panTo(point);
+      }
+    } catch { text('error', 'تعذّر التحديث، نحاول مجدداً…'); }
+    if (!terminal) poll = setTimeout(refresh, 5000);
+  }
+  clock = setInterval(age, 1000);
+  refresh();
+  window.addEventListener('pagehide', () => { terminal = true; clearTimeout(poll); clearInterval(clock); });
+})();
+</script>
+</body></html>

@@ -365,6 +365,13 @@ class _AccountBody extends StatelessWidget {
                       () => context.push<void>('/rider/places'),
                     ),
                   row(
+                    l10n.safetyTitle,
+                    AppIcons.shield,
+                    () => context.push<void>(
+                      driver ? '/driver/safety' : '/rider/safety',
+                    ),
+                  ),
+                  row(
                     l10n.accountLanguage,
                     AppIcons.globe,
                     () => _language(context),

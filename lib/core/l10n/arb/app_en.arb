@@ -756,5 +756,68 @@
         "type": "String"
       }
     }
+  },
+  "safetyTitle": "Safety",
+  "trustedContacts": "Trusted contacts",
+  "contactsEmpty": "Add people you trust",
+  "contactsExplanation": "Save up to five people to send your location when you need help.",
+  "contactAdd": "Add trusted contact",
+  "contactEdit": "Edit trusted contact",
+  "contactDelete": "Delete trusted contact",
+  "contactDeleteConfirm": "Delete {name}?",
+  "@contactDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "contactName": "Name",
+  "contactPhone": "Jordanian mobile number",
+  "contactInvalid": "Enter a name of 1–40 characters and a valid Jordanian mobile number.",
+  "contactsLimit": "You can add up to five trusted contacts.",
+  "emergencySettings": "Emergency settings",
+  "emergencyFootnote": "The emergency number in Jordan is 911",
+  "safetyToolkit": "Safety tools",
+  "emergencyCall": "Call emergency services (911)",
+  "emergencyConfirm": "Call emergency services on 911?",
+  "safetySms": "Send my location to trusted contacts",
+  "safetyNoContacts": "Add trusted contacts in Safety",
+  "safetyShare": "Share trip details",
+  "shareTripText": "Follow my trip with {driver} on Mishwar: {url}",
+  "@shareTripText": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "safetySmsBody": "I am on a trip with {driver} ({car} {plate}). My location: https://maps.google.com/?q={coordinates}",
+  "@safetySmsBody": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "car": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      },
+      "coordinates": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyDriverSmsBody": "My location: https://maps.google.com/?q={coordinates}",
+  "@safetyDriverSmsBody": {
+    "placeholders": {
+      "coordinates": {
+        "type": "String"
+      }
+    }
   }
 }

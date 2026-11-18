@@ -18,10 +18,14 @@ class MwDriverCard extends StatelessWidget {
   const MwDriverCard({
     required this.driver,
     this.launcher = launchRiderUri,
+    this.onShare,
+    this.onSafety,
     super.key,
   });
   final RidePartyInfo driver;
   final RiderUriLauncher launcher;
+  final VoidCallback? onShare;
+  final VoidCallback? onSafety;
   Future<void> _call() async {
     try {
       await launcher(Uri(scheme: 'tel', path: driver.phone));
@@ -128,9 +132,13 @@ class MwDriverCard extends StatelessWidget {
               context.l10n.riderCall,
               () => unawaited(_call()),
             ),
-            // TODO(T6.7): Enable sharing and safety tools.
-            _action(context, AppIcons.share, context.l10n.riderShare, null),
-            _action(context, AppIcons.shield, context.l10n.riderSafety, null),
+            _action(context, AppIcons.share, context.l10n.riderShare, onShare),
+            _action(
+              context,
+              AppIcons.shield,
+              context.l10n.riderSafety,
+              onSafety,
+            ),
           ],
         ),
       ],

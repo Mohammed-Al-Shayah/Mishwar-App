@@ -1367,4 +1367,88 @@ class AppLocalizationsEn extends AppLocalizations {
   String cancellationBalanceInfo(String amount) {
     return 'You owe $amount in cancellation fees, added to your next ride.';
   }
+
+  @override
+  String get safetyTitle => 'Safety';
+
+  @override
+  String get trustedContacts => 'Trusted contacts';
+
+  @override
+  String get contactsEmpty => 'Add people you trust';
+
+  @override
+  String get contactsExplanation =>
+      'Save up to five people to send your location when you need help.';
+
+  @override
+  String get contactAdd => 'Add trusted contact';
+
+  @override
+  String get contactEdit => 'Edit trusted contact';
+
+  @override
+  String get contactDelete => 'Delete trusted contact';
+
+  @override
+  String contactDeleteConfirm(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get contactName => 'Name';
+
+  @override
+  String get contactPhone => 'Jordanian mobile number';
+
+  @override
+  String get contactInvalid =>
+      'Enter a name of 1–40 characters and a valid Jordanian mobile number.';
+
+  @override
+  String get contactsLimit => 'You can add up to five trusted contacts.';
+
+  @override
+  String get emergencySettings => 'Emergency settings';
+
+  @override
+  String get emergencyFootnote => 'The emergency number in Jordan is 911';
+
+  @override
+  String get safetyToolkit => 'Safety tools';
+
+  @override
+  String get emergencyCall => 'Call emergency services (911)';
+
+  @override
+  String get emergencyConfirm => 'Call emergency services on 911?';
+
+  @override
+  String get safetySms => 'Send my location to trusted contacts';
+
+  @override
+  String get safetyNoContacts => 'Add trusted contacts in Safety';
+
+  @override
+  String get safetyShare => 'Share trip details';
+
+  @override
+  String shareTripText(String driver, String url) {
+    return 'Follow my trip with $driver on Mishwar: $url';
+  }
+
+  @override
+  String safetySmsBody(
+    String driver,
+    String car,
+    String plate,
+    String coordinates,
+  ) {
+    return 'I am on a trip with $driver ($car $plate). My location: https://maps.google.com/?q=$coordinates';
+  }
+
+  @override
+  String safetyDriverSmsBody(String coordinates) {
+    return 'My location: https://maps.google.com/?q=$coordinates';
+  }
 }

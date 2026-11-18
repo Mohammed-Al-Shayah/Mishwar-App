@@ -29,6 +29,7 @@ class RideEntity extends Equatable {
     required this.fareEstimatedFils,
     required this.createdAt,
     this.scheduledFor,
+    this.shareToken,
     this.promoCode,
     this.discountFils = 0,
     this.fareCancellationFeeFils = 0,
@@ -52,6 +53,7 @@ class RideEntity extends Equatable {
     this.offerExpiresAt,
     this.offerDistanceMeters,
   });
+  final String? shareToken;
   final String? promoCode;
   final int discountFils;
   final int fareCancellationFeeFils;
@@ -87,6 +89,7 @@ class RideEntity extends Equatable {
   @override
   List<Object?> get props => [
     scheduledFor,
+    shareToken,
     promoCode,
     discountFils,
     fareCancellationFeeFils,
