@@ -65,6 +65,7 @@ abstract class RideModel with _$RideModel {
     required RidePlaceModel dropoff,
     required RideFareModel fare,
     @TimestampConverter() required DateTime createdAt,
+    @TimestampConverter() DateTime? scheduledFor,
     RideRatingModel? driverRating,
     RideRatingModel? riderRating,
     String? driverId,
@@ -93,6 +94,7 @@ abstract class RideModel with _$RideModel {
       throw const FormatException('Invalid fare');
     }
     return RideEntity(
+      scheduledFor: scheduledFor,
       driverRating: driverRating?.stars,
       riderRating: riderRating?.stars,
       id: id,

@@ -40,6 +40,7 @@ import '../../features/driver/presence/driver_presence_bloc_test.dart'
 import '../../features/history/history_data_cubit_test.dart';
 import '../../features/history/history_widgets_test.dart'
     show historySize, historyWrap;
+import '../../helpers/ride_mocks.dart';
 import '../../helpers/saved_places_mocks.dart';
 import 'rider_search_flow_test.dart' show MockHome, MockRiderHome;
 
@@ -173,7 +174,11 @@ void main() {
       })
       ..registerSingleton<WatchActiveRideId>(WatchActiveRideId(rides))
       ..registerFactory<RideHistoryCubit>(
-        () => RideHistoryCubit(GetRideHistory(rides)),
+        () => RideHistoryCubit(
+          GetRideHistory(rides),
+          watchScheduledRides: emptyScheduledRidesWatch(),
+          cancelRide: cancelRideStub(),
+        ),
       )
       ..registerFactory<RideReceiptCubit>(
         () => RideReceiptCubit(WatchRide(rides)),

@@ -132,6 +132,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/get_ride_history.da
     as _i811;
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart'
     as _i892;
+import 'package:mishwar/features/common/ride/domain/usecases/schedule_ride.dart'
+    as _i731;
 import 'package:mishwar/features/common/ride/domain/usecases/update_ride_status.dart'
     as _i759;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart'
@@ -140,6 +142,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_locati
     as _i787;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart'
     as _i263;
+import 'package:mishwar/features/common/ride/domain/usecases/watch_scheduled_rides.dart'
+    as _i574;
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart'
     as _i60;
 import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
@@ -541,6 +545,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i892.RequestRide>(
       () => _i892.RequestRide(gh<_i118.RideRepository>()),
     );
+    gh.lazySingleton<_i731.ScheduleRide>(
+      () => _i731.ScheduleRide(gh<_i118.RideRepository>()),
+    );
     gh.lazySingleton<_i759.UpdateRideStatus>(
       () => _i759.UpdateRideStatus(gh<_i118.RideRepository>()),
     );
@@ -552,6 +559,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i263.WatchRide>(
       () => _i263.WatchRide(gh<_i118.RideRepository>()),
+    );
+    gh.lazySingleton<_i574.WatchScheduledRides>(
+      () => _i574.WatchScheduledRides(gh<_i118.RideRepository>()),
     );
     gh.factoryParam<_i267.OtpCubit, _i858.OtpSession, dynamic>(
       (session, _) =>
@@ -594,13 +604,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i60.RideReceiptCubit>(
       () => _i60.RideReceiptCubit(gh<_i263.WatchRide>()),
     );
-    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
-      (draft, _) => _i934.RideConfirmCubit(
-        gh<_i598.GetFareEstimates>(),
-        gh<_i892.RequestRide>(),
-        draft,
-      ),
-    );
     gh.lazySingleton<_i838.SessionCubit>(
       () => _i838.SessionCubit(
         gh<_i584.WatchAuthState>(),
@@ -638,11 +641,16 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i290.AuthRepository>(),
       ),
     );
-    gh.factory<_i831.RideHistoryCubit>(
-      () => _i831.RideHistoryCubit(gh<_i811.GetRideHistory>()),
-    );
     gh.factory<_i969.RecentPlacesCubit>(
       () => _i969.RecentPlacesCubit(gh<_i811.GetRideHistory>()),
+    );
+    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
+      (draft, _) => _i934.RideConfirmCubit(
+        gh<_i598.GetFareEstimates>(),
+        gh<_i892.RequestRide>(),
+        draft,
+        scheduleRide: gh<_i731.ScheduleRide>(),
+      ),
     );
     gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(
       (rideId, side) => _i661.RatingCubit(
@@ -657,6 +665,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i43.PushRepository>(),
         gh<_i290.AuthRepository>(),
         gh<_i768.PushTokenSync>(),
+      ),
+    );
+    gh.factory<_i831.RideHistoryCubit>(
+      () => _i831.RideHistoryCubit(
+        gh<_i811.GetRideHistory>(),
+        watchScheduledRides: gh<_i574.WatchScheduledRides>(),
+        cancelRide: gh<_i72.CancelRide>(),
       ),
     );
     gh.factory<_i562.DriverPresenceBloc>(

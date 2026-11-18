@@ -586,5 +586,35 @@
   "savedPlacesEmptyHint": "Save home and work to get there in one tap",
   "savedPlaceLimit": "You reached the limit of 20 places",
   "savedPlaceInvalid": "Check the name and location",
-  "recentPlaces": "Recent"
+  "recentPlaces": "Recent",
+  "scheduleTitle": "When do you want to leave?",
+  "scheduleToday": "Today",
+  "scheduleTomorrow": "Tomorrow",
+  "scheduleOtherDate": "Another date",
+  "scheduleWindow": "Book from 30 minutes to 30 days ahead",
+  "scheduleConfirm": "Confirm time",
+  "scheduleClear": "Clear scheduled time",
+  "scheduleSuccess": "Your ride is booked",
+  "scheduledDeparture": "Departure time · {time}",
+  "scheduleVehicle": "Book {vehicle}",
+  "scheduledSection": "Scheduled",
+  "scheduledCancelTitle": "Cancel your scheduled ride?",
+  "scheduledCancelConfirm": "Cancel ride",
+  "scheduledKeep": "Keep ride",
+  "scheduledCancel": "Cancel",
+  "tooManyScheduled": "You can have up to 3 scheduled rides. Cancel one to book another.",
+  "@scheduledDeparture": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@scheduleVehicle": {
+    "placeholders": {
+      "vehicle": {
+        "type": "String"
+      }
+    }
+  }
 }

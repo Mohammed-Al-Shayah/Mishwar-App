@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../helpers/ride_mocks.dart';
 import 'ride_confirm_cubit_test.dart'
     show MockRouteRepository, draft, estimates, stubSuccess;
@@ -71,6 +73,7 @@ void main() {
       GetFareEstimates(repository),
       requestRideStub(),
       draft,
+      scheduleRide: scheduleRideStub(),
     );
     await pumpConfirm(tester, cubit);
     await tester.pumpAndSettle();
@@ -148,6 +151,7 @@ void main() {
       GetFareEstimates(repository),
       requestRideStub(),
       draft,
+      scheduleRide: scheduleRideStub(),
     );
     await pumpConfirm(tester, cubit);
     expect(find.byType(MwSkeleton), findsNWidgets(3));
@@ -170,6 +174,7 @@ void main() {
       GetFareEstimates(repository),
       requestRideStub(),
       draft,
+      scheduleRide: scheduleRideStub(),
     );
     await pumpConfirm(tester, cubit);
     await tester.pumpAndSettle();
@@ -190,6 +195,7 @@ void main() {
         GetFareEstimates(repository),
         requestRideStub(),
         draft,
+        scheduleRide: scheduleRideStub(),
       );
       await pumpConfirm(tester, cubit, scale: 1.3, language: language);
       await tester.pumpAndSettle();

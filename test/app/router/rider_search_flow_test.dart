@@ -130,6 +130,7 @@ void main() {
           GetFareEstimates(routes),
           requestRideStub(),
           draft,
+          scheduleRide: scheduleRideStub(),
         );
       })
       ..registerFactory<HomeCubit>(() => home)

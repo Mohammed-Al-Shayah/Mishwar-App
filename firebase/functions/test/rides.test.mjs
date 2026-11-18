@@ -63,7 +63,7 @@ test('cancel checks ownership and status; cancellation is idempotent', async () 
     await cancelRideHandler(req({ rideId: 'x' }), store);
     assert.deepEqual(store.records.get('rides/x'), first);
   }
-  for (const status of ['in_progress', 'completed', 'no_drivers', 'scheduled']) {
+  for (const status of ['in_progress', 'completed', 'no_drivers']) {
     const store = db(); store.records.set('rides/x', { riderId: 'rider', status });
     await rejects(cancelRideHandler(req({ rideId: 'x' }), store), 'failed-precondition');
     assert.equal(store.records.get('rides/x').status, status);

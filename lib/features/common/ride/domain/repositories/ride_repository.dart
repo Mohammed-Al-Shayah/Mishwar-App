@@ -9,6 +9,11 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_history.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
 abstract class RideRepository {
+  Future<Either<Failure, String>> scheduleRide(
+    RideDraft draft,
+    VehicleType vehicleType,
+  );
+  Stream<Either<Failure, List<RideEntity>>> watchScheduledRides(String uid);
   Future<Either<Failure, RideHistoryPage>> history({
     required RideParty party,
     required String uid,

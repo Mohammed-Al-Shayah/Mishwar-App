@@ -23,6 +23,7 @@ import 'package:mishwar/features/rider/history/presentation/rider_bottom_nav.dar
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/home_shortcuts.dart';
+import 'package:mishwar/features/rider/home/presentation/widgets/schedule_sheet.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 
 class RiderHomeScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class RiderHomeScreen extends StatefulWidget {
 class _RiderHomeScreenState extends State<RiderHomeScreen>
     with WidgetsBindingObserver {
   final GlobalKey<State<StatefulWidget>> _sheetKey = GlobalKey();
+  DateTime? _scheduledFor;
   MwMapController? _map;
   double _sheetHeight = 0;
   bool _followedFirstFix = false;
@@ -103,6 +105,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
     await context.push<void>(
       '/rider/confirm',
       extra: RideDraft(
+        scheduledFor: _scheduledFor,
         pickup: RideStop(name: label, address: label, location: pickup),
         dropoff: RideStop(
           name: details.name,
@@ -205,7 +208,24 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                           style: context.textStyles.headlineMedium,
                         ),
                         SizedBox(height: AppSpacing.md),
-                        MwSearchPill(onTap: _searchDestination),
+                        MwSearchPill(
+                          onTap: _searchDestination,
+                          scheduleLabel: _scheduledFor == null
+                              ? null
+                              : scheduledTime(context, _scheduledFor!),
+                          onClearSchedule: _scheduledFor == null
+                              ? null
+                              : () => setState(() => _scheduledFor = null),
+                          onSchedule: () async {
+                            final time = await showScheduleSheet(
+                              context,
+                              _scheduledFor,
+                            );
+                            if (mounted && time != null) {
+                              setState(() => _scheduledFor = time);
+                            }
+                          },
+                        ),
                         SizedBox(height: AppSpacing.xs),
                         HomeShortcuts(
                           onPlace: (place) => unawaited(_chooseRide(place)),

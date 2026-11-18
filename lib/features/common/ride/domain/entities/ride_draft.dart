@@ -15,9 +15,14 @@ class RideStop extends Equatable {
 }
 
 class RideDraft extends Equatable {
-  const RideDraft({required this.pickup, required this.dropoff});
+  const RideDraft({
+    required this.pickup,
+    required this.dropoff,
+    this.scheduledFor,
+  });
+  final DateTime? scheduledFor;
   final RideStop pickup;
   final RideStop dropoff;
   @override
-  List<Object> get props => [pickup, dropoff];
+  List<Object?> get props => [pickup, dropoff, scheduledFor];
 }

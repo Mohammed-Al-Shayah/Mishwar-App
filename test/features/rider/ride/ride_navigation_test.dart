@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_c
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../helpers/ride_mocks.dart';
 import '../confirm/ride_confirm_cubit_test.dart'
     show MockRouteRepository, draft, stubSuccess;
@@ -96,6 +98,7 @@ void main() {
                 GetFareEstimates(routes),
                 requestRideStub(result),
                 draft,
+                scheduleRide: scheduleRideStub(),
               ),
               child: RideConfirmScreen(
                 draft: draft,

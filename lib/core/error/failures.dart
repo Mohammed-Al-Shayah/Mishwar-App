@@ -103,3 +103,12 @@ final class RideActionFailure extends Failure {
 final class RatingFailure extends Failure {
   const RatingFailure.alreadyRated() : super('already-rated');
 }
+
+enum SchedulingFailureReason { tooManyScheduled }
+
+final class SchedulingFailure extends Failure {
+  const SchedulingFailure(this.reason) : super('scheduling');
+  final SchedulingFailureReason reason;
+  @override
+  List<Object> get props => [reason];
+}

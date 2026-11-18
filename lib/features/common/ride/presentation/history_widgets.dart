@@ -53,10 +53,12 @@ class HistoryRideRow extends StatelessWidget {
     required this.ride,
     required this.onTap,
     this.driver = false,
+    this.trailing,
     super.key,
   });
   final RideEntity ride;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final Widget? trailing;
   final bool driver;
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ class HistoryRideRow extends StatelessWidget {
         ? DateFormat.jm(
             locale,
           ).format(ammanTime(ride.completedAt ?? ride.createdAt))
-        : historyDate(context, ride.createdAt);
+        : historyDate(context, ride.scheduledFor ?? ride.createdAt);
     return Column(
       children: [
         InkWell(
@@ -130,10 +132,16 @@ class HistoryRideRow extends StatelessWidget {
                   ),
                   if (ride.status != RideStatus.noDrivers) ...[
                     SizedBox(width: AppSpacing.sm),
-                    Text(
-                      ridePrice(context, ride),
-                      textDirection: TextDirection.ltr,
-                      style: AppTextStyles.tabular(AppTextStyles.headline),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          ridePrice(context, ride),
+                          textDirection: TextDirection.ltr,
+                          style: AppTextStyles.tabular(AppTextStyles.headline),
+                        ),
+                        ?trailing,
+                      ],
                     ),
                   ],
                 ],

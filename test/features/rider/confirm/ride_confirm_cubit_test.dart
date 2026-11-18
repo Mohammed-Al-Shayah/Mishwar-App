@@ -12,6 +12,7 @@ import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dar
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../helpers/ride_mocks.dart';
 
 class MockRouteRepository extends Mock implements RouteRepository {}
@@ -60,6 +61,7 @@ void main() {
     GetFareEstimates(repository),
     requestRideStub(const Right('ride-id')),
     draft,
+    scheduleRide: scheduleRideStub(),
   );
   blocTest<RideConfirmCubit, RideConfirmState>(
     'success defaults to economy',
@@ -140,6 +142,7 @@ void main() {
         GetFareEstimates(repository),
         requestRideStub(Left(failure)),
         draft,
+        scheduleRide: scheduleRideStub(),
       ),
       act: (c) async {
         await c.start();

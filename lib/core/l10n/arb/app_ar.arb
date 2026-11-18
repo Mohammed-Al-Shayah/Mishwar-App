@@ -593,5 +593,35 @@
         "type": "String"
       }
     }
+  },
+  "scheduleTitle": "متى بدك تطلع؟",
+  "scheduleToday": "اليوم",
+  "scheduleTomorrow": "بكرا",
+  "scheduleOtherDate": "تاريخ آخر",
+  "scheduleWindow": "احجز من 30 دقيقة لحد 30 يوم لقدام",
+  "scheduleConfirm": "تأكيد الموعد",
+  "scheduleClear": "إلغاء الموعد المحدد",
+  "scheduleSuccess": "انحجز مشوارك",
+  "scheduledDeparture": "موعد الانطلاق · {time}",
+  "scheduleVehicle": "احجز {vehicle}",
+  "scheduledSection": "المجدولة",
+  "scheduledCancelTitle": "بدك تلغي مشوارك المجدول؟",
+  "scheduledCancelConfirm": "إلغاء المشوار",
+  "scheduledKeep": "خلي المشوار",
+  "scheduledCancel": "إلغاء",
+  "tooManyScheduled": "بتقدر تحجز 3 مشاوير مجدولة. إلغي واحد عشان تحجز مشوار جديد.",
+  "@scheduledDeparture": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@scheduleVehicle": {
+    "placeholders": {
+      "vehicle": {
+        "type": "String"
+      }
+    }
   }
 }

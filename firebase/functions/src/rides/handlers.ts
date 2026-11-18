@@ -12,8 +12,8 @@ function place(value: unknown) {
   const data = v.object(value);
   return { ...v.point(data), name: v.string(data.name, 1, 120), address: v.string(data.address, 1, 200) };
 }
-export async function requestRideHandler(request: CallableRequest, db: Firestore, key: string,
-  estimate = fareEstimatesHandler, now = () => Timestamp.now()) {
+export async function buildRide(request: CallableRequest, db: Firestore, key: string,
+  estimate = fareEstimatesHandler) {
   authenticated(request);
   const uid = request.auth!.uid;
   const data = v.object(request.data);
@@ -25,19 +25,26 @@ export async function requestRideHandler(request: CallableRequest, db: Firestore
   // Only validated coordinates go to the server route/pricing implementation.
   const estimates = await estimate({ ...request, data: { origin: pickup, destination: dropoff } }, key);
   const estimated = estimates.fares.find((fare) => fare.vehicleType === vehicleType)!.amount;
+  const storedPlace = (p: ReturnType<typeof place>) => ({ name: p.name, address: p.address, geopoint: new GeoPoint(p.lat, p.lng) });
+  return {
+    riderId: uid, driverId: null, vehicleType,
+    pickup: storedPlace(pickup), dropoff: storedPlace(dropoff), route: estimates.route,
+    fare: { estimated, final: null, currency: 'JOD' }, paymentMethod: 'cash',
+    offeredTo: null, offerExpiresAt: null, offerSeq: 0, offerDistanceMeters: null,
+    declinedBy: [], createdAt: FieldValue.serverTimestamp(),
+  };
+}
+export async function requestRideHandler(request: CallableRequest, db: Firestore, key: string,
+  estimate = fareEstimatesHandler, now = () => Timestamp.now()) {
+  const ride = await buildRide(request, db, key, estimate);
+  const uid = request.auth!.uid, userRef = db.doc(`users/${uid}`);
   const rideRef = db.collection('rides').doc();
   await db.runTransaction(async (tx) => {
     const user = await tx.get(userRef);
     if (user.data()?.accountDeleting || user.data()?.role !== 'rider') throw new HttpsError('permission-denied', 'Rider role required.');
     const active = await tx.get(db.collection('rides').where('riderId', '==', uid).where('status', 'in', activeStatuses).limit(1));
     if (!active.empty) throw new HttpsError('failed-precondition', 'An active ride already exists.', { activeRideId: active.docs[0].id });
-    const storedPlace = (p: ReturnType<typeof place>) => ({ name: p.name, address: p.address, geopoint: new GeoPoint(p.lat, p.lng) });
-    tx.create(rideRef, {
-      riderId: uid, driverId: null, status: 'searching', vehicleType,
-      pickup: storedPlace(pickup), dropoff: storedPlace(dropoff), route: estimates.route,
-      fare: { estimated, final: null, currency: 'JOD' }, paymentMethod: 'cash',
-      offeredTo: null, offerExpiresAt: null, offerSeq: 0, offerDistanceMeters: null,
-      declinedBy: [], createdAt: FieldValue.serverTimestamp(),
+    tx.create(rideRef, { ...ride, status: 'searching',
       searchExpiresAt: Timestamp.fromMillis(now().toMillis() + 120000),
     });
     // This document also serializes concurrent requests from the same rider.
@@ -74,6 +81,10 @@ export async function cancelRideHandler(request: CallableRequest, db: Firestore,
       return true;
     }
     if (data.riderId !== uid) throw new HttpsError('permission-denied', 'Ride participant required.');
+    if (data.status === 'scheduled' || (data.status === 'cancelled' && data.scheduledFor && data.cancelledBy === 'rider')) {
+      if (data.status === 'scheduled') tx.update(ref, { status: 'cancelled', cancelledBy: 'rider', cancelledAt: FieldValue.serverTimestamp() });
+      return false;
+    }
     const userRef = db.doc(`users/${data.riderId}`);
     const user = await tx.get(userRef);
     if (data.status !== 'cancelled' && !cancellable.includes(data.status)) throw new HttpsError('failed-precondition', 'Ride cannot be cancelled.');

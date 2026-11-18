@@ -23,6 +23,24 @@ test('offer payload and 15 second lifetime', async () => {
 test('missing token skips messaging', async () => {
   await send(new FakeFirestore(), { send: () => assert.fail('must skip') });
 });
+
+test('scheduled notifications reuse token delivery and emulator logging', async () => {
+  let payload;
+  const body = 'مشوارك المجدول الساعة ٣:٣٠ م';
+  await sendOfferNotification(seed(), { send: async message => { payload = message; } }, 'd', 'r', () => {}, body);
+  assert.deepEqual(payload.data, { type: 'scheduled_ride', rideId: 'r' });
+  assert.equal(payload.notification.body, body);
+  const previous = process.env.FUNCTIONS_EMULATOR;
+  process.env.FUNCTIONS_EMULATOR = 'true';
+  try {
+    const logs = [];
+    await sendOfferNotification({}, {}, 'd', 'r', message => logs.push(message), body);
+    assert.equal(logs.length, 1); assert.ok(logs[0].includes(body));
+  } finally {
+    if (previous === undefined) delete process.env.FUNCTIONS_EMULATOR;
+    else process.env.FUNCTIONS_EMULATOR = previous;
+  }
+});
 for (const code of ['messaging/registration-token-not-registered', 'messaging/invalid-registration-token']) {
   test(code + ' cleans up only the token used', async () => {
     const db = seed();

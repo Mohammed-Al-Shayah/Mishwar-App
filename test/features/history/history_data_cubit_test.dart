@@ -2,6 +2,7 @@
 // ignore_for_file: subtype_of_sealed_class
 
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,6 +28,8 @@ import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cu
 import 'package:mishwar/features/driver/earnings/presentation/earnings_screen_cubit.dart';
 import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../../helpers/ride_mocks.dart';
 import '../common/ride/ride_data_test.dart' show rideJson;
 
 class MockDb extends Mock implements FirebaseFirestore {}
@@ -200,7 +203,11 @@ void main() {
   test('history first, more, end, failure, retry and empty', () async {
     final rides = MockRides();
     final cursor = Cursor();
-    final cubit = RideHistoryCubit(GetRideHistory(rides));
+    final cubit = RideHistoryCubit(
+      GetRideHistory(rides),
+      watchScheduledRides: emptyScheduledRidesWatch(),
+      cancelRide: cancelRideStub(),
+    );
     addTearDown(cubit.close);
     when(() => rides.history(party: RideParty.rider, uid: 'u')).thenAnswer(
       (_) async =>
@@ -241,7 +248,11 @@ void main() {
   test('refresh discards an older in-flight page', () async {
     final rides = MockRides();
     final pending = Completer<Either<Failure, RideHistoryPage>>();
-    final cubit = RideHistoryCubit(GetRideHistory(rides));
+    final cubit = RideHistoryCubit(
+      GetRideHistory(rides),
+      watchScheduledRides: emptyScheduledRidesWatch(),
+      cancelRide: cancelRideStub(),
+    );
     addTearDown(cubit.close);
     when(
       () => rides.history(party: RideParty.rider, uid: 'u'),

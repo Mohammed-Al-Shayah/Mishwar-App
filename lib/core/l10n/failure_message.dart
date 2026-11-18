@@ -33,6 +33,7 @@ String failureMessage(BuildContext context, Failure failure) {
       OfferFailureReason.notOffered => l10n.offerNotOffered,
       OfferFailureReason.driverBusy => l10n.offerDriverBusy,
     },
+    SchedulingFailure() => l10n.tooManyScheduled,
     NetworkFailure() => l10n.errorNetwork,
     _ => l10n.errorGeneric,
   };

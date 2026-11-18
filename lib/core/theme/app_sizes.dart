@@ -1,6 +1,8 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static double get schedulePillWidth => 200.w;
+  static double get scheduleWheelHeight => 216.h;
   static double get earningsChartHeight => 144.h;
   static double get ratingControlStar => 40.r;
   static double get driverAvatar => 56.r;
