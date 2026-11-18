@@ -44,6 +44,7 @@ class RideRepositoryImpl implements RideRepository {
           'vehicleType': vehicleType.name,
           'paymentMethod': 'cash',
           'serviceType': draft.serviceType.name,
+          if (draft.flightNumber != null) 'flightNumber': draft.flightNumber,
           if (draft.parcel case final parcel?)
             'parcel': {
               'recipientName': parcel.recipientName,
@@ -108,6 +109,7 @@ class RideRepositoryImpl implements RideRepository {
           'vehicleType': vehicleType.name,
           'paymentMethod': 'cash',
           'serviceType': draft.serviceType.name,
+          if (draft.flightNumber != null) 'flightNumber': draft.flightNumber,
           if (draft.parcel case final parcel?)
             'parcel': {
               'recipientName': parcel.recipientName,

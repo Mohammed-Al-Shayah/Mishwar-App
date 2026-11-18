@@ -20,10 +20,12 @@ class RideDraft extends Equatable {
     required this.pickup,
     required this.dropoff,
     this.parcel,
+    this.flightNumber,
     this.scheduledFor,
     this.promoCode,
   });
   final ParcelDetails? parcel;
+  final String? flightNumber;
   ServiceType get serviceType =>
       parcel == null ? ServiceType.ride : ServiceType.parcel;
   final String? promoCode;
@@ -33,10 +35,18 @@ class RideDraft extends Equatable {
     scheduledFor: scheduledFor,
     promoCode: code,
     parcel: parcel,
+    flightNumber: flightNumber,
   );
   final DateTime? scheduledFor;
   final RideStop pickup;
   final RideStop dropoff;
   @override
-  List<Object?> get props => [pickup, dropoff, scheduledFor, promoCode, parcel];
+  List<Object?> get props => [
+    pickup,
+    dropoff,
+    scheduledFor,
+    promoCode,
+    parcel,
+    flightNumber,
+  ];
 }

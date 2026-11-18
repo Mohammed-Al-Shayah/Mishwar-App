@@ -19,7 +19,8 @@ import 'package:mishwar/features/rider/search/presentation/bloc/destination_sear
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_state.dart';
 
 class DestinationSearchScreen extends StatefulWidget {
-  const DestinationSearchScreen({super.key});
+  const DestinationSearchScreen({this.pickupName, super.key});
+  final String? pickupName;
   @override
   State<DestinationSearchScreen> createState() =>
       _DestinationSearchScreenState();
@@ -111,7 +112,8 @@ class _DestinationSearchScreenState extends State<DestinationSearchScreen> {
                                   vertical: AppSpacing.sm,
                                 ),
                                 child: Text(
-                                  context.l10n.currentLocation,
+                                  widget.pickupName ??
+                                      context.l10n.currentLocation,
                                   style: context.textStyles.bodySmall?.copyWith(
                                     color: context.colors.textSecondary,
                                   ),

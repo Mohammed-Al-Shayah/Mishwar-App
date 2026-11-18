@@ -553,7 +553,7 @@ as String,
 /// @nodoc
 mixin _$FareEstimatesModel {
 
- RouteModel get route; List<FareEstimateModel> get fares;
+ RouteModel get route; List<FareEstimateModel> get fares; AirportDetailsModel? get airport;
 /// Create a copy of FareEstimatesModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -566,16 +566,16 @@ $FareEstimatesModelCopyWith<FareEstimatesModel> get copyWith => _$FareEstimatesM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FareEstimatesModel&&(identical(other.route, route) || other.route == route)&&const DeepCollectionEquality().equals(other.fares, fares));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FareEstimatesModel&&(identical(other.route, route) || other.route == route)&&const DeepCollectionEquality().equals(other.fares, fares)&&(identical(other.airport, airport) || other.airport == airport));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,route,const DeepCollectionEquality().hash(fares));
+int get hashCode => Object.hash(runtimeType,route,const DeepCollectionEquality().hash(fares),airport);
 
 @override
 String toString() {
-  return 'FareEstimatesModel(route: $route, fares: $fares)';
+  return 'FareEstimatesModel(route: $route, fares: $fares, airport: $airport)';
 }
 
 
@@ -586,11 +586,11 @@ abstract mixin class $FareEstimatesModelCopyWith<$Res>  {
   factory $FareEstimatesModelCopyWith(FareEstimatesModel value, $Res Function(FareEstimatesModel) _then) = _$FareEstimatesModelCopyWithImpl;
 @useResult
 $Res call({
- RouteModel route, List<FareEstimateModel> fares
+ RouteModel route, List<FareEstimateModel> fares, AirportDetailsModel? airport
 });
 
 
-$RouteModelCopyWith<$Res> get route;
+$RouteModelCopyWith<$Res> get route;$AirportDetailsModelCopyWith<$Res>? get airport;
 
 }
 /// @nodoc
@@ -603,11 +603,12 @@ class _$FareEstimatesModelCopyWithImpl<$Res>
 
 /// Create a copy of FareEstimatesModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? route = null,Object? fares = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? route = null,Object? fares = null,Object? airport = freezed,}) {
   return _then(_self.copyWith(
 route: null == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
 as RouteModel,fares: null == fares ? _self.fares : fares // ignore: cast_nullable_to_non_nullable
-as List<FareEstimateModel>,
+as List<FareEstimateModel>,airport: freezed == airport ? _self.airport : airport // ignore: cast_nullable_to_non_nullable
+as AirportDetailsModel?,
   ));
 }
 /// Create a copy of FareEstimatesModel
@@ -618,6 +619,18 @@ $RouteModelCopyWith<$Res> get route {
   
   return $RouteModelCopyWith<$Res>(_self.route, (value) {
     return _then(_self.copyWith(route: value));
+  });
+}/// Create a copy of FareEstimatesModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AirportDetailsModelCopyWith<$Res>? get airport {
+    if (_self.airport == null) {
+    return null;
+  }
+
+  return $AirportDetailsModelCopyWith<$Res>(_self.airport!, (value) {
+    return _then(_self.copyWith(airport: value));
   });
 }
 }
@@ -701,10 +714,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RouteModel route,  List<FareEstimateModel> fares)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RouteModel route,  List<FareEstimateModel> fares,  AirportDetailsModel? airport)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FareEstimatesModel() when $default != null:
-return $default(_that.route,_that.fares);case _:
+return $default(_that.route,_that.fares,_that.airport);case _:
   return orElse();
 
 }
@@ -722,10 +735,10 @@ return $default(_that.route,_that.fares);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RouteModel route,  List<FareEstimateModel> fares)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RouteModel route,  List<FareEstimateModel> fares,  AirportDetailsModel? airport)  $default,) {final _that = this;
 switch (_that) {
 case _FareEstimatesModel():
-return $default(_that.route,_that.fares);case _:
+return $default(_that.route,_that.fares,_that.airport);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -742,10 +755,10 @@ return $default(_that.route,_that.fares);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RouteModel route,  List<FareEstimateModel> fares)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RouteModel route,  List<FareEstimateModel> fares,  AirportDetailsModel? airport)?  $default,) {final _that = this;
 switch (_that) {
 case _FareEstimatesModel() when $default != null:
-return $default(_that.route,_that.fares);case _:
+return $default(_that.route,_that.fares,_that.airport);case _:
   return null;
 
 }
@@ -757,7 +770,7 @@ return $default(_that.route,_that.fares);case _:
 @JsonSerializable()
 
 class _FareEstimatesModel extends FareEstimatesModel {
-  const _FareEstimatesModel({required this.route, required final  List<FareEstimateModel> fares}): _fares = fares,super._();
+  const _FareEstimatesModel({required this.route, required final  List<FareEstimateModel> fares, this.airport}): _fares = fares,super._();
   factory _FareEstimatesModel.fromJson(Map<String, dynamic> json) => _$FareEstimatesModelFromJson(json);
 
 @override final  RouteModel route;
@@ -768,6 +781,7 @@ class _FareEstimatesModel extends FareEstimatesModel {
   return EqualUnmodifiableListView(_fares);
 }
 
+@override final  AirportDetailsModel? airport;
 
 /// Create a copy of FareEstimatesModel
 /// with the given fields replaced by the non-null parameter values.
@@ -782,16 +796,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FareEstimatesModel&&(identical(other.route, route) || other.route == route)&&const DeepCollectionEquality().equals(other._fares, _fares));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FareEstimatesModel&&(identical(other.route, route) || other.route == route)&&const DeepCollectionEquality().equals(other._fares, _fares)&&(identical(other.airport, airport) || other.airport == airport));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,route,const DeepCollectionEquality().hash(_fares));
+int get hashCode => Object.hash(runtimeType,route,const DeepCollectionEquality().hash(_fares),airport);
 
 @override
 String toString() {
-  return 'FareEstimatesModel(route: $route, fares: $fares)';
+  return 'FareEstimatesModel(route: $route, fares: $fares, airport: $airport)';
 }
 
 
@@ -802,11 +816,11 @@ abstract mixin class _$FareEstimatesModelCopyWith<$Res> implements $FareEstimate
   factory _$FareEstimatesModelCopyWith(_FareEstimatesModel value, $Res Function(_FareEstimatesModel) _then) = __$FareEstimatesModelCopyWithImpl;
 @override @useResult
 $Res call({
- RouteModel route, List<FareEstimateModel> fares
+ RouteModel route, List<FareEstimateModel> fares, AirportDetailsModel? airport
 });
 
 
-@override $RouteModelCopyWith<$Res> get route;
+@override $RouteModelCopyWith<$Res> get route;@override $AirportDetailsModelCopyWith<$Res>? get airport;
 
 }
 /// @nodoc
@@ -819,11 +833,12 @@ class __$FareEstimatesModelCopyWithImpl<$Res>
 
 /// Create a copy of FareEstimatesModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? route = null,Object? fares = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? route = null,Object? fares = null,Object? airport = freezed,}) {
   return _then(_FareEstimatesModel(
 route: null == route ? _self.route : route // ignore: cast_nullable_to_non_nullable
 as RouteModel,fares: null == fares ? _self._fares : fares // ignore: cast_nullable_to_non_nullable
-as List<FareEstimateModel>,
+as List<FareEstimateModel>,airport: freezed == airport ? _self.airport : airport // ignore: cast_nullable_to_non_nullable
+as AirportDetailsModel?,
   ));
 }
 
@@ -835,6 +850,18 @@ $RouteModelCopyWith<$Res> get route {
   
   return $RouteModelCopyWith<$Res>(_self.route, (value) {
     return _then(_self.copyWith(route: value));
+  });
+}/// Create a copy of FareEstimatesModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AirportDetailsModelCopyWith<$Res>? get airport {
+    if (_self.airport == null) {
+    return null;
+  }
+
+  return $AirportDetailsModelCopyWith<$Res>(_self.airport!, (value) {
+    return _then(_self.copyWith(airport: value));
   });
 }
 }

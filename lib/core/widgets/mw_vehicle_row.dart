@@ -17,6 +17,7 @@ class MwVehicleRow extends StatelessWidget {
     required this.onTap,
     this.isVan = false,
     this.originalPrice,
+    this.priceLabel,
     super.key,
   });
   final String name;
@@ -25,6 +26,7 @@ class MwVehicleRow extends StatelessWidget {
   final String tagline;
   final String price;
   final String? originalPrice;
+  final String? priceLabel;
   final bool selected;
   final bool isVan;
   final VoidCallback onTap;
@@ -102,7 +104,36 @@ class MwVehicleRow extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: AppSpacing.xs),
-                if (originalPrice == null)
+                if (priceLabel != null)
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Chip(
+                          label: Text(
+                            priceLabel!,
+                            style: AppTextStyles.caption,
+                          ),
+                        ),
+                        Text(
+                          price,
+                          textDirection: TextDirection.ltr,
+                          style: AppTextStyles.tabular(AppTextStyles.headline),
+                        ),
+                        if (originalPrice != null)
+                          Text(
+                            originalPrice!,
+                            textDirection: TextDirection.ltr,
+                            style: AppTextStyles.tabular(AppTextStyles.footnote)
+                                .copyWith(
+                                  color: context.colors.textSecondary,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                          ),
+                      ],
+                    ),
+                  )
+                else if (originalPrice == null)
                   Text(
                     price,
                     textDirection: TextDirection.ltr,

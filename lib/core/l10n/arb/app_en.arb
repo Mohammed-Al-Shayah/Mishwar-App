@@ -873,5 +873,16 @@
   "parcelBadCode": "That code isn't right. Try again",
   "parcelCodeLocked": "You've reached 5 attempts. Contact support to complete delivery",
   "parcelSupport": "Contact support",
-  "parcelServiceDisabled": "Parcel delivery is unavailable right now. Try again later"
+  "parcelServiceDisabled": "Parcel delivery is unavailable right now. Try again later",
+  "airportTo": "To the airport",
+  "airportFrom": "From the airport",
+  "airportName": "Queen Alia International Airport",
+  "airportPickup": "Choose a pickup point",
+  "airportFlightNumber": "Flight number (optional)",
+  "airportFlightHint": "RJ 182",
+  "airportFlightInvalid": "Check your flight number, e.g. RJ 182",
+  "airportUnavailable": "Airport service is unavailable. Please try again later.",
+  "airportContinue": "Continue",
+  "airportFixedFare": "Fixed airport fare",
+  "airportReceipt": "Airport ride · Fixed fare"
 }

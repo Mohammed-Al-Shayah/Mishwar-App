@@ -21,8 +21,8 @@ export function requireSmsSender(sender: SmsSender) {
 }
 export function parcelInput(data: Record<string, unknown>, uid: string) {
   const serviceType = data.serviceType ?? 'ride';
-  if (serviceType !== 'ride' && serviceType !== 'parcel') v.invalid();
-  if (serviceType === 'ride') {
+  if (serviceType !== 'ride' && serviceType !== 'parcel' && serviceType !== 'airport') v.invalid();
+  if (serviceType !== 'parcel') {
     if (data.parcel !== undefined) v.invalid();
     return { serviceType };
   }

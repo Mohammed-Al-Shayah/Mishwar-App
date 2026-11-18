@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1619,4 +1620,38 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get parcelServiceDisabled =>
       'Parcel delivery is unavailable right now. Try again later';
+
+  @override
+  String get airportTo => 'To the airport';
+
+  @override
+  String get airportFrom => 'From the airport';
+
+  @override
+  String get airportName => 'Queen Alia International Airport';
+
+  @override
+  String get airportPickup => 'Choose a pickup point';
+
+  @override
+  String get airportFlightNumber => 'Flight number (optional)';
+
+  @override
+  String get airportFlightHint => 'RJ 182';
+
+  @override
+  String get airportFlightInvalid => 'Check your flight number, e.g. RJ 182';
+
+  @override
+  String get airportUnavailable =>
+      'Airport service is unavailable. Please try again later.';
+
+  @override
+  String get airportContinue => 'Continue';
+
+  @override
+  String get airportFixedFare => 'Fixed airport fare';
+
+  @override
+  String get airportReceipt => 'Airport ride · Fixed fare';
 }

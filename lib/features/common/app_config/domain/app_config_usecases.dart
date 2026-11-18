@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/features/common/app_config/domain/airport_config.dart';
 import 'package:mishwar/features/common/app_config/domain/app_banner.dart';
 import 'package:mishwar/features/common/app_config/domain/app_config_repository.dart';
 import 'package:mishwar/features/common/app_config/domain/app_service.dart';
@@ -26,4 +27,11 @@ class WatchServices {
   final AppConfigRepository _repository;
   Stream<Either<Failure, List<AppService>>> call() =>
       _repository.watchServices();
+}
+
+@lazySingleton
+class GetAirportConfig {
+  const GetAirportConfig(this._repository);
+  final AppConfigRepository _repository;
+  Future<Either<Failure, AirportConfig?>> call() => _repository.airportConfig();
 }

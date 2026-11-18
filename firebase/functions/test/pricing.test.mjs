@@ -6,7 +6,8 @@ import {readFileSync} from 'node:fs';
 import {spawnSync, spawn} from 'node:child_process';
 import {createServer} from 'node:http';
 import {computeFare,DEFAULT_PRICING} from '../lib/pricing.js';
-import {fareEstimatesHandler} from '../lib/getFareEstimates.js';
+import {fareEstimatesHandler as estimates} from '../lib/getFareEstimates.js';
+const fareEstimatesHandler = (...args) => estimates(...args, async()=>undefined);
 const fixtures=JSON.parse(readFileSync(new URL('./fixtures/fares.json',import.meta.url),'utf8'));
 for(const row of fixtures) test('fixture: '+row.name,()=>{
  assert.equal(computeFare(DEFAULT_PRICING[row.vehicleType],row.distanceMeters,row.durationSeconds)*1000,row.expectedFils);

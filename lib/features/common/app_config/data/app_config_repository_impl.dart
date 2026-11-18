@@ -4,8 +4,10 @@ import 'package:clock/clock.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/features/common/app_config/data/airport_config_parser.dart';
 import 'package:mishwar/features/common/app_config/data/app_config_remote_data_source.dart';
 import 'package:mishwar/features/common/app_config/data/app_service_model.dart';
+import 'package:mishwar/features/common/app_config/domain/airport_config.dart';
 import 'package:mishwar/features/common/app_config/domain/app_banner.dart';
 import 'package:mishwar/features/common/app_config/domain/app_config_repository.dart';
 import 'package:mishwar/features/common/app_config/domain/app_service.dart';
@@ -14,6 +16,15 @@ import 'package:mishwar/features/common/app_config/domain/app_service.dart';
 class AppConfigRepositoryImpl implements AppConfigRepository {
   const AppConfigRepositoryImpl(this._remote);
   final AppConfigRemoteDataSource _remote;
+  @override
+  Future<Either<Failure, AirportConfig?>> airportConfig() async {
+    try {
+      return Right(parseAirportConfig(await _remote.appConfig()));
+    } on Object {
+      return const Left(ServerFailure('airport'));
+    }
+  }
+
   @override
   Stream<Either<Failure, List<AppService>>> watchServices() async* {
     try {

@@ -6,6 +6,8 @@ import 'package:mishwar/features/common/app_config/data/app_banner_model.dart';
 class AppConfigRemoteDataSource {
   const AppConfigRemoteDataSource(this._db);
   final FirebaseFirestore _db;
+  Future<Map<String, dynamic>?> appConfig() async =>
+      (await _db.doc('config/app').get()).data();
   Stream<Map<String, dynamic>?> watchServices() =>
       _db.doc('config/app').snapshots().map((doc) => doc.data());
   Stream<List<AppBannerModel>> watchBanners({bool all = false}) {

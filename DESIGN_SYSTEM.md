@@ -212,3 +212,12 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 - Services: four 76 × 76 grey100 tiles, radius 12, Phosphor regular glyphs and captions. Disabled services retain their position with a muted glyph and a small “قريباً” pill. The full services screen uses two columns and one-line descriptions.
 - Banner carousel: 16:8 images, radius 12, grey100 loading/error surface, white title/subtitle on a bottom black 50% to transparent gradient, with page dots below. Advance every five seconds; pause during touch and while the app is inactive; disable automatic movement for reduced motion.
 - Admin content uses the existing web workspace, flat service rows, native switches, order arrows and a scrollable banner editor.
+
+### Airport service (T7.2)
+
+- Airport booking uses a native to/from segmented control, standard pin list rows
+  for arrivals pickup points, and an optional LTR flight field with inline negative
+  validation. Content scrolls above one primary continue button.
+- Vehicle prices carry a small monochrome fixed-airport-fare pill; traffic ETAs
+  remain visible. Driver offers and trips show an airport chip and optional LTR
+  flight number. Receipts add a standard fixed-fare airport row. Support text scale 1.3.

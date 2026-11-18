@@ -275,6 +275,9 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                       MwVehicleRow(
                                         key: ValueKey(type),
                                         name: _name(context, type),
+                                        priceLabel: loaded.airport == null
+                                            ? null
+                                            : context.l10n.airportFixedFare,
                                         seats: type == VehicleType.van ? 6 : 4,
                                         isVan: type == VehicleType.van,
                                         selected: loaded.selected == type,

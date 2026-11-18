@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mishwar/core/firebase/converters.dart';
+import 'package:mishwar/features/common/ride/data/models/airport_details_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/parcel_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_party_info.dart';
@@ -73,6 +74,7 @@ abstract class RideModel with _$RideModel {
     @TimestampConverter() DateTime? scheduledFor,
     @Default(ServiceType.ride) ServiceType serviceType,
     ParcelDetailsModel? parcel,
+    AirportDetailsModel? airport,
     RidePromoModel? promo,
     RideRatingModel? driverRating,
     RideRatingModel? riderRating,
@@ -112,6 +114,7 @@ abstract class RideModel with _$RideModel {
     return RideEntity(
       serviceType: serviceType,
       parcel: parcel?.toEntity(),
+      airport: airport?.toEntity(),
       shareToken: shareToken,
       scheduledFor: scheduledFor,
       promoCode: promo?.code,

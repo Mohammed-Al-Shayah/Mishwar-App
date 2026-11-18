@@ -150,7 +150,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
       case ServiceId.parcel:
         await context.push<void>('/rider/parcel');
       case ServiceId.airport:
-        serviceComingSoon(context);
+        await context.push<void>('/rider/airport');
     }
   }
 

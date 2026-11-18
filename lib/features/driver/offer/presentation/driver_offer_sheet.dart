@@ -14,6 +14,7 @@ import 'package:mishwar/core/widgets/mw_countdown_bar.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/presentation/airport_badge.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/driver/offer/presentation/bloc/driver_offer_bloc.dart';
 
@@ -84,6 +85,8 @@ class DriverOfferSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (ride.airport case final airport?)
+                        AirportBadge(airport: airport),
                       if (ride.parcel case final parcel?) ...[
                         Align(
                           alignment: AlignmentDirectional.centerStart,

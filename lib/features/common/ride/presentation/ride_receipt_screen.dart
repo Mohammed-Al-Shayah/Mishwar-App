@@ -96,6 +96,14 @@ class RideReceiptContent extends StatelessWidget {
         ),
         SizedBox(height: AppSpacing.md),
         TripStops(ride: ride),
+        if (ride.airport != null)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+            child: Text(
+              context.l10n.airportReceipt,
+              style: AppTextStyles.headline,
+            ),
+          ),
         if (ride.parcel case final parcel?) ...[
           SizedBox(height: AppSpacing.md),
           Text(context.l10n.parcelRecipient, style: AppTextStyles.footnote),
@@ -261,6 +269,7 @@ String receiptText(BuildContext context, RideEntity ride) {
   String amount(int fils) => l.fareJod(Money(fils).toJodString());
   final lines = [
     l.receiptTitle,
+    if (ride.airport != null) l.airportReceipt,
     historyDate(context, ride.createdAt),
     l.historyRoute(ride.pickup.name, ride.dropoff.name),
   ];

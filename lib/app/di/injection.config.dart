@@ -284,6 +284,8 @@ import 'package:mishwar/features/driver/presence/presentation/bloc/presence_sche
     as _i262;
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart'
     as _i1059;
+import 'package:mishwar/features/rider/airport/presentation/airport_cubit.dart'
+    as _i731;
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart'
     as _i934;
 import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart'
@@ -616,6 +618,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i616.WatchServices>(
       () => _i616.WatchServices(gh<_i654.AppConfigRepository>()),
     );
+    gh.lazySingleton<_i616.GetAirportConfig>(
+      () => _i616.GetAirportConfig(gh<_i654.AppConfigRepository>()),
+    );
     gh.lazySingleton<_i801.CreateUserProfile>(
       () => _i801.CreateUserProfile(gh<_i695.UserRepository>()),
     );
@@ -853,6 +858,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i787.WatchDriverLocation>(),
         gh<_i569.RideTrackingClock>(),
         gh<_i251.CancellationQuote>(),
+      ),
+    );
+    gh.factory<_i731.AirportCubit>(
+      () => _i731.AirportCubit(
+        gh<_i616.GetAirportConfig>(),
+        gh<_i107.CurrentPosition>(),
       ),
     );
     gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(

@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/promos/domain/promo_quote.dart';
 import 'package:mishwar/features/common/promos/domain/validate_promo.dart';
+import 'package:mishwar/features/common/ride/domain/entities/airport_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/schedule_ride.dart';
@@ -29,6 +30,7 @@ class RideConfirmLoaded extends RideConfirmState {
     required this.route,
     required List<FareEstimate> fares,
     this.selected = VehicleType.economy,
+    this.airport,
     this.isRequesting = false,
     this.requestFailure,
     this.promoQuote,
@@ -37,6 +39,7 @@ class RideConfirmLoaded extends RideConfirmState {
     this.promoFailure,
   }) : fares = List.unmodifiable(fares);
   final RouteInfo route;
+  final AirportDetails? airport;
   final List<FareEstimate> fares;
   final VehicleType selected;
   final bool isRequesting;
@@ -52,6 +55,7 @@ class RideConfirmLoaded extends RideConfirmState {
     Failure? failure,
   }) => RideConfirmLoaded(
     route: route,
+    airport: airport,
     fares: fares,
     selected: selected,
     promoQuote: quote,
@@ -64,6 +68,7 @@ class RideConfirmLoaded extends RideConfirmState {
   @override
   List<Object?> get props => [
     route,
+    airport,
     fares,
     selected,
     isRequesting,
@@ -88,6 +93,7 @@ class RideConfirmRequested extends RideConfirmLoaded {
     required super.fares,
     required super.selected,
     required this.rideId,
+    super.airport,
   });
   final String rideId;
   @override
@@ -127,6 +133,7 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
       (estimates) => emit(
         RideConfirmLoaded(
           route: estimates.route,
+          airport: estimates.airport,
           fares: draft.parcel == null
               ? estimates.fares
               : estimates.fares
@@ -156,6 +163,7 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
     emit(
       RideConfirmLoaded(
         route: current.route,
+        airport: current.airport,
         fares: current.fares,
         selected: vehicle,
         promoCode: current.promoCode,
@@ -216,6 +224,7 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
     emit(
       RideConfirmLoaded(
         route: current.route,
+        airport: current.airport,
         fares: current.fares,
         selected: current.selected,
         promoQuote: current.promoQuote,
@@ -236,6 +245,7 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
     void requested(String id) => emit(
       RideConfirmRequested(
         route: current.route,
+        airport: current.airport,
         fares: current.fares,
         selected: current.selected,
         rideId: id,
@@ -248,6 +258,7 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
         emit(
           RideConfirmLoaded(
             route: current.route,
+            airport: current.airport,
             fares: current.fares,
             selected: current.selected,
             requestFailure: failure,

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1604,4 +1605,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get parcelServiceDisabled => 'توصيل الطرود مش متاح هلأ، جرّب بعدين';
+
+  @override
+  String get airportTo => 'للمطار';
+
+  @override
+  String get airportFrom => 'من المطار';
+
+  @override
+  String get airportName => 'مطار الملكة علياء الدولي';
+
+  @override
+  String get airportPickup => 'اختار نقطة الانطلاق';
+
+  @override
+  String get airportFlightNumber => 'رقم الرحلة (اختياري)';
+
+  @override
+  String get airportFlightHint => 'RJ 182';
+
+  @override
+  String get airportFlightInvalid => 'تأكد من رقم الرحلة، مثلاً RJ 182';
+
+  @override
+  String get airportUnavailable => 'خدمة المطار مش متوفرة هلأ، جرّب كمان شوي';
+
+  @override
+  String get airportContinue => 'كمّل';
+
+  @override
+  String get airportFixedFare => 'سعر ثابت للمطار';
+
+  @override
+  String get airportReceipt => 'رحلة مطار · سعر ثابت';
 }

@@ -23,6 +23,7 @@ import 'package:mishwar/core/widgets/map/mw_map_markers.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/presentation/airport_badge.dart';
 import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
 import 'package:mishwar/features/common/ride/presentation/parcel_widgets.dart';
 import 'package:mishwar/features/common/safety/presentation/trip_safety_tools.dart';
@@ -436,6 +437,8 @@ class _TripViewState extends State<_TripView> {
                       ),
                   ],
                 ],
+                if (ride.airport case final airport?)
+                  AirportBadge(airport: airport),
                 if (ride.parcel case final parcel?) ...[
                   Text(parcel.description, style: AppTextStyles.body),
                   if (state.phase == TripPhase.onTrip)

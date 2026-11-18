@@ -12,9 +12,14 @@ import 'package:mishwar/features/rider/search/presentation/bloc/destination_sear
 /// A typed route argument permits an absent location bias, but rejects links
 /// without a search session.
 class DestinationSearchParams {
-  const DestinationSearchParams({this.position, this.language = 'ar'});
+  const DestinationSearchParams({
+    this.position,
+    this.language = 'ar',
+    this.pickupName,
+  });
   final GeoPointValue? position;
   final String language;
+  final String? pickupName;
 }
 
 @injectable

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mishwar/features/common/ride/data/models/airport_details_model.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimate.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimates.dart';
 import 'package:mishwar/features/common/route/domain/entities/route_info.dart';
@@ -49,12 +50,14 @@ abstract class FareEstimatesModel with _$FareEstimatesModel {
   const factory FareEstimatesModel({
     required RouteModel route,
     required List<FareEstimateModel> fares,
+    AirportDetailsModel? airport,
   }) = _FareEstimatesModel;
   const FareEstimatesModel._();
   factory FareEstimatesModel.fromJson(Map<String, dynamic> json) =>
       _$FareEstimatesModelFromJson(json);
   FareEstimates toEntity() => FareEstimates(
     route: route.toEntity(),
+    airport: airport?.toEntity(),
     fares: List.unmodifiable(fares.map((fare) => fare.toEntity())),
   );
 }

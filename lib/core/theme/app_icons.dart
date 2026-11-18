@@ -43,6 +43,7 @@ abstract final class AppIcons {
   static const airplane = IconData(0xe002, fontFamily: 'PhosphorRegular');
   static const car = IconData(0xe112, fontFamily: 'PhosphorRegular');
   static const star = IconData(0xe46a, fontFamily: 'PhosphorRegular');
+  static const check = IconData(0xe182, fontFamily: 'PhosphorRegular');
   static const globe = IconData(0xe288, fontFamily: 'PhosphorRegular');
   static const appearance = IconData(0xe18c, fontFamily: 'PhosphorRegular');
   static const info = IconData(0xe2ce, fontFamily: 'PhosphorRegular');

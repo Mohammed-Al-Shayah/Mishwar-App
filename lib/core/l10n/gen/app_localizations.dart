@@ -3060,6 +3060,72 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'توصيل الطرود مش متاح هلأ، جرّب بعدين'**
   String get parcelServiceDisabled;
+
+  /// No description provided for @airportTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'للمطار'**
+  String get airportTo;
+
+  /// No description provided for @airportFrom.
+  ///
+  /// In ar, this message translates to:
+  /// **'من المطار'**
+  String get airportFrom;
+
+  /// No description provided for @airportName.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطار الملكة علياء الدولي'**
+  String get airportName;
+
+  /// No description provided for @airportPickup.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختار نقطة الانطلاق'**
+  String get airportPickup;
+
+  /// No description provided for @airportFlightNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الرحلة (اختياري)'**
+  String get airportFlightNumber;
+
+  /// No description provided for @airportFlightHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'RJ 182'**
+  String get airportFlightHint;
+
+  /// No description provided for @airportFlightInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكد من رقم الرحلة، مثلاً RJ 182'**
+  String get airportFlightInvalid;
+
+  /// No description provided for @airportUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمة المطار مش متوفرة هلأ، جرّب كمان شوي'**
+  String get airportUnavailable;
+
+  /// No description provided for @airportContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'كمّل'**
+  String get airportContinue;
+
+  /// No description provided for @airportFixedFare.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر ثابت للمطار'**
+  String get airportFixedFare;
+
+  /// No description provided for @airportReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'رحلة مطار · سعر ثابت'**
+  String get airportReceipt;
 }
 
 class _AppLocalizationsDelegate

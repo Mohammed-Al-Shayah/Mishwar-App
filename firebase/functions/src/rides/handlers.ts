@@ -36,11 +36,17 @@ export async function buildRide(request: CallableRequest, db: Firestore, key: st
   if ((await userRef.get()).data()?.role !== 'rider') throw new HttpsError('permission-denied', 'Rider role required.');
   // Only validated coordinates go to the server route/pricing implementation.
   const estimates = await estimate({ ...request, data: { origin: pickup, destination: dropoff } }, key);
+  const direction = estimates.airport?.direction;
+  let flightNumber: string | undefined;
+  if (data.flightNumber !== undefined) {
+    flightNumber = v.string(data.flightNumber, 3, 8).toUpperCase();
+    if (!/^[A-Z0-9]{2}\s?\d{1,4}[A-Z]?$/.test(flightNumber) || !direction || service.serviceType === 'parcel') v.invalid();
+  }
   const estimated = estimates.fares.find((fare) => fare.vehicleType === vehicleType)!.amount;
   const storedPlace = (p: ReturnType<typeof place>) => ({ name: p.name, address: p.address, geopoint: new GeoPoint(p.lat, p.lng) });
   return {
     ...(data.promoCode === undefined ? {} : { promo: await previewPromo(db, normalizePromo(data.promoCode), uid, estimated) }),
-    ...service, riderId: uid, driverId: null, vehicleType,
+    ...service, serviceType: service.serviceType === 'parcel' ? 'parcel' : direction ? 'airport' : 'ride', ...(direction ? { airport: { direction, ...(flightNumber ? { flightNumber } : {}), fixedFare: true } } : {}), riderId: uid, driverId: null, vehicleType,
     pickup: storedPlace(pickup), dropoff: storedPlace(dropoff), route: estimates.route,
     fare: { estimated, final: null, currency: 'JOD' }, paymentMethod: 'cash',
     offeredTo: null, offerExpiresAt: null, offerSeq: 0, offerDistanceMeters: null,

@@ -58,6 +58,8 @@ import 'package:mishwar/features/driver/rating/presentation/driver_rating_screen
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart'
     as trip;
 import 'package:mishwar/features/driver/trip/presentation/driver_trip_screen.dart';
+import 'package:mishwar/features/rider/airport/presentation/airport_cubit.dart';
+import 'package:mishwar/features/rider/airport/presentation/airport_screen.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
 import 'package:mishwar/features/rider/confirm/presentation/ride_confirm_screen.dart';
 import 'package:mishwar/features/rider/history/presentation/ride_history_cubit.dart';
@@ -123,6 +125,7 @@ String? sessionRedirect(
                             location == '/rider/places' ||
                             location == '/rider/services' ||
                             location == '/rider/parcel' ||
+                            location == '/rider/airport' ||
                             location == '/rider/history' ||
                             RegExp(
                               r'^/rider/history/[^/]+$',
@@ -299,6 +302,17 @@ GoRouter createAppRouter(
           ),
         ),
         GoRoute(
+          path: 'airport',
+          builder: (_, _) => BlocProvider(
+            create: (_) {
+              final cubit = getIt<AirportCubit>();
+              unawaited(cubit.load());
+              return cubit;
+            },
+            child: const AirportScreen(),
+          ),
+        ),
+        GoRoute(
           path: 'parcel',
           builder: (_, _) => BlocProvider(
             create: (_) => getIt<ParcelFormCubit>(),
@@ -416,7 +430,9 @@ GoRouter createAppRouter(
                 },
               ),
             ],
-            child: const DestinationSearchScreen(),
+            child: DestinationSearchScreen(
+              pickupName: (state.extra! as DestinationSearchParams).pickupName,
+            ),
           ),
         ),
         GoRoute(

@@ -65,6 +65,9 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
   parcel: json['parcel'] == null
       ? null
       : ParcelDetailsModel.fromJson(json['parcel'] as Map<String, dynamic>),
+  airport: json['airport'] == null
+      ? null
+      : AirportDetailsModel.fromJson(json['airport'] as Map<String, dynamic>),
   promo: json['promo'] == null
       ? null
       : RidePromoModel.fromJson(json['promo'] as Map<String, dynamic>),
@@ -133,6 +136,7 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
       ),
       'serviceType': _$ServiceTypeEnumMap[instance.serviceType]!,
       'parcel': instance.parcel?.toJson(),
+      'airport': instance.airport?.toJson(),
       'promo': instance.promo?.toJson(),
       'driverRating': instance.driverRating?.toJson(),
       'riderRating': instance.riderRating?.toJson(),
@@ -187,6 +191,7 @@ Value? _$JsonConverterFromJson<Json, Value>(
 const _$ServiceTypeEnumMap = {
   ServiceType.ride: 'ride',
   ServiceType.parcel: 'parcel',
+  ServiceType.airport: 'airport',
 };
 
 Json? _$JsonConverterToJson<Json, Value>(

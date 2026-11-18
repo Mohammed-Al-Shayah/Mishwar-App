@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum ServiceType { ride, parcel }
+enum ServiceType { ride, parcel, airport }
 
 class ParcelDetails extends Equatable {
   const ParcelDetails({

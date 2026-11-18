@@ -45,7 +45,16 @@ _FareEstimatesModel _$FareEstimatesModelFromJson(Map<String, dynamic> json) =>
       fares: (json['fares'] as List<dynamic>)
           .map((e) => FareEstimateModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      airport: json['airport'] == null
+          ? null
+          : AirportDetailsModel.fromJson(
+              json['airport'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$FareEstimatesModelToJson(_FareEstimatesModel instance) =>
-    <String, dynamic>{'route': instance.route, 'fares': instance.fares};
+    <String, dynamic>{
+      'route': instance.route,
+      'fares': instance.fares,
+      'airport': instance.airport,
+    };

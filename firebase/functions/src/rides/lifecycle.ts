@@ -69,13 +69,13 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     const pricing = pricingDocument.exists ? parsePricing(pricingDocument.data()) : DEFAULT_PRICING;
     const seconds = (time.toMillis() - (ride.startedAt?.toMillis() ?? NaN)) / 1000;
     if (!Number.isFinite(seconds) || seconds < 0 || !Number.isFinite(ride.fare?.estimated) || ride.fare.estimated < 0) invalid();
-    const priced = computeFare(pricing[ride.vehicleType as VehicleType], ride.route.distanceMeters, seconds);
+    const priced = ride.airport?.fixedFare === true ? ride.fare.estimated : computeFare(pricing[ride.vehicleType as VehicleType], ride.route.distanceMeters, seconds);
     const estimatedFils = Math.round(ride.fare.estimated * 1000);
     const cap = estimatedFils * 3 / 2000;
-    let final = roundFare(Math.min(cap, Math.max(ride.fare.estimated, priced)));
+    let final = ride.airport?.fixedFare === true ? ride.fare.estimated : roundFare(Math.min(cap, Math.max(ride.fare.estimated, priced)));
     const checked = ride.promo ? await readPromo(db, tx, ride.promo.code, ride.riderId, final, ride.createdAt) : undefined;
     const discount = checked?.result.ok ? checked.result.discountJod : 0;
-    final = roundFare(Math.max(0, (Math.round(final * 1000) - Math.round(discount * 1000)) / 1000));
+    if (discount > 0 || ride.airport?.fixedFare !== true) final = roundFare(Math.max(0, (Math.round(final * 1000) - Math.round(discount * 1000)) / 1000));
     final = (Math.round(final * 1000) + waitingFils + balanceFils) / 1000;
     const day = earningsDay(time);
     const earningsRef = db.doc(`drivers/${ride.driverId}/earnings/${day}`);

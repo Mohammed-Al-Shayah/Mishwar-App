@@ -892,5 +892,16 @@
   "parcelBadCode": "الرمز مش صح، جرّب كمان مرة",
   "parcelCodeLocked": "وصلت لـ 5 محاولات، تواصل مع الدعم عشان تكمّل التسليم",
   "parcelSupport": "تواصل مع الدعم",
-  "parcelServiceDisabled": "توصيل الطرود مش متاح هلأ، جرّب بعدين"
+  "parcelServiceDisabled": "توصيل الطرود مش متاح هلأ، جرّب بعدين",
+  "airportTo": "للمطار",
+  "airportFrom": "من المطار",
+  "airportName": "مطار الملكة علياء الدولي",
+  "airportPickup": "اختار نقطة الانطلاق",
+  "airportFlightNumber": "رقم الرحلة (اختياري)",
+  "airportFlightHint": "RJ 182",
+  "airportFlightInvalid": "تأكد من رقم الرحلة، مثلاً RJ 182",
+  "airportUnavailable": "خدمة المطار مش متوفرة هلأ، جرّب كمان شوي",
+  "airportContinue": "كمّل",
+  "airportFixedFare": "سعر ثابت للمطار",
+  "airportReceipt": "رحلة مطار · سعر ثابت"
 }

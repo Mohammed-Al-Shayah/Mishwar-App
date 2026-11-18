@@ -205,10 +205,6 @@ class ServicesScreen extends StatelessWidget {
           services: state.services,
           full: true,
           onService: (id) {
-            if (id == ServiceId.airport) {
-              serviceComingSoon(context);
-              return;
-            }
             if (context.canPop()) {
               context.pop(id);
             } else {

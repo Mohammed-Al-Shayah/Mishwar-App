@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mishwar/core/theme/app_colors.dart';
+import 'package:mishwar/core/theme/app_icons.dart';
 import 'package:mishwar/core/theme/app_radius.dart';
 import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
@@ -111,6 +112,11 @@ abstract final class AppTheme {
           borderRadius: AppRadius.pillBorder,
           borderSide: BorderSide.none,
         ),
+      ),
+      // Selected segments use the bundled Phosphor check like the rest
+      // of the UI.
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        selectedIcon: Icon(AppIcons.check, size: AppSizes.icon),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colors.sheet,
