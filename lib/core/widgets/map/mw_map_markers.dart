@@ -16,20 +16,38 @@ abstract final class MwMapMarkers {
     final size = AppSizes.carMarker;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder)..scale(ratio);
-    final body = Rect.fromLTWH(size * .25, size * .05, size * .5, size * .9);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(body, Radius.circular(size * .12)),
-      Paint()..color = AppColors.black,
-    );
-    for (final y in [.23, .66]) {
+    // Top-down car, nose up, drawn on a 24 × 44 grid (same proportions as the
+    // share page marker) and centred in the square marker.
+    final unit = size * .9 / 44;
+    final dx = (size - 24 * unit) / 2;
+    final dy = size * .05;
+    void part(double x, double y, double w, double h, double r, Color c) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(size * .32, size * y, size * .36, size * .15),
-          Radius.circular(size * .03),
+          Rect.fromLTWH(dx + x * unit, dy + y * unit, w * unit, h * unit),
+          Radius.circular(r * unit),
         ),
-        Paint()..color = AppColors.white,
+        Paint()..color = c,
       );
     }
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(dx + 2 * unit, dy + 2 * unit, 20 * unit, 42 * unit),
+        Radius.circular(7 * unit),
+      ),
+      Paint()
+        ..color = AppColors.black.withValues(alpha: .3)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 2 * unit),
+    );
+    part(2, 1, 20, 42, 7, AppColors.black); // body
+    part(.5, 11, 2, 4, 1, AppColors.black); // mirrors
+    part(21.5, 11, 2, 4, 1, AppColors.black);
+    part(4.5, 8, 15, 8, 2.5, AppColors.grey200); // windshield
+    part(5.5, 17.5, 13, 10, 1.5, AppColors.grey600); // roof
+    part(5.5, 29, 13, 6, 2, AppColors.grey200); // rear window
+    part(5, 2, 4, 2, 1, AppColors.white); // headlights
+    part(15, 2, 4, 2, 1, AppColors.white);
     final picture = recorder.endRecording();
     final image = await picture.toImage(
       (size * ratio).ceil(),

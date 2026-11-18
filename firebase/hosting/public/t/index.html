@@ -16,7 +16,11 @@
     #plate{font-size:18px;font-weight:600;direction:ltr;display:inline-block} .car{font-size:28px;filter:grayscale(1);transition:transform .5s linear}
     a{color:inherit}#state{font-weight:600}#error{color:#5e5e5e}
     /* Monochrome car marker: black dot with a white ring, like the app. */
-    .car { background: #000; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,.35); }
+    /* Top-down car marker, rotated to the driver's heading. */
+    .car { background: none; border: 0; }
+    .car .body { width: 24px; height: 44px; transform-origin: 50% 50%; transition: transform .8s linear;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
+    @media (prefers-reduced-motion: reduce) { .car .body { transition: none; } }
   </style>
 </head>
 <body><main>
@@ -76,8 +80,12 @@
       text('eta', 'الوقت المتوقع: ' + data.etaMinutes + ' دقيقة');
       if (map && data.driver && Number.isFinite(data.driver.lat) && Number.isFinite(data.driver.lng)) {
         const point = [data.driver.lat, data.driver.lng];
-        if (!marker) marker = L.marker(point, { icon: L.divIcon({ className: 'car', html: '', iconSize: [18,18] }) }).addTo(map);
-        else marker.setLatLng(point);
+        if (!marker) {
+          marker = L.marker(point, { icon: L.divIcon({ className: 'car', iconSize: [24, 44], iconAnchor: [12, 22],
+            html: '<div class="body"><svg viewBox="0 0 24 44" width="24" height="44" aria-hidden="true"><rect x="2" y="1" width="20" height="42" rx="7" fill="#000"/><rect x="4.5" y="8" width="15" height="8" rx="2.5" fill="#d6d6d6"/><rect x="5.5" y="29" width="13" height="6" rx="2" fill="#d6d6d6"/><rect x="5.5" y="17.5" width="13" height="10" rx="1.5" fill="#1f1f1f"/><rect x="0.5" y="11" width="2" height="4" rx="1" fill="#000"/><rect x="21.5" y="11" width="2" height="4" rx="1" fill="#000"/><rect x="5" y="2" width="4" height="2" rx="1" fill="#fff"/><rect x="15" y="2" width="4" height="2" rx="1" fill="#fff"/></svg></div>' }) }).addTo(map);
+        } else marker.setLatLng(point);
+        const body = marker.getElement() && marker.getElement().querySelector('.body');
+        if (body) body.style.transform = 'rotate(' + (Number(data.driver.heading) || 0) + 'deg)';
         map.panTo(point);
       }
     } catch { text('error', 'تعذّر التحديث، نحاول مجدداً…'); }
