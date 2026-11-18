@@ -125,7 +125,14 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
     result.fold(
       (failure) => emit(RideConfirmFailure(failure)),
       (estimates) => emit(
-        RideConfirmLoaded(route: estimates.route, fares: estimates.fares),
+        RideConfirmLoaded(
+          route: estimates.route,
+          fares: draft.parcel == null
+              ? estimates.fares
+              : estimates.fares
+                    .where((f) => f.vehicleType == VehicleType.economy)
+                    .toList(),
+        ),
       ),
     );
     if (draft.promoCode != null && state is RideConfirmLoaded) {
@@ -142,6 +149,7 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
         current is RideConfirmRequested) {
       return;
     }
+    if (draft.parcel != null && vehicle != VehicleType.economy) return;
     if (vehicle == current.selected) return;
     _promoTimer?.cancel();
     ++_promoRevision;

@@ -24,10 +24,12 @@ import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
+import 'package:mishwar/features/common/ride/presentation/parcel_widgets.dart';
 import 'package:mishwar/features/common/safety/presentation/trip_safety_tools.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart'
     as presence;
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart';
+import 'package:mishwar/features/driver/trip/presentation/parcel_delivery_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 typedef TripLauncher = Future<bool> Function(Uri uri);
@@ -434,6 +436,32 @@ class _TripViewState extends State<_TripView> {
                       ),
                   ],
                 ],
+                if (ride.parcel case final parcel?) ...[
+                  Text(parcel.description, style: AppTextStyles.body),
+                  if (state.phase == TripPhase.onTrip)
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        parcel.recipientName,
+                        style: AppTextStyles.headline,
+                      ),
+                      subtitle: Text(
+                        context.l10n.parcelRecipient,
+                        style: AppTextStyles.footnote,
+                      ),
+                      trailing: _circle(
+                        label: context.l10n.tripCall,
+                        icon: AppIcons.phone,
+                        onPressed: () =>
+                            unawaited(_call(parcel.recipientPhone)),
+                      ),
+                    ),
+                  if (parcel.photoPath != null)
+                    ParcelPhotoButton(
+                      rideId: ride.id,
+                      launcher: widget.launcher,
+                    ),
+                ],
                 if (state.failure != null)
                   Text(
                     state.failure ==
@@ -455,7 +483,10 @@ class _TripViewState extends State<_TripView> {
                         when ride.status == RideStatus.accepted =>
                       context.l10n.rideTryAgain,
                     TripPhase.waiting => context.l10n.tripStart,
-                    TripPhase.onTrip => context.l10n.tripComplete,
+                    TripPhase.onTrip =>
+                      ride.parcel != null
+                          ? context.l10n.parcelDeliver
+                          : context.l10n.tripComplete,
                     TripPhase.collectCash => context.l10n.tripCashCollected,
                     _ => context.l10n.tripArrived,
                   },
@@ -473,7 +504,11 @@ class _TripViewState extends State<_TripView> {
                             case TripPhase.waiting:
                               _send(const StartPressed());
                             case TripPhase.onTrip:
-                              unawaited(_confirm(cancel: false));
+                              unawaited(
+                                ride.parcel != null
+                                    ? showParcelDeliverySheet(context)
+                                    : _confirm(cancel: false),
+                              );
                             case TripPhase.collectCash:
                               _send(const CashCollectedPressed());
                             case TripPhase.done ||

@@ -1556,4 +1556,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportDriver => 'Driver';
+
+  @override
+  String get parcelTitle => 'Parcel delivery';
+
+  @override
+  String get parcelRecipient => 'Recipient name';
+
+  @override
+  String get parcelDescription => 'What\'s in the parcel?';
+
+  @override
+  String get parcelPhoto => 'Parcel photo';
+
+  @override
+  String get parcelPhotoOptional =>
+      'Optional — helps the driver identify the parcel';
+
+  @override
+  String get parcelPhotoUploaded => 'Photo ready, tap to change it';
+
+  @override
+  String get parcelInvalid =>
+      'Check the recipient name, mobile number and parcel description';
+
+  @override
+  String get parcelContinue => 'Continue to destination';
+
+  @override
+  String get parcelRequest => 'Request delivery';
+
+  @override
+  String parcelCode(String code) {
+    return 'Delivery code: $code — give it to the recipient';
+  }
+
+  @override
+  String get parcelSendCode => 'Send code to recipient';
+
+  @override
+  String parcelSms(String code) {
+    return 'Mishwar: your parcel delivery code is $code';
+  }
+
+  @override
+  String get parcelDeliver => 'Deliver parcel';
+
+  @override
+  String get parcelEnterCode =>
+      'Ask the recipient for their 4-digit delivery code';
+
+  @override
+  String get parcelBadCode => 'That code isn\'t right. Try again';
+
+  @override
+  String get parcelCodeLocked =>
+      'You\'ve reached 5 attempts. Contact support to complete delivery';
+
+  @override
+  String get parcelSupport => 'Contact support';
+
+  @override
+  String get parcelServiceDisabled =>
+      'Parcel delivery is unavailable right now. Try again later';
 }

@@ -59,7 +59,7 @@
   "errorQuota": "الرسائل مش متاحة حالياً. جرّب بعد شوي.",
   "errorGeneric": "صار خطأ. جرّب مرة ثانية.",
   "errorNameRequired": "أدخل اسمك الأول واسم العائلة.",
-  "errorNameLength": "لازم يكون اسمك بين حرفين و٤٠ حرف.",
+  "errorNameLength": "لازم يكون اسمك بين حرفين و 40 حرف.",
   "@otpSent": {
     "placeholders": {
       "phone": {
@@ -474,7 +474,7 @@
   "accountDeleteWord": "حذف",
   "accountBusy": "خلّص المشوار الحالي أول",
   "accountName": "الاسم",
-  "accountNameError": "الاسم لازم يكون من حرفين لـ ٤٠ حرف",
+  "accountNameError": "الاسم لازم يكون من حرفين لـ 40 حرف",
   "accountVersion": "الإصدار",
   "accountArabic": "العربية",
   "accountEnglish": "English",
@@ -860,5 +860,37 @@
   "supportUserMessage": "أنت",
   "supportAdminMessage": "فريق الدعم",
   "supportRider": "راكب",
-  "supportDriver": "سائق"
+  "supportDriver": "سائق",
+  "parcelTitle": "توصيل طرد",
+  "parcelRecipient": "اسم المستلم",
+  "parcelDescription": "شو في بالطرد؟",
+  "parcelPhoto": "صورة الطرد",
+  "parcelPhotoOptional": "اختياري — صورة بتساعد السائق يعرف الطرد",
+  "parcelPhotoUploaded": "الصورة جاهزة، اضغط لتغيّرها",
+  "parcelInvalid": "اكتب اسم المستلم ورقمه ووصف للطرد، وتأكد إنهم صح",
+  "parcelContinue": "كمّل واختار الوجهة",
+  "parcelRequest": "اطلب توصيل",
+  "parcelCode": "رمز التسليم: {code} — أعطيه للمستلم",
+  "@parcelCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "parcelSendCode": "أرسل الرمز للمستلم",
+  "parcelSms": "مشوار: رمز استلام طردك {code}",
+  "@parcelSms": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "parcelDeliver": "تسليم الطرد",
+  "parcelEnterCode": "اطلب من المستلم رمز التسليم من 4 أرقام",
+  "parcelBadCode": "الرمز مش صح، جرّب كمان مرة",
+  "parcelCodeLocked": "وصلت لـ 5 محاولات، تواصل مع الدعم عشان تكمّل التسليم",
+  "parcelSupport": "تواصل مع الدعم",
+  "parcelServiceDisabled": "توصيل الطرود مش متاح هلأ، جرّب بعدين"
 }

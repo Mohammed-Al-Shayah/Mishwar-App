@@ -5,6 +5,9 @@ Failure callableFailure(Object error) {
   if (error is FirebaseFunctionsException && error.details is Map) {
     final details = error.details as Map;
     final reason = details['reason'];
+    if (reason == 'service-disabled') {
+      return const ValidationFailure('service-disabled');
+    }
     if (const [
       'not-found',
       'inactive',

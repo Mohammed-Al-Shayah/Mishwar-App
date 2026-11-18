@@ -88,10 +88,15 @@ class RideRemoteDataSource {
     return result.data['redispatched'] == true;
   }
 
-  Future<void> updateStatus(String id, String status) async {
+  Future<void> updateStatus(
+    String id,
+    String status, {
+    String? deliveryCode,
+  }) async {
     await _functions.httpsCallable('updateRideStatus').call<void>({
       'rideId': id,
       'status': status,
+      'deliveryCode': ?deliveryCode,
     });
   }
 

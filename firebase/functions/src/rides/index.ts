@@ -57,3 +57,12 @@ export const dispatchScheduledRides = onSchedule({ region: 'europe-west1', sched
     dispatch: scheduledMatching(db, matchingDeps),
   });
 });
+
+import { getStorage } from 'firebase-admin/storage';
+import { parcelPhotoUrlHandler } from './parcel.js';
+import { adminCompleteParcelHandler } from './lifecycle.js';
+export const adminCompleteParcel = onCall({ region: 'europe-west1' }, request => adminCompleteParcelHandler(request, getFirestore()));
+export const parcelPhotoUrl = onCall({ region: 'europe-west1' }, request => parcelPhotoUrlHandler(request, getFirestore(), async (path, expires) => {
+  const [url] = await getStorage().bucket().file(path).getSignedUrl({ action: 'read', expires });
+  return url;
+}));

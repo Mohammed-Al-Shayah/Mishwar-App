@@ -18,7 +18,7 @@ test('nearest eligible driver gets one offer, distance and delayed task', async 
   assert.equal(r.offeredTo, 'near'); assert.equal(r.offerSeq, 1);
   assert.equal(r.offerExpiresAt.toMillis(), 16000);
   assert(r.offerDistanceMeters > 100 && r.offerDistanceMeters < 120);
-  assert.deepEqual(h.db.records.get('drivers/near').offer, { rideId: 'x', expiresAt: ts(16000), seq: 1 });
+  assert.deepEqual(h.db.records.get('drivers/near').offer, { rideId: 'x', expiresAt: ts(16000), seq: 1, serviceType: 'ride' });
   assert.deepEqual(h.tasks, [{ data: { rideId: 'x', seq: 1 }, delay: 16 }]);
   assert.deepEqual(h.notifications, [{ uid: 'near', rideId: 'x' }]);
   await dispatchRide(h.db, 'x', h.deps); assert.equal(h.tasks.length, 1);

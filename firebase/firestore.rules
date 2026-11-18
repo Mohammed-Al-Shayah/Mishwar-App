@@ -191,6 +191,10 @@ service cloud.firestore {
         && (resource.data.riderId == request.auth.uid
           || resource.data.get('driverId', null) == request.auth.uid));
       allow create, update, delete: if false;
+      match /private/rider {
+        allow read: if request.auth != null && request.auth.uid == get(/databases/$(database)/documents/rides/$(rideId)).data.riderId;
+        allow write: if false;
+      }
       match /live/driver {
         function ride() { return get(/databases/$(database)/documents/rides/$(rideId)).data; }
         allow read: if isAdmin() || request.auth != null

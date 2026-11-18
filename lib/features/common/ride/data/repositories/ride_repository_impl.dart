@@ -43,6 +43,14 @@ class RideRepositoryImpl implements RideRepository {
           'dropoff': place(draft.dropoff),
           'vehicleType': vehicleType.name,
           'paymentMethod': 'cash',
+          'serviceType': draft.serviceType.name,
+          if (draft.parcel case final parcel?)
+            'parcel': {
+              'recipientName': parcel.recipientName,
+              'recipientPhone': parcel.recipientPhone,
+              'description': parcel.description,
+              if (parcel.photoPath != null) 'photoPath': parcel.photoPath,
+            },
           if (draft.promoCode != null) 'promoCode': draft.promoCode,
           'scheduledFor': draft.scheduledFor?.toUtc().toIso8601String(),
         }),
@@ -99,6 +107,14 @@ class RideRepositoryImpl implements RideRepository {
           'dropoff': place(draft.dropoff),
           'vehicleType': vehicleType.name,
           'paymentMethod': 'cash',
+          'serviceType': draft.serviceType.name,
+          if (draft.parcel case final parcel?)
+            'parcel': {
+              'recipientName': parcel.recipientName,
+              'recipientPhone': parcel.recipientPhone,
+              'description': parcel.description,
+              if (parcel.photoPath != null) 'photoPath': parcel.photoPath,
+            },
           if (draft.promoCode != null) 'promoCode': draft.promoCode,
         }),
       );
@@ -136,12 +152,14 @@ class RideRepositoryImpl implements RideRepository {
   @override
   Future<Either<Failure, Unit>> updateStatus(
     String rideId,
-    RideStatus status,
-  ) async {
+    RideStatus status, {
+    String? deliveryCode,
+  }) async {
     try {
       await _source.updateStatus(
         rideId,
         const RideStatusConverter().toJson(status),
+        deliveryCode: deliveryCode,
       );
       return const Right(unit);
     } on Object catch (error) {
@@ -150,6 +168,8 @@ class RideRepositoryImpl implements RideRepository {
           error.details is Map) {
         final reason = switch ((error.details as Map)['reason']) {
           'too-far' => RideActionFailureReason.tooFar,
+          'bad-code' => RideActionFailureReason.badCode,
+          'code-locked' => RideActionFailureReason.codeLocked,
           'invalid-transition' => RideActionFailureReason.invalidTransition,
           _ => null,
         };

@@ -59,6 +59,12 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
     json['scheduledFor'],
     const TimestampConverter().fromJson,
   ),
+  serviceType:
+      $enumDecodeNullable(_$ServiceTypeEnumMap, json['serviceType']) ??
+      ServiceType.ride,
+  parcel: json['parcel'] == null
+      ? null
+      : ParcelDetailsModel.fromJson(json['parcel'] as Map<String, dynamic>),
   promo: json['promo'] == null
       ? null
       : RidePromoModel.fromJson(json['promo'] as Map<String, dynamic>),
@@ -125,6 +131,8 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
         instance.scheduledFor,
         const TimestampConverter().toJson,
       ),
+      'serviceType': _$ServiceTypeEnumMap[instance.serviceType]!,
+      'parcel': instance.parcel?.toJson(),
       'promo': instance.promo?.toJson(),
       'driverRating': instance.driverRating?.toJson(),
       'riderRating': instance.riderRating?.toJson(),
@@ -176,6 +184,11 @@ Value? _$JsonConverterFromJson<Json, Value>(
   Value? Function(Json json) fromJson,
 ) => json == null ? null : fromJson(json as Json);
 
+const _$ServiceTypeEnumMap = {
+  ServiceType.ride: 'ride',
+  ServiceType.parcel: 'parcel',
+};
+
 Json? _$JsonConverterToJson<Json, Value>(
   Value? value,
   Json? Function(Value value) toJson,
@@ -213,3 +226,21 @@ _RidePromoModel _$RidePromoModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$RidePromoModelToJson(_RidePromoModel instance) =>
     <String, dynamic>{'code': instance.code, 'applied': instance.applied};
+
+_ParcelDetailsModel _$ParcelDetailsModelFromJson(Map<String, dynamic> json) =>
+    _ParcelDetailsModel(
+      recipientName: json['recipientName'] as String,
+      recipientPhone: json['recipientPhone'] as String,
+      description: json['description'] as String,
+      photoPath: json['photoPath'] as String?,
+      codeAttempts: (json['codeAttempts'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$ParcelDetailsModelToJson(_ParcelDetailsModel instance) =>
+    <String, dynamic>{
+      'recipientName': instance.recipientName,
+      'recipientPhone': instance.recipientPhone,
+      'description': instance.description,
+      'photoPath': instance.photoPath,
+      'codeAttempts': instance.codeAttempts,
+    };

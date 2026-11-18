@@ -196,6 +196,18 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 
 ### Home content (T6.4–T6.5)
 
+### Parcel delivery (T7.1)
+
+- Parcel forms use standard filled fields, the sign-in Jordanian phone input,
+  an optional photo list row and an upload progress bar. Content scrolls above
+  one primary continue button. Confirmation shows economy only.
+- Tracking shows a grey100 tile with a title2 delivery code and a text action
+  to send it by SMS. Receipts show recipient and description as standard rows.
+- Driver offers show a monochrome parcel chip and description. After pickup,
+  the dark trip sheet shows recipient/call and photo actions. Delivery opens a
+  scrollable keyboard-safe sheet with four standard OTP cells, inline negative
+  errors and a support link when locked. The theme supplies its drag handle.
+
 - Home content scrolls inside a sheet capped at 70% of available height. Map padding follows its measured height.
 - Services: four 76 × 76 grey100 tiles, radius 12, Phosphor regular glyphs and captions. Disabled services retain their position with a muted glyph and a small “قريباً” pill. The full services screen uses two columns and one-line descriptions.
 - Banner carousel: 16:8 images, radius 12, grey100 loading/error surface, white title/subtitle on a bottom black 50% to transparent gradient, with page dots below. Advance every five seconds; pause during touch and while the app is inactive; disable automatic movement for reduced motion.

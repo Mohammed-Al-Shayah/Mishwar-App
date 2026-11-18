@@ -16,7 +16,7 @@ export { placeDetails } from './placeDetails.js';
 export { getRoute } from './getRoute.js';
 export { getFareEstimates } from './getFareEstimates.js';
 export { switchRole, deleteAccount } from './account/index.js';
-export { cancellationQuote, scheduleRide, dispatchScheduledRides, rateRide, skipRating, updateRideStatus, requestRide, cancelRide, expireSearchingRides, onRideCreated, offerTimeout, acceptRide, declineRide } from './rides/index.js';
+export { parcelPhotoUrl, adminCompleteParcel, cancellationQuote, scheduleRide, dispatchScheduledRides, rateRide, skipRating, updateRideStatus, requestRide, cancelRide, expireSearchingRides, onRideCreated, offerTimeout, acceptRide, declineRide } from './rides/index.js';
 
 export { validatePromo } from './promos/index.js';
 export { createShareLink, sharedTrip } from './safety/index.js';

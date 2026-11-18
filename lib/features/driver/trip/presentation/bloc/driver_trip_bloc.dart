@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -37,7 +38,8 @@ final class StartPressed extends DriverTripEvent {
 }
 
 final class CompletePressed extends DriverTripEvent {
-  const CompletePressed();
+  const CompletePressed({this.deliveryCode});
+  final String? deliveryCode;
 }
 
 final class CancelPressed extends DriverTripEvent {
@@ -145,13 +147,16 @@ class DriverTripBloc extends Bloc<DriverTripEvent, DriverTripState> {
   );
   Future<void> _transition(
     RideStatus target,
-    Emitter<DriverTripState> emit,
-  ) async {
+    Emitter<DriverTripState> emit, {
+    String? deliveryCode,
+  }) async {
     if (_operation || _pending != null || state.terminal) return;
     _operation = true;
     _pending = target;
     emit(_state());
-    final result = await _update(rideId, target);
+    final result = deliveryCode == null
+        ? await _update(rideId, target)
+        : await _update(rideId, target, deliveryCode: deliveryCode);
     _operation = false;
     if (_closing || state.terminal) return;
     final failure = result.getLeft().toNullable();
@@ -220,9 +225,13 @@ class DriverTripBloc extends Bloc<DriverTripEvent, DriverTripState> {
         if (state.phase == TripPhase.waiting) {
           await _transition(RideStatus.inProgress, emit);
         }
-      case CompletePressed():
+      case CompletePressed(:final deliveryCode):
         if (state.phase == TripPhase.onTrip) {
-          await _transition(RideStatus.completed, emit);
+          await _transition(
+            RideStatus.completed,
+            emit,
+            deliveryCode: deliveryCode,
+          );
         }
       case CancelPressed():
         if (state.busy ||

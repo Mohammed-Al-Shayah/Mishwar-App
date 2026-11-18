@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mishwar/core/firebase/converters.dart';
+import 'package:mishwar/features/common/ride/domain/entities/parcel_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_party_info.dart';
 import 'package:mishwar/features/common/route/data/models/route_models.dart';
@@ -70,6 +71,8 @@ abstract class RideModel with _$RideModel {
     required RideFareModel fare,
     @TimestampConverter() required DateTime createdAt,
     @TimestampConverter() DateTime? scheduledFor,
+    @Default(ServiceType.ride) ServiceType serviceType,
+    ParcelDetailsModel? parcel,
     RidePromoModel? promo,
     RideRatingModel? driverRating,
     RideRatingModel? riderRating,
@@ -107,6 +110,8 @@ abstract class RideModel with _$RideModel {
       throw const FormatException('Invalid fare');
     }
     return RideEntity(
+      serviceType: serviceType,
+      parcel: parcel?.toEntity(),
       shareToken: shareToken,
       scheduledFor: scheduledFor,
       promoCode: promo?.code,
@@ -180,4 +185,25 @@ abstract class RidePromoModel with _$RidePromoModel {
       _RidePromoModel;
   factory RidePromoModel.fromJson(Map<String, dynamic> json) =>
       _$RidePromoModelFromJson(json);
+}
+
+@freezed
+abstract class ParcelDetailsModel with _$ParcelDetailsModel {
+  const factory ParcelDetailsModel({
+    required String recipientName,
+    required String recipientPhone,
+    required String description,
+    String? photoPath,
+    @Default(0) int codeAttempts,
+  }) = _ParcelDetailsModel;
+  const ParcelDetailsModel._();
+  factory ParcelDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$ParcelDetailsModelFromJson(json);
+  ParcelDetails toEntity() => ParcelDetails(
+    recipientName: recipientName,
+    recipientPhone: recipientPhone,
+    description: description,
+    photoPath: photoPath,
+    codeAttempts: codeAttempts,
+  );
 }

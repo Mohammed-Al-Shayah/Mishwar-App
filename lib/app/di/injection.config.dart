@@ -134,12 +134,18 @@ import 'package:mishwar/features/common/rating/domain/rating_tag.dart' as _i176;
 import 'package:mishwar/features/common/rating/domain/skip_rating.dart' as _i29;
 import 'package:mishwar/features/common/rating/presentation/rating_cubit.dart'
     as _i661;
+import 'package:mishwar/features/common/ride/data/datasources/parcel_remote_data_source.dart'
+    as _i435;
 import 'package:mishwar/features/common/ride/data/datasources/ride_remote_data_source.dart'
     as _i747;
+import 'package:mishwar/features/common/ride/data/repositories/parcel_repository_impl.dart'
+    as _i918;
 import 'package:mishwar/features/common/ride/data/repositories/ride_repository_impl.dart'
     as _i297;
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart'
     as _i422;
+import 'package:mishwar/features/common/ride/domain/repositories/parcel_repository.dart'
+    as _i788;
 import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart'
     as _i118;
 import 'package:mishwar/features/common/ride/domain/usecases/accept_ride.dart'
@@ -152,6 +158,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/decline_ride.dart'
     as _i100;
 import 'package:mishwar/features/common/ride/domain/usecases/get_ride_history.dart'
     as _i811;
+import 'package:mishwar/features/common/ride/domain/usecases/parcel_usecases.dart'
+    as _i669;
 import 'package:mishwar/features/common/ride/domain/usecases/request_ride.dart'
     as _i892;
 import 'package:mishwar/features/common/ride/domain/usecases/schedule_ride.dart'
@@ -166,6 +174,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart'
     as _i263;
 import 'package:mishwar/features/common/ride/domain/usecases/watch_scheduled_rides.dart'
     as _i574;
+import 'package:mishwar/features/common/ride/presentation/parcel_tools_cubit.dart'
+    as _i599;
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart'
     as _i60;
 import 'package:mishwar/features/common/route/data/datasources/route_remote_data_source.dart'
@@ -282,6 +292,8 @@ import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cub
     as _i969;
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart'
     as _i786;
+import 'package:mishwar/features/rider/parcel/presentation/parcel_form_cubit.dart'
+    as _i594;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart'
     as _i893;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart'
@@ -335,6 +347,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i327.DriverRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
         gh<_i457.FirebaseStorage>(),
+      ),
+    );
+    gh.lazySingleton<_i435.ParcelRemoteDataSource>(
+      () => _i435.ParcelRemoteDataSource(
+        gh<_i457.FirebaseStorage>(),
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i809.FirebaseFunctions>(),
       ),
     );
     gh.lazySingleton<_i159.LocaleCubit>(
@@ -427,6 +446,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1008.EarningsRemoteDataSource>(
       () => _i1008.EarningsRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i788.ParcelRepository>(
+      () => _i918.ParcelRepositoryImpl(gh<_i435.ParcelRemoteDataSource>()),
+    );
     gh.lazySingleton<_i775.SafetyRemoteDataSource>(
       () => _i775.SafetyRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
@@ -451,6 +473,21 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i285.PromoRepository>(
       () => _i587.PromoRepositoryImpl(gh<_i585.PromoRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i669.UploadParcelPhoto>(
+      () => _i669.UploadParcelPhoto(gh<_i788.ParcelRepository>()),
+    );
+    gh.lazySingleton<_i669.WatchDeliveryCode>(
+      () => _i669.WatchDeliveryCode(gh<_i788.ParcelRepository>()),
+    );
+    gh.lazySingleton<_i669.GetParcelPhotoUrl>(
+      () => _i669.GetParcelPhotoUrl(gh<_i788.ParcelRepository>()),
+    );
+    gh.factory<_i599.ParcelToolsCubit>(
+      () => _i599.ParcelToolsCubit(
+        gh<_i669.WatchDeliveryCode>(),
+        gh<_i669.GetParcelPhotoUrl>(),
+      ),
     );
     gh.lazySingleton<_i180.AdminSignIn>(
       () => _i180.AdminSignIn(gh<_i1005.AdminRepository>()),
@@ -791,6 +828,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i43.PushRepository>(),
         gh<_i768.PushTokenSync>(),
         gh<_i290.AuthRepository>(),
+      ),
+    );
+    gh.factory<_i594.ParcelFormCubit>(
+      () => _i594.ParcelFormCubit(
+        gh<_i669.UploadParcelPhoto>(),
+        gh<_i107.CurrentPosition>(),
       ),
     );
     gh.factory<_i296.NewSupportCubit>(

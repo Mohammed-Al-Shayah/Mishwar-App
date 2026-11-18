@@ -33,7 +33,11 @@ abstract class RideRepository {
   );
   Future<Either<Failure, int>> cancellationQuote(String id);
   Future<Either<Failure, CancelRideResult>> cancelRide(String id);
-  Future<Either<Failure, Unit>> updateStatus(String rideId, RideStatus status);
+  Future<Either<Failure, Unit>> updateStatus(
+    String rideId,
+    RideStatus status, {
+    String? deliveryCode,
+  });
   Future<Either<Failure, Unit>> acceptRide(String id);
   Future<Either<Failure, Unit>> declineRide(String id);
   Stream<Either<Failure, DriverLiveLocation>> watchDriverLocation(

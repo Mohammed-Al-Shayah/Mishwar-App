@@ -1,3 +1,4 @@
+import { deliverySecret, emulatorSmsSender, requireSmsSender, type SmsSender } from './parcel.js';
 import { Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { authenticated } from '../lib/maps.js';
@@ -20,7 +21,7 @@ export function schedulingReader(db: Firestore) {
 }
 
 export async function scheduleRideHandler(request: CallableRequest, db: Firestore, key: string,
-  config = async () => defaultScheduling, estimate = fareEstimatesHandler, now = () => Timestamp.now()) {
+  config = async () => defaultScheduling, estimate = fareEstimatesHandler, now = () => Timestamp.now(), sms: SmsSender = emulatorSmsSender) {
   authenticated(request);
   const settings = await config(), time = now();
   const raw = request.data?.scheduledFor;
@@ -31,17 +32,21 @@ export async function scheduleRideHandler(request: CallableRequest, db: Firestor
   }
   const ride = await buildRide(request, db, key, estimate);
   const ref = db.collection('rides').doc(), userRef = db.doc(`users/${request.auth!.uid}`);
+  const secret = ride.parcel ? deliverySecret(ref.id) : undefined;
+  if (secret) requireSmsSender(sms);
   await db.runTransaction(async tx => {
     const user = (await tx.get(userRef)).data();
     if (user?.role !== 'rider' || user.accountDeleting) throw new HttpsError('permission-denied', 'Rider role required.');
     const future = await tx.get(db.collection('rides').where('riderId', '==', request.auth!.uid)
       .where('status', '==', 'scheduled').where('scheduledFor', '>=', time).limit(3));
     if (future.docs.length >= 3) throw new HttpsError('failed-precondition', 'Too many scheduled rides.', { reason: 'too-many-scheduled' });
-    tx.create(ref, { ...ride, status: 'scheduled', scheduledFor: Timestamp.fromMillis(millis) });
+    tx.create(ref, { ...ride, ...(secret ? { parcel: { ...ride.parcel, deliveryCodeHash: secret.deliveryCodeHash, deliveryCodeSalt: secret.deliveryCodeSalt, codeAttempts: 0 } } : {}), status: 'scheduled', scheduledFor: Timestamp.fromMillis(millis) });
+    if (secret) tx.create(db.doc(`rides/${ref.id}/private/rider`), { deliveryCode: secret.deliveryCode });
     // Serialize concurrent bookings on the rider document without changing activeRideId.
     tx.update(userRef, { scheduledRideUpdatedAt: time });
   });
-  return { rideId: ref.id };
+  if (secret) await sms.send(ride.parcel!.recipientPhone, `مشوار: رمز استلام طردك ${secret.deliveryCode}`);
+  return { rideId: ref.id, ...(secret ? { deliveryCode: secret.deliveryCode } : {}) };
 }
 
 export interface ScheduledDeps {

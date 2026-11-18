@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorNameLength.
   ///
   /// In ar, this message translates to:
-  /// **'لازم يكون اسمك بين حرفين و٤٠ حرف.'**
+  /// **'لازم يكون اسمك بين حرفين و 40 حرف.'**
   String get errorNameLength;
 
   /// No description provided for @driverRegisterTitle.
@@ -1469,7 +1469,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountNameError.
   ///
   /// In ar, this message translates to:
-  /// **'الاسم لازم يكون من حرفين لـ ٤٠ حرف'**
+  /// **'الاسم لازم يكون من حرفين لـ 40 حرف'**
   String get accountNameError;
 
   /// No description provided for @accountVersion.
@@ -2952,6 +2952,114 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'سائق'**
   String get supportDriver;
+
+  /// No description provided for @parcelTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيل طرد'**
+  String get parcelTitle;
+
+  /// No description provided for @parcelRecipient.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المستلم'**
+  String get parcelRecipient;
+
+  /// No description provided for @parcelDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'شو في بالطرد؟'**
+  String get parcelDescription;
+
+  /// No description provided for @parcelPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة الطرد'**
+  String get parcelPhoto;
+
+  /// No description provided for @parcelPhotoOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختياري — صورة بتساعد السائق يعرف الطرد'**
+  String get parcelPhotoOptional;
+
+  /// No description provided for @parcelPhotoUploaded.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصورة جاهزة، اضغط لتغيّرها'**
+  String get parcelPhotoUploaded;
+
+  /// No description provided for @parcelInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب اسم المستلم ورقمه ووصف للطرد، وتأكد إنهم صح'**
+  String get parcelInvalid;
+
+  /// No description provided for @parcelContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'كمّل واختار الوجهة'**
+  String get parcelContinue;
+
+  /// No description provided for @parcelRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب توصيل'**
+  String get parcelRequest;
+
+  /// No description provided for @parcelCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التسليم: {code} — أعطيه للمستلم'**
+  String parcelCode(String code);
+
+  /// No description provided for @parcelSendCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل الرمز للمستلم'**
+  String get parcelSendCode;
+
+  /// No description provided for @parcelSms.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشوار: رمز استلام طردك {code}'**
+  String parcelSms(String code);
+
+  /// No description provided for @parcelDeliver.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسليم الطرد'**
+  String get parcelDeliver;
+
+  /// No description provided for @parcelEnterCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب من المستلم رمز التسليم من 4 أرقام'**
+  String get parcelEnterCode;
+
+  /// No description provided for @parcelBadCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرمز مش صح، جرّب كمان مرة'**
+  String get parcelBadCode;
+
+  /// No description provided for @parcelCodeLocked.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت لـ 5 محاولات، تواصل مع الدعم عشان تكمّل التسليم'**
+  String get parcelCodeLocked;
+
+  /// No description provided for @parcelSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع الدعم'**
+  String get parcelSupport;
+
+  /// No description provided for @parcelServiceDisabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيل الطرود مش متاح هلأ، جرّب بعدين'**
+  String get parcelServiceDisabled;
 }
 
 class _AppLocalizationsDelegate

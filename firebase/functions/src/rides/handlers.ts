@@ -1,3 +1,4 @@
+import { parcelInput, deliverySecret, emulatorSmsSender, requireSmsSender, type SmsSender } from './parcel.js';
 import { FieldValue, GeoPoint, Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { fareEstimatesHandler } from '../getFareEstimates.js';
@@ -20,6 +21,14 @@ export async function buildRide(request: CallableRequest, db: Firestore, key: st
   authenticated(request);
   const uid = request.auth!.uid;
   const data = v.object(request.data);
+  const service = parcelInput(data, uid);
+  if (service.serviceType === 'parcel') {
+    const services = (await db.doc('config/app').get()).data()?.services;
+    if (!Array.isArray(services) || !services.some(s => s.id === 'parcel' && s.enabled === true)) {
+      throw new HttpsError('failed-precondition', 'Parcel service disabled.', { reason: 'service-disabled' });
+    }
+    if (data.vehicleType !== 'economy') v.invalid();
+  }
   const pickup = place(data.pickup), dropoff = place(data.dropoff);
   if (!['economy', 'comfort', 'van'].includes(data.vehicleType as string) || data.paymentMethod !== 'cash') v.invalid();
   const vehicleType = data.vehicleType as VehicleType;
@@ -31,7 +40,7 @@ export async function buildRide(request: CallableRequest, db: Firestore, key: st
   const storedPlace = (p: ReturnType<typeof place>) => ({ name: p.name, address: p.address, geopoint: new GeoPoint(p.lat, p.lng) });
   return {
     ...(data.promoCode === undefined ? {} : { promo: await previewPromo(db, normalizePromo(data.promoCode), uid, estimated) }),
-    riderId: uid, driverId: null, vehicleType,
+    ...service, riderId: uid, driverId: null, vehicleType,
     pickup: storedPlace(pickup), dropoff: storedPlace(dropoff), route: estimates.route,
     fare: { estimated, final: null, currency: 'JOD' }, paymentMethod: 'cash',
     offeredTo: null, offerExpiresAt: null, offerSeq: 0, offerDistanceMeters: null,
@@ -39,22 +48,26 @@ export async function buildRide(request: CallableRequest, db: Firestore, key: st
   };
 }
 export async function requestRideHandler(request: CallableRequest, db: Firestore, key: string,
-  estimate = fareEstimatesHandler, now = () => Timestamp.now()) {
+  estimate = fareEstimatesHandler, now = () => Timestamp.now(), sms: SmsSender = emulatorSmsSender) {
   const ride = await buildRide(request, db, key, estimate);
   const uid = request.auth!.uid, userRef = db.doc(`users/${uid}`);
   const rideRef = db.collection('rides').doc();
+  const secret = ride.parcel ? deliverySecret(rideRef.id) : undefined;
+  if (secret) requireSmsSender(sms);
   await db.runTransaction(async (tx) => {
     const user = await tx.get(userRef);
     if (user.data()?.accountDeleting || user.data()?.role !== 'rider') throw new HttpsError('permission-denied', 'Rider role required.');
     const active = await tx.get(db.collection('rides').where('riderId', '==', uid).where('status', 'in', activeStatuses).limit(1));
     if (!active.empty) throw new HttpsError('failed-precondition', 'An active ride already exists.', { activeRideId: active.docs[0].id });
-    tx.create(rideRef, { ...ride, status: 'searching',
+    tx.create(rideRef, { ...ride, ...(secret ? { parcel: { ...ride.parcel, deliveryCodeHash: secret.deliveryCodeHash, deliveryCodeSalt: secret.deliveryCodeSalt, codeAttempts: 0 } } : {}), status: 'searching',
       searchExpiresAt: Timestamp.fromMillis(now().toMillis() + 120000),
     });
+    if (secret) tx.create(db.doc(`rides/${rideRef.id}/private/rider`), { deliveryCode: secret.deliveryCode });
     // This document also serializes concurrent requests from the same rider.
     tx.update(userRef, { activeRideId: rideRef.id });
   });
-  return { rideId: rideRef.id };
+  if (secret) await sms.send(ride.parcel!.recipientPhone, `مشوار: رمز استلام طردك ${secret.deliveryCode}`);
+  return { rideId: rideRef.id, ...(secret ? { deliveryCode: secret.deliveryCode } : {}) };
 }
 export function rideId(value: unknown) {
   const id = v.string(v.object(value).rideId, 1, 1500);

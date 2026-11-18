@@ -91,7 +91,7 @@ final class OfferFailure extends Failure {
   List<Object> get props => [reason];
 }
 
-enum RideActionFailureReason { tooFar, invalidTransition }
+enum RideActionFailureReason { tooFar, invalidTransition, badCode, codeLocked }
 
 final class RideActionFailure extends Failure {
   const RideActionFailure(this.reason) : super('ride-action');

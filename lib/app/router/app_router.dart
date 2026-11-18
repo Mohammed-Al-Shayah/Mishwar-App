@@ -66,6 +66,8 @@ import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cub
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/services_grid.dart';
+import 'package:mishwar/features/rider/parcel/presentation/parcel_form_cubit.dart';
+import 'package:mishwar/features/rider/parcel/presentation/parcel_form_screen.dart';
 import 'package:mishwar/features/rider/places/presentation/saved_places_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
@@ -120,6 +122,7 @@ String? sessionRedirect(
                             location == '/rider/safety' ||
                             location == '/rider/places' ||
                             location == '/rider/services' ||
+                            location == '/rider/parcel' ||
                             location == '/rider/history' ||
                             RegExp(
                               r'^/rider/history/[^/]+$',
@@ -293,6 +296,15 @@ GoRouter createAppRouter(
               return cubit;
             },
             child: const SafetyScreen(),
+          ),
+        ),
+        GoRoute(
+          path: 'parcel',
+          builder: (_, _) => BlocProvider(
+            create: (_) => getIt<ParcelFormCubit>(),
+            child: ParcelFormScreen(
+              uid: (session.state as SessionReady).user.id,
+            ),
           ),
         ),
         GoRoute(

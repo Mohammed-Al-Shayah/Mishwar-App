@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -83,6 +84,14 @@ class DriverOfferSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (ride.parcel case final parcel?) ...[
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Chip(label: Text(l10n.serviceParcel)),
+                        ),
+                        Text(parcel.description, style: AppTextStyles.body),
+                        SizedBox(height: AppSpacing.sm),
+                      ],
                       Row(
                         children: [
                           Expanded(

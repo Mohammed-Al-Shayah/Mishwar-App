@@ -147,7 +147,9 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
         await _searchDestination();
       case ServiceId.schedule:
         await _schedule();
-      case ServiceId.parcel || ServiceId.airport:
+      case ServiceId.parcel:
+        await context.push<void>('/rider/parcel');
+      case ServiceId.airport:
         serviceComingSoon(context);
     }
   }

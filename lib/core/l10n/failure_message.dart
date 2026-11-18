@@ -21,6 +21,7 @@ String failureMessage(BuildContext context, Failure failure) {
       AuthFailureCode.quotaExceeded => l10n.errorQuota,
       AuthFailureCode.unknown => l10n.errorGeneric,
     },
+    ValidationFailure(field: 'service-disabled') => l10n.parcelServiceDisabled,
     ValidationFailure(field: 'saved-places-limit') => l10n.savedPlaceLimit,
     ValidationFailure(field: 'trusted-contacts-limit') => l10n.contactsLimit,
     ValidationFailure(field: 'trusted-contact') => l10n.contactInvalid,
@@ -48,6 +49,10 @@ String failureMessage(BuildContext context, Failure failure) {
       'rate-limit' => l10n.promoRateLimit,
       _ => l10n.promoNotFound,
     },
+    RideActionFailure(reason: RideActionFailureReason.badCode) =>
+      l10n.parcelBadCode,
+    RideActionFailure(reason: RideActionFailureReason.codeLocked) =>
+      l10n.parcelCodeLocked,
     SchedulingFailure() => l10n.tooManyScheduled,
     NetworkFailure() => l10n.errorNetwork,
     _ => l10n.errorGeneric,

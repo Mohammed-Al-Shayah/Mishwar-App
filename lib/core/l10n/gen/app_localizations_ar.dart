@@ -174,7 +174,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorNameRequired => 'أدخل اسمك الأول واسم العائلة.';
 
   @override
-  String get errorNameLength => 'لازم يكون اسمك بين حرفين و٤٠ حرف.';
+  String get errorNameLength => 'لازم يكون اسمك بين حرفين و 40 حرف.';
 
   @override
   String get driverRegisterTitle => 'سجّل سيارتك';
@@ -757,7 +757,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountName => 'الاسم';
 
   @override
-  String get accountNameError => 'الاسم لازم يكون من حرفين لـ ٤٠ حرف';
+  String get accountNameError => 'الاسم لازم يكون من حرفين لـ 40 حرف';
 
   @override
   String get accountVersion => 'الإصدار';
@@ -1544,4 +1544,64 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get supportDriver => 'سائق';
+
+  @override
+  String get parcelTitle => 'توصيل طرد';
+
+  @override
+  String get parcelRecipient => 'اسم المستلم';
+
+  @override
+  String get parcelDescription => 'شو في بالطرد؟';
+
+  @override
+  String get parcelPhoto => 'صورة الطرد';
+
+  @override
+  String get parcelPhotoOptional => 'اختياري — صورة بتساعد السائق يعرف الطرد';
+
+  @override
+  String get parcelPhotoUploaded => 'الصورة جاهزة، اضغط لتغيّرها';
+
+  @override
+  String get parcelInvalid =>
+      'اكتب اسم المستلم ورقمه ووصف للطرد، وتأكد إنهم صح';
+
+  @override
+  String get parcelContinue => 'كمّل واختار الوجهة';
+
+  @override
+  String get parcelRequest => 'اطلب توصيل';
+
+  @override
+  String parcelCode(String code) {
+    return 'رمز التسليم: $code — أعطيه للمستلم';
+  }
+
+  @override
+  String get parcelSendCode => 'أرسل الرمز للمستلم';
+
+  @override
+  String parcelSms(String code) {
+    return 'مشوار: رمز استلام طردك $code';
+  }
+
+  @override
+  String get parcelDeliver => 'تسليم الطرد';
+
+  @override
+  String get parcelEnterCode => 'اطلب من المستلم رمز التسليم من 4 أرقام';
+
+  @override
+  String get parcelBadCode => 'الرمز مش صح، جرّب كمان مرة';
+
+  @override
+  String get parcelCodeLocked =>
+      'وصلت لـ 5 محاولات، تواصل مع الدعم عشان تكمّل التسليم';
+
+  @override
+  String get parcelSupport => 'تواصل مع الدعم';
+
+  @override
+  String get parcelServiceDisabled => 'توصيل الطرود مش متاح هلأ، جرّب بعدين';
 }

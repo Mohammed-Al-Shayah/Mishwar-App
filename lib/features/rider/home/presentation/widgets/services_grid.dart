@@ -205,7 +205,7 @@ class ServicesScreen extends StatelessWidget {
           services: state.services,
           full: true,
           onService: (id) {
-            if (id == ServiceId.parcel || id == ServiceId.airport) {
+            if (id == ServiceId.airport) {
               serviceComingSoon(context);
               return;
             }

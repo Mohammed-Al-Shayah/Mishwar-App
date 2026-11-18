@@ -96,6 +96,12 @@ class RideReceiptContent extends StatelessWidget {
         ),
         SizedBox(height: AppSpacing.md),
         TripStops(ride: ride),
+        if (ride.parcel case final parcel?) ...[
+          SizedBox(height: AppSpacing.md),
+          Text(context.l10n.parcelRecipient, style: AppTextStyles.footnote),
+          Text(parcel.recipientName, style: AppTextStyles.headline),
+          Text(parcel.description, style: AppTextStyles.body),
+        ],
         SizedBox(height: AppSpacing.lg),
         if (party != null) Text(party.name, style: AppTextStyles.headline),
         if (vehicle != null) ...[

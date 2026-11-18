@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mishwar/core/theme/app_radius.dart';
 
 class MwTextField extends StatelessWidget {
   const MwTextField({
@@ -59,6 +60,17 @@ class MwTextField extends StatelessWidget {
       floatingLabelBehavior: floatLabel ? null : FloatingLabelBehavior.never,
       hintText: hintText,
       suffixIcon: suffixIcon,
+      // Pill corners suit one line; taller multi-line fields use tile corners.
+      border: _multiline ? _tile : null,
+      enabledBorder: _multiline ? _tile : null,
+      focusedBorder: _multiline ? _tile : null,
+      disabledBorder: _multiline ? _tile : null,
     ),
+  );
+
+  bool get _multiline => (maxLines ?? 2) > 1 || (minLines ?? 1) > 1;
+  InputBorder get _tile => OutlineInputBorder(
+    borderRadius: AppRadius.tileBorder,
+    borderSide: BorderSide.none,
   );
 }

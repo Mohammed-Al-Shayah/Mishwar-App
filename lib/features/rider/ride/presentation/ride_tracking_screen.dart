@@ -20,6 +20,7 @@ import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
+import 'package:mishwar/features/common/ride/presentation/parcel_widgets.dart';
 import 'package:mishwar/features/common/safety/presentation/trip_safety_tools.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
@@ -231,6 +232,12 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                 ),
                               ],
                             ] else ...[
+                              if (ride.parcel != null)
+                                ParcelCodeCard(
+                                  key: ValueKey(ride.id),
+                                  ride: ride,
+                                  launcher: widget.launcher,
+                                ),
                               Text(
                                 noDrivers
                                     ? context.l10n.rideNoDrivers

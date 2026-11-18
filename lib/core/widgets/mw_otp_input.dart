@@ -7,27 +7,36 @@ import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 
 class MwOtpInput extends StatefulWidget {
-  const MwOtpInput({required this.onChanged, this.enabled = true, super.key});
+  const MwOtpInput({
+    required this.onChanged,
+    this.enabled = true,
+    this.length = 6,
+    super.key,
+  });
   final ValueChanged<String> onChanged;
   final bool enabled;
+  final int length;
   @override
   State<MwOtpInput> createState() => _MwOtpInputState();
 }
 
 class _MwOtpInputState extends State<MwOtpInput> {
-  final List<TextEditingController> _controllers = List.generate(
-    6,
+  late final List<TextEditingController> _controllers = List.generate(
+    widget.length,
     (_) => TextEditingController(),
   );
-  final List<FocusNode> _focus = List.generate(6, (_) => FocusNode());
+  late final List<FocusNode> _focus = List.generate(
+    widget.length,
+    (_) => FocusNode(),
+  );
   void _changed(int index, String value) {
     if (value.length > 1) {
-      final digits = value.characters.take(6).toList();
-      for (var i = 0; i < 6; i++) {
+      final digits = value.characters.take(widget.length).toList();
+      for (var i = 0; i < widget.length; i++) {
         _controllers[i].text = i < digits.length ? digits[i] : '';
       }
-      _focus[(digits.length - 1).clamp(0, 5)].requestFocus();
-    } else if (value.isNotEmpty && index < 5) {
+      _focus[(digits.length - 1).clamp(0, widget.length - 1)].requestFocus();
+    } else if (value.isNotEmpty && index < widget.length - 1) {
       _focus[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
       _focus[index - 1].requestFocus();
@@ -53,7 +62,7 @@ class _MwOtpInputState extends State<MwOtpInput> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(
-          6,
+          widget.length,
           (index) => SizedBox(
             width: AppSizes.otpWidth,
             height: AppSizes.otpHeight,
@@ -73,7 +82,7 @@ class _MwOtpInputState extends State<MwOtpInput> {
                 autofillHints: const [AutofillHints.oneTimeCode],
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
+                  LengthLimitingTextInputFormatter(widget.length),
                 ],
                 onChanged: (value) => _changed(index, value),
                 decoration: InputDecoration(

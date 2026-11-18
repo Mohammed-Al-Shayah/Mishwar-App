@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:mishwar/features/common/ride/domain/entities/parcel_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_party_info.dart';
 import 'package:mishwar/features/common/route/domain/entities/route_info.dart';
@@ -28,6 +29,8 @@ class RideEntity extends Equatable {
     required this.dropoff,
     required this.fareEstimatedFils,
     required this.createdAt,
+    this.serviceType = ServiceType.ride,
+    this.parcel,
     this.scheduledFor,
     this.shareToken,
     this.promoCode,
@@ -53,6 +56,8 @@ class RideEntity extends Equatable {
     this.offerExpiresAt,
     this.offerDistanceMeters,
   });
+  final ServiceType serviceType;
+  final ParcelDetails? parcel;
   final String? shareToken;
   final String? promoCode;
   final int discountFils;
@@ -85,9 +90,12 @@ class RideEntity extends Equatable {
   final DateTime? searchExpiresAt;
   final DateTime? offerExpiresAt;
   final int? offerDistanceMeters;
-  RideDraft get draft => RideDraft(pickup: pickup, dropoff: dropoff);
+  RideDraft get draft =>
+      RideDraft(pickup: pickup, dropoff: dropoff, parcel: parcel);
   @override
   List<Object?> get props => [
+    serviceType,
+    parcel,
     scheduledFor,
     shareToken,
     promoCode,

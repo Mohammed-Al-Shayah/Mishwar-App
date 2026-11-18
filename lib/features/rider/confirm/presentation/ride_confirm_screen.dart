@@ -253,7 +253,9 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                           Padding(
                             padding: EdgeInsets.all(AppSpacing.sm),
                             child: Text(
-                              context.l10n.chooseRide,
+                              widget.draft.parcel != null
+                                  ? context.l10n.parcelTitle
+                                  : context.l10n.chooseRide,
                               style: AppTextStyles.headline,
                             ),
                           ),
@@ -266,7 +268,10 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                               child: Column(
                                 children: [
                                   if (loaded != null)
-                                    for (final type in VehicleType.values)
+                                    for (final type
+                                        in (widget.draft.parcel == null
+                                            ? VehicleType.values
+                                            : [VehicleType.economy]))
                                       MwVehicleRow(
                                         key: ValueKey(type),
                                         name: _name(context, type),
@@ -418,7 +423,9 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                             ),
                           MwPrimaryButton(
                             isLoading: loaded?.isRequesting ?? false,
-                            label: loaded == null
+                            label: widget.draft.parcel != null
+                                ? context.l10n.parcelRequest
+                                : loaded == null
                                 ? context.l10n.chooseRide
                                 : widget.draft.scheduledFor != null
                                 ? context.l10n.scheduleVehicle(

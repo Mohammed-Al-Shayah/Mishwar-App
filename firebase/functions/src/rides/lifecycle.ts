@@ -1,3 +1,4 @@
+import { validDeliveryCode } from './parcel.js';
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { distanceBetween } from 'geofire-common';
@@ -17,19 +18,23 @@ const transitions: Record<string, { from: string; timestamp: string }> = {
   in_progress: { from: 'arrived', timestamp: 'startedAt' },
   completed: { from: 'in_progress', timestamp: 'completedAt' },
 };
-export async function updateRideStatusHandler(request: CallableRequest, db: Firestore, now = () => Timestamp.now()) {
+export async function updateRideStatusHandler(request: CallableRequest, db: Firestore, now = () => Timestamp.now(), adminOverride = false) {
   authenticated(request);
   const uid = request.auth!.uid, id = rideId(request.data);
   const status = v.object(request.data).status;
-  const ref = db.doc(`rides/${id}`), driverRef = db.doc(`drivers/${uid}`);
-  await db.runTransaction(async (tx) => {
+  if (adminOverride && request.auth!.token?.admin !== true) throw new HttpsError('permission-denied', 'Admin claim required.');
+  const ref = db.doc(`rides/${id}`);
+  const log = adminOverride ? db.collection('adminLog').doc() : undefined;
+  const result = await db.runTransaction(async (tx) => {
     const ride = (await tx.get(ref)).data();
     if (!ride) invalid();
-    if (ride.driverId !== uid) throw new HttpsError('permission-denied', 'Assigned driver required.');
+    if (adminOverride && (ride.serviceType !== 'parcel' || status !== 'completed')) invalid();
+    if (!adminOverride && ride.driverId !== uid) throw new HttpsError('permission-denied', 'Assigned driver required.');
     if (ride.status === status) return;
     if (typeof status !== 'string' || !Object.hasOwn(transitions, status)) invalid();
     const transition = transitions[status];
     if (ride.status !== transition.from) invalid();
+    const driverRef = db.doc(`drivers/${ride.driverId}`);
     const driver = (await tx.get(driverRef)).data();
     if (!driver || driver.currentRideId !== id) invalid();
     const time = now();
@@ -45,6 +50,14 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     if (status !== 'completed') {
       tx.update(ref, { status, [transition.timestamp]: time });
       return;
+    }
+    if (ride.serviceType === 'parcel' && !adminOverride) {
+      if ((ride.parcel?.codeAttempts ?? 0) >= 5) return 'code-locked';
+      if (!validDeliveryCode(id, v.object(request.data).deliveryCode, ride.parcel ?? {})) {
+        const attempts = (ride.parcel?.codeAttempts ?? 0) + 1;
+        tx.update(ref, { parcel: { ...ride.parcel, codeAttempts: attempts } });
+        return attempts >= 5 ? 'code-locked' : 'bad-code';
+      }
     }
     const userRef = db.doc(`users/${ride.riderId}`);
     const user = (await tx.get(userRef)).data();
@@ -65,7 +78,7 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     final = roundFare(Math.max(0, (Math.round(final * 1000) - Math.round(discount * 1000)) / 1000));
     final = (Math.round(final * 1000) + waitingFils + balanceFils) / 1000;
     const day = earningsDay(time);
-    const earningsRef = db.doc(`drivers/${uid}/earnings/${day}`);
+    const earningsRef = db.doc(`drivers/${ride.driverId}/earnings/${day}`);
     const earnings = (await tx.get(earningsRef)).data();
     if (checked?.result.ok) {
       tx.update(checked.ref, { usedCount: checked.promo!.usedCount + 1 });
@@ -74,6 +87,7 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     // Earnings use the discounted fare for now; platform absorption comes with future payout logic.
     // Add integer fils, then persist a two-decimal JOD amount.
     const totalFils = Math.round((earnings?.total ?? 0) * 1000) + Math.round(final * 1000);
+    if (log) tx.create(log, { action: 'adminCompleteParcel', target: id, by: uid, at: time });
     tx.update(ref, { status, completedAt: time, fare: { ...ride.fare, final, waitingFee: waitingFils / 1000, previousBalance: balanceFils / 1000, ...(ride.promo ? { discount } : {}) },
       ...(ride.promo ? { promo: { ...ride.promo, applied: checked!.result.ok } } : {}) });
     tx.update(userRef, { pendingRatingRideId: id, balanceDueFils: 0,
@@ -81,5 +95,10 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     tx.update(driverRef, { currentRideId: null, pendingRatingRideId: id });
     tx.set(earningsRef, { ...earnings, total: Number((totalFils / 1000).toFixed(2)), trips: (earnings?.trips ?? 0) + 1, updatedAt: time });
   });
+  if (result) throw new HttpsError('failed-precondition', 'Delivery code rejected.', { reason: result });
   return { ok: true };
+}
+
+export async function adminCompleteParcelHandler(request: CallableRequest, db: Firestore, now = () => Timestamp.now()) {
+  return updateRideStatusHandler({ ...request, data: { ...v.object(request.data), status: 'completed' } }, db, now, true);
 }

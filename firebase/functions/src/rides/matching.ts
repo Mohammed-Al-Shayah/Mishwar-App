@@ -59,7 +59,7 @@ export async function dispatchRide(db: Firestore, rideId: string, deps: Matching
         offerDistanceMeters: Math.round(distance(driver.data()!, ride)),
         ...(ride.offeredTo ? { declinedBy: FieldValue.arrayUnion(ride.offeredTo) } : {}) });
       if (previous?.data()?.offer?.rideId === rideId) tx.update(previous.ref, { offer: null });
-      tx.update(driver.ref, { offer: { rideId, expiresAt, seq: sequence + 1 } });
+      tx.update(driver.ref, { offer: { rideId, expiresAt, seq: sequence + 1, serviceType: ride.serviceType ?? 'ride' } });
       return true;
     });
     if (assigned) {
