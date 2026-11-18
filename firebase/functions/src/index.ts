@@ -20,3 +20,4 @@ export { cancellationQuote, scheduleRide, dispatchScheduledRides, rateRide, skip
 
 export { validatePromo } from './promos/index.js';
 export { createShareLink, sharedTrip } from './safety/index.js';
+export { createSupportTicket, replySupportTicket, setSupportTicketStatus, onSupportMessageCreated } from './support/index.js';

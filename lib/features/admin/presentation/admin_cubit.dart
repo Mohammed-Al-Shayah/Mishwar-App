@@ -74,6 +74,7 @@ class AdminCubit extends Cubit<AdminState> {
   final FareCalculator _fare;
   StreamSubscription<dynamic>? _subscription;
   final _cursors = <String?>[null];
+  String? _rideId;
   int _generation = 0;
   int _licenseGeneration = 0;
 
@@ -102,7 +103,8 @@ class AdminCubit extends Cubit<AdminState> {
     ),
   );
 
-  Future<void> start(AdminSection section) async {
+  Future<void> start(AdminSection section, {String? rideId}) async {
+    _rideId = rideId;
     final generation = ++_generation;
     await _subscription?.cancel();
     if (isClosed || generation != _generation) return;
@@ -150,6 +152,7 @@ class AdminCubit extends Cubit<AdminState> {
         from: state.from,
         to: state.to,
         after: _cursors.last,
+        rideId: _rideId,
       ),
     );
     if (isClosed || generation != _generation) return;
@@ -160,6 +163,7 @@ class AdminCubit extends Cubit<AdminState> {
   }
 
   Future<void> filter({String? status, DateTime? from, DateTime? to}) async {
+    _rideId = null;
     _cursors
       ..clear()
       ..add(null);

@@ -131,7 +131,7 @@ void main() {
   AppLocalizations strings(WidgetTester tester) =>
       tester.element(find.byType(AccountScreen)).l10n;
   Future<void> tapText(WidgetTester tester, String text) async {
-    final finder = find.text(text).first;
+    final finder = find.text(text);
     if (finder.evaluate().isEmpty) {
       await tester.scrollUntilVisible(
         finder,
@@ -139,8 +139,9 @@ void main() {
         scrollable: find.byType(Scrollable).first,
       );
     }
-    await tester.ensureVisible(finder);
-    await tester.tap(finder);
+    await tester.ensureVisible(finder.first);
+    await tester.pumpAndSettle();
+    await tester.tap(finder.first);
     await tester.pumpAndSettle();
   }
 

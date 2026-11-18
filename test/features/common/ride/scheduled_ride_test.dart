@@ -320,7 +320,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.text(language == 'ar' ? 'المجدولة' : 'Scheduled'),
+        find.text(language == 'ar' ? 'الجاية' : 'Upcoming'),
         findsOneWidget,
       );
       expect(find.text('Dropoff'), findsOneWidget);

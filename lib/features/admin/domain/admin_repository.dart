@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/pricing_table.dart';
 
-enum AdminSection { overview, drivers, rides, map, pricing, content }
+enum AdminSection { overview, drivers, rides, map, pricing, content, support }
 
 const adminActiveStatuses = [
   'searching',
@@ -103,14 +103,16 @@ class AdminQuery extends Equatable {
     this.from,
     this.to,
     this.after,
+    this.rideId,
   });
   final AdminSection section;
   final String? status;
   final String? after;
+  final String? rideId;
   final DateTime? from;
   final DateTime? to;
   @override
-  List<Object?> get props => [section, status, from, to, after];
+  List<Object?> get props => [section, status, from, to, after, rideId];
 }
 
 class AdminData extends Equatable {

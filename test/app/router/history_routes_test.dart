@@ -135,6 +135,23 @@ void main() {
       );
     }
   });
+  test('support routes enforce rider and approved-driver modes', () {
+    final rider = SessionReady(user.copyWith(role: UserRole.rider));
+    final approved = SessionReady(
+      user.copyWith(role: UserRole.driver),
+      driver: driver(),
+    );
+    for (final suffix in ['', '/new', '/ticket']) {
+      expect(sessionRedirect(rider, '/rider/support$suffix'), isNull);
+      expect(sessionRedirect(approved, '/driver/support$suffix'), isNull);
+      expect(sessionRedirect(rider, '/driver/support$suffix'), '/rider');
+      expect(sessionRedirect(approved, '/rider/support$suffix'), '/driver');
+      expect(
+        sessionRedirect(const SessionSignedOut(), '/rider/support$suffix'),
+        '/auth/phone',
+      );
+    }
+  });
   testWidgets('rider Activity tab opens history and a receipt', (tester) async {
     historySize(tester);
     final session = MockHistorySession();

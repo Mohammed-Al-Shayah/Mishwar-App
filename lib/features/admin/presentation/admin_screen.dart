@@ -17,9 +17,11 @@ import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_labels.dart';
 import 'package:mishwar/features/admin/presentation/admin_live_map.dart';
 import 'package:mishwar/features/admin/presentation/admin_pricing.dart';
+import 'package:mishwar/features/admin/presentation/admin_support.dart';
 
 class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
+  const AdminScreen({this.supportTicketId, super.key});
+  final String? supportTicketId;
   @override
   State<AdminScreen> createState() => _AdminScreenState();
 }
@@ -143,7 +145,11 @@ class _AdminScreenState extends State<AdminScreen> {
                             _ridesToolbar(context, state),
                           if (state.loading) const LinearProgressIndicator(),
                           Expanded(
-                            child: state.section == AdminSection.content
+                            child:
+                                [
+                                  AdminSection.content,
+                                  AdminSection.support,
+                                ].contains(state.section)
                                 ? _body(context, state)
                                 : SingleChildScrollView(
                                     child: _body(context, state),
@@ -343,6 +349,7 @@ class _AdminScreenState extends State<AdminScreen> {
       AdminSection.drivers => _drivers(context, state.entries),
       AdminSection.rides => _rides(context, state.entries),
       AdminSection.content => const AdminContent(),
+      AdminSection.support => AdminSupport(ticketId: widget.supportTicketId),
       AdminSection.map => AdminLiveMap(drivers: state.entries),
       AdminSection.pricing =>
         state.data!.pricing == null

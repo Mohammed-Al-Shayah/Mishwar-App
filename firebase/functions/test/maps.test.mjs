@@ -78,12 +78,12 @@ test('all deployed callables require auth',async(context)=>{
  context.mock.method(globalThis,'fetch',()=>assert.fail('network called'));
  const callables=Object.entries(deployed).filter(([,value])=>value.__endpoint?.callableTrigger);
  assert.deepEqual(callables.map(([name])=>name).sort(),[
-  'acceptRide','adminCancelRide','cancelRide','cancellationQuote','createShareLink','declineRide','deleteAccount','deleteBanner','getFareEstimates','getRoute','ping','placeDetails','placesAutocomplete','rateRide','requestRide','reviewDriver','scheduleRide','skipRating','switchRole','updatePricing','updateRideStatus','updateServices','upsertBanner','validatePromo',
+  'acceptRide','adminCancelRide','cancelRide','cancellationQuote','createShareLink','createSupportTicket','declineRide','deleteAccount','deleteBanner','getFareEstimates','getRoute','ping','placeDetails','placesAutocomplete','rateRide','replySupportTicket','requestRide','reviewDriver','scheduleRide','setSupportTicketStatus','skipRating','switchRole','updatePricing','updateRideStatus','updateServices','upsertBanner','validatePromo',
  ]);
  for(const [name,callable] of callables) {
   await assert.rejects(()=>callable.run({data:{}}),(error)=>{
    assert.ok(error instanceof HttpsError,name);
-   assert.equal(error.code,['adminCancelRide','reviewDriver','updatePricing','deleteBanner','updateServices','upsertBanner'].includes(name) ? 'permission-denied' : 'unauthenticated',name);
+   assert.equal(error.code,['adminCancelRide','reviewDriver','updatePricing','deleteBanner','updateServices','upsertBanner','replySupportTicket','setSupportTicketStatus'].includes(name) ? 'permission-denied' : 'unauthenticated',name);
    return true;
   });
  }

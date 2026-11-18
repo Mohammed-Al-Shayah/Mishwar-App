@@ -18,7 +18,13 @@ class PushRouterBinding {
   late final StreamSubscription<dynamic> _subscription;
   bool _disposed = false;
   void _navigate(String route) {
-    if (!_disposed && route == '/driver') _router.go('/driver');
+    if (!_disposed &&
+        (route == '/driver' ||
+            RegExp(
+              r'^/(rider|driver)/support/[A-Za-z0-9_-]{1,128}$',
+            ).hasMatch(route))) {
+      _router.go(route);
+    }
   }
 
   Future<void> _initial(GetInitialPushRoute initial) async {

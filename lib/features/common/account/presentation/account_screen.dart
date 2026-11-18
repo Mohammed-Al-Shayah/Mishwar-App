@@ -25,16 +25,25 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({this.driver = false, super.key});
+  const AccountScreen({
+    this.driver = false,
+    this.supportUnread = false,
+    super.key,
+  });
+  final bool supportUnread;
   final bool driver;
   @override
   Widget build(BuildContext context) => driver
-      ? Theme(data: AppTheme.dark(), child: const _AccountBody(driver: true))
-      : const _AccountBody(driver: false);
+      ? Theme(
+          data: AppTheme.dark(),
+          child: _AccountBody(driver: true, supportUnread: supportUnread),
+        )
+      : _AccountBody(driver: false, supportUnread: supportUnread);
 }
 
 class _AccountBody extends StatelessWidget {
-  const _AccountBody({required this.driver});
+  const _AccountBody({required this.driver, required this.supportUnread});
+  final bool supportUnread;
   final bool driver;
   Future<T?> _sheet<T>(BuildContext context, String title, Widget child) =>
       showModalBottomSheet<T>(
@@ -467,6 +476,29 @@ class _AccountBody extends StatelessWidget {
                       AppIcons.shield,
                       () => _openUrl(context, privacy),
                     ),
+                  MwListRow(
+                    icon: AppIcons.info,
+                    title: l10n.supportTitle,
+                    subtitle: '',
+                    trailing: supportUnread
+                        ? Semantics(
+                            label: l10n.supportUnread,
+                            child: Container(
+                              width: AppSpacing.sm,
+                              height: AppSpacing.sm,
+                              decoration: BoxDecoration(
+                                color: context.colors.textPrimary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          )
+                        : Icon(AppIcons.chevron, size: AppSizes.icon),
+                    onTap: state.busy
+                        ? null
+                        : () => context.push(
+                            '/${driver ? 'driver' : 'rider'}/support',
+                          ),
+                  ),
                   row(l10n.accountAbout, AppIcons.info, () => _about(context)),
                   SizedBox(height: AppSpacing.lg),
                   FilledButton.tonal(

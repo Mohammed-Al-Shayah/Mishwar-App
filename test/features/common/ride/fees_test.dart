@@ -85,7 +85,7 @@ void main() {
       );
       await tester.pumpWidget(
         historyWrap(
-          RideReceiptContent(ride: model.toEntity()),
+          Scaffold(body: RideReceiptContent(ride: model.toEntity())),
           language: language,
         ),
       );
@@ -142,7 +142,12 @@ void main() {
           );
           await tester.pumpWidget(
             historyWrap(
-              RideReceiptContent(ride: model.toEntity(), driver: driver),
+              Scaffold(
+                body: RideReceiptContent(
+                  ride: model.toEntity(),
+                  driver: driver,
+                ),
+              ),
               language: language,
               dark: driver,
             ),

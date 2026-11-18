@@ -22,9 +22,12 @@ import 'package:mishwar/features/common/auth/domain/usecases/sign_out.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/pricing_table.dart';
 import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart';
+import 'package:mishwar/features/common/support/domain/support_usecases.dart';
+import 'package:mishwar/features/common/support/presentation/support_cubits.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../app_config/app_config_test.dart' show MockConfigRepository;
+import '../support/support_test.dart' show MockSupport;
 
 class MockSignOut extends Mock implements SignOut {}
 
@@ -280,6 +283,13 @@ void main() {
         )..start();
         addTearDown(content.close);
         final cubit = makeCubit(repo);
+        final supportRepo = MockSupport();
+        when(
+          supportRepo.watchTickets,
+        ).thenAnswer((_) => Stream.value(const Right([])));
+        final support = SupportListCubit(WatchSupportTickets(supportRepo));
+        if (section == AdminSection.support) await support.start();
+        addTearDown(() => tester.runAsync(support.close));
         await cubit.start(section);
         if (![AdminSection.drivers, AdminSection.rides].contains(section)) {
           repo.feed.add(Right(repo.data));
@@ -297,6 +307,7 @@ void main() {
               providers: [
                 BlocProvider.value(value: cubit),
                 BlocProvider.value(value: content),
+                BlocProvider.value(value: support),
                 BlocProvider(
                   create: (_) =>
                       AdminLoginCubit(AdminSignIn(repo), MockSignOut()),

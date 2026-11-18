@@ -77,8 +77,18 @@ class PushRepositoryImpl implements PushRepository {
     return unit;
   });
 
-  static String? routeForData(Map<String, dynamic> data) =>
-      data['type'] == 'ride_offer' ? '/driver' : null;
+  static String? routeForData(Map<String, dynamic> data) {
+    if (data['type'] == 'ride_offer') return '/driver';
+    final role = data['role'];
+    final id = data['ticketId'];
+    if (data['type'] == 'support_reply' &&
+        ['rider', 'driver'].contains(role) &&
+        id is String &&
+        RegExp(r'^[A-Za-z0-9_-]{1,128}$').hasMatch(id)) {
+      return '/$role/support/$id';
+    }
+    return null;
+  }
 
   @override
   Stream<String> get openedRoutes {

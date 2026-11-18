@@ -49,3 +49,7 @@ android/.kotlin/
 android/key.properties
 *.jks
 *.keystore
+
+# Tool state left by sandboxed runs
+.dart-state/
+.tool-state/

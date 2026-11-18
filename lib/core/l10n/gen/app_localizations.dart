@@ -2748,6 +2748,210 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'موقعي: https://maps.google.com/?q={coordinates}'**
   String safetyDriverSmsBody(String coordinates);
+
+  /// No description provided for @activityUpcoming.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجاية'**
+  String get activityUpcoming;
+
+  /// No description provided for @activityPast.
+  ///
+  /// In ar, this message translates to:
+  /// **'السابقة'**
+  String get activityPast;
+
+  /// No description provided for @activityUpcomingEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما عندك مشاوير جاية. احجز مشوار من الرئيسية.'**
+  String get activityUpcomingEmpty;
+
+  /// No description provided for @receiptReport.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن مشكلة'**
+  String get receiptReport;
+
+  /// No description provided for @receiptShare.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاركة الفاتورة'**
+  String get receiptShare;
+
+  /// No description provided for @receiptCancelledRider.
+  ///
+  /// In ar, this message translates to:
+  /// **'ألغى الراكب المشوار'**
+  String get receiptCancelledRider;
+
+  /// No description provided for @receiptCancelledDriver.
+  ///
+  /// In ar, this message translates to:
+  /// **'ألغى السائق المشوار'**
+  String get receiptCancelledDriver;
+
+  /// No description provided for @receiptCancelledSystem.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُلغي المشوار من النظام'**
+  String get receiptCancelledSystem;
+
+  /// No description provided for @supportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم'**
+  String get supportTitle;
+
+  /// No description provided for @supportNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب مساعدة جديد'**
+  String get supportNew;
+
+  /// No description provided for @supportEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما عندك طلبات دعم'**
+  String get supportEmpty;
+
+  /// No description provided for @supportOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتوح'**
+  String get supportOpen;
+
+  /// No description provided for @supportInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المعالجة'**
+  String get supportInProgress;
+
+  /// No description provided for @supportClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلق'**
+  String get supportClosed;
+
+  /// No description provided for @supportLostItem.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغراض منسية'**
+  String get supportLostItem;
+
+  /// No description provided for @supportFare.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر'**
+  String get supportFare;
+
+  /// No description provided for @supportSafety.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأمان'**
+  String get supportSafety;
+
+  /// No description provided for @supportOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشي ثاني'**
+  String get supportOther;
+
+  /// No description provided for @supportMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالتك'**
+  String get supportMessage;
+
+  /// No description provided for @supportSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get supportSend;
+
+  /// No description provided for @supportClosedNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'هالطلب مسكّر. إذا لسا بدك مساعدة افتح طلب جديد.'**
+  String get supportClosedNote;
+
+  /// No description provided for @supportMessageInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالة من حرف لـ 1000 حرف.'**
+  String get supportMessageInvalid;
+
+  /// No description provided for @supportLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'عندك 5 طلبات لسا مفتوحة. استنى لحد ما يتسكّر واحد منهم.'**
+  String get supportLimit;
+
+  /// No description provided for @supportUnread.
+  ///
+  /// In ar, this message translates to:
+  /// **'رد جديد من الدعم'**
+  String get supportUnread;
+
+  /// No description provided for @supportRole.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوضع'**
+  String get supportRole;
+
+  /// No description provided for @supportCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف'**
+  String get supportCategory;
+
+  /// No description provided for @supportRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشوار'**
+  String get supportRide;
+
+  /// No description provided for @supportLastMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر رسالة'**
+  String get supportLastMessage;
+
+  /// No description provided for @supportUser.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستخدم'**
+  String get supportUser;
+
+  /// No description provided for @supportStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get supportStatus;
+
+  /// No description provided for @supportUserMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت'**
+  String get supportUserMessage;
+
+  /// No description provided for @supportAdminMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق الدعم'**
+  String get supportAdminMessage;
+
+  /// No description provided for @supportRider.
+  ///
+  /// In ar, this message translates to:
+  /// **'راكب'**
+  String get supportRider;
+
+  /// No description provided for @supportDriver.
+  ///
+  /// In ar, this message translates to:
+  /// **'سائق'**
+  String get supportDriver;
 }
 
 class _AppLocalizationsDelegate

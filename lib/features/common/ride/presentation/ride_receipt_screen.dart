@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mishwar/core/l10n/failure_message.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
+import 'package:mishwar/core/theme/app_icons.dart';
 import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/mw_list_row.dart';
 import 'package:mishwar/core/widgets/mw_star_rating.dart';
 import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
@@ -16,6 +18,7 @@ import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
 import 'package:mishwar/features/common/ride/presentation/history_widgets.dart';
 import 'package:mishwar/features/common/ride/presentation/promo_discount_row.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
+import 'package:share_plus/share_plus.dart';
 
 class RideReceiptScreen extends StatelessWidget {
   const RideReceiptScreen({
@@ -161,11 +164,45 @@ class RideReceiptContent extends StatelessWidget {
         ],
         if (ride.status == RideStatus.cancelled)
           Text(
-            context.l10n.historyCancelled,
+            receiptCancellation(context, ride),
             style: AppTextStyles.footnote.copyWith(
               color: context.colors.negative,
             ),
           ),
+        SizedBox(height: AppSpacing.md),
+        MwListRow(
+          icon: AppIcons.warning,
+          title: context.l10n.receiptReport,
+          subtitle: '',
+          onTap: () => context.push(
+            '/${driver ? 'driver' : 'rider'}/support/new?rideId=${Uri.encodeQueryComponent(ride.id)}',
+          ),
+        ),
+        Builder(
+          builder: (rowContext) => MwListRow(
+            icon: AppIcons.share,
+            title: context.l10n.receiptShare,
+            subtitle: '',
+            onTap: () async {
+              final box = rowContext.findRenderObject()! as RenderBox;
+              try {
+                await SharePlus.instance.share(
+                  ShareParams(
+                    text: receiptText(context, ride),
+                    sharePositionOrigin:
+                        box.localToGlobal(Offset.zero) & box.size,
+                  ),
+                );
+              } on Object {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(context.l10n.errorGeneric)),
+                  );
+                }
+              }
+            },
+          ),
+        ),
         if (!driver) ...[
           SizedBox(height: AppSpacing.xl),
           FilledButton(
@@ -203,4 +240,58 @@ class RideReceiptContent extends StatelessWidget {
       ],
     ),
   );
+}
+
+String receiptCancellation(BuildContext context, RideEntity ride) =>
+    switch (ride.cancelledBy) {
+      'rider' => context.l10n.receiptCancelledRider,
+      'driver' => context.l10n.receiptCancelledDriver,
+      _ => context.l10n.receiptCancelledSystem,
+    };
+
+/// Same server fare components as the visible receipt, shared as plain text.
+String receiptText(BuildContext context, RideEntity ride) {
+  final l = context.l10n;
+  String amount(int fils) => l.fareJod(Money(fils).toJodString());
+  final lines = [
+    l.receiptTitle,
+    historyDate(context, ride.createdAt),
+    l.historyRoute(ride.pickup.name, ride.dropoff.name),
+  ];
+  if (ride.status == RideStatus.noDrivers) {
+    return [...lines, l.historyNoDrivers].join('\n');
+  }
+  if (ride.status == RideStatus.cancelled) {
+    lines.add(receiptCancellation(context, ride));
+  } else {
+    final base =
+        (ride.fareFinalFils ?? ride.fareEstimatedFils) -
+        ride.fareWaitingFeeFils -
+        ride.farePreviousBalanceFils +
+        (ride.promoApplied == true ? ride.discountFils : 0);
+    lines.add(
+      '${l.receiptFare}: ${amount(base)}',
+    );
+  }
+  if (ride.promoApplied == true && ride.discountFils > 0) {
+    lines.add(
+      l.promoDiscount(
+        ride.promoCode ?? '',
+        Money(ride.discountFils).toJodString(),
+      ),
+    );
+  }
+  for (final (label, value) in [
+    (l.feeWaiting, ride.fareWaitingFeeFils),
+    (l.feePreviousBalance, ride.farePreviousBalanceFils),
+    if (ride.status == RideStatus.cancelled)
+      (l.feeCancellation, ride.fareCancellationFeeFils),
+  ]) {
+    if (value > 0) lines.add('$label: ${amount(value)}');
+  }
+  return [
+    ...lines,
+    '${l.receiptTotal}: ${ridePrice(context, ride)}',
+    '${l.receiptPayment}: ${l.cashPayment}',
+  ].join('\n');
 }

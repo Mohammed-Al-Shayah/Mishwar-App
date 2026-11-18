@@ -158,6 +158,16 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 
 ### Account and settings
 
+### Activity and support (T6.8–T6.9)
+
+- Activity starts with a native segmented control for upcoming and past rides.
+- Support uses standard list rows, monochrome status pills, category chips and
+  multiline MwTextField inputs. Threads use end-aligned black/white user bubbles
+  and start-aligned grey100 admin bubbles, tile radius, body copy and footnote
+  timestamps. Bubbles occupy at most 85% of the available width.
+- Closed threads replace the composer with a localized note. Driver support
+  keeps the dark theme; admin support reuses the desktop table and detail panel.
+
 - Account header: 64 avatar circle with initial, title2 name, start-aligned LTR phone in footnote, and a pill with one filled star plus rating.
 - Settings use MwListRow icon circles and directional chevrons. Driver account stays dark; appearance selection affects rider mode.
 - Settings sheets use the standard grabber, centred headline, divider and scrollable content. Language and appearance choices use native radio rows.

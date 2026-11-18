@@ -198,6 +198,16 @@ import 'package:mishwar/features/common/saved_places/domain/saved_places_usecase
     as _i1039;
 import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart'
     as _i806;
+import 'package:mishwar/features/common/support/data/support_remote_data_source.dart'
+    as _i868;
+import 'package:mishwar/features/common/support/data/support_repository_impl.dart'
+    as _i399;
+import 'package:mishwar/features/common/support/domain/support_repository.dart'
+    as _i805;
+import 'package:mishwar/features/common/support/domain/support_usecases.dart'
+    as _i1043;
+import 'package:mishwar/features/common/support/presentation/support_cubits.dart'
+    as _i296;
 import 'package:mishwar/features/common/user/data/datasources/driver_remote_data_source.dart'
     as _i327;
 import 'package:mishwar/features/common/user/data/datasources/user_remote_data_source.dart'
@@ -396,6 +406,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i400.RouteRemoteDataSource>(
       () => _i400.RouteRemoteDataSource(gh<_i809.FirebaseFunctions>()),
     );
+    gh.lazySingleton<_i868.SupportRemoteDataSource>(
+      () => _i868.SupportRemoteDataSource(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i809.FirebaseFunctions>(),
+      ),
+    );
     gh.lazySingleton<_i1040.RouteRepository>(
       () => _i627.RouteRepositoryImpl(gh<_i400.RouteRemoteDataSource>()),
     );
@@ -488,6 +504,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i62.SearchPlaces>(
       () => _i62.SearchPlaces(gh<_i1040.PlacesRepository>()),
+    );
+    gh.lazySingleton<_i805.SupportRepository>(
+      () => _i399.SupportRepositoryImpl(gh<_i868.SupportRemoteDataSource>()),
     );
     gh.lazySingleton<_i1039.WatchSavedPlaces>(
       () => _i1039.WatchSavedPlaces(gh<_i552.SavedPlacesRepository>()),
@@ -656,6 +675,27 @@ extension GetItInjectableX on _i174.GetIt {
       (session, _) =>
           _i267.OtpCubit(gh<_i454.VerifyOtp>(), gh<_i563.SendOtp>(), session),
     );
+    gh.lazySingleton<_i1043.WatchSupportTickets>(
+      () => _i1043.WatchSupportTickets(gh<_i805.SupportRepository>()),
+    );
+    gh.lazySingleton<_i1043.WatchSupportTicket>(
+      () => _i1043.WatchSupportTicket(gh<_i805.SupportRepository>()),
+    );
+    gh.lazySingleton<_i1043.WatchSupportMessages>(
+      () => _i1043.WatchSupportMessages(gh<_i805.SupportRepository>()),
+    );
+    gh.lazySingleton<_i1043.CreateSupportTicket>(
+      () => _i1043.CreateSupportTicket(gh<_i805.SupportRepository>()),
+    );
+    gh.lazySingleton<_i1043.SendSupportMessage>(
+      () => _i1043.SendSupportMessage(gh<_i805.SupportRepository>()),
+    );
+    gh.lazySingleton<_i1043.MarkSupportRead>(
+      () => _i1043.MarkSupportRead(gh<_i805.SupportRepository>()),
+    );
+    gh.lazySingleton<_i1043.SetSupportStatus>(
+      () => _i1043.SetSupportStatus(gh<_i805.SupportRepository>()),
+    );
     gh.lazySingleton<_i942.GetWeekEarnings>(
       () => _i942.GetWeekEarnings(gh<_i63.EarningsRepository>()),
     );
@@ -714,6 +754,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i342.DeleteTrustedContact>(),
       ),
     );
+    gh.factory<_i296.SupportListCubit>(
+      () => _i296.SupportListCubit(gh<_i1043.WatchSupportTickets>()),
+    );
     gh.factory<_i693.NameCubit>(
       () => _i693.NameCubit(gh<_i801.CreateUserProfile>()),
     );
@@ -750,6 +793,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i290.AuthRepository>(),
       ),
     );
+    gh.factory<_i296.NewSupportCubit>(
+      () => _i296.NewSupportCubit(
+        gh<_i1043.CreateSupportTicket>(),
+        gh<_i263.WatchRide>(),
+      ),
+    );
     gh.factory<_i969.RecentPlacesCubit>(
       () => _i969.RecentPlacesCubit(gh<_i811.GetRideHistory>()),
     );
@@ -783,6 +832,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i811.GetRideHistory>(),
         watchScheduledRides: gh<_i574.WatchScheduledRides>(),
         cancelRide: gh<_i72.CancelRide>(),
+      ),
+    );
+    gh.factory<_i296.SupportThreadCubit>(
+      () => _i296.SupportThreadCubit(
+        gh<_i1043.WatchSupportTicket>(),
+        gh<_i1043.WatchSupportMessages>(),
+        gh<_i1043.SendSupportMessage>(),
+        gh<_i1043.MarkSupportRead>(),
+        gh<_i1043.SetSupportStatus>(),
       ),
     );
     gh.factory<_i562.DriverPresenceBloc>(

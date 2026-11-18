@@ -1439,4 +1439,109 @@ class AppLocalizationsAr extends AppLocalizations {
   String safetyDriverSmsBody(String coordinates) {
     return 'موقعي: https://maps.google.com/?q=$coordinates';
   }
+
+  @override
+  String get activityUpcoming => 'الجاية';
+
+  @override
+  String get activityPast => 'السابقة';
+
+  @override
+  String get activityUpcomingEmpty =>
+      'ما عندك مشاوير جاية. احجز مشوار من الرئيسية.';
+
+  @override
+  String get receiptReport => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get receiptShare => 'مشاركة الفاتورة';
+
+  @override
+  String get receiptCancelledRider => 'ألغى الراكب المشوار';
+
+  @override
+  String get receiptCancelledDriver => 'ألغى السائق المشوار';
+
+  @override
+  String get receiptCancelledSystem => 'أُلغي المشوار من النظام';
+
+  @override
+  String get supportTitle => 'الدعم';
+
+  @override
+  String get supportNew => 'طلب مساعدة جديد';
+
+  @override
+  String get supportEmpty => 'ما عندك طلبات دعم';
+
+  @override
+  String get supportOpen => 'مفتوح';
+
+  @override
+  String get supportInProgress => 'قيد المعالجة';
+
+  @override
+  String get supportClosed => 'مغلق';
+
+  @override
+  String get supportLostItem => 'أغراض منسية';
+
+  @override
+  String get supportFare => 'السعر';
+
+  @override
+  String get supportSafety => 'الأمان';
+
+  @override
+  String get supportOther => 'إشي ثاني';
+
+  @override
+  String get supportMessage => 'رسالتك';
+
+  @override
+  String get supportSend => 'إرسال';
+
+  @override
+  String get supportClosedNote =>
+      'هالطلب مسكّر. إذا لسا بدك مساعدة افتح طلب جديد.';
+
+  @override
+  String get supportMessageInvalid => 'اكتب رسالة من حرف لـ 1000 حرف.';
+
+  @override
+  String get supportLimit =>
+      'عندك 5 طلبات لسا مفتوحة. استنى لحد ما يتسكّر واحد منهم.';
+
+  @override
+  String get supportUnread => 'رد جديد من الدعم';
+
+  @override
+  String get supportRole => 'الوضع';
+
+  @override
+  String get supportCategory => 'التصنيف';
+
+  @override
+  String get supportRide => 'المشوار';
+
+  @override
+  String get supportLastMessage => 'آخر رسالة';
+
+  @override
+  String get supportUser => 'المستخدم';
+
+  @override
+  String get supportStatus => 'الحالة';
+
+  @override
+  String get supportUserMessage => 'أنت';
+
+  @override
+  String get supportAdminMessage => 'فريق الدعم';
+
+  @override
+  String get supportRider => 'راكب';
+
+  @override
+  String get supportDriver => 'سائق';
 }

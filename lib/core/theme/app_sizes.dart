@@ -1,6 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static const supportBubbleFraction = 0.85;
   static const homeSheetFraction = 0.7;
   static const double bannerAspectRatio = 16 / 8;
   static const bannerInterval = Duration(seconds: 5);

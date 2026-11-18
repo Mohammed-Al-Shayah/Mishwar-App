@@ -16,6 +16,9 @@ class MwTextField extends StatelessWidget {
     this.textInputAction,
     this.suffixIcon,
     this.floatLabel = true,
+    this.minLines,
+    this.maxLines = 1,
+    this.maxLength,
     super.key,
   });
   final String label;
@@ -34,9 +37,15 @@ class MwTextField extends StatelessWidget {
   /// False keeps the label inside the pill (placeholder-like), for
   /// single-field sheets whose title already names the field.
   final bool floatLabel;
+  final int? minLines;
+  final int? maxLines;
+  final int? maxLength;
   @override
   Widget build(BuildContext context) => TextField(
     controller: controller,
+    minLines: minLines,
+    maxLines: maxLines,
+    maxLength: maxLength,
     onChanged: onChanged,
     keyboardType: keyboardType,
     inputFormatters: inputFormatters,

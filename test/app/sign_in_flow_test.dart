@@ -36,6 +36,9 @@ import 'package:mishwar/features/common/auth/presentation/session/session_cubit.
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/notifications/domain/usecases/unregister_push_token.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_id.dart';
+import 'package:mishwar/features/common/support/domain/support_repository.dart';
+import 'package:mishwar/features/common/support/domain/support_usecases.dart';
+import 'package:mishwar/features/common/support/presentation/support_cubits.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
@@ -74,8 +77,17 @@ class MockUnregisterPushToken extends Mock implements UnregisterPushToken {}
 
 class MockAccountRepository extends Mock implements AccountRepository {}
 
+class MockSupportRepository extends Mock implements SupportRepository {}
+
 void main() {
   setUp(registerSavedPlaces);
+  setUp(() {
+    final support = MockSupportRepository();
+    when(
+      () => support.watchTickets(uid: any(named: 'uid')),
+    ).thenAnswer((_) => Stream.value(const Right([])));
+    getIt.registerFactory(() => SupportListCubit(WatchSupportTickets(support)));
+  });
   setUpAll(() {
     registerFallbackValue(const GoOnlinePressed());
     registerFallbackValue(const offer.Started('u'));

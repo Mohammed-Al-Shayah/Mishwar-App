@@ -120,12 +120,20 @@ void main() {
         await tester.pumpAndSettle();
 
         // Retry uses the existing localized label.
-        expect(find.byType(TextButton), findsOneWidget);
+        expect(
+          find.text(language == 'ar' ? 'حاول مرة ثانية' : 'Try again'),
+          findsOneWidget,
+        );
 
         when(
           () => repository.history(party: RideParty.rider, uid: 'u'),
         ).thenAnswer((_) async => Right(RideHistoryPage(items: [])));
-        await tester.tap(find.byType(TextButton));
+        await tester.tap(
+          find.widgetWithText(
+            TextButton,
+            language == 'ar' ? 'حاول مرة ثانية' : 'Try again',
+          ),
+        );
         await tester.pumpAndSettle();
         expect(
           find.text(language == 'ar' ? 'ما عندك مشاوير لسا' : 'No trips yet'),
@@ -169,6 +177,7 @@ void main() {
       expect(find.text('12-345'), findsOneWidget);
       expect(find.text('JD 2.55'), findsNWidgets(2));
       await tester.ensureVisible(find.byType(FilledButton));
+      await tester.pumpAndSettle();
       await tester.tap(find.byType(FilledButton));
       await tester.pumpAndSettle();
       expect(rebooked, ride.draft);

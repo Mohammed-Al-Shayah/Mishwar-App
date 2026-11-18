@@ -1451,4 +1451,109 @@ class AppLocalizationsEn extends AppLocalizations {
   String safetyDriverSmsBody(String coordinates) {
     return 'My location: https://maps.google.com/?q=$coordinates';
   }
+
+  @override
+  String get activityUpcoming => 'Upcoming';
+
+  @override
+  String get activityPast => 'Past';
+
+  @override
+  String get activityUpcomingEmpty =>
+      'No upcoming rides. Schedule a ride from Home.';
+
+  @override
+  String get receiptReport => 'Report a problem';
+
+  @override
+  String get receiptShare => 'Share receipt';
+
+  @override
+  String get receiptCancelledRider => 'Cancelled by the rider';
+
+  @override
+  String get receiptCancelledDriver => 'Cancelled by the driver';
+
+  @override
+  String get receiptCancelledSystem => 'Cancelled by the system';
+
+  @override
+  String get supportTitle => 'Support';
+
+  @override
+  String get supportNew => 'New help request';
+
+  @override
+  String get supportEmpty => 'No support requests yet';
+
+  @override
+  String get supportOpen => 'Open';
+
+  @override
+  String get supportInProgress => 'In progress';
+
+  @override
+  String get supportClosed => 'Closed';
+
+  @override
+  String get supportLostItem => 'Lost item';
+
+  @override
+  String get supportFare => 'Fare';
+
+  @override
+  String get supportSafety => 'Safety';
+
+  @override
+  String get supportOther => 'Other';
+
+  @override
+  String get supportMessage => 'Your message';
+
+  @override
+  String get supportSend => 'Send';
+
+  @override
+  String get supportClosedNote =>
+      'This request is closed. You can open a new help request.';
+
+  @override
+  String get supportMessageInvalid => 'Write a message of 1–1000 characters.';
+
+  @override
+  String get supportLimit =>
+      'You have 5 active requests. Wait for one to close before opening another.';
+
+  @override
+  String get supportUnread => 'New support reply';
+
+  @override
+  String get supportRole => 'Role';
+
+  @override
+  String get supportCategory => 'Category';
+
+  @override
+  String get supportRide => 'Ride';
+
+  @override
+  String get supportLastMessage => 'Last message';
+
+  @override
+  String get supportUser => 'User';
+
+  @override
+  String get supportStatus => 'Status';
+
+  @override
+  String get supportUserMessage => 'You';
+
+  @override
+  String get supportAdminMessage => 'Support team';
+
+  @override
+  String get supportRider => 'Rider';
+
+  @override
+  String get supportDriver => 'Driver';
 }

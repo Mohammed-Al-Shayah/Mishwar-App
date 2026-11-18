@@ -39,6 +39,8 @@ import 'package:mishwar/features/common/safety/presentation/trip_safety_cubit.da
 import 'package:mishwar/features/common/safety/presentation/trusted_contacts_cubit.dart';
 import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
 import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
+import 'package:mishwar/features/common/support/presentation/support_cubits.dart';
+import 'package:mishwar/features/common/support/presentation/support_screens.dart';
 import 'package:mishwar/features/common/user/domain/entities/driver_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
@@ -113,6 +115,8 @@ String? sessionRedirect(
           : user.role != UserRole.driver
           ? (user.role == UserRole.rider &&
                     ((location == '/rider/account' ||
+                            location == '/rider/support' ||
+                            location.startsWith('/rider/support/') ||
                             location == '/rider/safety' ||
                             location == '/rider/places' ||
                             location == '/rider/services' ||
@@ -142,6 +146,8 @@ String? sessionRedirect(
                           driver?.currentRideId != null
                     ? '/driver/ride/${driver!.currentRideId}'
                     : (location == '/driver/account' ||
+                          location == '/driver/support' ||
+                          location.startsWith('/driver/support/') ||
                           location == '/driver/safety' ||
                           location == '/driver/earnings' ||
                           RegExp(
@@ -202,22 +208,42 @@ GoRouter createAppRouter(
         path: section == AdminSection.overview
             ? '/admin'
             : '/admin/${section.name}',
-        builder: (_, _) => MultiBlocProvider(
+        builder: (_, routeState) => MultiBlocProvider(
+          key: ValueKey(routeState.uri.toString()),
           providers: [
             BlocProvider(create: (_) => getIt<AdminLoginCubit>()),
+            if (section == AdminSection.support) ...[
+              BlocProvider(create: (_) => _supportList()),
+              BlocProvider(
+                create: (_) {
+                  final cubit = getIt<SupportThreadCubit>();
+                  final id = routeState.uri.queryParameters['ticket'];
+                  if (id != null) unawaited(cubit.start(id, admin: true));
+                  return cubit;
+                },
+              ),
+            ],
             if (section == AdminSection.content)
               BlocProvider(create: (_) => getIt<AdminContentCubit>()..start()),
             BlocProvider(
               create: (_) {
                 final cubit = getIt<AdminCubit>();
-                unawaited(cubit.start(section));
+                unawaited(
+                  cubit.start(
+                    section,
+                    rideId: routeState.uri.queryParameters['rideId'],
+                  ),
+                );
                 return cubit;
               },
             ),
           ],
-          child: const AdminScreen(),
+          child: AdminScreen(
+            supportTicketId: routeState.uri.queryParameters['ticket'],
+          ),
         ),
       ),
+    _supportRoute('rider', session),
     GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
     GoRoute(
       path: '/auth/phone',
@@ -284,7 +310,14 @@ GoRouter createAppRouter(
               unawaited(cubit.start((session.state as SessionReady).user.id));
               return cubit;
             },
-            child: const AccountScreen(),
+            child: BlocProvider(
+              create: (_) =>
+                  _supportList(uid: (session.state as SessionReady).user.id),
+              child: BlocBuilder<SupportListCubit, SupportListState>(
+                builder: (_, state) =>
+                    AccountScreen(supportUnread: state.unread),
+              ),
+            ),
           ),
         ),
         GoRoute(
@@ -473,6 +506,7 @@ GoRouter createAppRouter(
         ),
       ),
       routes: [
+        _supportRoute('driver', session),
         GoRoute(
           path: '/driver/safety',
           builder: (_, _) => BlocProvider(
@@ -492,7 +526,14 @@ GoRouter createAppRouter(
               unawaited(cubit.start((session.state as SessionReady).user.id));
               return cubit;
             },
-            child: const AccountScreen(driver: true),
+            child: BlocProvider(
+              create: (_) =>
+                  _supportList(uid: (session.state as SessionReady).user.id),
+              child: BlocBuilder<SupportListCubit, SupportListState>(
+                builder: (_, state) =>
+                    AccountScreen(driver: true, supportUnread: state.unread),
+              ),
+            ),
           ),
         ),
         GoRoute(
@@ -582,3 +623,44 @@ Widget _tripSafetyScope(SessionCubit session, Widget child) =>
       ],
       child: child,
     );
+
+GoRoute _supportRoute(String mode, SessionCubit session) => GoRoute(
+  path: '/$mode/support',
+  builder: (_, _) => BlocProvider(
+    create: (_) => _supportList(uid: (session.state as SessionReady).user.id),
+    child: SupportListScreen(
+      uid: (session.state as SessionReady).user.id,
+      driver: mode == 'driver',
+    ),
+  ),
+  routes: [
+    GoRoute(
+      path: 'new',
+      builder: (_, state) => BlocProvider(
+        create: (_) =>
+            getIt<NewSupportCubit>()
+              ..start(state.uri.queryParameters['rideId']),
+        child: NewSupportScreen(driver: mode == 'driver'),
+      ),
+    ),
+    GoRoute(
+      path: ':id',
+      builder: (_, state) => BlocProvider(
+        create: (_) => _supportThread(state.pathParameters['id']!),
+        child: SupportThreadScreen(driver: mode == 'driver'),
+      ),
+    ),
+  ],
+);
+
+SupportListCubit _supportList({String? uid}) {
+  final cubit = getIt<SupportListCubit>();
+  unawaited(cubit.start(uid: uid));
+  return cubit;
+}
+
+SupportThreadCubit _supportThread(String id) {
+  final cubit = getIt<SupportThreadCubit>();
+  unawaited(cubit.start(id));
+  return cubit;
+}

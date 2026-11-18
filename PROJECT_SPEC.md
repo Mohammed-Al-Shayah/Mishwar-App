@@ -258,8 +258,27 @@ lib/features/
 
 **`supportTickets/{id}`**
 ```json
-{ "uid": "string", "rideId": "string?", "category": "lost_item | fare | safety | other", "message": "string", "status": "open | in_progress | closed", "createdAt": "timestamp" }
+{
+  "uid": "string", "role": "rider | driver", "rideId": "string?",
+  "category": "lost_item | fare | safety | other",
+  "subject": "string (category-derived, <= 80)",
+  "status": "open | in_progress | closed",
+  "createdAt": "timestamp", "updatedAt": "timestamp",
+  "lastMessageAt": "timestamp", "lastMessageBy": "user | admin",
+  "userUnread": "bool"
+}
 ```
+
+**`supportTickets/{id}/messages/{id}`**
+```json
+{ "from": "user | admin", "text": "string (1–1000)", "createdAt": "timestamp" }
+```
+
+Tickets and their first message are created by `createSupportTicket` only
+(maximum five non-closed tickets per user). Owners may append user messages to
+non-closed tickets and clear `userUnread`; admin replies and status changes use
+audited callables. A message trigger updates last-message metadata without
+changing ticket status.
 
 ---
 
@@ -433,8 +452,8 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
   - مشاركة المشوار برابط تتبع (`shareToken` + صفحة ويب بسيطة)
   - زر الطوارئ (اتصال بـ 911 + إرسال الموقع لجهات الاتصال الموثوقة)
   - إدارة جهات الاتصال الموثوقة
-- [ ] **T6.8** تبويب النشاط كامل: الجاية والسابقة، والفاتورة، و"اطلب نفس المشوار"، و"الإبلاغ عن مشكلة" (`supportTickets`)
-- [ ] **T6.9** الدعم: تذاكر من التطبيق (أغراض منسية، سعر، أمان) + إدارتها والرد عليها من لوحة الأدمن
+- [x] **T6.8** تبويب النشاط كامل: الجاية والسابقة، والفاتورة، و"اطلب نفس المشوار"، و"الإبلاغ عن مشكلة" (`supportTickets`)
+- [x] **T6.9** الدعم: تذاكر من التطبيق (أغراض منسية، سعر، أمان) + إدارتها والرد عليها من لوحة الأدمن
 
 **معيار القبول:** راكب بيحجز مشوار لبعد ساعة بكود خصم، وبيوصله تذكير، وبيتوزع على سائق بالوقت الصح، والفاتورة فيها الخصم. ومشاركة المشوار بتفتح صفحة تتبع شغالة.
 

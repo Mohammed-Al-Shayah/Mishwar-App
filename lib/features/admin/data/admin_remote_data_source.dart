@@ -63,6 +63,14 @@ class AdminRemoteDataSource {
   );
 
   Future<AdminData> load(AdminQuery params) async {
+    if (params.rideId != null) {
+      final doc = await _db.doc('rides/${params.rideId}').get();
+      return AdminData(
+        entries: doc.exists
+            ? [AdminRecordModel(id: doc.id, fields: doc.data()!).toEntity()]
+            : [],
+      );
+    }
     final drivers = params.section == AdminSection.drivers;
     Query<Map<String, dynamic>> query = _db.collection(
       drivers ? 'drivers' : 'rides',
@@ -98,7 +106,9 @@ class AdminRemoteDataSource {
   }
 
   Stream<AdminData> watch(AdminSection section) {
-    if (section == AdminSection.content) return Stream.value(AdminData());
+    if ([AdminSection.content, AdminSection.support].contains(section)) {
+      return Stream.value(AdminData());
+    }
     if (section == AdminSection.map) {
       return _db
           .collection('drivers')
