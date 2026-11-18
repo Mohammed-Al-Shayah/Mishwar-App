@@ -13,16 +13,21 @@ export async function reverseGeocodeHandler(request: CallableRequest, key: strin
   const cached = cache.get(cacheKey);
   if (cached) return cached;
   const query = new URLSearchParams({ latlng: `${point.lat},${point.lng}`, language: lang, key });
-  const response = await google<{ status: string; results?: { formatted_address?: string; address_components?: { long_name: string; types: string[] }[] }[] }>(
+  const response = await google<{ status: string; results?: { formatted_address?: string; types?: string[]; address_components?: { long_name: string; types: string[] }[] }[] }>(
     `https://maps.googleapis.com/maps/api/geocode/json?${query}`, {}, fetchImpl);
   if (response.status === 'ZERO_RESULTS') throw new HttpsError('not-found', 'No address found.');
   if (response.status !== 'OK') throw new HttpsError(response.status === 'UNKNOWN_ERROR' || response.status === 'OVER_QUERY_LIMIT' ? 'unavailable' : 'internal', 'Map service request failed.');
-  const result = response.results?.[0];
+  // Google often lists a Plus Code (e.g. "XW36+H76") first; riders need a street or place.
+  const results = response.results ?? [];
+  const readable = (r: (typeof results)[number]) => !(r.types ?? []).includes('plus_code') &&
+    !/^[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,3}/.test(r.formatted_address ?? '');
+  const result = results.find(readable) ?? results[0];
   if (!result?.formatted_address) throw new HttpsError('internal', 'Invalid map response.');
   const components = result.address_components ?? [];
   const component = (type: string) => components.find(c => c.types.includes(type))?.long_name;
   const name = component('point_of_interest') ?? component('premise') ??
-    ([component('route'), component('street_number')].filter(Boolean).join(' ') || components[0]?.long_name || result.formatted_address);
+    ([component('route'), component('street_number')].filter(Boolean).join(' ') ||
+      (component('neighborhood') ?? component('sublocality') ?? components[0]?.long_name ?? result.formatted_address));
   const value = { name, address: result.formatted_address };
   if (cache.size >= 500) cache.delete(cache.keys().next().value!);
   cache.set(cacheKey, value);

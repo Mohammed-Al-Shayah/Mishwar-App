@@ -45,3 +45,12 @@ for (const handler of [reverseGeocodeHandler, pickupSuggestionsHandler]) {
     await assert.rejects(handler(request({lat: 4,lng: 4}), 'fake', async () => new Response('', {status: 503})), {code: 'unavailable'});
   });
 }
+test('reverse skips a leading Plus Code result for a readable street', async () => {
+  const body = { status: 'OK', results: [
+    { formatted_address: 'XW36+H76، عمّان، الأردن', types: ['plus_code'], address_components: [{ long_name: 'XW36+H76', types: ['plus_code'] }] },
+    { formatted_address: 'شارع الملك فيصل، عمّان', types: ['route'], address_components: [{ long_name: 'شارع الملك فيصل', types: ['route'] }] },
+  ] };
+  const fetch = async () => Response.json(body);
+  assert.deepEqual(await reverseGeocodeHandler(request({ lat: 31.95391, lng: 35.91061 }), 'fake', fetch),
+    { name: 'شارع الملك فيصل', address: 'شارع الملك فيصل، عمّان' });
+});
