@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +19,8 @@ import 'package:mishwar/features/rider/airport/presentation/airport_cubit.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 
 class AirportScreen extends StatefulWidget {
-  const AirportScreen({super.key});
+  const AirportScreen({this.pickupAvailable = true, super.key});
+  final bool pickupAvailable;
   @override
   State<AirportScreen> createState() => _AirportScreenState();
 }
@@ -50,7 +52,7 @@ class _AirportScreenState extends State<AirportScreen> {
       if (!mounted || location == null) return;
       final name = context.l10n.airportName;
       final current = context.l10n.currentLocation;
-      final pickup = toAirport
+      var pickup = toAirport
           ? RideStop(name: current, address: current, location: location)
           : _point!;
       RideStop dropoff;
@@ -77,6 +79,14 @@ class _AirportScreenState extends State<AirportScreen> {
         );
       }
       if (!mounted) return;
+      if (!kIsWeb && widget.pickupAvailable) {
+        final confirmed = await context.push<RideStop>(
+          '/rider/pickup',
+          extra: pickup,
+        );
+        if (!mounted || confirmed == null) return;
+        pickup = confirmed;
+      }
       await context.push<void>(
         '/rider/confirm',
         extra: RideDraft(

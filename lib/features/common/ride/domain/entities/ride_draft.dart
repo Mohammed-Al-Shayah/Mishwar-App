@@ -29,6 +29,14 @@ class RideDraft extends Equatable {
   ServiceType get serviceType =>
       parcel == null ? ServiceType.ride : ServiceType.parcel;
   final String? promoCode;
+  RideDraft withPickup(RideStop stop) => RideDraft(
+    pickup: stop,
+    dropoff: dropoff,
+    scheduledFor: scheduledFor,
+    promoCode: promoCode,
+    parcel: parcel,
+    flightNumber: flightNumber,
+  );
   RideDraft withPromo(String? code) => RideDraft(
     pickup: pickup,
     dropoff: dropoff,

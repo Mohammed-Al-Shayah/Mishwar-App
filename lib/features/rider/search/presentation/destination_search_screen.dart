@@ -106,7 +106,6 @@ class _DestinationSearchScreenState extends State<DestinationSearchScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // TODO(T7.3): Allow pickup editing.
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                   vertical: AppSpacing.sm,

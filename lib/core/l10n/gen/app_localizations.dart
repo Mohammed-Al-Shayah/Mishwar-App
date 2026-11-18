@@ -3126,6 +3126,42 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'رحلة مطار · سعر ثابت'**
   String get airportReceipt;
+
+  /// No description provided for @pickupTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'???? ???? ????????'**
+  String get pickupTitle;
+
+  /// No description provided for @pickupHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'???? ??????? ???? ???? ????? ??????'**
+  String get pickupHint;
+
+  /// No description provided for @pickupConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'???? ????????'**
+  String get pickupConfirm;
+
+  /// No description provided for @pickupFarWarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'???? ???????? ????? ?? ?????'**
+  String get pickupFarWarning;
+
+  /// No description provided for @pickupEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'???? ???? ????????'**
+  String get pickupEdit;
+
+  /// No description provided for @pickupGeneric.
+  ///
+  /// In ar, this message translates to:
+  /// **'???? ????????'**
+  String get pickupGeneric;
 }
 
 class _AppLocalizationsDelegate

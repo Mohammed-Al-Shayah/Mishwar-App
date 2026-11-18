@@ -884,5 +884,11 @@
   "airportUnavailable": "Airport service is unavailable. Please try again later.",
   "airportContinue": "Continue",
   "airportFixedFare": "Fixed airport fare",
-  "airportReceipt": "Airport ride · Fixed fare"
+  "airportReceipt": "Airport ride · Fixed fare",
+  "pickupTitle": "Confirm pickup point",
+  "pickupHint": "Move the map to set your exact pickup point",
+  "pickupConfirm": "Confirm pickup",
+  "pickupFarWarning": "Pickup point is far from your location",
+  "pickupEdit": "Edit pickup point",
+  "pickupGeneric": "Pickup point"
 }

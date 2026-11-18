@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1654,4 +1653,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get airportReceipt => 'Airport ride · Fixed fare';
+
+  @override
+  String get pickupTitle => 'Confirm pickup point';
+
+  @override
+  String get pickupHint => 'Move the map to set your exact pickup point';
+
+  @override
+  String get pickupConfirm => 'Confirm pickup';
+
+  @override
+  String get pickupFarWarning => 'Pickup point is far from your location';
+
+  @override
+  String get pickupEdit => 'Edit pickup point';
+
+  @override
+  String get pickupGeneric => 'Pickup point';
 }

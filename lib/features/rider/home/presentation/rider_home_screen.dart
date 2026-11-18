@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -37,8 +38,14 @@ import 'package:mishwar/features/rider/search/presentation/bloc/destination_sear
 import 'package:url_launcher/url_launcher.dart';
 
 class RiderHomeScreen extends StatefulWidget {
-  const RiderHomeScreen({this.mapBuilder, this.initialService, super.key});
+  const RiderHomeScreen({
+    this.mapBuilder,
+    this.initialService,
+    this.pickupAvailable,
+    super.key,
+  });
   final ServiceId? initialService;
+  final bool? pickupAvailable;
   final WidgetBuilder? mapBuilder;
   @override
   State<RiderHomeScreen> createState() => _RiderHomeScreenState();
@@ -119,6 +126,15 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
       return;
     }
     final label = context.l10n.currentLocation;
+    var pickupStop = RideStop(name: label, address: label, location: pickup);
+    if (!kIsWeb && (widget.pickupAvailable ?? widget.mapBuilder == null)) {
+      final confirmed = await context.push<RideStop>(
+        '/rider/pickup',
+        extra: pickupStop,
+      );
+      if (!mounted || confirmed == null) return;
+      pickupStop = confirmed;
+    }
     final promoCode = _promoCode;
     _promoCode = null;
     await context.push<void>(
@@ -126,7 +142,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
       extra: RideDraft(
         scheduledFor: _scheduledFor,
         promoCode: promoCode,
-        pickup: RideStop(name: label, address: label, location: pickup),
+        pickup: pickupStop,
         dropoff: RideStop(
           name: details.name,
           address: details.address,

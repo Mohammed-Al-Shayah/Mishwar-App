@@ -1,6 +1,11 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static const pickupSheetFraction = 0.45;
+  static const pinLiftDuration = Duration(milliseconds: 150);
+  static double get pickupPinLift => 8.h;
+  static double get pickupShadow => 6.r;
+  static const pickupSuggestionRadius = 3.0;
   static const supportBubbleFraction = 0.85;
   static const homeSheetFraction = 0.7;
   static const double bannerAspectRatio = 16 / 8;

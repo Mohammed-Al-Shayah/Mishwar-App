@@ -14,6 +14,7 @@ export const ping = onCall({ region: 'europe-west1' }, (request) => {
 export { placesAutocomplete } from './placesAutocomplete.js';
 export { placeDetails } from './placeDetails.js';
 export { getRoute } from './getRoute.js';
+export { reverseGeocode, pickupSuggestions } from './pickup.js';
 export { getFareEstimates } from './getFareEstimates.js';
 export { switchRole, deleteAccount } from './account/index.js';
 export { parcelPhotoUrl, adminCompleteParcel, cancellationQuote, scheduleRide, dispatchScheduledRides, rateRide, skipRating, updateRideStatus, requestRide, cancelRide, expireSearchingRides, onRideCreated, offerTimeout, acceptRide, declineRide } from './rides/index.js';

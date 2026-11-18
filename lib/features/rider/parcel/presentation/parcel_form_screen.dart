@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,9 +32,11 @@ class ParcelFormScreen extends StatefulWidget {
   const ParcelFormScreen({
     required this.uid,
     this.picker = pickParcelPhoto,
+    this.pickupAvailable = true,
     super.key,
   });
   final String uid;
+  final bool pickupAvailable;
   final ParcelPhotoPicker picker;
   @override
   State<ParcelFormScreen> createState() => _ParcelFormScreenState();
@@ -77,11 +79,20 @@ class _ParcelFormScreenState extends State<ParcelFormScreen> {
     );
     if (!mounted || details == null) return;
     final label = context.l10n.currentLocation;
+    var pickupStop = RideStop(name: label, address: label, location: pickup);
+    if (!kIsWeb && widget.pickupAvailable) {
+      final confirmed = await context.push<RideStop>(
+        '/rider/pickup',
+        extra: pickupStop,
+      );
+      if (!mounted || confirmed == null) return;
+      pickupStop = confirmed;
+    }
     await context.push<void>(
       '/rider/confirm',
       extra: RideDraft(
         parcel: parcel,
-        pickup: RideStop(name: label, address: label, location: pickup),
+        pickup: pickupStop,
         dropoff: RideStop(
           name: details.name,
           address: details.address,

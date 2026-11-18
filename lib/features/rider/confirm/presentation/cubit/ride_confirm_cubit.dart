@@ -115,7 +115,27 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
   final ValidatePromo validatePromo;
   Timer? _promoTimer;
   int _promoRevision = 0;
-  final RideDraft draft;
+  RideDraft draft;
+
+  Future<void> updatePickup(RideStop stop) async {
+    final current = state;
+    if (_fetching ||
+        isClosed ||
+        current is RideConfirmRequested ||
+        current is RideConfirmLoaded && current.isRequesting ||
+        stop == draft.pickup) {
+      return;
+    }
+    _promoTimer?.cancel();
+    ++_promoRevision;
+    draft = draft
+        .withPickup(stop)
+        .withPromo(
+          current is RideConfirmLoaded ? current.promoCode : draft.promoCode,
+        );
+    await start();
+  }
+
   bool _fetching = false;
 
   Future<void> start() async {

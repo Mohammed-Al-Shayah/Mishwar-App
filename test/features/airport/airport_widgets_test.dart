@@ -88,7 +88,7 @@ void main() {
               path: '/',
               builder: (_, _) => BlocProvider.value(
                 value: cubit,
-                child: const AirportScreen(),
+                child: const AirportScreen(pickupAvailable: false),
               ),
             ),
             GoRoute(

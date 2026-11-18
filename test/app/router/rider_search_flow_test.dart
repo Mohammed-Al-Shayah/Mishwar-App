@@ -30,6 +30,7 @@ import 'package:mishwar/features/common/ride/domain/usecases/watch_active_ride_i
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart';
 import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
 import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
+import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_entity.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
@@ -39,6 +40,8 @@ import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cub
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/schedule_sheet.dart';
+import 'package:mishwar/features/rider/pickup/presentation/pickup_confirm_cubit.dart';
+import 'package:mishwar/features/rider/pickup/presentation/pickup_confirm_screen.dart';
 import 'package:mishwar/features/rider/places/presentation/saved_places_screen.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/destination_search_screen.dart';
@@ -47,6 +50,7 @@ import 'package:mocktail/mocktail.dart';
 import '../../features/app_config/app_config_test.dart' show demoBanner;
 import '../../features/rider/confirm/ride_confirm_cubit_test.dart'
     show MockRouteRepository, estimates;
+import '../../features/rider/pickup/pickup_confirm_cubit_test.dart' as pickup;
 import '../../features/rider/search/destination_search_bloc_test.dart'
     show MockPlacesRepository, details, point, suggestion;
 import '../../helpers/ride_mocks.dart';
@@ -63,6 +67,7 @@ void main() {
   setUp(registerSavedPlaces);
   for (final origin in [
     'pill',
+    'pickup',
     'service',
     'all',
     'banner',
@@ -202,10 +207,38 @@ void main() {
       addTearDown(getIt.reset);
       final refresh = SessionRouterRefresh(session.stream);
       getIt.registerSingleton<WatchActiveRideId>(emptyActiveRideWatch());
+      if (origin == 'pickup') {
+        registerFallbackValue(point);
+        when(
+          () => routes.getFareEstimates(
+            origin: pickup.suggestion.location,
+            destination: details.location,
+          ),
+        ).thenAnswer((_) async => Right(estimates));
+        getIt.registerFactoryParam<PickupConfirmCubit, RideStop, dynamic>((
+          stop,
+          _,
+        ) {
+          final repository = pickup.MockPickupRepository();
+          when(() => repository.reverse(any(), 'en')).thenAnswer(
+            (invocation) async => Right(
+              RideStop(
+                name: 'Confirmed pickup',
+                address: 'Pickup street',
+                location: invocation.positionalArguments.first as GeoPointValue,
+              ),
+            ),
+          );
+          return pickup.pickupCubit(repository, stop: stop);
+        });
+      }
       final router = createAppRouter(
         session,
         refresh,
         riderMapBuilder: (_) => const MwMapPlaceholder(),
+        pickupMapBuilder: origin == 'pickup'
+            ? (_) => const MwMapPlaceholder()
+            : null,
       );
       addTearDown(refresh.dispose);
       addTearDown(router.dispose);
@@ -306,6 +339,43 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text(suggestion.primaryText));
       await tester.pumpAndSettle();
+      if (origin == 'pickup') {
+        expect(router.state.uri.path, '/rider/pickup');
+        expect(find.byType(PickupConfirmScreen), findsOneWidget);
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Confirm pickup'));
+        await tester.pumpAndSettle();
+        expect(router.state.uri.path, '/rider/confirm');
+        await tester.ensureVisible(find.text('Edit pickup point'));
+        await tester.tap(find.text('Edit pickup point'));
+        await tester.pumpAndSettle();
+        expect(router.state.uri.path, '/rider/pickup');
+        await tester.tap(find.text('Parking'));
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Confirm pickup'));
+        await tester.pumpAndSettle();
+        expect(router.state.uri.path, '/rider/confirm');
+        final confirmCubit = tester
+            .element(find.byType(RideConfirmScreen))
+            .read<RideConfirmCubit>();
+        expect(confirmCubit.draft.pickup.location, pickup.suggestion.location);
+        verify(
+          () => routes.getFareEstimates(
+            origin: pickup.suggestion.location,
+            destination: details.location,
+          ),
+        ).called(1);
+        await tester.ensureVisible(find.text('Edit pickup point'));
+        await tester.tap(find.text('Edit pickup point'));
+        await tester.pumpAndSettle();
+        router.pop();
+        await tester.pumpAndSettle();
+        expect(confirmCubit.draft.pickup.location, pickup.suggestion.location);
+        expect(tester.takeException(), isNull);
+        return;
+      }
       expect(find.byType(RideConfirmScreen), findsOneWidget);
       final confirm = tester.widget<RideConfirmScreen>(
         find.byType(RideConfirmScreen),

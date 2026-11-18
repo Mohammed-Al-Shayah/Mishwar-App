@@ -77,7 +77,7 @@ void main() {
         wrap(
           BlocProvider.value(
             value: cubit,
-            child: const ParcelFormScreen(uid: 'rider'),
+            child: const ParcelFormScreen(uid: 'rider', pickupAvailable: false),
           ),
           language,
         ),

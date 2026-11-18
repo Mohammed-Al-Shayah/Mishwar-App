@@ -70,6 +70,8 @@ import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart'
 import 'package:mishwar/features/rider/home/presentation/widgets/services_grid.dart';
 import 'package:mishwar/features/rider/parcel/presentation/parcel_form_cubit.dart';
 import 'package:mishwar/features/rider/parcel/presentation/parcel_form_screen.dart';
+import 'package:mishwar/features/rider/pickup/presentation/pickup_confirm_cubit.dart';
+import 'package:mishwar/features/rider/pickup/presentation/pickup_confirm_screen.dart';
 import 'package:mishwar/features/rider/places/presentation/saved_places_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
@@ -133,6 +135,7 @@ String? sessionRedirect(
                         (location == '/rider/search' &&
                             extra is DestinationSearchParams) ||
                         (location == '/rider/confirm' && extra is RideDraft) ||
+                        (location == '/rider/pickup' && extra is RideStop) ||
                         RegExp(
                           r'^/rider/ride/[^/]+(/summary)?$',
                         ).hasMatch(location))
@@ -189,6 +192,7 @@ GoRouter createAppRouter(
   SessionRouterRefresh refresh, {
   WidgetBuilder? riderMapBuilder,
   WidgetBuilder? driverMapBuilder,
+  WidgetBuilder? pickupMapBuilder,
 }) => GoRouter(
   initialLocation: '/splash',
   refreshListenable: refresh,
@@ -309,7 +313,10 @@ GoRouter createAppRouter(
               unawaited(cubit.load());
               return cubit;
             },
-            child: const AirportScreen(),
+            child: AirportScreen(
+              pickupAvailable:
+                  pickupMapBuilder != null || riderMapBuilder == null,
+            ),
           ),
         ),
         GoRoute(
@@ -318,6 +325,8 @@ GoRouter createAppRouter(
             create: (_) => getIt<ParcelFormCubit>(),
             child: ParcelFormScreen(
               uid: (session.state as SessionReady).user.id,
+              pickupAvailable:
+                  pickupMapBuilder != null || riderMapBuilder == null,
             ),
           ),
         ),
@@ -451,6 +460,16 @@ GoRouter createAppRouter(
           ),
         ),
         GoRoute(
+          path: 'pickup',
+          builder: (_, state) => BlocProvider(
+            create: (_) =>
+                getIt<PickupConfirmCubit>(param1: state.extra! as RideStop),
+            child: PickupConfirmScreen(
+              mapBuilder: pickupMapBuilder ?? riderMapBuilder,
+            ),
+          ),
+        ),
+        GoRoute(
           path: 'confirm',
           builder: (_, state) => BlocProvider(
             create: (_) =>
@@ -458,6 +477,8 @@ GoRouter createAppRouter(
             child: RideConfirmScreen(
               draft: state.extra! as RideDraft,
               mapBuilder: riderMapBuilder,
+              pickupAvailable:
+                  pickupMapBuilder != null || riderMapBuilder == null,
             ),
           ),
         ),
@@ -488,6 +509,8 @@ GoRouter createAppRouter(
             uid: (session.state as SessionReady).user.id,
             child: RiderHomeScreen(
               mapBuilder: riderMapBuilder,
+              pickupAvailable:
+                  pickupMapBuilder != null || riderMapBuilder == null,
               initialService: state.extra is ServiceId
                   ? state.extra! as ServiceId
                   : null,

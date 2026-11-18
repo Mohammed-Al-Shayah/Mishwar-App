@@ -58,11 +58,19 @@ class MwMap extends StatefulWidget {
     this.permissionGranted = false,
     this.padding = EdgeInsets.zero,
     this.onMapCreated,
+    this.initialTarget,
+    this.onCameraMoveStarted,
+    this.onCameraMove,
+    this.onCameraIdle,
     this.onUserInteraction,
     this.mapBuilder,
     super.key,
   });
   final VoidCallback? onUserInteraction;
+  final GeoPointValue? initialTarget;
+  final VoidCallback? onCameraMoveStarted;
+  final ValueChanged<GeoPointValue>? onCameraMove;
+  final VoidCallback? onCameraIdle;
   final Set<Polyline> polylines;
   final Set<Marker> markers;
   final Set<Circle> circles;
@@ -100,10 +108,21 @@ class _MwMapState extends State<MwMap> {
         return Listener(
           onPointerMove: (_) => widget.onUserInteraction?.call(),
           child: GoogleMap(
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(31.9539, 35.9106),
-              zoom: 13,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                widget.initialTarget?.lat ?? 31.9539,
+                widget.initialTarget?.lng ?? 35.9106,
+              ),
+              zoom: widget.initialTarget == null ? 13 : 16,
             ),
+            onCameraMoveStarted: widget.onCameraMoveStarted,
+            onCameraMove: (position) => widget.onCameraMove?.call(
+              GeoPointValue(
+                position.target.latitude,
+                position.target.longitude,
+              ),
+            ),
+            onCameraIdle: widget.onCameraIdle,
             style: snapshot
                 .data![Theme.of(context).brightness == Brightness.dark ? 1 : 0],
             myLocationEnabled: widget.permissionGranted,

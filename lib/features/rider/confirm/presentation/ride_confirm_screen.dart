@@ -34,15 +34,33 @@ import 'package:mishwar/features/rider/confirm/presentation/promo_sheet.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/schedule_sheet.dart';
 
 class RideConfirmScreen extends StatefulWidget {
-  const RideConfirmScreen({required this.draft, this.mapBuilder, super.key});
+  const RideConfirmScreen({
+    required this.draft,
+    this.mapBuilder,
+    this.pickupAvailable,
+    super.key,
+  });
   final RideDraft draft;
+  final bool? pickupAvailable;
   final WidgetBuilder? mapBuilder;
   @override
   State<RideConfirmScreen> createState() => _RideConfirmScreenState();
 }
 
 class _RideConfirmScreenState extends State<RideConfirmScreen> {
+  RideDraft get _draft => context.read<RideConfirmCubit>().draft;
   MwMapController? _controller;
+  Future<void> _editPickup() async {
+    final cubit = context.read<RideConfirmCubit>();
+    final stop = await context.push<RideStop>(
+      '/rider/pickup',
+      extra: cubit.draft.pickup,
+    );
+    if (!mounted || stop == null) return;
+    await cubit.updatePickup(stop);
+    if (mounted && !kIsWeb && widget.mapBuilder == null) await _loadMarkers();
+  }
+
   Set<Marker> _markers = {};
   late final DateTime _now;
   @override
@@ -71,17 +89,13 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
           Marker(
             markerId: MarkerId(i == 0 ? 'pickup' : 'dropoff'),
             position: LatLng(
-              (i == 0 ? widget.draft.pickup : widget.draft.dropoff)
-                  .location
-                  .lat,
-              (i == 0 ? widget.draft.pickup : widget.draft.dropoff)
-                  .location
-                  .lng,
+              (i == 0 ? _draft.pickup : _draft.dropoff).location.lat,
+              (i == 0 ? _draft.pickup : _draft.dropoff).location.lng,
             ),
             icon: icons[i],
             anchor: const Offset(0.5, 0.5),
             infoWindow: InfoWindow(
-              title: (i == 0 ? widget.draft.pickup : widget.draft.dropoff).name,
+              title: (i == 0 ? _draft.pickup : _draft.dropoff).name,
             ),
           ),
       },
@@ -96,8 +110,8 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
       if (!mounted) return;
       unawaited(
         _controller?.fitBounds([
-          widget.draft.pickup.location,
-          widget.draft.dropoff.location,
+          _draft.pickup.location,
+          _draft.dropoff.location,
           ..._route(state),
         ], AppSpacing.xl),
       );
@@ -119,7 +133,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
         _fit(state);
       }
       if (state is RideConfirmRequested) {
-        if (widget.draft.scheduledFor != null) {
+        if (_draft.scheduledFor != null) {
           context.go('/rider/history');
           ScaffoldMessenger.of(
             context,
@@ -144,7 +158,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
               : DateFormat.jm(
                   Localizations.localeOf(context).toString(),
                 ).format(
-                  (widget.draft.scheduledFor ?? _now).add(
+                  (_draft.scheduledFor ?? _now).add(
                     Duration(
                       milliseconds: (loaded.route.durationSeconds * 1000)
                           .round(),
@@ -208,7 +222,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                               child: Text(
                                 context.l10n.tripPill(
                                   minutes,
-                                  widget.draft.dropoff.name,
+                                  _draft.dropoff.name,
                                 ),
                                 style: AppTextStyles.tabular(
                                   AppTextStyles.footnote,
@@ -253,7 +267,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                           Padding(
                             padding: EdgeInsets.all(AppSpacing.sm),
                             child: Text(
-                              widget.draft.parcel != null
+                              _draft.parcel != null
                                   ? context.l10n.parcelTitle
                                   : context.l10n.chooseRide,
                               style: AppTextStyles.headline,
@@ -267,9 +281,22 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
+                                  MwListRow(
+                                    icon: AppIcons.mapPin,
+                                    title: context.l10n.pickupEdit,
+                                    subtitle: _draft.pickup.name,
+                                    onTap:
+                                        kIsWeb ||
+                                            !(widget.pickupAvailable ??
+                                                widget.mapBuilder == null) ||
+                                            state is RideConfirmLoading ||
+                                            (loaded?.isRequesting ?? false)
+                                        ? null
+                                        : _editPickup,
+                                  ),
                                   if (loaded != null)
                                     for (final type
-                                        in (widget.draft.parcel == null
+                                        in (_draft.parcel == null
                                             ? VehicleType.values
                                             : [VehicleType.economy]))
                                       MwVehicleRow(
@@ -365,7 +392,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                               ),
                             ),
                           ),
-                          if (widget.draft.scheduledFor != null)
+                          if (_draft.scheduledFor != null)
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 vertical: AppSpacing.xs,
@@ -374,7 +401,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                 context.l10n.scheduledDeparture(
                                   scheduledTime(
                                     context,
-                                    widget.draft.scheduledFor!,
+                                    _draft.scheduledFor!,
                                   ),
                                 ),
                                 style: AppTextStyles.footnote,
@@ -426,11 +453,11 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                             ),
                           MwPrimaryButton(
                             isLoading: loaded?.isRequesting ?? false,
-                            label: widget.draft.parcel != null
+                            label: _draft.parcel != null
                                 ? context.l10n.parcelRequest
                                 : loaded == null
                                 ? context.l10n.chooseRide
-                                : widget.draft.scheduledFor != null
+                                : _draft.scheduledFor != null
                                 ? context.l10n.scheduleVehicle(
                                     _name(context, loaded.selected),
                                   )

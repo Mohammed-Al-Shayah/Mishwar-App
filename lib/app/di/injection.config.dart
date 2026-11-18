@@ -296,6 +296,12 @@ import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.
     as _i786;
 import 'package:mishwar/features/rider/parcel/presentation/parcel_form_cubit.dart'
     as _i594;
+import 'package:mishwar/features/rider/pickup/data/pickup_repository_impl.dart'
+    as _i504;
+import 'package:mishwar/features/rider/pickup/domain/pickup_repository.dart'
+    as _i575;
+import 'package:mishwar/features/rider/pickup/presentation/pickup_confirm_cubit.dart'
+    as _i413;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart'
     as _i893;
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart'
@@ -427,6 +433,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i400.RouteRemoteDataSource>(
       () => _i400.RouteRemoteDataSource(gh<_i809.FirebaseFunctions>()),
     );
+    gh.lazySingleton<_i504.PickupRemoteDataSource>(
+      () => _i504.PickupRemoteDataSource(gh<_i809.FirebaseFunctions>()),
+    );
     gh.lazySingleton<_i868.SupportRemoteDataSource>(
       () => _i868.SupportRemoteDataSource(
         gh<_i974.FirebaseFirestore>(),
@@ -485,6 +494,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i669.GetParcelPhotoUrl>(
       () => _i669.GetParcelPhotoUrl(gh<_i788.ParcelRepository>()),
     );
+    gh.lazySingleton<_i575.PickupRepository>(
+      () => _i504.PickupRepositoryImpl(gh<_i504.PickupRemoteDataSource>()),
+    );
     gh.factory<_i599.ParcelToolsCubit>(
       () => _i599.ParcelToolsCubit(
         gh<_i669.WatchDeliveryCode>(),
@@ -523,6 +535,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i556.UploadLicensePhoto>(),
         gh<_i587.SubmitDriverApplication>(),
       ),
+    );
+    gh.lazySingleton<_i575.ReverseGeocode>(
+      () => _i575.ReverseGeocode(gh<_i575.PickupRepository>()),
+    );
+    gh.lazySingleton<_i575.GetPickupSuggestions>(
+      () => _i575.GetPickupSuggestions(gh<_i575.PickupRepository>()),
     );
     gh.lazySingleton<_i164.ValidatePromo>(
       () => _i164.ValidatePromo(gh<_i285.PromoRepository>()),
@@ -662,6 +680,14 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i910.AppConfigCubit(
         gh<_i616.WatchBanners>(),
         gh<_i616.WatchServices>(),
+      ),
+    );
+    gh.factoryParam<_i413.PickupConfirmCubit, _i422.RideStop, dynamic>(
+      (initial, _) => _i413.PickupConfirmCubit(
+        gh<_i575.ReverseGeocode>(),
+        gh<_i575.GetPickupSuggestions>(),
+        gh<_i107.CurrentPosition>(),
+        initial,
       ),
     );
     gh.lazySingleton<_i768.PushTokenSync>(
