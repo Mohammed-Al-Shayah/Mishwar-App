@@ -4,6 +4,7 @@ import { distanceBetween } from 'geofire-common';
 import { authenticated } from '../lib/maps.js';
 import * as v from '../lib/validate.js';
 import { computeFare, DEFAULT_PRICING, parsePricing, roundFare, type VehicleType } from '../pricing.js';
+import { readPromo } from '../promos/handlers.js';
 import { rideId } from './handlers.js';
 
 function invalid(): never {
@@ -53,14 +54,23 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     const priced = computeFare(pricing[ride.vehicleType as VehicleType], ride.route.distanceMeters, seconds);
     const estimatedFils = Math.round(ride.fare.estimated * 1000);
     const cap = estimatedFils * 3 / 2000;
-    const final = roundFare(Math.min(cap, Math.max(ride.fare.estimated, priced)));
+    let final = roundFare(Math.min(cap, Math.max(ride.fare.estimated, priced)));
+    const checked = ride.promo ? await readPromo(db, tx, ride.promo.code, ride.riderId, final, ride.createdAt) : undefined;
+    const discount = checked?.result.ok ? checked.result.discountJod : 0;
+    final = roundFare(Math.max(0, (Math.round(final * 1000) - Math.round(discount * 1000)) / 1000));
     const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Amman',
       year: 'numeric', month: '2-digit', day: '2-digit' }).format(time.toDate());
     const earningsRef = db.doc(`drivers/${uid}/earnings/${day}`);
     const earnings = (await tx.get(earningsRef)).data();
+    if (checked?.result.ok) {
+      tx.update(checked.ref, { usedCount: checked.promo!.usedCount + 1 });
+      tx.set(checked.redemptionRef, { count: checked.count + 1, lastRideId: id, updatedAt: time });
+    }
+    // Earnings use the discounted fare for now; platform absorption comes with future payout logic.
     // Add integer fils, then persist a two-decimal JOD amount.
     const totalFils = Math.round((earnings?.total ?? 0) * 1000) + Math.round(final * 1000);
-    tx.update(ref, { status, completedAt: time, fare: { ...ride.fare, final } });
+    tx.update(ref, { status, completedAt: time, fare: { ...ride.fare, final, ...(ride.promo ? { discount } : {}) },
+      ...(ride.promo ? { promo: { ...ride.promo, applied: checked!.result.ok } } : {}) });
     tx.update(userRef, { pendingRatingRideId: id,
       ...(user?.activeRideId === id ? { activeRideId: FieldValue.delete() } : {}) });
     tx.update(driverRef, { currentRideId: null, pendingRatingRideId: id });

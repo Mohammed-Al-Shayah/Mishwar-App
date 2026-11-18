@@ -112,3 +112,11 @@ final class SchedulingFailure extends Failure {
   @override
   List<Object> get props => [reason];
 }
+
+final class PromoFailure extends Failure {
+  const PromoFailure(this.reason, {this.minFareFils}) : super('promo');
+  final String reason;
+  final int? minFareFils;
+  @override
+  List<Object> get props => [reason, ?minFareFils];
+}

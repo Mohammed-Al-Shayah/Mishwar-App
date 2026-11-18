@@ -38,6 +38,8 @@ class _AccountBody extends StatelessWidget {
   final bool driver;
   Future<T?> _sheet<T>(BuildContext context, String title, Widget child) =>
       showModalBottomSheet<T>(
+        // This sheet draws its own grabber.
+        showDragHandle: false,
         context: context,
         isScrollControlled: true,
         backgroundColor: context.colors.sheet,

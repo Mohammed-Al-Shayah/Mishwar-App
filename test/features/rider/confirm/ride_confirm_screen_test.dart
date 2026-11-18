@@ -11,7 +11,10 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/mw_skeleton.dart';
+import 'package:mishwar/core/widgets/mw_text_field.dart';
 import 'package:mishwar/core/widgets/mw_vehicle_row.dart';
+import 'package:mishwar/features/common/promos/domain/promo_quote.dart';
+import 'package:mishwar/features/common/promos/domain/validate_promo.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimates.dart';
 import 'package:mishwar/features/common/route/domain/usecases/get_fare_estimates.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
@@ -64,6 +67,89 @@ Future<void> pumpConfirm(
 }
 
 void main() {
+  for (final language in ['ar', 'en']) {
+    testWidgets(
+      'promo sheet error, success, strike-through and remove at 1.3 $language',
+      (tester) async {
+        final routes = MockRouteRepository();
+        stubSuccess(routes);
+        final promos = MockPromoRepository();
+        when(
+          () => promos.validate('BAD', draft, VehicleType.economy),
+        ).thenAnswer((_) async => const Left(PromoFailure('expired')));
+        when(
+          () => promos.validate('WELCOME50', draft, VehicleType.economy),
+        ).thenAnswer(
+          (_) async => const Right(
+            PromoQuote(
+              code: 'WELCOME50',
+              discountFils: 1700,
+              fareBeforeFils: 4600,
+              fareAfterFils: 2900,
+            ),
+          ),
+        );
+        final cubit = RideConfirmCubit(
+          GetFareEstimates(routes),
+          requestRideStub(),
+          draft,
+          scheduleRide: scheduleRideStub(),
+          validatePromo: ValidatePromo(promos),
+        );
+        await pumpConfirm(tester, cubit, scale: 1.3, language: language);
+        await tester.pumpAndSettle();
+        final l10n = AppLocalizations.of(
+          tester.element(find.byType(RideConfirmScreen)),
+        )!;
+        await tester.tap(find.text(l10n.promoAdd));
+        await tester.pumpAndSettle();
+        tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+        addTearDown(tester.view.resetViewInsets);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(MwTextField), 'bad');
+        expect(
+          tester.widget<TextField>(find.byType(TextField)).controller!.text,
+          'BAD',
+        );
+        await tester.ensureVisible(find.text(l10n.promoApply));
+        await tester.tap(find.text(l10n.promoApply));
+        await tester.pumpAndSettle();
+        expect(
+          find.text(
+            l10n.promoExpired,
+          ),
+          findsWidgets,
+        );
+        await tester.enterText(find.byType(MwTextField), 'welcome50');
+        await tester.tap(find.text(l10n.promoApply));
+        await tester.pumpAndSettle();
+        expect(find.byType(MwTextField), findsNothing);
+        tester.view.resetViewInsets();
+        await tester.pumpAndSettle();
+        final row = tester.widget<MwVehicleRow>(
+          find.byKey(const ValueKey(VehicleType.economy)),
+        );
+        expect(row.price, 'JD 2.90');
+        expect(row.originalPrice, 'JD 4.60');
+        expect(
+          tester
+              .widget<MwVehicleRow>(
+                find.byKey(const ValueKey(VehicleType.comfort)),
+              )
+              .originalPrice,
+          isNull,
+        );
+        await tester.tap(
+          find.byTooltip(
+            l10n.promoRemove,
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect((cubit.state as RideConfirmLoaded).promoQuote, isNull);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
   testWidgets('prices, selection and inline request error', (
     tester,
   ) async {
@@ -73,6 +159,7 @@ void main() {
       GetFareEstimates(repository),
       requestRideStub(),
       draft,
+      validatePromo: promoValidatorStub(),
       scheduleRide: scheduleRideStub(),
     );
     await pumpConfirm(tester, cubit);
@@ -151,6 +238,7 @@ void main() {
       GetFareEstimates(repository),
       requestRideStub(),
       draft,
+      validatePromo: promoValidatorStub(),
       scheduleRide: scheduleRideStub(),
     );
     await pumpConfirm(tester, cubit);
@@ -174,6 +262,7 @@ void main() {
       GetFareEstimates(repository),
       requestRideStub(),
       draft,
+      validatePromo: promoValidatorStub(),
       scheduleRide: scheduleRideStub(),
     );
     await pumpConfirm(tester, cubit);
@@ -195,6 +284,7 @@ void main() {
         GetFareEstimates(repository),
         requestRideStub(),
         draft,
+        validatePromo: promoValidatorStub(),
         scheduleRide: scheduleRideStub(),
       );
       await pumpConfirm(tester, cubit, scale: 1.3, language: language);

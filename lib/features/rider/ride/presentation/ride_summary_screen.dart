@@ -9,6 +9,7 @@ import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/rating/presentation/rating_exit.dart';
 import 'package:mishwar/features/common/rating/presentation/rating_form.dart';
+import 'package:mishwar/features/common/ride/presentation/promo_discount_row.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 
 class RideSummaryScreen extends StatefulWidget {
@@ -72,6 +73,7 @@ class _RideSummaryScreenState extends State<RideSummaryScreen> {
                     style: AppTextStyles.tabular(AppTextStyles.largeTitle),
                   ),
                 ),
+                PromoDiscountRow(ride: ride),
                 Text(context.l10n.riderCashNote, style: AppTextStyles.body),
                 SizedBox(height: AppSpacing.xl),
                 TripStops(ride: ride),

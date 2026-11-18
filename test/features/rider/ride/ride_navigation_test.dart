@@ -98,6 +98,7 @@ void main() {
                 GetFareEstimates(routes),
                 requestRideStub(result),
                 draft,
+                validatePromo: promoValidatorStub(),
                 scheduleRide: scheduleRideStub(),
               ),
               child: RideConfirmScreen(

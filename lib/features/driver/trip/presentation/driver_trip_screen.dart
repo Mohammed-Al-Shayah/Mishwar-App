@@ -311,6 +311,13 @@ class _TripViewState extends State<_TripView> {
                       style: AppTextStyles.tabular(AppTextStyles.largeTitle),
                     ),
                   ),
+                  if (ride.promoApplied == true && ride.discountFils > 0)
+                    Text(
+                      context.l10n.promoCashFootnote(
+                        Money(ride.discountFils).toJodString(),
+                      ),
+                      style: AppTextStyles.footnote,
+                    ),
                   Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Chip(

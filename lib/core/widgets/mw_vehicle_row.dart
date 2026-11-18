@@ -16,6 +16,7 @@ class MwVehicleRow extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.isVan = false,
+    this.originalPrice,
     super.key,
   });
   final String name;
@@ -23,6 +24,7 @@ class MwVehicleRow extends StatelessWidget {
   final String subtitle;
   final String tagline;
   final String price;
+  final String? originalPrice;
   final bool selected;
   final bool isVan;
   final VoidCallback onTap;
@@ -100,11 +102,35 @@ class MwVehicleRow extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: AppSpacing.xs),
-                Text(
-                  price,
-                  textDirection: TextDirection.ltr,
-                  style: AppTextStyles.tabular(AppTextStyles.headline),
-                ),
+                if (originalPrice == null)
+                  Text(
+                    price,
+                    textDirection: TextDirection.ltr,
+                    style: AppTextStyles.tabular(AppTextStyles.headline),
+                  )
+                else
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          price,
+                          textDirection: TextDirection.ltr,
+                          style: AppTextStyles.tabular(AppTextStyles.headline),
+                        ),
+                        if (originalPrice != null)
+                          Text(
+                            originalPrice!,
+                            textDirection: TextDirection.ltr,
+                            style: AppTextStyles.tabular(AppTextStyles.footnote)
+                                .copyWith(
+                                  color: context.colors.textSecondary,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                          ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

@@ -422,7 +422,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
   - Cloud Function مجدولة كل دقيقة بتبلش البحث عن سائق قبل الموعد بـ `dispatchBeforeMinutes`
   - تذكير بإشعار قبل الموعد
   - إلغاء من تبويب النشاط
-- [ ] **T6.3** أكواد الخصم:
+- [x] **T6.3** أكواد الخصم:
   - إدخال الكود بشاشة اختيار السيارة
   - Callable `validatePromo` بتتحقق من الصلاحية والحدود والمشوار الأول
   - الخصم بينحسب بالسيرفر وقت `completed` (Transaction على `usedCount`)

@@ -616,5 +616,55 @@
         "type": "String"
       }
     }
-  }
+  },
+  "promoAdd": "Add promo code",
+  "promoApply": "Apply",
+  "promoCodeLabel": "Promo code",
+  "promoRemove": "Remove promo code",
+  "promoSelected": "{code} · JD {amount} off",
+  "@promoSelected": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoDiscount": "Discount ({code}) − JD {amount}",
+  "@promoDiscount": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoCashFootnote": "Includes JD {amount} discount",
+  "@promoCashFootnote": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoNotFound": "Invalid promo code",
+  "promoInactive": "This code is inactive",
+  "promoNotStarted": "This code is not valid yet",
+  "promoExpired": "This code has expired",
+  "promoLimit": "This code has reached its limit",
+  "promoUserLimit": "You already used this code",
+  "promoFirstRide": "This code is for your first ride only",
+  "promoMinFare": "Minimum fare for this code is JD {amount}",
+  "@promoMinFare": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoRateLimit": "Too many checks. Try again shortly"
 }

@@ -1,5 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/features/common/promos/domain/promo_repository.dart';
+import 'package:mishwar/features/common/promos/domain/validate_promo.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/repositories/ride_repository.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
@@ -47,3 +49,7 @@ WatchScheduledRides emptyScheduledRidesWatch() {
   ).thenAnswer((_) => const Stream.empty());
   return WatchScheduledRides(repository);
 }
+
+class MockPromoRepository extends Mock implements PromoRepository {}
+
+ValidatePromo promoValidatorStub() => ValidatePromo(MockPromoRepository());

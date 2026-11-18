@@ -131,6 +131,12 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 
 1. **Home:** large title "مشوار" · `MwSearchPill` with schedule · 2 recent `MwListRow` · "اقتراحات" + 4 `MwSuggestionTile` (رحلة، احجز، طرد، مطار) · `MwPromoCard` · `MwBottomNav`.
 2. **Choose ride:** map (top ~45%) with route, pins + labels, nearby cars, back FAB · sheet "اختر رحلة أو اسحب للمزيد" · 3 `MwVehicleRow` · `MwPaymentRow` · `MwButton.primary` "اختر مشوار X".
+   T6.3 adds a standard ticket-icon list row below payment and a scrollable promo
+   sheet with MwTextField, inline negative errors and a loading primary apply
+   button. The selected vehicle shows the server quote with the original price
+   in grey600 footnote and a strike-through; other vehicles keep their prices.
+   Applied discounts use positive text in receipts and summaries; collect-cash
+   uses a footnote below the final amount. All variants support text scale 1.3.
 3. **Schedule:** "متى تريد المغادرة؟" date/time wheel pickers, policy rows with icons, primary "حدّد موعد الانطلاق".
    T6.2 uses a horizontal list of date chips, a native time wheel (216 high),
    a departure summary, and the localized primary "تأكيد الموعد". The selected

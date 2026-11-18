@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/features/common/promos/domain/promo_quote.dart';
+import 'package:mishwar/features/common/promos/domain/validate_promo.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimate.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimates.dart';
@@ -52,6 +56,87 @@ void stubSuccess(MockRouteRepository repository) {
 }
 
 void main() {
+  test(
+    'promo selection debounces, discards stale quotes and sends validated code',
+    () async {
+      final routes = MockRouteRepository();
+      stubSuccess(routes);
+      final promos = MockPromoRepository();
+      final first = Completer<Either<Failure, PromoQuote>>();
+      const quote = PromoQuote(
+        code: 'WELCOME50',
+        discountFils: 1700,
+        fareBeforeFils: 4600,
+        fareAfterFils: 2900,
+      );
+      when(
+        () => promos.validate('welcome50', draft, VehicleType.economy),
+      ).thenAnswer((_) => first.future);
+      when(
+        () => promos.validate('WELCOME50', draft, VehicleType.van),
+      ).thenAnswer((_) async => const Right(quote));
+      final request = requestRideStub(const Right('id'));
+      final cubit = RideConfirmCubit(
+        GetFareEstimates(routes),
+        request,
+        draft,
+        scheduleRide: scheduleRideStub(),
+        validatePromo: ValidatePromo(promos),
+      );
+      await cubit.start();
+      final pending = cubit.applyPromo('welcome50');
+      cubit
+        ..select(VehicleType.comfort)
+        ..select(VehicleType.van);
+      first.complete(const Right(quote));
+      await pending;
+      expect((cubit.state as RideConfirmLoaded).promoQuote, isNull);
+      await cubit.confirm();
+      verifyNever(() => request(any(), any()));
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      expect((cubit.state as RideConfirmLoaded).promoQuote, quote);
+      verifyNever(() => promos.validate(any(), draft, VehicleType.comfort));
+      await cubit.confirm();
+      verify(
+        () => request(draft.withPromo('WELCOME50'), VehicleType.van),
+      ).called(1);
+      await cubit.close();
+    },
+  );
+  test(
+    'removing promo invalidates an in-flight response and errors are inline',
+    () async {
+      final routes = MockRouteRepository();
+      stubSuccess(routes);
+      final promos = MockPromoRepository();
+      final pending = Completer<Either<Failure, PromoQuote>>();
+      when(
+        () => promos.validate('CODE', draft, VehicleType.economy),
+      ).thenAnswer((_) => pending.future);
+      final cubit = RideConfirmCubit(
+        GetFareEstimates(routes),
+        requestRideStub(),
+        draft,
+        scheduleRide: scheduleRideStub(),
+        validatePromo: ValidatePromo(promos),
+      );
+      await cubit.start();
+      final checking = cubit.applyPromo('CODE');
+      cubit.removePromo();
+      pending.complete(const Left(PromoFailure('expired')));
+      await checking;
+      expect((cubit.state as RideConfirmLoaded).promoFailure, isNull);
+      when(
+        () => promos.validate('CODE', draft, VehicleType.economy),
+      ).thenAnswer((_) async => const Left(PromoFailure('expired')));
+      await cubit.applyPromo('CODE');
+      expect(
+        (cubit.state as RideConfirmLoaded).promoFailure,
+        const PromoFailure('expired'),
+      );
+      await cubit.close();
+    },
+  );
   late MockRouteRepository repository;
   setUp(() {
     repository = MockRouteRepository();
@@ -61,6 +146,7 @@ void main() {
     GetFareEstimates(repository),
     requestRideStub(const Right('ride-id')),
     draft,
+    validatePromo: promoValidatorStub(),
     scheduleRide: scheduleRideStub(),
   );
   blocTest<RideConfirmCubit, RideConfirmState>(
@@ -142,6 +228,7 @@ void main() {
         GetFareEstimates(repository),
         requestRideStub(Left(failure)),
         draft,
+        validatePromo: promoValidatorStub(),
         scheduleRide: scheduleRideStub(),
       ),
       act: (c) async {

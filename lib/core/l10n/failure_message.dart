@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 
 String failureMessage(BuildContext context, Failure failure) {
   final l10n = context.l10n;
@@ -32,6 +33,18 @@ String failureMessage(BuildContext context, Failure failure) {
       OfferFailureReason.expired => l10n.offerLost,
       OfferFailureReason.notOffered => l10n.offerNotOffered,
       OfferFailureReason.driverBusy => l10n.offerDriverBusy,
+    },
+    PromoFailure(:final reason, :final minFareFils) => switch (reason) {
+      'not-found' => l10n.promoNotFound,
+      'inactive' => l10n.promoInactive,
+      'not-started' => l10n.promoNotStarted,
+      'expired' => l10n.promoExpired,
+      'limit-reached' => l10n.promoLimit,
+      'user-limit' => l10n.promoUserLimit,
+      'first-ride-only' => l10n.promoFirstRide,
+      'min-fare' => l10n.promoMinFare(Money(minFareFils ?? 0).toJodString()),
+      'rate-limit' => l10n.promoRateLimit,
+      _ => l10n.promoNotFound,
     },
     SchedulingFailure() => l10n.tooManyScheduled,
     NetworkFailure() => l10n.errorNetwork,

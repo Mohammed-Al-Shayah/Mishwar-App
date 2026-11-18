@@ -12,6 +12,7 @@ import 'package:mishwar/core/widgets/mw_star_rating.dart';
 import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/presentation/history_widgets.dart';
+import 'package:mishwar/features/common/ride/presentation/promo_discount_row.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
 
 class RideReceiptScreen extends StatelessWidget {
@@ -127,7 +128,13 @@ class RideReceiptContent extends StatelessWidget {
         if (ride.status == RideStatus.noDrivers)
           Text(context.l10n.historyNoDrivers, style: AppTextStyles.body)
         else ...[
-          _fareRow(context, context.l10n.receiptFare, ridePrice(context, ride)),
+          if (ride.promoApplied != true || ride.discountFils == 0)
+            _fareRow(
+              context,
+              context.l10n.receiptFare,
+              ridePrice(context, ride),
+            ),
+          PromoDiscountRow(ride: ride),
           _fareRow(
             context,
             context.l10n.receiptPayment,

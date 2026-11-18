@@ -45,6 +45,7 @@ abstract class RideFareModel with _$RideFareModel {
   const factory RideFareModel({
     required double estimated,
     required String currency,
+    @Default(0) double discount,
     @JsonKey(name: 'final') double? finalAmount,
   }) = _RideFareModel;
   factory RideFareModel.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +67,7 @@ abstract class RideModel with _$RideModel {
     required RideFareModel fare,
     @TimestampConverter() required DateTime createdAt,
     @TimestampConverter() DateTime? scheduledFor,
+    RidePromoModel? promo,
     RideRatingModel? driverRating,
     RideRatingModel? riderRating,
     String? driverId,
@@ -86,7 +88,9 @@ abstract class RideModel with _$RideModel {
   factory RideModel.fromJson(Map<String, dynamic> json) =>
       _$RideModelFromJson(json);
   RideEntity toEntity() {
-    if (fare.currency != 'JOD' ||
+    if (!fare.discount.isFinite ||
+        fare.discount < 0 ||
+        fare.currency != 'JOD' ||
         !fare.estimated.isFinite ||
         fare.estimated < 0 ||
         (fare.finalAmount != null &&
@@ -95,6 +99,9 @@ abstract class RideModel with _$RideModel {
     }
     return RideEntity(
       scheduledFor: scheduledFor,
+      promoCode: promo?.code,
+      promoApplied: promo?.applied,
+      discountFils: (fare.discount * 1000).round(),
       driverRating: driverRating?.stars,
       riderRating: riderRating?.stars,
       id: id,
@@ -152,4 +159,12 @@ abstract class RideRatingModel with _$RideRatingModel {
   const factory RideRatingModel({required int stars}) = _RideRatingModel;
   factory RideRatingModel.fromJson(Map<String, dynamic> json) =>
       _$RideRatingModelFromJson(json);
+}
+
+@freezed
+abstract class RidePromoModel with _$RidePromoModel {
+  const factory RidePromoModel({required String code, bool? applied}) =
+      _RidePromoModel;
+  factory RidePromoModel.fromJson(Map<String, dynamic> json) =>
+      _$RidePromoModelFromJson(json);
 }

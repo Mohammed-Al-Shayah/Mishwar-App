@@ -623,5 +623,55 @@
         "type": "String"
       }
     }
-  }
+  },
+  "promoAdd": "إضافة كود خصم",
+  "promoApply": "تطبيق",
+  "promoCodeLabel": "كود الخصم",
+  "promoRemove": "إزالة كود الخصم",
+  "promoSelected": "{code} · خصم JD {amount}",
+  "@promoSelected": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoDiscount": "خصم ({code}) − JD {amount}",
+  "@promoDiscount": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoCashFootnote": "شامل خصم JD {amount}",
+  "@promoCashFootnote": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoNotFound": "الكود مش صحيح",
+  "promoInactive": "الكود مش فعّال",
+  "promoNotStarted": "الكود لسه ما بلّش",
+  "promoExpired": "انتهت صلاحية الكود",
+  "promoLimit": "وصل الكود للحد الأقصى",
+  "promoUserLimit": "استخدمت الكود قبل",
+  "promoFirstRide": "الكود لأول مشوار بس",
+  "promoMinFare": "أقل سعر للكود JD {amount}",
+  "@promoMinFare": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoRateLimit": "جربت أكواد كتير، جرّب بعد شوي"
 }

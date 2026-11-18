@@ -26,6 +26,7 @@ _RideFareModel _$RideFareModelFromJson(Map<String, dynamic> json) =>
     _RideFareModel(
       estimated: (json['estimated'] as num).toDouble(),
       currency: json['currency'] as String,
+      discount: (json['discount'] as num?)?.toDouble() ?? 0,
       finalAmount: (json['final'] as num?)?.toDouble(),
     );
 
@@ -33,6 +34,7 @@ Map<String, dynamic> _$RideFareModelToJson(_RideFareModel instance) =>
     <String, dynamic>{
       'estimated': instance.estimated,
       'currency': instance.currency,
+      'discount': instance.discount,
       'final': instance.finalAmount,
     };
 
@@ -51,6 +53,9 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
     json['scheduledFor'],
     const TimestampConverter().fromJson,
   ),
+  promo: json['promo'] == null
+      ? null
+      : RidePromoModel.fromJson(json['promo'] as Map<String, dynamic>),
   driverRating: json['driverRating'] == null
       ? null
       : RideRatingModel.fromJson(json['driverRating'] as Map<String, dynamic>),
@@ -113,6 +118,7 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
         instance.scheduledFor,
         const TimestampConverter().toJson,
       ),
+      'promo': instance.promo?.toJson(),
       'driverRating': instance.driverRating?.toJson(),
       'riderRating': instance.riderRating?.toJson(),
       'driverId': instance.driverId,
@@ -190,3 +196,12 @@ _RideRatingModel _$RideRatingModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$RideRatingModelToJson(_RideRatingModel instance) =>
     <String, dynamic>{'stars': instance.stars};
+
+_RidePromoModel _$RidePromoModelFromJson(Map<String, dynamic> json) =>
+    _RidePromoModel(
+      code: json['code'] as String,
+      applied: json['applied'] as bool?,
+    );
+
+Map<String, dynamic> _$RidePromoModelToJson(_RidePromoModel instance) =>
+    <String, dynamic>{'code': instance.code, 'applied': instance.applied};

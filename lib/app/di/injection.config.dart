@@ -109,6 +109,14 @@ import 'package:mishwar/features/common/places/domain/usecases/search_places.dar
     as _i62;
 import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart'
     as _i304;
+import 'package:mishwar/features/common/promos/data/promo_remote_data_source.dart'
+    as _i585;
+import 'package:mishwar/features/common/promos/data/promo_repository_impl.dart'
+    as _i587;
+import 'package:mishwar/features/common/promos/domain/promo_repository.dart'
+    as _i285;
+import 'package:mishwar/features/common/promos/domain/validate_promo.dart'
+    as _i164;
 import 'package:mishwar/features/common/rating/domain/rate_ride.dart' as _i899;
 import 'package:mishwar/features/common/rating/domain/rating_tag.dart' as _i176;
 import 'package:mishwar/features/common/rating/domain/skip_rating.dart' as _i29;
@@ -353,6 +361,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i29.PlacesRemoteDataSource>(
       () => _i29.PlacesRemoteDataSource(gh<_i809.FirebaseFunctions>()),
     );
+    gh.lazySingleton<_i585.PromoRemoteDataSource>(
+      () => _i585.PromoRemoteDataSource(gh<_i809.FirebaseFunctions>()),
+    );
     gh.lazySingleton<_i400.RouteRemoteDataSource>(
       () => _i400.RouteRemoteDataSource(gh<_i809.FirebaseFunctions>()),
     );
@@ -379,6 +390,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
+    );
+    gh.lazySingleton<_i285.PromoRepository>(
+      () => _i587.PromoRepositoryImpl(gh<_i585.PromoRemoteDataSource>()),
     );
     gh.lazySingleton<_i180.AdminSignIn>(
       () => _i180.AdminSignIn(gh<_i1005.AdminRepository>()),
@@ -412,6 +426,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i556.UploadLicensePhoto>(),
         gh<_i587.SubmitDriverApplication>(),
       ),
+    );
+    gh.lazySingleton<_i164.ValidatePromo>(
+      () => _i164.ValidatePromo(gh<_i285.PromoRepository>()),
     );
     gh.lazySingleton<_i63.EarningsRepository>(
       () => _i429.EarningsRepositoryImpl(gh<_i1008.EarningsRemoteDataSource>()),
@@ -573,6 +590,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i48.WatchDayEarnings>(
       () => _i48.WatchDayEarnings(gh<_i63.EarningsRepository>()),
     );
+    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
+      (draft, _) => _i934.RideConfirmCubit(
+        gh<_i598.GetFareEstimates>(),
+        gh<_i892.RequestRide>(),
+        draft,
+        scheduleRide: gh<_i731.ScheduleRide>(),
+        validatePromo: gh<_i164.ValidatePromo>(),
+      ),
+    );
     gh.factory<_i786.RiderHomeCubit>(
       () => _i786.RiderHomeCubit(
         gh<_i524.CheckLocationPermission>(),
@@ -643,14 +669,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i969.RecentPlacesCubit>(
       () => _i969.RecentPlacesCubit(gh<_i811.GetRideHistory>()),
-    );
-    gh.factoryParam<_i934.RideConfirmCubit, _i422.RideDraft, dynamic>(
-      (draft, _) => _i934.RideConfirmCubit(
-        gh<_i598.GetFareEstimates>(),
-        gh<_i892.RequestRide>(),
-        draft,
-        scheduleRide: gh<_i731.ScheduleRide>(),
-      ),
     );
     gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(
       (rideId, side) => _i661.RatingCubit(

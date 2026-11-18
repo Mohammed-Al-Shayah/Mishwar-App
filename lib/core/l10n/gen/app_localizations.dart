@@ -2239,6 +2239,102 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'بتقدر تحجز 3 مشاوير مجدولة. إلغي واحد عشان تحجز مشوار جديد.'**
   String get tooManyScheduled;
+
+  /// No description provided for @promoAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة كود خصم'**
+  String get promoAdd;
+
+  /// No description provided for @promoApply.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطبيق'**
+  String get promoApply;
+
+  /// No description provided for @promoCodeLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'كود الخصم'**
+  String get promoCodeLabel;
+
+  /// No description provided for @promoRemove.
+  ///
+  /// In ar, this message translates to:
+  /// **'إزالة كود الخصم'**
+  String get promoRemove;
+
+  /// No description provided for @promoSelected.
+  ///
+  /// In ar, this message translates to:
+  /// **'{code} · خصم JD {amount}'**
+  String promoSelected(String code, String amount);
+
+  /// No description provided for @promoDiscount.
+  ///
+  /// In ar, this message translates to:
+  /// **'خصم ({code}) − JD {amount}'**
+  String promoDiscount(String code, String amount);
+
+  /// No description provided for @promoCashFootnote.
+  ///
+  /// In ar, this message translates to:
+  /// **'شامل خصم JD {amount}'**
+  String promoCashFootnote(String amount);
+
+  /// No description provided for @promoNotFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكود مش صحيح'**
+  String get promoNotFound;
+
+  /// No description provided for @promoInactive.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكود مش فعّال'**
+  String get promoInactive;
+
+  /// No description provided for @promoNotStarted.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكود لسه ما بلّش'**
+  String get promoNotStarted;
+
+  /// No description provided for @promoExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت صلاحية الكود'**
+  String get promoExpired;
+
+  /// No description provided for @promoLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصل الكود للحد الأقصى'**
+  String get promoLimit;
+
+  /// No description provided for @promoUserLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدمت الكود قبل'**
+  String get promoUserLimit;
+
+  /// No description provided for @promoFirstRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكود لأول مشوار بس'**
+  String get promoFirstRide;
+
+  /// No description provided for @promoMinFare.
+  ///
+  /// In ar, this message translates to:
+  /// **'أقل سعر للكود JD {amount}'**
+  String promoMinFare(String amount);
+
+  /// No description provided for @promoRateLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'جربت أكواد كتير، جرّب بعد شوي'**
+  String get promoRateLimit;
 }
 
 class _AppLocalizationsDelegate

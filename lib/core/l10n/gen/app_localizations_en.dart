@@ -1164,4 +1164,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tooManyScheduled =>
       'You can have up to 3 scheduled rides. Cancel one to book another.';
+
+  @override
+  String get promoAdd => 'Add promo code';
+
+  @override
+  String get promoApply => 'Apply';
+
+  @override
+  String get promoCodeLabel => 'Promo code';
+
+  @override
+  String get promoRemove => 'Remove promo code';
+
+  @override
+  String promoSelected(String code, String amount) {
+    return '$code · JD $amount off';
+  }
+
+  @override
+  String promoDiscount(String code, String amount) {
+    return 'Discount ($code) − JD $amount';
+  }
+
+  @override
+  String promoCashFootnote(String amount) {
+    return 'Includes JD $amount discount';
+  }
+
+  @override
+  String get promoNotFound => 'Invalid promo code';
+
+  @override
+  String get promoInactive => 'This code is inactive';
+
+  @override
+  String get promoNotStarted => 'This code is not valid yet';
+
+  @override
+  String get promoExpired => 'This code has expired';
+
+  @override
+  String get promoLimit => 'This code has reached its limit';
+
+  @override
+  String get promoUserLimit => 'You already used this code';
+
+  @override
+  String get promoFirstRide => 'This code is for your first ride only';
+
+  @override
+  String promoMinFare(String amount) {
+    return 'Minimum fare for this code is JD $amount';
+  }
+
+  @override
+  String get promoRateLimit => 'Too many checks. Try again shortly';
 }

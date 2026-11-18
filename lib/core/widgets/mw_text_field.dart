@@ -15,6 +15,7 @@ class MwTextField extends StatelessWidget {
     this.autofocus = false,
     this.textInputAction,
     this.suffixIcon,
+    this.floatLabel = true,
     super.key,
   });
   final String label;
@@ -29,6 +30,10 @@ class MwTextField extends StatelessWidget {
   final bool autofocus;
   final TextInputAction? textInputAction;
   final Widget? suffixIcon;
+
+  /// False keeps the label inside the pill (placeholder-like), for
+  /// single-field sheets whose title already names the field.
+  final bool floatLabel;
   @override
   Widget build(BuildContext context) => TextField(
     controller: controller,
@@ -42,6 +47,7 @@ class MwTextField extends StatelessWidget {
     textInputAction: textInputAction,
     decoration: InputDecoration(
       labelText: label,
+      floatingLabelBehavior: floatLabel ? null : FloatingLabelBehavior.never,
       hintText: hintText,
       suffixIcon: suffixIcon,
     ),

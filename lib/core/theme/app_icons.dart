@@ -27,6 +27,8 @@ abstract final class AppIcons {
   static const person = IconData(0xe3a8, fontFamily: 'PhosphorRegular');
   static const user = IconData(0xe4c2, fontFamily: 'PhosphorRegular');
   static const van = IconData(0xe826, fontFamily: 'PhosphorRegular');
+  // Verified against phosphor_flutter 2.1.0 regular ticket glyph.
+  static const ticket = IconData(0xe490, fontFamily: 'PhosphorRegular');
   static const cash = IconData(0xe588, fontFamily: 'PhosphorRegular');
   static const chevron = IconData(
     0xe13a,

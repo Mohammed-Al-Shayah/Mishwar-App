@@ -20,6 +20,7 @@ import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
 import 'package:mishwar/core/widgets/map/mw_map_markers.dart';
+import 'package:mishwar/core/widgets/mw_list_row.dart';
 import 'package:mishwar/core/widgets/mw_payment_row.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/mw_skeleton.dart';
@@ -29,6 +30,7 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/confirm/presentation/cubit/ride_confirm_cubit.dart';
+import 'package:mishwar/features/rider/confirm/presentation/promo_sheet.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/schedule_sheet.dart';
 
 class RideConfirmScreen extends StatefulWidget {
@@ -128,6 +130,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
       }
     },
     builder: (context, state) => Scaffold(
+      resizeToAvoidBottomInset: false,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final sheetHeight =
@@ -285,15 +288,38 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                           VehicleType.van =>
                                             context.l10n.vanTagline,
                                         },
-                                        price: context.l10n.fareJod(
-                                          Money(
-                                            loaded.fares
-                                                .firstWhere(
-                                                  (f) => f.vehicleType == type,
-                                                )
-                                                .fils,
-                                          ).toJodString(),
-                                        ),
+                                        originalPrice:
+                                            loaded.selected == type &&
+                                                loaded.promoQuote != null
+                                            ? context.l10n.fareJod(
+                                                Money(
+                                                  loaded
+                                                      .promoQuote!
+                                                      .fareBeforeFils,
+                                                ).toJodString(),
+                                              )
+                                            : null,
+                                        price:
+                                            loaded.selected == type &&
+                                                loaded.promoQuote != null
+                                            ? context.l10n.fareJod(
+                                                Money(
+                                                  loaded
+                                                      .promoQuote!
+                                                      .fareAfterFils,
+                                                ).toJodString(),
+                                              )
+                                            : context.l10n.fareJod(
+                                                Money(
+                                                  loaded.fares
+                                                      .firstWhere(
+                                                        (f) =>
+                                                            f.vehicleType ==
+                                                            type,
+                                                      )
+                                                      .fils,
+                                                ).toJodString(),
+                                              ),
                                       ),
                                   if (state is RideConfirmLoading)
                                     for (var i = 0; i < 3; i++)
@@ -347,6 +373,42 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                               ),
                             ),
                           const MwPaymentRow(),
+                          if (loaded != null)
+                            MwListRow(
+                              icon: AppIcons.ticket,
+                              subtitle: '',
+                              title: loaded.promoQuote == null
+                                  ? context.l10n.promoAdd
+                                  : context.l10n.promoSelected(
+                                      loaded.promoQuote!.code,
+                                      Money(
+                                        loaded.promoQuote!.discountFils,
+                                      ).toJodString(),
+                                    ),
+                              onTap: loaded.isRequesting
+                                  ? null
+                                  : () => showPromoSheet(context),
+                              trailing: loaded.promoLoading
+                                  ? const CircularProgressIndicator()
+                                  : loaded.promoQuote == null
+                                  ? null
+                                  : IconButton(
+                                      tooltip: context.l10n.promoRemove,
+                                      icon: const Icon(AppIcons.close),
+                                      onPressed: loaded.isRequesting
+                                          ? null
+                                          : context
+                                                .read<RideConfirmCubit>()
+                                                .removePromo,
+                                    ),
+                            ),
+                          if (loaded?.promoFailure != null)
+                            Text(
+                              failureMessage(context, loaded!.promoFailure!),
+                              style: AppTextStyles.footnote.copyWith(
+                                color: context.colors.negative,
+                              ),
+                            ),
                           if (loaded?.requestFailure != null)
                             Text(
                               failureMessage(context, loaded!.requestFailure!),
@@ -365,7 +427,7 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                 : context.l10n.chooseVehicle(
                                     _name(context, loaded.selected),
                                   ),
-                            onPressed: loaded == null
+                            onPressed: loaded == null || loaded.promoLoading
                                 ? null
                                 : context.read<RideConfirmCubit>().confirm,
                           ),

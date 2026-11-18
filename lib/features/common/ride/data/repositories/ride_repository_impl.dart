@@ -43,6 +43,7 @@ class RideRepositoryImpl implements RideRepository {
           'dropoff': place(draft.dropoff),
           'vehicleType': vehicleType.name,
           'paymentMethod': 'cash',
+          if (draft.promoCode != null) 'promoCode': draft.promoCode,
           'scheduledFor': draft.scheduledFor?.toUtc().toIso8601String(),
         }),
       );
@@ -98,6 +99,7 @@ class RideRepositoryImpl implements RideRepository {
           'dropoff': place(draft.dropoff),
           'vehicleType': vehicleType.name,
           'paymentMethod': 'cash',
+          if (draft.promoCode != null) 'promoCode': draft.promoCode,
         }),
       );
     } on FirebaseFunctionsException catch (error) {

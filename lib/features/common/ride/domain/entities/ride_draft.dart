@@ -19,10 +19,18 @@ class RideDraft extends Equatable {
     required this.pickup,
     required this.dropoff,
     this.scheduledFor,
+    this.promoCode,
   });
+  final String? promoCode;
+  RideDraft withPromo(String? code) => RideDraft(
+    pickup: pickup,
+    dropoff: dropoff,
+    scheduledFor: scheduledFor,
+    promoCode: code,
+  );
   final DateTime? scheduledFor;
   final RideStop pickup;
   final RideStop dropoff;
   @override
-  List<Object?> get props => [pickup, dropoff, scheduledFor];
+  List<Object?> get props => [pickup, dropoff, scheduledFor, promoCode];
 }

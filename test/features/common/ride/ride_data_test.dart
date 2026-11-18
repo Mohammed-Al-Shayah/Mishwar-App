@@ -40,6 +40,56 @@ Map<String, dynamic> rideJson() => {
   ),
 };
 void main() {
+  test(
+    'promo data maps server discount and applied flag with legacy defaults',
+    () {
+      final json = rideJson();
+      final legacy = RideModel.fromJson(json).toEntity();
+      expect(legacy.discountFils, 0);
+      expect(legacy.promoApplied, isNull);
+      final model = RideModel.fromJson({
+        ...json,
+        'promo': {'code': 'WELCOME50', 'applied': true},
+        'fare': {
+          'estimated': 3.45,
+          'final': 1.75,
+          'discount': 1.7,
+          'currency': 'JOD',
+        },
+      });
+      final ride = model.toEntity();
+      expect(ride.promoCode, 'WELCOME50');
+      expect(ride.discountFils, 1700);
+      expect(ride.fareFinalFils, 1750);
+      expect(ride.promoApplied, true);
+      expect(RideModel.fromJson(model.toJson()), model);
+    },
+  );
+  test(
+    'request and schedule send only the promo code, never client discount',
+    () async {
+      final source = MockSource();
+      final repository = RideRepositoryImpl(source);
+      when(() => source.request(any())).thenAnswer((_) async => 'id');
+      when(() => source.schedule(any())).thenAnswer((_) async => 'scheduled');
+      await repository.requestRide(
+        draft.withPromo('WELCOME50'),
+        VehicleType.economy,
+      );
+      await repository.scheduleRide(
+        draft.withPromo('WELCOME50'),
+        VehicleType.economy,
+      );
+      for (final data in [
+        verify(() => source.request(captureAny())).captured.single,
+        verify(() => source.schedule(captureAny())).captured.single,
+      ]) {
+        expect((data as Map)['promoCode'], 'WELCOME50');
+        expect(data.containsKey('discount'), false);
+        expect(data.containsKey('fare'), false);
+      }
+    },
+  );
   test('party snapshots and lifecycle dates round trip into domain', () {
     final time = Timestamp.fromDate(DateTime.utc(2026, 11, 17));
     final model = RideModel.fromJson({

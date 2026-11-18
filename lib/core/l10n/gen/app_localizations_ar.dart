@@ -1152,4 +1152,60 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get tooManyScheduled =>
       'بتقدر تحجز 3 مشاوير مجدولة. إلغي واحد عشان تحجز مشوار جديد.';
+
+  @override
+  String get promoAdd => 'إضافة كود خصم';
+
+  @override
+  String get promoApply => 'تطبيق';
+
+  @override
+  String get promoCodeLabel => 'كود الخصم';
+
+  @override
+  String get promoRemove => 'إزالة كود الخصم';
+
+  @override
+  String promoSelected(String code, String amount) {
+    return '$code · خصم JD $amount';
+  }
+
+  @override
+  String promoDiscount(String code, String amount) {
+    return 'خصم ($code) − JD $amount';
+  }
+
+  @override
+  String promoCashFootnote(String amount) {
+    return 'شامل خصم JD $amount';
+  }
+
+  @override
+  String get promoNotFound => 'الكود مش صحيح';
+
+  @override
+  String get promoInactive => 'الكود مش فعّال';
+
+  @override
+  String get promoNotStarted => 'الكود لسه ما بلّش';
+
+  @override
+  String get promoExpired => 'انتهت صلاحية الكود';
+
+  @override
+  String get promoLimit => 'وصل الكود للحد الأقصى';
+
+  @override
+  String get promoUserLimit => 'استخدمت الكود قبل';
+
+  @override
+  String get promoFirstRide => 'الكود لأول مشوار بس';
+
+  @override
+  String promoMinFare(String amount) {
+    return 'أقل سعر للكود JD $amount';
+  }
+
+  @override
+  String get promoRateLimit => 'جربت أكواد كتير، جرّب بعد شوي';
 }

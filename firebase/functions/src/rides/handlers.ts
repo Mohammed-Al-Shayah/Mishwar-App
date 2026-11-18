@@ -3,6 +3,7 @@ import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { fareEstimatesHandler } from '../getFareEstimates.js';
 import { authenticated } from '../lib/maps.js';
 import * as v from '../lib/validate.js';
+import { normalizePromo, previewPromo } from '../promos/handlers.js';
 import { type VehicleType } from '../pricing.js';
 import { dispatchRide, offeredDriver, offerIsLive, type MatchingDeps } from './matching.js';
 
@@ -27,6 +28,7 @@ export async function buildRide(request: CallableRequest, db: Firestore, key: st
   const estimated = estimates.fares.find((fare) => fare.vehicleType === vehicleType)!.amount;
   const storedPlace = (p: ReturnType<typeof place>) => ({ name: p.name, address: p.address, geopoint: new GeoPoint(p.lat, p.lng) });
   return {
+    ...(data.promoCode === undefined ? {} : { promo: await previewPromo(db, normalizePromo(data.promoCode), uid, estimated) }),
     riderId: uid, driverId: null, vehicleType,
     pickup: storedPlace(pickup), dropoff: storedPlace(dropoff), route: estimates.route,
     fare: { estimated, final: null, currency: 'JOD' }, paymentMethod: 'cash',

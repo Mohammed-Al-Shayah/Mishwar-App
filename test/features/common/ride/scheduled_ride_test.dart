@@ -199,6 +199,7 @@ void main() {
         GetFareEstimates(routes),
         RequestRide(rides),
         scheduledDraft,
+        validatePromo: promoValidatorStub(),
         scheduleRide: ScheduleRide(rides),
       );
       addTearDown(cubit.close);
@@ -356,6 +357,7 @@ void main() {
                   GetFareEstimates(routes),
                   RequestRide(rides),
                   scheduledDraft,
+                  validatePromo: promoValidatorStub(),
                   scheduleRide: ScheduleRide(rides),
                 ),
                 child: RideConfirmScreen(

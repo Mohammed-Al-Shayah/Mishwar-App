@@ -130,6 +130,7 @@ void main() {
           GetFareEstimates(routes),
           requestRideStub(),
           draft,
+          validatePromo: promoValidatorStub(),
           scheduleRide: scheduleRideStub(),
         );
       })
