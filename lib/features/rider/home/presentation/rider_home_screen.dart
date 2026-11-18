@@ -14,6 +14,9 @@ import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
 import 'package:mishwar/core/widgets/mw_search_pill.dart';
+import 'package:mishwar/features/common/app_config/domain/app_banner.dart';
+import 'package:mishwar/features/common/app_config/domain/app_service.dart';
+import 'package:mishwar/features/common/app_config/presentation/app_config_cubit.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
@@ -22,12 +25,16 @@ import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dar
 import 'package:mishwar/features/rider/history/presentation/rider_bottom_nav.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_state.dart';
+import 'package:mishwar/features/rider/home/presentation/widgets/banner_carousel.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/home_shortcuts.dart';
 import 'package:mishwar/features/rider/home/presentation/widgets/schedule_sheet.dart';
+import 'package:mishwar/features/rider/home/presentation/widgets/services_grid.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RiderHomeScreen extends StatefulWidget {
-  const RiderHomeScreen({this.mapBuilder, super.key});
+  const RiderHomeScreen({this.mapBuilder, this.initialService, super.key});
+  final ServiceId? initialService;
   final WidgetBuilder? mapBuilder;
   @override
   State<RiderHomeScreen> createState() => _RiderHomeScreenState();
@@ -37,6 +44,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
     with WidgetsBindingObserver {
   final GlobalKey<State<StatefulWidget>> _sheetKey = GlobalKey();
   DateTime? _scheduledFor;
+  String? _promoCode;
   MwMapController? _map;
   double _sheetHeight = 0;
   bool _followedFirstFix = false;
@@ -45,6 +53,11 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     unawaited(context.read<RiderHomeCubit>().start());
+    if (widget.initialService != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_service(widget.initialService!));
+      });
+    }
   }
 
   @override
@@ -102,10 +115,13 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
       return;
     }
     final label = context.l10n.currentLocation;
+    final promoCode = _promoCode;
+    _promoCode = null;
     await context.push<void>(
       '/rider/confirm',
       extra: RideDraft(
         scheduledFor: _scheduledFor,
+        promoCode: promoCode,
         pickup: RideStop(name: label, address: label, location: pickup),
         dropoff: RideStop(
           name: details.name,
@@ -114,6 +130,52 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
         ),
       ),
     );
+  }
+
+  Future<void> _schedule() async {
+    final time = await showScheduleSheet(context, _scheduledFor);
+    if (mounted && time != null) setState(() => _scheduledFor = time);
+  }
+
+  Future<void> _service(ServiceId id) async {
+    switch (id) {
+      case ServiceId.ride:
+        await _searchDestination();
+      case ServiceId.schedule:
+        await _schedule();
+      case ServiceId.parcel || ServiceId.airport:
+        serviceComingSoon(context);
+    }
+  }
+
+  Future<void> _allServices() async {
+    final id = await context.push<ServiceId>('/rider/services');
+    if (mounted && id != null) await _service(id);
+  }
+
+  Future<void> _bannerAction(AppBanner banner) async {
+    switch (banner.action) {
+      case BannerAction.openSearch:
+        await _searchDestination();
+      case BannerAction.openPromo:
+        _promoCode = banner.promoCode;
+        await _searchDestination();
+      case BannerAction.url:
+        final uri = Uri.tryParse(banner.url ?? '');
+        var opened = false;
+        if (uri != null && uri.scheme == 'https' && uri.host.isNotEmpty) {
+          try {
+            opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } on Object {
+            opened = false;
+          }
+        }
+        if (!opened && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.contentLinkError)),
+          );
+        }
+    }
   }
 
   Future<void> _addSaved(SavedPlaceLabel label) =>
@@ -177,116 +239,151 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                key: _sheetKey,
-                decoration: BoxDecoration(
-                  color: context.colors.sheet,
-                  borderRadius: AppRadius.sheetBorder,
-                  boxShadow: AppShadows.soft,
-                ),
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Center(
-                          child: Container(
-                            width: AppSizes.grabberWidth,
-                            height: AppSizes.grabberHeight,
-                            decoration: BoxDecoration(
-                              color: context.colors.grabber,
-                              borderRadius: AppRadius.pillBorder,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: AppSpacing.md),
-                        Text(
-                          context.l10n.whereTo,
-                          style: context.textStyles.headlineMedium,
-                        ),
-                        SizedBox(height: AppSpacing.md),
-                        MwSearchPill(
-                          onTap: _searchDestination,
-                          scheduleLabel: _scheduledFor == null
-                              ? null
-                              : scheduledTime(context, _scheduledFor!),
-                          onClearSchedule: _scheduledFor == null
-                              ? null
-                              : () => setState(() => _scheduledFor = null),
-                          onSchedule: () async {
-                            final time = await showScheduleSheet(
-                              context,
-                              _scheduledFor,
-                            );
-                            if (mounted && time != null) {
-                              setState(() => _scheduledFor = time);
-                            }
-                          },
-                        ),
-                        SizedBox(height: AppSpacing.xs),
-                        HomeShortcuts(
-                          onPlace: (place) => unawaited(_chooseRide(place)),
-                          onAddSaved: (label) => unawaited(_addSaved(label)),
-                        ),
-                        if (state.isLocating)
-                          Padding(
-                            padding: EdgeInsets.only(top: AppSpacing.sm),
-                            child: LinearProgressIndicator(
-                              color: context.colors.textPrimary,
-                              backgroundColor: context.colors.fill,
-                            ),
-                          ),
-                        if (!state.isLocating &&
-                            state.permission !=
-                                LocationPermissionStatus.granted) ...[
-                          SizedBox(height: AppSpacing.sm),
-                          Text(switch (state.permission) {
-                            LocationPermissionStatus.deniedForever =>
-                              context.l10n.locationForeverHint,
-                            LocationPermissionStatus.serviceDisabled =>
-                              context.l10n.locationServiceHint,
-                            _ => context.l10n.locationPermissionHint,
-                          }, style: context.textStyles.bodySmall),
-                          SizedBox(height: AppSpacing.xs),
-                          SizedBox(
-                            height: AppSizes.buttonHeight,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: context.colors.fill,
-                                foregroundColor: context.colors.textPrimary,
+              child: NotificationListener<SizeChangedLayoutNotification>(
+                onNotification: (_) {
+                  _measureSheet();
+                  return false;
+                },
+                child: SizeChangedLayoutNotifier(
+                  child: Container(
+                    key: _sheetKey,
+                    decoration: BoxDecoration(
+                      color: context.colors.sheet,
+                      borderRadius: AppRadius.sheetBorder,
+                      boxShadow: AppShadows.soft,
+                    ),
+                    constraints: BoxConstraints(
+                      maxHeight:
+                          MediaQuery.sizeOf(context).height *
+                          AppSizes.homeSheetFraction,
+                    ),
+                    child: SingleChildScrollView(
+                      child: SafeArea(
+                        top: false,
+                        child: Padding(
+                          padding: EdgeInsets.all(AppSpacing.md),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Center(
+                                child: Container(
+                                  width: AppSizes.grabberWidth,
+                                  height: AppSizes.grabberHeight,
+                                  decoration: BoxDecoration(
+                                    color: context.colors.grabber,
+                                    borderRadius: AppRadius.pillBorder,
+                                  ),
+                                ),
                               ),
-                              onPressed: switch (state.permission) {
-                                LocationPermissionStatus.deniedForever =>
-                                  context
-                                      .read<RiderHomeCubit>()
-                                      .openAppSettings,
-                                LocationPermissionStatus.serviceDisabled =>
-                                  context
-                                      .read<RiderHomeCubit>()
-                                      .openLocationSettings,
-                                _ => context.read<RiderHomeCubit>().start,
-                              },
-                              child: Text(switch (state.permission) {
-                                LocationPermissionStatus.deniedForever =>
-                                  context.l10n.openSettings,
-                                LocationPermissionStatus.serviceDisabled =>
-                                  context.l10n.enableLocation,
-                                _ => context.l10n.allowLocation,
-                              }),
-                            ),
+                              SizedBox(height: AppSpacing.md),
+                              Text(
+                                context.l10n.whereTo,
+                                style: context.textStyles.headlineMedium,
+                              ),
+                              SizedBox(height: AppSpacing.md),
+                              MwSearchPill(
+                                onTap: _searchDestination,
+                                scheduleLabel: _scheduledFor == null
+                                    ? null
+                                    : scheduledTime(context, _scheduledFor!),
+                                onClearSchedule: _scheduledFor == null
+                                    ? null
+                                    : () =>
+                                          setState(() => _scheduledFor = null),
+                                onSchedule: _schedule,
+                              ),
+                              SizedBox(height: AppSpacing.xs),
+                              HomeShortcuts(
+                                onPlace: (place) =>
+                                    unawaited(_chooseRide(place)),
+                                onAddSaved: (label) =>
+                                    unawaited(_addSaved(label)),
+                              ),
+                              BlocBuilder<AppConfigCubit, AppConfigState>(
+                                builder: (context, config) => ServicesGrid(
+                                  services: config.services,
+                                  onService: (id) => unawaited(_service(id)),
+                                  onAll: () => unawaited(_allServices()),
+                                ),
+                              ),
+                              BlocBuilder<AppConfigCubit, AppConfigState>(
+                                builder: (context, config) =>
+                                    config.banners.isEmpty
+                                    ? const SizedBox.shrink()
+                                    : Padding(
+                                        padding: EdgeInsets.only(
+                                          top: AppSpacing.md,
+                                        ),
+                                        child: BannerCarousel(
+                                          banners: config.banners,
+                                          onAction: (banner) =>
+                                              unawaited(_bannerAction(banner)),
+                                        ),
+                                      ),
+                              ),
+                              if (state.isLocating)
+                                Padding(
+                                  padding: EdgeInsets.only(top: AppSpacing.sm),
+                                  child: LinearProgressIndicator(
+                                    color: context.colors.textPrimary,
+                                    backgroundColor: context.colors.fill,
+                                  ),
+                                ),
+                              if (!state.isLocating &&
+                                  state.permission !=
+                                      LocationPermissionStatus.granted) ...[
+                                SizedBox(height: AppSpacing.sm),
+                                Text(switch (state.permission) {
+                                  LocationPermissionStatus.deniedForever =>
+                                    context.l10n.locationForeverHint,
+                                  LocationPermissionStatus.serviceDisabled =>
+                                    context.l10n.locationServiceHint,
+                                  _ => context.l10n.locationPermissionHint,
+                                }, style: context.textStyles.bodySmall),
+                                SizedBox(height: AppSpacing.xs),
+                                SizedBox(
+                                  height: AppSizes.buttonHeight,
+                                  child: FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: context.colors.fill,
+                                      foregroundColor:
+                                          context.colors.textPrimary,
+                                    ),
+                                    onPressed: switch (state.permission) {
+                                      LocationPermissionStatus.deniedForever =>
+                                        context
+                                            .read<RiderHomeCubit>()
+                                            .openAppSettings,
+                                      LocationPermissionStatus
+                                          .serviceDisabled =>
+                                        context
+                                            .read<RiderHomeCubit>()
+                                            .openLocationSettings,
+                                      _ => context.read<RiderHomeCubit>().start,
+                                    },
+                                    child: Text(switch (state.permission) {
+                                      LocationPermissionStatus.deniedForever =>
+                                        context.l10n.openSettings,
+                                      LocationPermissionStatus
+                                          .serviceDisabled =>
+                                        context.l10n.enableLocation,
+                                      _ => context.l10n.allowLocation,
+                                    }),
+                                  ),
+                                ),
+                              ],
+                              if (state.failure != null)
+                                Text(
+                                  failureMessage(context, state.failure!),
+                                  style: context.textStyles.bodySmall?.copyWith(
+                                    color: context.colors.negative,
+                                  ),
+                                ),
+                            ],
                           ),
-                        ],
-                        if (state.failure != null)
-                          Text(
-                            failureMessage(context, state.failure!),
-                            style: context.textStyles.bodySmall?.copyWith(
-                              color: context.colors.negative,
-                            ),
-                          ),
-                      ],
+                        ),
+                      ),
                     ),
                   ),
                 ),

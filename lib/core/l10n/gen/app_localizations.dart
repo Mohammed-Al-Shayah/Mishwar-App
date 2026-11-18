@@ -2335,6 +2335,228 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'جربت أكواد كتير، جرّب بعد شوي'**
   String get promoRateLimit;
+
+  /// No description provided for @adminContent.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحتوى'**
+  String get adminContent;
+
+  /// No description provided for @contentBanners.
+  ///
+  /// In ar, this message translates to:
+  /// **'البانرات'**
+  String get contentBanners;
+
+  /// No description provided for @contentAddBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة بانر'**
+  String get contentAddBanner;
+
+  /// No description provided for @contentEditBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل البانر'**
+  String get contentEditBanner;
+
+  /// No description provided for @contentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان'**
+  String get contentTitle;
+
+  /// No description provided for @contentSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'النص الفرعي'**
+  String get contentSubtitle;
+
+  /// No description provided for @contentImage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رابط الصورة (https)'**
+  String get contentImage;
+
+  /// No description provided for @contentAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجراء'**
+  String get contentAction;
+
+  /// No description provided for @contentSearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح البحث'**
+  String get contentSearch;
+
+  /// No description provided for @contentPromo.
+  ///
+  /// In ar, this message translates to:
+  /// **'كود خصم'**
+  String get contentPromo;
+
+  /// No description provided for @contentUrl.
+  ///
+  /// In ar, this message translates to:
+  /// **'رابط خارجي (https)'**
+  String get contentUrl;
+
+  /// No description provided for @contentOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'الترتيب'**
+  String get contentOrder;
+
+  /// No description provided for @contentValidUntil.
+  ///
+  /// In ar, this message translates to:
+  /// **'صالح حتى'**
+  String get contentValidUntil;
+
+  /// No description provided for @contentActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get contentActive;
+
+  /// No description provided for @contentSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get contentSave;
+
+  /// No description provided for @contentDelete.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف'**
+  String get contentDelete;
+
+  /// No description provided for @contentDeleteConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف هذا البانر؟'**
+  String get contentDeleteConfirm;
+
+  /// No description provided for @contentCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get contentCancel;
+
+  /// No description provided for @contentInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق من القيمة المدخلة'**
+  String get contentInvalid;
+
+  /// No description provided for @contentMoveUp.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحريك لأعلى'**
+  String get contentMoveUp;
+
+  /// No description provided for @contentMoveDown.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحريك لأسفل'**
+  String get contentMoveDown;
+
+  /// No description provided for @contentServices.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخدمات'**
+  String get contentServices;
+
+  /// No description provided for @contentEnabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفعّل'**
+  String get contentEnabled;
+
+  /// No description provided for @bannerPage.
+  ///
+  /// In ar, this message translates to:
+  /// **'العرض {page} من {total}'**
+  String bannerPage(int page, int total);
+
+  /// No description provided for @contentLinkError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر فتح الرابط'**
+  String get contentLinkError;
+
+  /// No description provided for @servicesSuggestions.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاقتراحات'**
+  String get servicesSuggestions;
+
+  /// No description provided for @servicesAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get servicesAll;
+
+  /// No description provided for @serviceRide.
+  ///
+  /// In ar, this message translates to:
+  /// **'رحلة'**
+  String get serviceRide;
+
+  /// No description provided for @serviceSchedule.
+  ///
+  /// In ar, this message translates to:
+  /// **'احجز'**
+  String get serviceSchedule;
+
+  /// No description provided for @serviceParcel.
+  ///
+  /// In ar, this message translates to:
+  /// **'طرد'**
+  String get serviceParcel;
+
+  /// No description provided for @serviceAirport.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطار'**
+  String get serviceAirport;
+
+  /// No description provided for @serviceSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'قريباً'**
+  String get serviceSoon;
+
+  /// No description provided for @serviceSoonMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخدمة قريباً'**
+  String get serviceSoonMessage;
+
+  /// No description provided for @serviceRideDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب مشواراً الآن'**
+  String get serviceRideDescription;
+
+  /// No description provided for @serviceScheduleDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر موعد مشوارك'**
+  String get serviceScheduleDescription;
+
+  /// No description provided for @serviceParcelDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل طرداً'**
+  String get serviceParcelDescription;
+
+  /// No description provided for @serviceAirportDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاوير من وإلى المطار'**
+  String get serviceAirportDescription;
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,13 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract final class AppSizes {
+  static const homeSheetFraction = 0.7;
+  static const double bannerAspectRatio = 16 / 8;
+  static const bannerInterval = Duration(seconds: 5);
+  static const bannerOverlayAlpha = 0.5;
+  static double get bannerDot => 6.r;
+  static double get serviceTile => 76.w;
+  static double get serviceGlyph => 28.r;
   static double get schedulePillWidth => 200.w;
   static double get scheduleWheelHeight => 216.h;
   static double get earningsChartHeight => 144.h;

@@ -666,5 +666,52 @@
       }
     }
   },
-  "promoRateLimit": "Too many checks. Try again shortly"
+  "promoRateLimit": "Too many checks. Try again shortly",
+  "adminContent": "Content",
+  "contentBanners": "Banners",
+  "contentAddBanner": "Add banner",
+  "contentEditBanner": "Edit banner",
+  "contentTitle": "Title",
+  "contentSubtitle": "Subtitle",
+  "contentImage": "Image URL (https)",
+  "contentAction": "Action",
+  "contentSearch": "Open search",
+  "contentPromo": "Promo code",
+  "contentUrl": "External URL (https)",
+  "contentOrder": "Order",
+  "contentValidUntil": "Valid until",
+  "contentActive": "Active",
+  "contentSave": "Save",
+  "contentDelete": "Delete",
+  "contentDeleteConfirm": "Delete this banner?",
+  "contentCancel": "Cancel",
+  "contentInvalid": "Check this value",
+  "contentMoveUp": "Move up",
+  "contentMoveDown": "Move down",
+  "contentServices": "Services",
+  "contentEnabled": "Enabled",
+  "bannerPage": "Offer {page} of {total}",
+  "contentLinkError": "Could not open link",
+  "@bannerPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSuggestions": "Suggestions",
+  "servicesAll": "See all",
+  "serviceRide": "Ride",
+  "serviceSchedule": "Reserve",
+  "serviceParcel": "Parcel",
+  "serviceAirport": "Airport",
+  "serviceSoon": "Soon",
+  "serviceSoonMessage": "Service coming soon",
+  "serviceRideDescription": "Request a ride now",
+  "serviceScheduleDescription": "Choose your departure",
+  "serviceParcelDescription": "Send a package",
+  "serviceAirportDescription": "Rides to and from the airport"
 }

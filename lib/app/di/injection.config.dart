@@ -26,6 +26,8 @@ import 'package:mishwar/features/admin/data/admin_repository_impl.dart'
     as _i485;
 import 'package:mishwar/features/admin/domain/admin_repository.dart' as _i1005;
 import 'package:mishwar/features/admin/domain/admin_usecases.dart' as _i180;
+import 'package:mishwar/features/admin/presentation/admin_content_cubit.dart'
+    as _i3;
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart' as _i630;
 import 'package:mishwar/features/common/account/data/account_repository_impl.dart'
     as _i42;
@@ -39,6 +41,16 @@ import 'package:mishwar/features/common/account/domain/update_name.dart'
     as _i139;
 import 'package:mishwar/features/common/account/presentation/account_cubit.dart'
     as _i777;
+import 'package:mishwar/features/common/app_config/data/app_config_remote_data_source.dart'
+    as _i621;
+import 'package:mishwar/features/common/app_config/data/app_config_repository_impl.dart'
+    as _i126;
+import 'package:mishwar/features/common/app_config/domain/app_config_repository.dart'
+    as _i654;
+import 'package:mishwar/features/common/app_config/domain/app_config_usecases.dart'
+    as _i616;
+import 'package:mishwar/features/common/app_config/presentation/app_config_cubit.dart'
+    as _i910;
 import 'package:mishwar/features/common/auth/data/datasources/auth_remote_data_source.dart'
     as _i243;
 import 'package:mishwar/features/common/auth/data/repositories/auth_repository_impl.dart'
@@ -307,6 +319,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i390.ThemeModeCubit>(
       () => _i390.ThemeModeCubit(gh<_i460.SharedPreferences>()),
     );
+    gh.lazySingleton<_i621.AppConfigRemoteDataSource>(
+      () => _i621.AppConfigRemoteDataSource(gh<_i974.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i95.DriverRepository>(
       () => _i251.DriverRepositoryImpl(gh<_i327.DriverRemoteDataSource>()),
     );
@@ -387,6 +402,10 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i809.FirebaseFunctions>(),
         gh<_i974.FirebaseFirestore>(),
       ),
+    );
+    gh.lazySingleton<_i654.AppConfigRepository>(
+      () =>
+          _i126.AppConfigRepositoryImpl(gh<_i621.AppConfigRemoteDataSource>()),
     );
     gh.lazySingleton<_i598.GetFareEstimates>(
       () => _i598.GetFareEstimates(gh<_i1040.RouteRepository>()),
@@ -497,6 +516,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1039.DeleteSavedPlace>(),
       ),
     );
+    gh.lazySingleton<_i616.WatchBanners>(
+      () => _i616.WatchBanners(gh<_i654.AppConfigRepository>()),
+    );
+    gh.lazySingleton<_i616.WatchAllBanners>(
+      () => _i616.WatchAllBanners(gh<_i654.AppConfigRepository>()),
+    );
+    gh.lazySingleton<_i616.WatchServices>(
+      () => _i616.WatchServices(gh<_i654.AppConfigRepository>()),
+    );
     gh.lazySingleton<_i801.CreateUserProfile>(
       () => _i801.CreateUserProfile(gh<_i695.UserRepository>()),
     );
@@ -534,6 +562,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i584.WatchAuthState(gh<_i290.AuthRepository>()),
     );
     gh.factory<_i520.RoleCubit>(() => _i520.RoleCubit(gh<_i600.SetUserRole>()));
+    gh.lazySingleton<_i910.AppConfigCubit>(
+      () => _i910.AppConfigCubit(
+        gh<_i616.WatchBanners>(),
+        gh<_i616.WatchServices>(),
+      ),
+    );
     gh.lazySingleton<_i768.PushTokenSync>(
       () => _i768.PushTokenSync(
         gh<_i43.PushRepository>(),
@@ -607,6 +641,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i365.WatchPosition>(),
         gh<_i916.OpenAppSettings>(),
         gh<_i682.OpenLocationSettings>(),
+      ),
+    );
+    gh.factory<_i3.AdminContentCubit>(
+      () => _i3.AdminContentCubit(
+        gh<_i616.WatchAllBanners>(),
+        gh<_i616.WatchServices>(),
+        gh<_i180.AdminAction>(),
       ),
     );
     gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(

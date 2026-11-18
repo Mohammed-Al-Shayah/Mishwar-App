@@ -128,6 +128,9 @@ class RideConfirmCubit extends Cubit<RideConfirmState> {
         RideConfirmLoaded(route: estimates.route, fares: estimates.fares),
       ),
     );
+    if (draft.promoCode != null && state is RideConfirmLoaded) {
+      await applyPromo(draft.promoCode!);
+    }
   }
 
   Future<void> retry() => start();

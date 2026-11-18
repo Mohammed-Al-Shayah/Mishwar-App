@@ -35,6 +35,10 @@ abstract final class AppIcons {
     fontFamily: 'PhosphorRegular',
     matchTextDirection: true,
   );
+  // Verified in phosphor_flutter 2.1.0 phosphor_icons_regular.dart.
+  static const calendar = IconData(0xe10a, fontFamily: 'PhosphorRegular');
+  static const package = IconData(0xe390, fontFamily: 'PhosphorRegular');
+  static const airplane = IconData(0xe002, fontFamily: 'PhosphorRegular');
   static const car = IconData(0xe112, fontFamily: 'PhosphorRegular');
   static const star = IconData(0xe46a, fontFamily: 'PhosphorRegular');
   static const globe = IconData(0xe288, fontFamily: 'PhosphorRegular');

@@ -11,15 +11,20 @@ import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
 import 'package:mishwar/features/admin/domain/admin_usecases.dart';
+import 'package:mishwar/features/admin/presentation/admin_content_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_login_screen.dart';
 import 'package:mishwar/features/admin/presentation/admin_screen.dart';
+import 'package:mishwar/features/common/app_config/domain/app_config_usecases.dart';
+import 'package:mishwar/features/common/app_config/domain/app_service.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/usecases/sign_out.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/pricing_table.dart';
 import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../app_config/app_config_test.dart' show MockConfigRepository;
 
 class MockSignOut extends Mock implements SignOut {}
 
@@ -73,6 +78,7 @@ void main() {
       '/admin/rides',
       '/admin/map',
       '/admin/pricing',
+      '/admin/content',
     ]) {
       expect(sessionRedirect(admin, path, isWeb: true), isNull);
       expect(sessionRedirect(regular, path, isWeb: true), '/admin/denied');
@@ -260,6 +266,19 @@ void main() {
           stats: const [1, 2, 3, 4],
           pricing: PricingTable.defaults(),
         );
+        final config = MockConfigRepository();
+        when(
+          config.watchAllBanners,
+        ).thenAnswer((_) => Stream.value(const Right([])));
+        when(
+          config.watchServices,
+        ).thenAnswer((_) => Stream.value(const Right(AppService.defaults)));
+        final content = AdminContentCubit(
+          WatchAllBanners(config),
+          WatchServices(config),
+          AdminAction(repo),
+        )..start();
+        addTearDown(content.close);
         final cubit = makeCubit(repo);
         await cubit.start(section);
         if (![AdminSection.drivers, AdminSection.rides].contains(section)) {
@@ -277,6 +296,7 @@ void main() {
             builder: (_, _) => MultiBlocProvider(
               providers: [
                 BlocProvider.value(value: cubit),
+                BlocProvider.value(value: content),
                 BlocProvider(
                   create: (_) =>
                       AdminLoginCubit(AdminSignIn(repo), MockSignOut()),

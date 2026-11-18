@@ -21,6 +21,8 @@ import 'package:mishwar/features/common/auth/presentation/session/session_state.
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'helpers/saved_places_mocks.dart' show appConfigCubit;
+
 class MockSendOtp extends Mock implements SendOtp {}
 
 class MockSession extends Mock implements SessionCubit {}
@@ -162,6 +164,7 @@ void main() {
       await tester.pumpWidget(
         MishwarApp(
           router: router,
+          appConfigCubit: appConfigCubit(),
           sessionCubit: session,
           localeCubit: LocaleCubit(await _preferences()),
           themeModeCubit: ThemeModeCubit(await _preferences()),

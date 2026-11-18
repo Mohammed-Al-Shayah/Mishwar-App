@@ -1208,4 +1208,117 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get promoRateLimit => 'جربت أكواد كتير، جرّب بعد شوي';
+
+  @override
+  String get adminContent => 'المحتوى';
+
+  @override
+  String get contentBanners => 'البانرات';
+
+  @override
+  String get contentAddBanner => 'إضافة بانر';
+
+  @override
+  String get contentEditBanner => 'تعديل البانر';
+
+  @override
+  String get contentTitle => 'العنوان';
+
+  @override
+  String get contentSubtitle => 'النص الفرعي';
+
+  @override
+  String get contentImage => 'رابط الصورة (https)';
+
+  @override
+  String get contentAction => 'الإجراء';
+
+  @override
+  String get contentSearch => 'فتح البحث';
+
+  @override
+  String get contentPromo => 'كود خصم';
+
+  @override
+  String get contentUrl => 'رابط خارجي (https)';
+
+  @override
+  String get contentOrder => 'الترتيب';
+
+  @override
+  String get contentValidUntil => 'صالح حتى';
+
+  @override
+  String get contentActive => 'نشط';
+
+  @override
+  String get contentSave => 'حفظ';
+
+  @override
+  String get contentDelete => 'حذف';
+
+  @override
+  String get contentDeleteConfirm => 'حذف هذا البانر؟';
+
+  @override
+  String get contentCancel => 'إلغاء';
+
+  @override
+  String get contentInvalid => 'تحقق من القيمة المدخلة';
+
+  @override
+  String get contentMoveUp => 'تحريك لأعلى';
+
+  @override
+  String get contentMoveDown => 'تحريك لأسفل';
+
+  @override
+  String get contentServices => 'الخدمات';
+
+  @override
+  String get contentEnabled => 'مفعّل';
+
+  @override
+  String bannerPage(int page, int total) {
+    return 'العرض $page من $total';
+  }
+
+  @override
+  String get contentLinkError => 'تعذّر فتح الرابط';
+
+  @override
+  String get servicesSuggestions => 'الاقتراحات';
+
+  @override
+  String get servicesAll => 'الكل';
+
+  @override
+  String get serviceRide => 'رحلة';
+
+  @override
+  String get serviceSchedule => 'احجز';
+
+  @override
+  String get serviceParcel => 'طرد';
+
+  @override
+  String get serviceAirport => 'مطار';
+
+  @override
+  String get serviceSoon => 'قريباً';
+
+  @override
+  String get serviceSoonMessage => 'الخدمة قريباً';
+
+  @override
+  String get serviceRideDescription => 'اطلب مشواراً الآن';
+
+  @override
+  String get serviceScheduleDescription => 'اختر موعد مشوارك';
+
+  @override
+  String get serviceParcelDescription => 'أرسل طرداً';
+
+  @override
+  String get serviceAirportDescription => 'مشاوير من وإلى المطار';
 }

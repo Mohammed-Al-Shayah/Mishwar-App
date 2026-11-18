@@ -53,10 +53,11 @@ export class FakeFirestore {
     const result = this.queue.then(async () => {
       const writes = [];
       const tx = { get: (ref) => { if (writes.length) throw Error('Read after write'); return ref.get(); }, create: (ref, data) => writes.push([ref, data]),
-        set: (ref, data) => writes.push([ref, data]), update: (ref, data) => writes.push([ref, data]) };
+        set: (ref, data, options) => writes.push([ref, data, !options?.merge]), delete: ref => writes.push([ref, null]), update: (ref, data) => writes.push([ref, data]) };
       const result = await body(tx);
-      for (const [ref, data] of writes) {
-        const next = { ...this.records.get(ref.path) };
+      for (const [ref, data, replace] of writes) {
+        if (data === null) { this.records.delete(ref.path); continue; }
+        const next = replace ? {} : { ...this.records.get(ref.path) };
         for (const [key, value] of Object.entries(data)) {
           if (value?.isEqual?.(FieldValue.delete())) delete next[key];
           else if (value?.constructor?.name === 'ArrayUnionTransform') next[key] = [...new Set([...(next[key] ?? []), ...value.elements])];

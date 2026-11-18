@@ -11,6 +11,8 @@ import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/settings/locale_cubit.dart';
 import 'package:mishwar/core/settings/theme_mode_cubit.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
+import 'package:mishwar/features/common/app_config/presentation/app_config_cubit.dart';
+import 'package:mishwar/features/common/app_config/presentation/app_config_session_binding.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/notifications/domain/usecases/watch_push_routes.dart';
@@ -19,6 +21,7 @@ import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 class MishwarApp extends StatefulWidget {
   const MishwarApp({
     this.router,
+    this.appConfigCubit,
     this.localeCubit,
     this.themeModeCubit,
     this.sessionCubit,
@@ -26,6 +29,7 @@ class MishwarApp extends StatefulWidget {
     this.initialPushRoute,
     super.key,
   });
+  final AppConfigCubit? appConfigCubit;
   final LocaleCubit? localeCubit;
   final ThemeModeCubit? themeModeCubit;
   final WatchPushRoutes? watchPushRoutes;
@@ -67,35 +71,42 @@ class _MishwarAppState extends State<MishwarApp> {
   Widget build(BuildContext context) => MultiBlocProvider(
     providers: [
       BlocProvider.value(value: _session),
+      BlocProvider(
+        create: (_) => widget.appConfigCubit ?? getIt<AppConfigCubit>(),
+      ),
       BlocProvider(create: (_) => widget.localeCubit ?? getIt<LocaleCubit>()),
       BlocProvider(
         create: (_) => widget.themeModeCubit ?? getIt<ThemeModeCubit>(),
       ),
     ],
-    child: ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      enableScaleWH: () => !kIsWeb,
-      enableScaleText: () => !kIsWeb,
-      builder: (_, _) => BlocBuilder<SessionCubit, SessionState>(
-        builder: (context, session) => BlocBuilder<LocaleCubit, Locale>(
-          builder: (context, locale) => BlocBuilder<ThemeModeCubit, ThemeMode>(
-            builder: (context, mode) => MaterialApp.router(
-              routerConfig: _router,
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.light(),
-              darkTheme: AppTheme.dark(),
-              themeMode:
-                  session is SessionReady &&
-                      session.user.role == UserRole.driver
-                  ? ThemeMode.dark
-                  : mode,
-              locale: locale,
-              supportedLocales: AppLocalizations.supportedLocales,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              onGenerateTitle: (context) => context.l10n.appName,
-            ),
+    child: AppConfigSessionBinding(
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        enableScaleWH: () => !kIsWeb,
+        enableScaleText: () => !kIsWeb,
+        builder: (_, _) => BlocBuilder<SessionCubit, SessionState>(
+          builder: (context, session) => BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, locale) =>
+                BlocBuilder<ThemeModeCubit, ThemeMode>(
+                  builder: (context, mode) => MaterialApp.router(
+                    routerConfig: _router,
+                    debugShowCheckedModeBanner: false,
+                    theme: AppTheme.light(),
+                    darkTheme: AppTheme.dark(),
+                    themeMode:
+                        session is SessionReady &&
+                            session.user.role == UserRole.driver
+                        ? ThemeMode.dark
+                        : mode,
+                    locale: locale,
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    localizationsDelegates:
+                        AppLocalizations.localizationsDelegates,
+                    onGenerateTitle: (context) => context.l10n.appName,
+                  ),
+                ),
           ),
         ),
       ),

@@ -57,6 +57,47 @@ void stubSuccess(MockRouteRepository repository) {
 
 void main() {
   test(
+    'banner draft pre-applies code with server validation after estimates',
+    () async {
+      final routes = MockRouteRepository();
+      stubSuccess(routes);
+      final promos = MockPromoRepository();
+      when(
+        () => promos.validate(
+          'WELCOME50',
+          draft.withPromo('WELCOME50'),
+          VehicleType.economy,
+        ),
+      ).thenAnswer(
+        (_) async => const Right(
+          PromoQuote(
+            code: 'WELCOME50',
+            discountFils: 1000,
+            fareBeforeFils: 4600,
+            fareAfterFils: 3600,
+          ),
+        ),
+      );
+      final cubit = RideConfirmCubit(
+        GetFareEstimates(routes),
+        requestRideStub(),
+        draft.withPromo('WELCOME50'),
+        scheduleRide: scheduleRideStub(),
+        validatePromo: ValidatePromo(promos),
+      );
+      await cubit.start();
+      expect((cubit.state as RideConfirmLoaded).promoQuote?.code, 'WELCOME50');
+      verify(
+        () => promos.validate(
+          'WELCOME50',
+          draft.withPromo('WELCOME50'),
+          VehicleType.economy,
+        ),
+      ).called(1);
+      await cubit.close();
+    },
+  );
+  test(
     'promo selection debounces, discards stale quotes and sends validated code',
     () async {
       final routes = MockRouteRepository();

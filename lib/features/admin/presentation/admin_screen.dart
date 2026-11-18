@@ -12,6 +12,7 @@ import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
+import 'package:mishwar/features/admin/presentation/admin_content.dart';
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_labels.dart';
 import 'package:mishwar/features/admin/presentation/admin_live_map.dart';
@@ -142,9 +143,11 @@ class _AdminScreenState extends State<AdminScreen> {
                             _ridesToolbar(context, state),
                           if (state.loading) const LinearProgressIndicator(),
                           Expanded(
-                            child: SingleChildScrollView(
-                              child: _body(context, state),
-                            ),
+                            child: state.section == AdminSection.content
+                                ? _body(context, state)
+                                : SingleChildScrollView(
+                                    child: _body(context, state),
+                                  ),
                           ),
                           if ([
                             AdminSection.drivers,
@@ -339,6 +342,7 @@ class _AdminScreenState extends State<AdminScreen> {
       ),
       AdminSection.drivers => _drivers(context, state.entries),
       AdminSection.rides => _rides(context, state.entries),
+      AdminSection.content => const AdminContent(),
       AdminSection.map => AdminLiveMap(drivers: state.entries),
       AdminSection.pricing =>
         state.data!.pricing == null

@@ -11,6 +11,8 @@ import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/saved_places_mocks.dart' show appConfigCubit;
+
 class MockSession extends Mock implements SessionCubit {}
 
 void main() {
@@ -76,6 +78,7 @@ void main() {
       addTearDown(router.dispose);
       await tester.pumpWidget(
         MishwarApp(
+          appConfigCubit: appConfigCubit(),
           router: router,
           sessionCubit: session,
           localeCubit: locale,

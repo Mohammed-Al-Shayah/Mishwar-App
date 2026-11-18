@@ -6,11 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mishwar/app/di/injection.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
+import 'package:mishwar/features/admin/presentation/admin_content_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_login_screen.dart';
 import 'package:mishwar/features/admin/presentation/admin_screen.dart';
 import 'package:mishwar/features/common/account/presentation/account_cubit.dart';
 import 'package:mishwar/features/common/account/presentation/account_screen.dart';
+import 'package:mishwar/features/common/app_config/domain/app_service.dart';
+import 'package:mishwar/features/common/app_config/presentation/app_config_cubit.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/home_cubit.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/name_cubit.dart';
@@ -57,6 +60,7 @@ import 'package:mishwar/features/rider/history/presentation/ride_history_screen.
 import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/rider_home_cubit.dart';
 import 'package:mishwar/features/rider/home/presentation/rider_home_screen.dart';
+import 'package:mishwar/features/rider/home/presentation/widgets/services_grid.dart';
 import 'package:mishwar/features/rider/places/presentation/saved_places_screen.dart';
 import 'package:mishwar/features/rider/ride/presentation/active_ride_listener.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
@@ -107,6 +111,7 @@ String? sessionRedirect(
           ? (user.role == UserRole.rider &&
                     ((location == '/rider/account' ||
                             location == '/rider/places' ||
+                            location == '/rider/services' ||
                             location == '/rider/history' ||
                             RegExp(
                               r'^/rider/history/[^/]+$',
@@ -195,6 +200,8 @@ GoRouter createAppRouter(
         builder: (_, _) => MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => getIt<AdminLoginCubit>()),
+            if (section == AdminSection.content)
+              BlocProvider(create: (_) => getIt<AdminContentCubit>()..start()),
             BlocProvider(
               create: (_) {
                 final cubit = getIt<AdminCubit>();
@@ -246,6 +253,13 @@ GoRouter createAppRouter(
     GoRoute(
       path: '/rider',
       routes: [
+        GoRoute(
+          path: 'services',
+          builder: (_, _) => BlocProvider.value(
+            value: getIt<AppConfigCubit>(),
+            child: const ServicesScreen(),
+          ),
+        ),
         GoRoute(
           path: 'account',
           builder: (_, _) => BlocProvider(
@@ -368,10 +382,11 @@ GoRouter createAppRouter(
           ),
         ),
       ],
-      builder: (_, _) => BlocProvider(
+      builder: (_, state) => BlocProvider(
         create: (_) => getIt<HomeCubit>(),
         child: MultiBlocProvider(
           providers: [
+            BlocProvider.value(value: getIt<AppConfigCubit>()),
             BlocProvider(create: (_) => getIt<RiderHomeCubit>()),
             BlocProvider(
               create: (_) {
@@ -391,7 +406,12 @@ GoRouter createAppRouter(
           child: ActiveRideListener(
             watch: getIt<WatchActiveRideId>(),
             uid: (session.state as SessionReady).user.id,
-            child: RiderHomeScreen(mapBuilder: riderMapBuilder),
+            child: RiderHomeScreen(
+              mapBuilder: riderMapBuilder,
+              initialService: state.extra is ServiceId
+                  ? state.extra! as ServiceId
+                  : null,
+            ),
           ),
         ),
       ),

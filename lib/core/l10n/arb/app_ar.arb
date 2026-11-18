@@ -673,5 +673,52 @@
       }
     }
   },
-  "promoRateLimit": "جربت أكواد كتير، جرّب بعد شوي"
+  "promoRateLimit": "جربت أكواد كتير، جرّب بعد شوي",
+  "adminContent": "المحتوى",
+  "contentBanners": "البانرات",
+  "contentAddBanner": "إضافة بانر",
+  "contentEditBanner": "تعديل البانر",
+  "contentTitle": "العنوان",
+  "contentSubtitle": "النص الفرعي",
+  "contentImage": "رابط الصورة (https)",
+  "contentAction": "الإجراء",
+  "contentSearch": "فتح البحث",
+  "contentPromo": "كود خصم",
+  "contentUrl": "رابط خارجي (https)",
+  "contentOrder": "الترتيب",
+  "contentValidUntil": "صالح حتى",
+  "contentActive": "نشط",
+  "contentSave": "حفظ",
+  "contentDelete": "حذف",
+  "contentDeleteConfirm": "حذف هذا البانر؟",
+  "contentCancel": "إلغاء",
+  "contentInvalid": "تحقق من القيمة المدخلة",
+  "contentMoveUp": "تحريك لأعلى",
+  "contentMoveDown": "تحريك لأسفل",
+  "contentServices": "الخدمات",
+  "contentEnabled": "مفعّل",
+  "bannerPage": "العرض {page} من {total}",
+  "contentLinkError": "تعذّر فتح الرابط",
+  "@bannerPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "servicesSuggestions": "الاقتراحات",
+  "servicesAll": "الكل",
+  "serviceRide": "رحلة",
+  "serviceSchedule": "احجز",
+  "serviceParcel": "طرد",
+  "serviceAirport": "مطار",
+  "serviceSoon": "قريباً",
+  "serviceSoonMessage": "الخدمة قريباً",
+  "serviceRideDescription": "اطلب مشواراً الآن",
+  "serviceScheduleDescription": "اختر موعد مشوارك",
+  "serviceParcelDescription": "أرسل طرداً",
+  "serviceAirportDescription": "مشاوير من وإلى المطار"
 }

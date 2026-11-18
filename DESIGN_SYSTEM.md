@@ -183,3 +183,10 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
 - [ ] RTL + LTR, light + dark, text scale 1.3 all correct.
 - [ ] Loading / empty / error states designed.
 - [ ] Golden tests for core widgets.
+
+### Home content (T6.4–T6.5)
+
+- Home content scrolls inside a sheet capped at 70% of available height. Map padding follows its measured height.
+- Services: four 76 × 76 grey100 tiles, radius 12, Phosphor regular glyphs and captions. Disabled services retain their position with a muted glyph and a small “قريباً” pill. The full services screen uses two columns and one-line descriptions.
+- Banner carousel: 16:8 images, radius 12, grey100 loading/error surface, white title/subtitle on a bottom black 50% to transparent gradient, with page dots below. Advance every five seconds; pause during touch and while the app is inactive; disable automatic movement for reduced motion.
+- Admin content uses the existing web workspace, flat service rows, native switches, order arrows and a scrollable banner editor.

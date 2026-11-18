@@ -1220,4 +1220,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get promoRateLimit => 'Too many checks. Try again shortly';
+
+  @override
+  String get adminContent => 'Content';
+
+  @override
+  String get contentBanners => 'Banners';
+
+  @override
+  String get contentAddBanner => 'Add banner';
+
+  @override
+  String get contentEditBanner => 'Edit banner';
+
+  @override
+  String get contentTitle => 'Title';
+
+  @override
+  String get contentSubtitle => 'Subtitle';
+
+  @override
+  String get contentImage => 'Image URL (https)';
+
+  @override
+  String get contentAction => 'Action';
+
+  @override
+  String get contentSearch => 'Open search';
+
+  @override
+  String get contentPromo => 'Promo code';
+
+  @override
+  String get contentUrl => 'External URL (https)';
+
+  @override
+  String get contentOrder => 'Order';
+
+  @override
+  String get contentValidUntil => 'Valid until';
+
+  @override
+  String get contentActive => 'Active';
+
+  @override
+  String get contentSave => 'Save';
+
+  @override
+  String get contentDelete => 'Delete';
+
+  @override
+  String get contentDeleteConfirm => 'Delete this banner?';
+
+  @override
+  String get contentCancel => 'Cancel';
+
+  @override
+  String get contentInvalid => 'Check this value';
+
+  @override
+  String get contentMoveUp => 'Move up';
+
+  @override
+  String get contentMoveDown => 'Move down';
+
+  @override
+  String get contentServices => 'Services';
+
+  @override
+  String get contentEnabled => 'Enabled';
+
+  @override
+  String bannerPage(int page, int total) {
+    return 'Offer $page of $total';
+  }
+
+  @override
+  String get contentLinkError => 'Could not open link';
+
+  @override
+  String get servicesSuggestions => 'Suggestions';
+
+  @override
+  String get servicesAll => 'See all';
+
+  @override
+  String get serviceRide => 'Ride';
+
+  @override
+  String get serviceSchedule => 'Reserve';
+
+  @override
+  String get serviceParcel => 'Parcel';
+
+  @override
+  String get serviceAirport => 'Airport';
+
+  @override
+  String get serviceSoon => 'Soon';
+
+  @override
+  String get serviceSoonMessage => 'Service coming soon';
+
+  @override
+  String get serviceRideDescription => 'Request a ride now';
+
+  @override
+  String get serviceScheduleDescription => 'Choose your departure';
+
+  @override
+  String get serviceParcelDescription => 'Send a package';
+
+  @override
+  String get serviceAirportDescription => 'Rides to and from the airport';
 }

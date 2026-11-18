@@ -98,6 +98,7 @@ class AdminRemoteDataSource {
   }
 
   Stream<AdminData> watch(AdminSection section) {
+    if (section == AdminSection.content) return Stream.value(AdminData());
     if (section == AdminSection.map) {
       return _db
           .collection('drivers')

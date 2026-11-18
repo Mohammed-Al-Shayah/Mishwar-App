@@ -42,156 +42,161 @@ void main() {
       ..addFont(rootBundle.load('assets/fonts/phosphor/Phosphor.ttf'));
     await icons.load();
   });
-  for (final locale in ['ar', 'en']) {
-    for (final dark in [false, true]) {
-      for (final permission in LocationPermissionStatus.values) {
-        testWidgets('$locale dark=$dark $permission inline CTA', (
-          tester,
-        ) async {
-          tester.view.physicalSize = const Size(375, 812);
-          tester.view.devicePixelRatio = 1;
-          addTearDown(tester.view.resetPhysicalSize);
-          addTearDown(tester.view.resetDevicePixelRatio);
-          final repository = MockLocationRepository();
-          final positions =
-              StreamController<Either<Failure, GeoPointValue>>.broadcast();
-          addTearDown(positions.close);
-          when(
-            repository.checkPermission,
-          ).thenAnswer((_) async => Right(permission));
-          when(
-            repository.requestPermission,
-          ).thenAnswer((_) async => Right(permission));
-          if (permission == LocationPermissionStatus.granted) {
-            // A failed fix still leaves the map usable and the sheet visible.
-            when(repository.currentPosition).thenAnswer(
-              (_) async =>
-                  const Left(LocationFailure(LocationFailureCode.timeout)),
-            );
+  for (final height in [812.0, 568.0]) {
+    for (final locale in ['ar', 'en']) {
+      for (final dark in [false, true]) {
+        for (final permission in LocationPermissionStatus.values) {
+          testWidgets('$locale dark=$dark height=$height $permission CTA', (
+            tester,
+          ) async {
+            tester.view.physicalSize = Size(375, height);
+            tester.view.devicePixelRatio = 1;
+            addTearDown(tester.view.resetPhysicalSize);
+            addTearDown(tester.view.resetDevicePixelRatio);
+            final repository = MockLocationRepository();
+            final positions =
+                StreamController<Either<Failure, GeoPointValue>>.broadcast();
+            addTearDown(positions.close);
             when(
-              repository.watchPosition,
-            ).thenAnswer((_) => positions.stream);
-          }
-          when(repository.openAppSettings).thenAnswer((_) async {});
-          when(repository.openLocationSettings).thenAnswer((_) async {});
-          final cubit = riderCubit(repository);
-          final home = HomeCubit(MockSignOut());
-          addTearDown(cubit.close);
-          addTearDown(home.close);
-          await tester.pumpWidget(
-            ScreenUtilInit(
-              designSize: const Size(375, 812),
-              minTextAdapt: true,
-              splitScreenMode: true,
-              builder: (_, _) => MaterialApp(
-                locale: Locale(locale),
-                supportedLocales: AppLocalizations.supportedLocales,
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                theme: dark ? AppTheme.dark() : AppTheme.light(),
-                builder: (context, child) => MediaQuery(
-                  data: MediaQuery.of(
-                    context,
-                  ).copyWith(textScaler: const TextScaler.linear(1.3)),
-                  child: child!,
-                ),
-                home: MultiBlocProvider(
-                  providers: [
-                    BlocProvider<RiderHomeCubit>.value(value: cubit),
-                    BlocProvider<HomeCubit>.value(value: home),
-                  ],
-                  child: savedProviders(
-                    RiderHomeScreen(
-                      mapBuilder: (_) => const MwMapPlaceholder(),
+              repository.checkPermission,
+            ).thenAnswer((_) async => Right(permission));
+            when(
+              repository.requestPermission,
+            ).thenAnswer((_) async => Right(permission));
+            if (permission == LocationPermissionStatus.granted) {
+              // A failed fix still leaves the map usable and the sheet visible.
+              when(repository.currentPosition).thenAnswer(
+                (_) async =>
+                    const Left(LocationFailure(LocationFailureCode.timeout)),
+              );
+              when(
+                repository.watchPosition,
+              ).thenAnswer((_) => positions.stream);
+            }
+            when(repository.openAppSettings).thenAnswer((_) async {});
+            when(repository.openLocationSettings).thenAnswer((_) async {});
+            final cubit = riderCubit(repository);
+            final home = HomeCubit(MockSignOut());
+            addTearDown(cubit.close);
+            addTearDown(home.close);
+            await tester.pumpWidget(
+              ScreenUtilInit(
+                designSize: const Size(375, 812),
+                minTextAdapt: true,
+                splitScreenMode: true,
+                builder: (_, _) => MaterialApp(
+                  locale: Locale(locale),
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  localizationsDelegates:
+                      AppLocalizations.localizationsDelegates,
+                  theme: dark ? AppTheme.dark() : AppTheme.light(),
+                  builder: (context, child) => MediaQuery(
+                    data: MediaQuery.of(
+                      context,
+                    ).copyWith(textScaler: const TextScaler.linear(1.3)),
+                    child: child!,
+                  ),
+                  home: MultiBlocProvider(
+                    providers: [
+                      BlocProvider<RiderHomeCubit>.value(value: cubit),
+                      BlocProvider<HomeCubit>.value(value: home),
+                    ],
+                    child: savedProviders(
+                      RiderHomeScreen(
+                        mapBuilder: (_) => const MwMapPlaceholder(),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-          await tester.pumpAndSettle();
-          final context = tester.element(find.byType(RiderHomeScreen));
-          final l10n = AppLocalizations.of(context)!;
-          expect(find.text(l10n.whereTo), findsNWidgets(2));
-          expect(find.byType(GoogleMap), findsNothing);
-          final map = tester.widget<MwMap>(find.byType(MwMap));
-          final sheetRect = tester.getRect(
-            find
-                .ancestor(
-                  of: find.text(l10n.whereTo).first,
-                  matching: find.byType(Container),
-                )
-                .first,
-          );
-          expect(map.padding.bottom, sheetRect.height);
-          expect(
-            map.permissionGranted,
-            permission == LocationPermissionStatus.granted,
-          );
-          if (permission != LocationPermissionStatus.granted) {
-            final label = switch (permission) {
-              LocationPermissionStatus.deniedForever => l10n.openSettings,
-              LocationPermissionStatus.serviceDisabled => l10n.enableLocation,
-              _ => l10n.allowLocation,
-            };
-            expect(find.text(label), findsOneWidget);
-            await tester.tap(find.text(label));
-            await tester.pumpAndSettle();
-            if (permission == LocationPermissionStatus.deniedForever) {
-              verify(repository.openAppSettings).called(1);
-            }
-            if (permission == LocationPermissionStatus.serviceDisabled) {
-              verify(repository.openLocationSettings).called(1);
-            }
-            if (permission == LocationPermissionStatus.denied) {
-              verify(repository.requestPermission).called(2);
-            }
-          }
-          if (permission == LocationPermissionStatus.granted) {
-            const first = GeoPointValue(31.9, 35.9);
-            const second = GeoPointValue(32, 36);
-            final controller = MockMapController();
-            when(() => controller.animateTo(first)).thenAnswer((_) async {});
-            when(() => controller.animateTo(second)).thenAnswer((_) async {});
-            map.onMapCreated!(controller);
-            positions.add(const Right(first));
-            await tester.pumpAndSettle();
-            verify(() => controller.animateTo(first)).called(1);
-            positions.add(const Right(second));
-            await tester.pumpAndSettle();
-            verifyNever(() => controller.animateTo(second));
-            final recenter = find.byWidgetPredicate(
-              (widget) =>
-                  widget is MwMapFab && widget.label == l10n.recenterMap,
             );
+            await tester.pumpAndSettle();
+            final context = tester.element(find.byType(RiderHomeScreen));
+            final l10n = AppLocalizations.of(context)!;
+            expect(find.text(l10n.whereTo), findsNWidgets(2));
+            expect(find.byType(GoogleMap), findsNothing);
+            final map = tester.widget<MwMap>(find.byType(MwMap));
+            final sheetRect = tester.getRect(
+              find
+                  .ancestor(
+                    of: find.text(l10n.whereTo).first,
+                    matching: find.byType(Container),
+                  )
+                  .first,
+            );
+            expect(map.padding.bottom, sheetRect.height);
             expect(
-              tester.getRect(recenter).bottom,
-              lessThan(
-                tester
-                    .getRect(
-                      find.byWidgetPredicate(
-                        (widget) =>
-                            widget is Container && widget.key is GlobalKey,
-                      ),
-                    )
-                    .top,
-              ),
+              map.permissionGranted,
+              permission == LocationPermissionStatus.granted,
             );
-            await tester.tap(recenter);
-            await tester.pumpAndSettle();
-            verify(() => controller.animateTo(second)).called(1);
-          }
-          expect(sheetRect.height, greaterThan(0));
-          if (permission == LocationPermissionStatus.deniedForever) {
-            await expectLater(
-              find.byType(Scaffold),
-              matchesGoldenFile(
-                'goldens/rider_home_${locale}_${dark ? 'dark' : 'light'}.png',
-              ),
-            );
-          }
-          expect(tester.takeException(), isNull);
-          await tester.pumpWidget(const SizedBox.shrink());
-        });
+            if (permission != LocationPermissionStatus.granted) {
+              final label = switch (permission) {
+                LocationPermissionStatus.deniedForever => l10n.openSettings,
+                LocationPermissionStatus.serviceDisabled => l10n.enableLocation,
+                _ => l10n.allowLocation,
+              };
+              expect(find.text(label), findsOneWidget);
+              await tester.ensureVisible(find.text(label));
+              await tester.tap(find.text(label));
+              await tester.pumpAndSettle();
+              if (permission == LocationPermissionStatus.deniedForever) {
+                verify(repository.openAppSettings).called(1);
+              }
+              if (permission == LocationPermissionStatus.serviceDisabled) {
+                verify(repository.openLocationSettings).called(1);
+              }
+              if (permission == LocationPermissionStatus.denied) {
+                verify(repository.requestPermission).called(2);
+              }
+            }
+            if (permission == LocationPermissionStatus.granted) {
+              const first = GeoPointValue(31.9, 35.9);
+              const second = GeoPointValue(32, 36);
+              final controller = MockMapController();
+              when(() => controller.animateTo(first)).thenAnswer((_) async {});
+              when(() => controller.animateTo(second)).thenAnswer((_) async {});
+              map.onMapCreated!(controller);
+              positions.add(const Right(first));
+              await tester.pumpAndSettle();
+              verify(() => controller.animateTo(first)).called(1);
+              positions.add(const Right(second));
+              await tester.pumpAndSettle();
+              verifyNever(() => controller.animateTo(second));
+              final recenter = find.byWidgetPredicate(
+                (widget) =>
+                    widget is MwMapFab && widget.label == l10n.recenterMap,
+              );
+              expect(
+                tester.getRect(recenter).bottom,
+                lessThan(
+                  tester
+                      .getRect(
+                        find.byWidgetPredicate(
+                          (widget) =>
+                              widget is Container && widget.key is GlobalKey,
+                        ),
+                      )
+                      .top,
+                ),
+              );
+              await tester.tap(recenter);
+              await tester.pumpAndSettle();
+              verify(() => controller.animateTo(second)).called(1);
+            }
+            expect(sheetRect.height, greaterThan(0));
+            if (height == 812 &&
+                permission == LocationPermissionStatus.deniedForever) {
+              await expectLater(
+                find.byType(Scaffold),
+                matchesGoldenFile(
+                  'goldens/rider_home_${locale}_${dark ? 'dark' : 'light'}.png',
+                ),
+              );
+            }
+            expect(tester.takeException(), isNull);
+            await tester.pumpWidget(const SizedBox.shrink());
+          });
+        }
       }
     }
   }

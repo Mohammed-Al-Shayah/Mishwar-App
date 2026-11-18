@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  clock: ^1.1.2
   cloud_firestore: ^7.1.0
   cloud_functions: ^7.0.1
   cupertino_icons: ^1.0.8
