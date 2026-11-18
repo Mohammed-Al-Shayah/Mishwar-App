@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/app/di/injection.dart';
@@ -189,7 +190,12 @@ void main() {
       refresh,
       riderMapBuilder: (_) => const SizedBox(),
     )..go('/rider');
-    await tester.pumpWidget(historyWrap(const SizedBox(), router: router));
+    await tester.pumpWidget(
+      BlocProvider<SessionCubit>.value(
+        value: session,
+        child: historyWrap(const SizedBox(), router: router),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Activity'));
     await tester.pumpAndSettle();

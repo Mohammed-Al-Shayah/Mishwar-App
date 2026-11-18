@@ -116,6 +116,15 @@ class RideRepositoryImpl implements RideRepository {
   }
 
   @override
+  Future<Either<Failure, int>> cancellationQuote(String id) async {
+    try {
+      return Right(await _source.cancellationQuote(id));
+    } on Object catch (error) {
+      return Left(callableFailure(error));
+    }
+  }
+
+  @override
   Future<Either<Failure, CancelRideResult>> cancelRide(String id) async {
     try {
       return Right(CancelRideResult(redispatched: await _source.cancel(id)));

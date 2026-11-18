@@ -1321,4 +1321,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get serviceAirportDescription => 'مشاوير من وإلى المطار';
+
+  @override
+  String cancellationFeeWarning(String amount) {
+    return 'إذا لغيت هلأ رح يترتب عليك رسوم إلغاء $amount بتنضاف على مشوارك الجاي';
+  }
+
+  @override
+  String freeWaitingCountdown(String time) {
+    return 'انتظار مجاني $time';
+  }
+
+  @override
+  String waitingFeeRate(String amount) {
+    return 'رسوم انتظار $amount للدقيقة';
+  }
+
+  @override
+  String waitingFeeRunning(String amount) {
+    return 'رسوم انتظار: $amount';
+  }
+
+  @override
+  String get feeWaiting => 'رسوم انتظار';
+
+  @override
+  String get feePreviousBalance => 'رسوم إلغاء سابقة';
+
+  @override
+  String get feeCancellation => 'رسوم الإلغاء';
+
+  @override
+  String cancellationBalanceInfo(String amount) {
+    return 'عليك $amount رسوم إلغاء، بتنضاف على مشوارك الجاي';
+  }
 }

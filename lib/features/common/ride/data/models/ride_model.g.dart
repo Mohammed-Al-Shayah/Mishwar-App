@@ -27,6 +27,9 @@ _RideFareModel _$RideFareModelFromJson(Map<String, dynamic> json) =>
       estimated: (json['estimated'] as num).toDouble(),
       currency: json['currency'] as String,
       discount: (json['discount'] as num?)?.toDouble() ?? 0,
+      cancellationFee: (json['cancellationFee'] as num?)?.toDouble() ?? 0,
+      waitingFee: (json['waitingFee'] as num?)?.toDouble() ?? 0,
+      previousBalance: (json['previousBalance'] as num?)?.toDouble() ?? 0,
       finalAmount: (json['final'] as num?)?.toDouble(),
     );
 
@@ -35,6 +38,9 @@ Map<String, dynamic> _$RideFareModelToJson(_RideFareModel instance) =>
       'estimated': instance.estimated,
       'currency': instance.currency,
       'discount': instance.discount,
+      'cancellationFee': instance.cancellationFee,
+      'waitingFee': instance.waitingFee,
+      'previousBalance': instance.previousBalance,
       'final': instance.finalAmount,
     };
 

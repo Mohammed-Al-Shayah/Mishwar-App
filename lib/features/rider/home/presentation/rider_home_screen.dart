@@ -10,6 +10,7 @@ import 'package:mishwar/core/theme/app_radius.dart';
 import 'package:mishwar/core/theme/app_shadows.dart';
 import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
+import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
@@ -17,9 +18,12 @@ import 'package:mishwar/core/widgets/mw_search_pill.dart';
 import 'package:mishwar/features/common/app_config/domain/app_banner.dart';
 import 'package:mishwar/features/common/app_config/domain/app_service.dart';
 import 'package:mishwar/features/common/app_config/presentation/app_config_cubit.dart';
+import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
+import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/location/domain/entities/location_permission_status.dart';
 import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
+import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
 import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/rider/history/presentation/rider_bottom_nav.dart';
@@ -299,6 +303,32 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                                     unawaited(_chooseRide(place)),
                                 onAddSaved: (label) =>
                                     unawaited(_addSaved(label)),
+                              ),
+                              BlocBuilder<SessionCubit, SessionState>(
+                                builder: (context, session) {
+                                  final balance = session is SessionReady
+                                      ? session.user.balanceDueFils
+                                      : 0;
+                                  return balance <= 0
+                                      ? const SizedBox.shrink()
+                                      : Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: AppSpacing.sm,
+                                          ),
+                                          child: Text(
+                                            context.l10n
+                                                .cancellationBalanceInfo(
+                                                  feeAmount(context, balance),
+                                                ),
+                                            style: AppTextStyles.footnote
+                                                .copyWith(
+                                                  color: context
+                                                      .colors
+                                                      .textSecondary,
+                                                ),
+                                          ),
+                                        );
+                                },
                               ),
                               BlocBuilder<AppConfigCubit, AppConfigState>(
                                 builder: (context, config) => ServicesGrid(

@@ -284,7 +284,7 @@ as GeoPointValue,
 /// @nodoc
 mixin _$RideFareModel {
 
- double get estimated; String get currency; double get discount;@JsonKey(name: 'final') double? get finalAmount;
+ double get estimated; String get currency; double get discount; double get cancellationFee; double get waitingFee; double get previousBalance;@JsonKey(name: 'final') double? get finalAmount;
 /// Create a copy of RideFareModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +297,16 @@ $RideFareModelCopyWith<RideFareModel> get copyWith => _$RideFareModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RideFareModel&&(identical(other.estimated, estimated) || other.estimated == estimated)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RideFareModel&&(identical(other.estimated, estimated) || other.estimated == estimated)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.cancellationFee, cancellationFee) || other.cancellationFee == cancellationFee)&&(identical(other.waitingFee, waitingFee) || other.waitingFee == waitingFee)&&(identical(other.previousBalance, previousBalance) || other.previousBalance == previousBalance)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,estimated,currency,discount,finalAmount);
+int get hashCode => Object.hash(runtimeType,estimated,currency,discount,cancellationFee,waitingFee,previousBalance,finalAmount);
 
 @override
 String toString() {
-  return 'RideFareModel(estimated: $estimated, currency: $currency, discount: $discount, finalAmount: $finalAmount)';
+  return 'RideFareModel(estimated: $estimated, currency: $currency, discount: $discount, cancellationFee: $cancellationFee, waitingFee: $waitingFee, previousBalance: $previousBalance, finalAmount: $finalAmount)';
 }
 
 
@@ -317,7 +317,7 @@ abstract mixin class $RideFareModelCopyWith<$Res>  {
   factory $RideFareModelCopyWith(RideFareModel value, $Res Function(RideFareModel) _then) = _$RideFareModelCopyWithImpl;
 @useResult
 $Res call({
- double estimated, String currency, double discount,@JsonKey(name: 'final') double? finalAmount
+ double estimated, String currency, double discount, double cancellationFee, double waitingFee, double previousBalance,@JsonKey(name: 'final') double? finalAmount
 });
 
 
@@ -334,11 +334,14 @@ class _$RideFareModelCopyWithImpl<$Res>
 
 /// Create a copy of RideFareModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? estimated = null,Object? currency = null,Object? discount = null,Object? finalAmount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? estimated = null,Object? currency = null,Object? discount = null,Object? cancellationFee = null,Object? waitingFee = null,Object? previousBalance = null,Object? finalAmount = freezed,}) {
   return _then(_self.copyWith(
 estimated: null == estimated ? _self.estimated : estimated // ignore: cast_nullable_to_non_nullable
 as double,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String,discount: null == discount ? _self.discount : discount // ignore: cast_nullable_to_non_nullable
+as double,cancellationFee: null == cancellationFee ? _self.cancellationFee : cancellationFee // ignore: cast_nullable_to_non_nullable
+as double,waitingFee: null == waitingFee ? _self.waitingFee : waitingFee // ignore: cast_nullable_to_non_nullable
+as double,previousBalance: null == previousBalance ? _self.previousBalance : previousBalance // ignore: cast_nullable_to_non_nullable
 as double,finalAmount: freezed == finalAmount ? _self.finalAmount : finalAmount // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
@@ -425,10 +428,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double estimated,  String currency,  double discount, @JsonKey(name: 'final')  double? finalAmount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double estimated,  String currency,  double discount,  double cancellationFee,  double waitingFee,  double previousBalance, @JsonKey(name: 'final')  double? finalAmount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RideFareModel() when $default != null:
-return $default(_that.estimated,_that.currency,_that.discount,_that.finalAmount);case _:
+return $default(_that.estimated,_that.currency,_that.discount,_that.cancellationFee,_that.waitingFee,_that.previousBalance,_that.finalAmount);case _:
   return orElse();
 
 }
@@ -446,10 +449,10 @@ return $default(_that.estimated,_that.currency,_that.discount,_that.finalAmount)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double estimated,  String currency,  double discount, @JsonKey(name: 'final')  double? finalAmount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double estimated,  String currency,  double discount,  double cancellationFee,  double waitingFee,  double previousBalance, @JsonKey(name: 'final')  double? finalAmount)  $default,) {final _that = this;
 switch (_that) {
 case _RideFareModel():
-return $default(_that.estimated,_that.currency,_that.discount,_that.finalAmount);case _:
+return $default(_that.estimated,_that.currency,_that.discount,_that.cancellationFee,_that.waitingFee,_that.previousBalance,_that.finalAmount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -466,10 +469,10 @@ return $default(_that.estimated,_that.currency,_that.discount,_that.finalAmount)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double estimated,  String currency,  double discount, @JsonKey(name: 'final')  double? finalAmount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double estimated,  String currency,  double discount,  double cancellationFee,  double waitingFee,  double previousBalance, @JsonKey(name: 'final')  double? finalAmount)?  $default,) {final _that = this;
 switch (_that) {
 case _RideFareModel() when $default != null:
-return $default(_that.estimated,_that.currency,_that.discount,_that.finalAmount);case _:
+return $default(_that.estimated,_that.currency,_that.discount,_that.cancellationFee,_that.waitingFee,_that.previousBalance,_that.finalAmount);case _:
   return null;
 
 }
@@ -481,12 +484,15 @@ return $default(_that.estimated,_that.currency,_that.discount,_that.finalAmount)
 @JsonSerializable()
 
 class _RideFareModel implements RideFareModel {
-  const _RideFareModel({required this.estimated, required this.currency, this.discount = 0, @JsonKey(name: 'final') this.finalAmount});
+  const _RideFareModel({required this.estimated, required this.currency, this.discount = 0, this.cancellationFee = 0, this.waitingFee = 0, this.previousBalance = 0, @JsonKey(name: 'final') this.finalAmount});
   factory _RideFareModel.fromJson(Map<String, dynamic> json) => _$RideFareModelFromJson(json);
 
 @override final  double estimated;
 @override final  String currency;
 @override@JsonKey() final  double discount;
+@override@JsonKey() final  double cancellationFee;
+@override@JsonKey() final  double waitingFee;
+@override@JsonKey() final  double previousBalance;
 @override@JsonKey(name: 'final') final  double? finalAmount;
 
 /// Create a copy of RideFareModel
@@ -502,16 +508,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RideFareModel&&(identical(other.estimated, estimated) || other.estimated == estimated)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RideFareModel&&(identical(other.estimated, estimated) || other.estimated == estimated)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.cancellationFee, cancellationFee) || other.cancellationFee == cancellationFee)&&(identical(other.waitingFee, waitingFee) || other.waitingFee == waitingFee)&&(identical(other.previousBalance, previousBalance) || other.previousBalance == previousBalance)&&(identical(other.finalAmount, finalAmount) || other.finalAmount == finalAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,estimated,currency,discount,finalAmount);
+int get hashCode => Object.hash(runtimeType,estimated,currency,discount,cancellationFee,waitingFee,previousBalance,finalAmount);
 
 @override
 String toString() {
-  return 'RideFareModel(estimated: $estimated, currency: $currency, discount: $discount, finalAmount: $finalAmount)';
+  return 'RideFareModel(estimated: $estimated, currency: $currency, discount: $discount, cancellationFee: $cancellationFee, waitingFee: $waitingFee, previousBalance: $previousBalance, finalAmount: $finalAmount)';
 }
 
 
@@ -522,7 +528,7 @@ abstract mixin class _$RideFareModelCopyWith<$Res> implements $RideFareModelCopy
   factory _$RideFareModelCopyWith(_RideFareModel value, $Res Function(_RideFareModel) _then) = __$RideFareModelCopyWithImpl;
 @override @useResult
 $Res call({
- double estimated, String currency, double discount,@JsonKey(name: 'final') double? finalAmount
+ double estimated, String currency, double discount, double cancellationFee, double waitingFee, double previousBalance,@JsonKey(name: 'final') double? finalAmount
 });
 
 
@@ -539,11 +545,14 @@ class __$RideFareModelCopyWithImpl<$Res>
 
 /// Create a copy of RideFareModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? estimated = null,Object? currency = null,Object? discount = null,Object? finalAmount = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? estimated = null,Object? currency = null,Object? discount = null,Object? cancellationFee = null,Object? waitingFee = null,Object? previousBalance = null,Object? finalAmount = freezed,}) {
   return _then(_RideFareModel(
 estimated: null == estimated ? _self.estimated : estimated // ignore: cast_nullable_to_non_nullable
 as double,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String,discount: null == discount ? _self.discount : discount // ignore: cast_nullable_to_non_nullable
+as double,cancellationFee: null == cancellationFee ? _self.cancellationFee : cancellationFee // ignore: cast_nullable_to_non_nullable
+as double,waitingFee: null == waitingFee ? _self.waitingFee : waitingFee // ignore: cast_nullable_to_non_nullable
+as double,previousBalance: null == previousBalance ? _self.previousBalance : previousBalance // ignore: cast_nullable_to_non_nullable
 as double,finalAmount: freezed == finalAmount ? _self.finalAmount : finalAmount // ignore: cast_nullable_to_non_nullable
 as double?,
   ));

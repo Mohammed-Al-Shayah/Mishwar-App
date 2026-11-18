@@ -31,6 +31,9 @@ class RideEntity extends Equatable {
     this.scheduledFor,
     this.promoCode,
     this.discountFils = 0,
+    this.fareCancellationFeeFils = 0,
+    this.fareWaitingFeeFils = 0,
+    this.farePreviousBalanceFils = 0,
     this.promoApplied,
     this.driverRating,
     this.riderRating,
@@ -51,6 +54,9 @@ class RideEntity extends Equatable {
   });
   final String? promoCode;
   final int discountFils;
+  final int fareCancellationFeeFils;
+  final int fareWaitingFeeFils;
+  final int farePreviousBalanceFils;
   final bool? promoApplied;
   final DateTime? scheduledFor;
   final int? driverRating;
@@ -83,6 +89,9 @@ class RideEntity extends Equatable {
     scheduledFor,
     promoCode,
     discountFils,
+    fareCancellationFeeFils,
+    fareWaitingFeeFils,
+    farePreviousBalanceFils,
     promoApplied,
     driverRating,
     riderRating,

@@ -8,11 +8,15 @@ import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { mapsKey, mapsOptions } from '../lib/maps.js';
-import { requestRideHandler, cancelRideHandler, expireSearchingRidesHandler } from './handlers.js';
+import { requestRideHandler, cancelRideHandler, cancellationQuoteHandler, expireSearchingRidesHandler } from './handlers.js';
 import { dispatchRide, offerTimeoutHandler, type MatchingDeps, type OfferTask } from './matching.js';
 import { updateRideStatusHandler } from './lifecycle.js';
 import { acceptRideHandler, declineRideHandler } from './offers.js';
 
+import { feeConfigReader } from './fees.js';
+let readFees: ReturnType<typeof feeConfigReader> | undefined;
+const fees = () => (readFees ??= feeConfigReader(getFirestore()))();
+export const cancellationQuote = onCall({ region: 'europe-west1' }, request => cancellationQuoteHandler(request, getFirestore(), fees));
 export const matchingDeps: MatchingDeps = {
   now: () => Timestamp.now(),
   enqueue: (data, scheduleDelaySeconds) => getFunctions()
@@ -28,7 +32,7 @@ export const offerTimeout = onTaskDispatched<OfferTask>({ region: 'europe-west1'
   (request) => offerTimeoutHandler(getFirestore(), request.data, matchingDeps));
 
 export const requestRide = onCall(mapsOptions, (request) => requestRideHandler(request, getFirestore(), mapsKey.value()));
-export const cancelRide = onCall({ region: 'europe-west1' }, (request) => cancelRideHandler(request, getFirestore(), matchingDeps));
+export const cancelRide = onCall({ region: 'europe-west1' }, (request) => cancelRideHandler(request, getFirestore(), matchingDeps, fees));
 export const acceptRide = onCall({ region: 'europe-west1' }, (request) => acceptRideHandler(request, getFirestore(), matchingDeps));
 export const declineRide = onCall({ region: 'europe-west1' }, (request) => declineRideHandler(request, getFirestore(), matchingDeps));
 export const expireSearchingRides = onSchedule({ region: 'europe-west1', schedule: 'every 1 minutes' }, async () => {

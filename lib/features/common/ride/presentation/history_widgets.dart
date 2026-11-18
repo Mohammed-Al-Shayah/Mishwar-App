@@ -16,7 +16,11 @@ String historyDate(BuildContext context, DateTime date) {
 }
 
 String ridePrice(BuildContext context, RideEntity ride) => context.l10n.fareJod(
-  ((ride.fareFinalFils ?? ride.fareEstimatedFils) / 1000).toStringAsFixed(2),
+  ((ride.status == RideStatus.cancelled
+              ? ride.fareCancellationFeeFils
+              : ride.fareFinalFils ?? ride.fareEstimatedFils) /
+          1000)
+      .toStringAsFixed(2),
 );
 
 class HistorySkeleton extends StatelessWidget {

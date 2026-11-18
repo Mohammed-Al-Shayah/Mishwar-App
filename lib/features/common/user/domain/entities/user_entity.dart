@@ -12,6 +12,7 @@ class UserEntity extends Equatable {
     this.pendingRatingRideId,
     this.rating = 5.0,
     this.ratingCount = 0,
+    this.balanceDueFils = 0,
   });
   final String id;
   final String? pendingRatingRideId;
@@ -21,6 +22,7 @@ class UserEntity extends Equatable {
   final String? photoUrl;
   final double rating;
   final int ratingCount;
+  final int balanceDueFils;
   final DateTime createdAt;
   static const _unset = Object();
   UserEntity copyWith({
@@ -32,6 +34,7 @@ class UserEntity extends Equatable {
     Object? photoUrl = _unset,
     double? rating,
     int? ratingCount,
+    int? balanceDueFils,
     DateTime? createdAt,
   }) => UserEntity(
     id: id ?? this.id,
@@ -44,6 +47,7 @@ class UserEntity extends Equatable {
     photoUrl: identical(photoUrl, _unset) ? this.photoUrl : photoUrl as String?,
     rating: rating ?? this.rating,
     ratingCount: ratingCount ?? this.ratingCount,
+    balanceDueFils: balanceDueFils ?? this.balanceDueFils,
     createdAt: createdAt ?? this.createdAt,
   );
 
@@ -57,6 +61,7 @@ class UserEntity extends Equatable {
     photoUrl,
     rating,
     ratingCount,
+    balanceDueFils,
     createdAt,
   ];
 }

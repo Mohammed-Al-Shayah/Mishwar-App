@@ -23,6 +23,7 @@ import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/cancellation_quote.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
@@ -43,7 +44,11 @@ Future<GoRouter> pumpTracking(
   double scale = 1,
   String language = 'en',
   bool summary = false,
+  Future<Either<Failure, int>>? quote,
 }) async {
+  when(
+    () => repository.cancellationQuote(any()),
+  ).thenAnswer((_) => quote ?? Future.value(const Right(0)));
   tester.view.physicalSize = const Size(375, 812);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -69,6 +74,7 @@ Future<GoRouter> pumpTracking(
             'ride',
             WatchDriverLocation(repository),
             RideTrackingClock(),
+            CancellationQuote(repository),
           ),
           child: MultiBlocProvider(
             providers: [
@@ -95,6 +101,7 @@ Future<GoRouter> pumpTracking(
             'ride',
             WatchDriverLocation(repository),
             RideTrackingClock(),
+            CancellationQuote(repository),
           ),
           child: RideTrackingScreen(
             mapBuilder: (_) => const MwMapPlaceholder(),
@@ -165,6 +172,41 @@ void main() {
     ).thenAnswer((_) async => const Right(CancelRideResult()));
   });
   for (final language in ['ar', 'en']) {
+    testWidgets('quote loading and fee confirmation $language at scale 1.3', (
+      tester,
+    ) async {
+      final quote = Completer<Either<Failure, int>>();
+      when(() => repository.watchRide('ride')).thenAnswer(
+        (_) => Stream.value(Right(liveRide(RideStatus.accepted))),
+      );
+      await pumpTracking(
+        tester,
+        repository,
+        language: language,
+        scale: 1.3,
+        reducedMotion: true,
+        quote: quote.future,
+      );
+      final cancel = find.text(
+        language == 'ar' ? 'إلغاء المشوار' : 'Cancel trip',
+      );
+      await tester.ensureVisible(cancel);
+      await tester.tap(cancel);
+      await tester.pump();
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(BottomSheet), findsNothing);
+      quote.complete(const Right(500));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('JD 0.50'), findsOneWidget);
+      final sheet = tester.widget<BottomSheet>(find.byType(BottomSheet));
+      expect(sheet.showDragHandle, isNot(false));
+      await tester.ensureVisible(find.byType(MwPrimaryButton));
+      await tester.tap(find.byType(MwPrimaryButton));
+      await tester.pumpAndSettle();
+      verify(() => repository.cancellationQuote('ride')).called(1);
+      verify(() => repository.cancelRide('ride')).called(1);
+      expect(tester.takeException(), isNull);
+    });
     for (final status in [
       RideStatus.accepted,
       RideStatus.arriving,

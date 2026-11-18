@@ -10,7 +10,7 @@ test('role-less profile supports first role selection and deletion', async () =>
   await assertSucceeds(updateDoc(doc(s.db(), 'users/owner'), { role: 'driver' }));
   await assertFails(deleteDoc(doc(s.db(), 'users/owner')));
 });
-for (const [field, value] of Object.entries({ activeRideId: 'ride', pendingRatingRideId: 'ride', rating: 5, ratingCount: 1, accountDeleting: true, offer: null, currentRideId: null, cancelCount: 0, unknown: true })) {
+for (const [field, value] of Object.entries({ balanceDueFils: 500, activeRideId: 'ride', pendingRatingRideId: 'ride', rating: 5, ratingCount: 1, accountDeleting: true, offer: null, currentRideId: null, cancelCount: 0, unknown: true })) {
   test(`users: cannot create server/unknown field ${field}`, () => assertFails(setDoc(doc(s.db(), 'users/owner'), { ...profile, [field]: value })));
   for (const removal of [false, true]) test(`users: cannot ${removal ? 'remove' : 'set'} ${field}`, async () => {
     await s.seed({ 'users/owner': { ...profile, ...(removal ? { [field]: value } : {}) } });

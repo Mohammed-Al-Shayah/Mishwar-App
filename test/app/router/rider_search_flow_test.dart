@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -213,12 +214,15 @@ void main() {
           designSize: const Size(375, 812),
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (_, _) => MaterialApp.router(
-            theme: AppTheme.light(),
-            routerConfig: router,
-            locale: const Locale('en'),
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+          builder: (_, _) => BlocProvider<SessionCubit>.value(
+            value: session,
+            child: MaterialApp.router(
+              theme: AppTheme.light(),
+              routerConfig: router,
+              locale: const Locale('en'),
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+            ),
           ),
         ),
       );

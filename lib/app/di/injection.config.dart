@@ -146,6 +146,8 @@ import 'package:mishwar/features/common/ride/domain/usecases/accept_ride.dart'
     as _i851;
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart'
     as _i72;
+import 'package:mishwar/features/common/ride/domain/usecases/cancellation_quote.dart'
+    as _i251;
 import 'package:mishwar/features/common/ride/domain/usecases/decline_ride.dart'
     as _i100;
 import 'package:mishwar/features/common/ride/domain/usecases/get_ride_history.dart'
@@ -587,6 +589,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i72.CancelRide>(
       () => _i72.CancelRide(gh<_i118.RideRepository>()),
     );
+    gh.lazySingleton<_i251.CancellationQuote>(
+      () => _i251.CancellationQuote(gh<_i118.RideRepository>()),
+    );
     gh.lazySingleton<_i100.DeclineRide>(
       () => _i100.DeclineRide(gh<_i118.RideRepository>()),
     );
@@ -650,15 +655,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i180.AdminAction>(),
       ),
     );
-    gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
-      (rideId, _) => _i893.RideTrackingBloc(
-        gh<_i263.WatchRide>(),
-        gh<_i72.CancelRide>(),
-        rideId,
-        gh<_i787.WatchDriverLocation>(),
-        gh<_i569.RideTrackingClock>(),
-      ),
-    );
     gh.factoryParam<_i1059.DriverTripBloc, String, dynamic>(
       (rideId, _) => _i1059.DriverTripBloc(
         rideId,
@@ -710,6 +706,16 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i969.RecentPlacesCubit>(
       () => _i969.RecentPlacesCubit(gh<_i811.GetRideHistory>()),
+    );
+    gh.factoryParam<_i893.RideTrackingBloc, String, dynamic>(
+      (rideId, _) => _i893.RideTrackingBloc(
+        gh<_i263.WatchRide>(),
+        gh<_i72.CancelRide>(),
+        rideId,
+        gh<_i787.WatchDriverLocation>(),
+        gh<_i569.RideTrackingClock>(),
+        gh<_i251.CancellationQuote>(),
+      ),
     );
     gh.factoryParam<_i661.RatingCubit, String, _i176.RatingSide>(
       (rideId, side) => _i661.RatingCubit(

@@ -31,6 +31,7 @@ abstract class RideRepository {
     RideDraft draft,
     VehicleType vehicleType,
   );
+  Future<Either<Failure, int>> cancellationQuote(String id);
   Future<Either<Failure, CancelRideResult>> cancelRide(String id);
   Future<Either<Failure, Unit>> updateStatus(String rideId, RideStatus status);
   Future<Either<Failure, Unit>> acceptRide(String id);

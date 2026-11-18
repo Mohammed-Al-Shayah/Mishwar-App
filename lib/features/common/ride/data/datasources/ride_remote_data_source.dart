@@ -70,6 +70,17 @@ class RideRemoteDataSource {
     return result.data['rideId'] as String;
   }
 
+  Future<int> cancellationQuote(String id) async {
+    final result = await _functions
+        .httpsCallable('cancellationQuote')
+        .call<Map<String, dynamic>>({'rideId': id});
+    final fee = result.data['fee'];
+    if (fee is! num || !fee.isFinite || fee < 0) {
+      throw const FormatException('Invalid fee');
+    }
+    return (fee * 1000).round();
+  }
+
   Future<bool> cancel(String id) async {
     final result = await _functions
         .httpsCallable('cancelRide')

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presen
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart';
 import 'package:mishwar/features/driver/trip/presentation/driver_trip_screen.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../presence/driver_home_screen_test.dart'
     show MockPresenceBloc, map, size, wrap;
 import 'driver_trip_bloc_test.dart';
@@ -23,6 +25,42 @@ void main() {
   setUpAll(() => registerFallbackValue(const Started()));
   for (final language in ['ar', 'en']) {
     final l10n = language == 'ar' ? AppLocalizationsAr() : AppLocalizationsEn();
+    testWidgets('paid waiting $language scale 1.3', (tester) async {
+      size(tester);
+      final bloc = MockTripBloc();
+      whenListen(
+        bloc,
+        const Stream<DriverTripState>.empty(),
+        initialState: DriverTripState(
+          ride: tripRide(RideStatus.arrived),
+          phase: TripPhase.waiting,
+          waitingElapsed: const Duration(seconds: 241),
+        ),
+      );
+      final presenceBloc = MockPresenceBloc();
+      whenListen(
+        presenceBloc,
+        const Stream<presence.DriverPresenceState>.empty(),
+        initialState: const presence.DriverPresenceState(),
+      );
+      await tester.pumpWidget(
+        wrap(
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<DriverTripBloc>.value(value: bloc),
+              BlocProvider<presence.DriverPresenceBloc>.value(
+                value: presenceBloc,
+              ),
+            ],
+            child: const DriverTripScreen(mapBuilder: map),
+          ),
+          language: language,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.textContaining('JD 0.10'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
     for (final phase in [
       TripPhase.toPickup,
       TripPhase.waiting,

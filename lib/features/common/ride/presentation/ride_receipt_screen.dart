@@ -10,7 +10,9 @@ import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/mw_star_rating.dart';
 import 'package:mishwar/core/widgets/trip_stops.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
 import 'package:mishwar/features/common/ride/presentation/history_widgets.dart';
 import 'package:mishwar/features/common/ride/presentation/promo_discount_row.dart';
 import 'package:mishwar/features/common/ride/presentation/ride_receipt_cubit.dart';
@@ -128,13 +130,21 @@ class RideReceiptContent extends StatelessWidget {
         if (ride.status == RideStatus.noDrivers)
           Text(context.l10n.historyNoDrivers, style: AppTextStyles.body)
         else ...[
-          if (ride.promoApplied != true || ride.discountFils == 0)
+          if (ride.status != RideStatus.cancelled)
             _fareRow(
               context,
               context.l10n.receiptFare,
-              ridePrice(context, ride),
+              context.l10n.fareJod(
+                Money(
+                  (ride.fareFinalFils ?? ride.fareEstimatedFils) -
+                      ride.fareWaitingFeeFils -
+                      ride.farePreviousBalanceFils +
+                      (ride.promoApplied == true ? ride.discountFils : 0),
+                ).toJodString(),
+              ),
             ),
           PromoDiscountRow(ride: ride),
+          FareFeeRows(ride: ride),
           _fareRow(
             context,
             context.l10n.receiptPayment,

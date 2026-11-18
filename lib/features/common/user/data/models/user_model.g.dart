@@ -22,6 +22,7 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   photoUrl: json['photoUrl'] as String?,
   rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
   ratingCount: (json['ratingCount'] as num?)?.toInt() ?? 0,
+  balanceDueFils: (json['balanceDueFils'] as num?)?.toInt() ?? 0,
   fcmToken: json['fcmToken'] as String?,
 );
 

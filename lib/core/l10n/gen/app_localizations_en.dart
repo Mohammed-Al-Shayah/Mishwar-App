@@ -1333,4 +1333,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serviceAirportDescription => 'Rides to and from the airport';
+
+  @override
+  String cancellationFeeWarning(String amount) {
+    return 'Cancelling now costs $amount, added to your next ride.';
+  }
+
+  @override
+  String freeWaitingCountdown(String time) {
+    return 'Free waiting $time';
+  }
+
+  @override
+  String waitingFeeRate(String amount) {
+    return 'Waiting fee $amount per minute';
+  }
+
+  @override
+  String waitingFeeRunning(String amount) {
+    return 'Waiting fee: $amount';
+  }
+
+  @override
+  String get feeWaiting => 'Waiting fee';
+
+  @override
+  String get feePreviousBalance => 'Previous cancellation fees';
+
+  @override
+  String get feeCancellation => 'Cancellation fee';
+
+  @override
+  String cancellationBalanceInfo(String amount) {
+    return 'You owe $amount in cancellation fees, added to your next ride.';
+  }
 }

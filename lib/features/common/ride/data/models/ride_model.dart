@@ -46,6 +46,9 @@ abstract class RideFareModel with _$RideFareModel {
     required double estimated,
     required String currency,
     @Default(0) double discount,
+    @Default(0) double cancellationFee,
+    @Default(0) double waitingFee,
+    @Default(0) double previousBalance,
     @JsonKey(name: 'final') double? finalAmount,
   }) = _RideFareModel;
   factory RideFareModel.fromJson(Map<String, dynamic> json) =>
@@ -88,7 +91,12 @@ abstract class RideModel with _$RideModel {
   factory RideModel.fromJson(Map<String, dynamic> json) =>
       _$RideModelFromJson(json);
   RideEntity toEntity() {
-    if (!fare.discount.isFinite ||
+    if ([
+          fare.cancellationFee,
+          fare.waitingFee,
+          fare.previousBalance,
+        ].any((value) => !value.isFinite || value < 0) ||
+        !fare.discount.isFinite ||
         fare.discount < 0 ||
         fare.currency != 'JOD' ||
         !fare.estimated.isFinite ||
@@ -101,6 +109,9 @@ abstract class RideModel with _$RideModel {
       scheduledFor: scheduledFor,
       promoCode: promo?.code,
       promoApplied: promo?.applied,
+      fareCancellationFeeFils: (fare.cancellationFee * 1000).round(),
+      fareWaitingFeeFils: (fare.waitingFee * 1000).round(),
+      farePreviousBalanceFils: (fare.previousBalance * 1000).round(),
       discountFils: (fare.discount * 1000).round(),
       driverRating: driverRating?.stars,
       riderRating: riderRating?.stars,

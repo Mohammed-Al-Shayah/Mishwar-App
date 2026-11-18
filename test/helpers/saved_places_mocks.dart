@@ -3,12 +3,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mishwar/app/di/injection.dart';
 import 'package:mishwar/features/common/app_config/presentation/app_config_cubit.dart';
+import 'package:mishwar/features/common/auth/presentation/session/session_cubit.dart';
+import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
 import 'package:mishwar/features/common/saved_places/domain/saved_place.dart';
 import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/rider/home/presentation/cubit/recent_places_cubit.dart';
 import 'package:mocktail/mocktail.dart';
+
+import 'rating_mocks.dart';
 
 class MockAppConfigCubit extends MockCubit<AppConfigState>
     implements AppConfigCubit {}
@@ -68,14 +72,26 @@ MockRecentPlacesCubit recentCubit({List<PlaceDetails> places = const []}) {
   return cubit;
 }
 
-Widget savedProviders(Widget child) => MultiBlocProvider(
-  providers: [
-    BlocProvider<AppConfigCubit>(create: (_) => appConfigCubit()),
-    BlocProvider<SavedPlacesCubit>(create: (_) => savedCubit()),
-    BlocProvider<RecentPlacesCubit>(create: (_) => recentCubit()),
-  ],
-  child: child,
-);
+Widget savedProviders(Widget child, {int balanceDueFils = 0}) =>
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<SessionCubit>(
+          create: (_) {
+            final session = readyRatingSession();
+            when(() => session.state).thenReturn(
+              SessionReady(
+                ratingSession().user.copyWith(balanceDueFils: balanceDueFils),
+              ),
+            );
+            return session;
+          },
+        ),
+        BlocProvider<AppConfigCubit>(create: (_) => appConfigCubit()),
+        BlocProvider<SavedPlacesCubit>(create: (_) => savedCubit()),
+        BlocProvider<RecentPlacesCubit>(create: (_) => recentCubit()),
+      ],
+      child: child,
+    );
 
 void registerSavedPlaces() {
   getIt

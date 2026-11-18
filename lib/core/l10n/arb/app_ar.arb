@@ -720,5 +720,48 @@
   "serviceRideDescription": "اطلب مشواراً الآن",
   "serviceScheduleDescription": "اختر موعد مشوارك",
   "serviceParcelDescription": "أرسل طرداً",
-  "serviceAirportDescription": "مشاوير من وإلى المطار"
+  "serviceAirportDescription": "مشاوير من وإلى المطار",
+  "cancellationFeeWarning": "إذا لغيت هلأ رح يترتب عليك رسوم إلغاء {amount} بتنضاف على مشوارك الجاي",
+  "freeWaitingCountdown": "انتظار مجاني {time}",
+  "waitingFeeRate": "رسوم انتظار {amount} للدقيقة",
+  "waitingFeeRunning": "رسوم انتظار: {amount}",
+  "feeWaiting": "رسوم انتظار",
+  "feePreviousBalance": "رسوم إلغاء سابقة",
+  "feeCancellation": "رسوم الإلغاء",
+  "cancellationBalanceInfo": "عليك {amount} رسوم إلغاء، بتنضاف على مشوارك الجاي",
+  "@cancellationFeeWarning": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@freeWaitingCountdown": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@waitingFeeRate": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@waitingFeeRunning": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@cancellationBalanceInfo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -2557,6 +2557,54 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'مشاوير من وإلى المطار'**
   String get serviceAirportDescription;
+
+  /// No description provided for @cancellationFeeWarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'إذا لغيت هلأ رح يترتب عليك رسوم إلغاء {amount} بتنضاف على مشوارك الجاي'**
+  String cancellationFeeWarning(String amount);
+
+  /// No description provided for @freeWaitingCountdown.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتظار مجاني {time}'**
+  String freeWaitingCountdown(String time);
+
+  /// No description provided for @waitingFeeRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم انتظار {amount} للدقيقة'**
+  String waitingFeeRate(String amount);
+
+  /// No description provided for @waitingFeeRunning.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم انتظار: {amount}'**
+  String waitingFeeRunning(String amount);
+
+  /// No description provided for @feeWaiting.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم انتظار'**
+  String get feeWaiting;
+
+  /// No description provided for @feePreviousBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم إلغاء سابقة'**
+  String get feePreviousBalance;
+
+  /// No description provided for @feeCancellation.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم الإلغاء'**
+  String get feeCancellation;
+
+  /// No description provided for @cancellationBalanceInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'عليك {amount} رسوم إلغاء، بتنضاف على مشوارك الجاي'**
+  String cancellationBalanceInfo(String amount);
 }
 
 class _AppLocalizationsDelegate

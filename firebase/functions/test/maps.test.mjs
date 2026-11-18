@@ -78,7 +78,7 @@ test('all deployed callables require auth',async(context)=>{
  context.mock.method(globalThis,'fetch',()=>assert.fail('network called'));
  const callables=Object.entries(deployed).filter(([,value])=>value.__endpoint?.callableTrigger);
  assert.deepEqual(callables.map(([name])=>name).sort(),[
-  'acceptRide','adminCancelRide','cancelRide','declineRide','deleteAccount','deleteBanner','getFareEstimates','getRoute','ping','placeDetails','placesAutocomplete','rateRide','requestRide','reviewDriver','scheduleRide','skipRating','switchRole','updatePricing','updateRideStatus','updateServices','upsertBanner','validatePromo',
+  'acceptRide','adminCancelRide','cancelRide','cancellationQuote','declineRide','deleteAccount','deleteBanner','getFareEstimates','getRoute','ping','placeDetails','placesAutocomplete','rateRide','requestRide','reviewDriver','scheduleRide','skipRating','switchRole','updatePricing','updateRideStatus','updateServices','upsertBanner','validatePromo',
  ]);
  for(const [name,callable] of callables) {
   await assert.rejects(()=>callable.run({data:{}}),(error)=>{

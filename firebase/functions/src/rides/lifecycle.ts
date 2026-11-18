@@ -5,6 +5,7 @@ import { authenticated } from '../lib/maps.js';
 import * as v from '../lib/validate.js';
 import { computeFare, DEFAULT_PRICING, parsePricing, roundFare, type VehicleType } from '../pricing.js';
 import { readPromo } from '../promos/handlers.js';
+import { earningsDay, parseFees, waitingFeeFils } from './fees.js';
 import { rideId } from './handlers.js';
 
 function invalid(): never {
@@ -47,6 +48,10 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     }
     const userRef = db.doc(`users/${ride.riderId}`);
     const user = (await tx.get(userRef)).data();
+    const settings = parseFees((await tx.get(db.doc('config/app'))).data());
+    const waitingFils = waitingFeeFils(ride.arrivedAt, ride.startedAt, settings);
+    const balanceFils = user?.balanceDueFils ?? 0;
+    if (!Number.isSafeInteger(balanceFils) || balanceFils < 0) invalid();
     const pricingDocument = await tx.get(db.doc('config/pricing'));
     const pricing = pricingDocument.exists ? parsePricing(pricingDocument.data()) : DEFAULT_PRICING;
     const seconds = (time.toMillis() - (ride.startedAt?.toMillis() ?? NaN)) / 1000;
@@ -58,8 +63,8 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     const checked = ride.promo ? await readPromo(db, tx, ride.promo.code, ride.riderId, final, ride.createdAt) : undefined;
     const discount = checked?.result.ok ? checked.result.discountJod : 0;
     final = roundFare(Math.max(0, (Math.round(final * 1000) - Math.round(discount * 1000)) / 1000));
-    const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Amman',
-      year: 'numeric', month: '2-digit', day: '2-digit' }).format(time.toDate());
+    final = (Math.round(final * 1000) + waitingFils + balanceFils) / 1000;
+    const day = earningsDay(time);
     const earningsRef = db.doc(`drivers/${uid}/earnings/${day}`);
     const earnings = (await tx.get(earningsRef)).data();
     if (checked?.result.ok) {
@@ -69,12 +74,12 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     // Earnings use the discounted fare for now; platform absorption comes with future payout logic.
     // Add integer fils, then persist a two-decimal JOD amount.
     const totalFils = Math.round((earnings?.total ?? 0) * 1000) + Math.round(final * 1000);
-    tx.update(ref, { status, completedAt: time, fare: { ...ride.fare, final, ...(ride.promo ? { discount } : {}) },
+    tx.update(ref, { status, completedAt: time, fare: { ...ride.fare, final, waitingFee: waitingFils / 1000, previousBalance: balanceFils / 1000, ...(ride.promo ? { discount } : {}) },
       ...(ride.promo ? { promo: { ...ride.promo, applied: checked!.result.ok } } : {}) });
-    tx.update(userRef, { pendingRatingRideId: id,
+    tx.update(userRef, { pendingRatingRideId: id, balanceDueFils: 0,
       ...(user?.activeRideId === id ? { activeRideId: FieldValue.delete() } : {}) });
     tx.update(driverRef, { currentRideId: null, pendingRatingRideId: id });
-    tx.set(earningsRef, { total: Number((totalFils / 1000).toFixed(2)), trips: (earnings?.trips ?? 0) + 1, updatedAt: time });
+    tx.set(earningsRef, { ...earnings, total: Number((totalFils / 1000).toFixed(2)), trips: (earnings?.trips ?? 0) + 1, updatedAt: time });
   });
   return { ok: true };
 }

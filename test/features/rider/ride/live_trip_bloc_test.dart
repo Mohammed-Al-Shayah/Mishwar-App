@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -7,12 +8,14 @@ import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/driver_live_location.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/cancellation_quote.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../helpers/ride_mocks.dart';
 import '../../common/ride/ride_data_test.dart' show rideJson;
 
@@ -41,6 +44,7 @@ void main() {
         'ride',
         WatchDriverLocation(repository),
         clock,
+        CancellationQuote(repository),
       );
       final base = RideModel.fromJson(rideJson()).copyWith(
         driverId: 'driver',

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ import 'package:mishwar/core/widgets/map/mw_map_markers.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
 import 'package:mishwar/features/driver/presence/presentation/bloc/driver_presence_bloc.dart'
     as presence;
 import 'package:mishwar/features/driver/trip/presentation/bloc/driver_trip_bloc.dart';
@@ -311,6 +313,7 @@ class _TripViewState extends State<_TripView> {
                       style: AppTextStyles.tabular(AppTextStyles.largeTitle),
                     ),
                   ),
+                  FareFeeRows(ride: ride),
                   if (ride.promoApplied == true && ride.discountFils > 0)
                     Text(
                       context.l10n.promoCashFootnote(
@@ -391,7 +394,14 @@ class _TripViewState extends State<_TripView> {
                   SizedBox(height: AppSpacing.md),
                   if (state.phase == TripPhase.waiting)
                     Text(
-                      context.l10n.tripWaitingTime(time),
+                      elapsed.inMilliseconds > WaitingDisplay.freeSeconds * 1000
+                          ? context.l10n.waitingFeeRunning(
+                              feeAmount(
+                                context,
+                                WaitingDisplay.feeFils(elapsed),
+                              ),
+                            )
+                          : context.l10n.tripWaitingTime(time),
                       style: AppTextStyles.tabular(AppTextStyles.largeTitle),
                     ),
                   if (state.phase == TripPhase.onTrip) ...[

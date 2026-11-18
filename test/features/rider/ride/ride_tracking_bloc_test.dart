@@ -8,6 +8,7 @@ import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/cancel_ride_result.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/cancellation_quote.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
@@ -46,6 +47,7 @@ void main() {
     'ride',
     WatchDriverLocation(repository),
     RideTrackingClock(),
+    CancellationQuote(repository),
   );
   blocTest<RideTrackingBloc, RideTrackingState>(
     'searching to no drivers and retry retains draft',

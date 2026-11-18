@@ -7,6 +7,8 @@ import { normalizePromo, previewPromo } from '../promos/handlers.js';
 import { type VehicleType } from '../pricing.js';
 import { dispatchRide, offeredDriver, offerIsLive, type MatchingDeps } from './matching.js';
 
+import { cancellationFeeFils, defaultFees, earningsDay, type FeeConfig } from './fees.js';
+
 export const activeStatuses = ['searching', 'accepted', 'arriving', 'arrived', 'in_progress'];
 const cancellable = ['searching', 'accepted', 'arriving', 'arrived'];
 function place(value: unknown) {
@@ -59,8 +61,9 @@ export function rideId(value: unknown) {
   if (id.includes('/')) v.invalid();
   return id;
 }
-export async function cancelRideHandler(request: CallableRequest, db: Firestore, deps?: MatchingDeps) {
+export async function cancelRideHandler(request: CallableRequest, db: Firestore, deps?: MatchingDeps, config: () => Promise<FeeConfig> = async () => defaultFees) {
   authenticated(request);
+  const settings = await config();
   const ref = db.doc(`rides/${rideId(request.data)}`);
   const redispatched = await db.runTransaction(async (tx) => {
     const ride = await tx.get(ref);
@@ -84,7 +87,7 @@ export async function cancelRideHandler(request: CallableRequest, db: Firestore,
     }
     if (data.riderId !== uid) throw new HttpsError('permission-denied', 'Ride participant required.');
     if (data.status === 'scheduled' || (data.status === 'cancelled' && data.scheduledFor && data.cancelledBy === 'rider')) {
-      if (data.status === 'scheduled') tx.update(ref, { status: 'cancelled', cancelledBy: 'rider', cancelledAt: FieldValue.serverTimestamp() });
+      if (data.status === 'scheduled') tx.update(ref, { fare: { ...data.fare, cancellationFee: 0 }, status: 'cancelled', cancelledBy: 'rider', cancelledAt: FieldValue.serverTimestamp() });
       return false;
     }
     const userRef = db.doc(`users/${data.riderId}`);
@@ -92,7 +95,20 @@ export async function cancelRideHandler(request: CallableRequest, db: Firestore,
     if (data.status !== 'cancelled' && !cancellable.includes(data.status)) throw new HttpsError('failed-precondition', 'Ride cannot be cancelled.');
     const offered = await offeredDriver(db, tx, data);
     const assigned = data.driverId ? await tx.get(db.doc(`drivers/${data.driverId}`)) : undefined;
-    if (data.status !== 'cancelled') tx.update(ref, { status: 'cancelled', cancelledBy: 'rider', cancelledAt: FieldValue.serverTimestamp(),
+    const time = deps?.now() ?? Timestamp.now();
+    const feeFils = cancellationFeeFils(data as Parameters<typeof cancellationFeeFils>[0], time, settings);
+    const earningsRef = feeFils > 0 && data.driverId ? db.doc('drivers/' + data.driverId + '/earnings/' + earningsDay(time)) : undefined;
+    const earnings = earningsRef ? (await tx.get(earningsRef)).data() : undefined;
+    if (feeFils > 0) {
+      const balance = user.data()?.balanceDueFils ?? 0;
+      if (!Number.isSafeInteger(balance) || balance < 0 || !Number.isSafeInteger(balance + feeFils)) throw new HttpsError('internal', 'Invalid balance.');
+      tx.update(userRef, { balanceDueFils: (user.data()?.balanceDueFils ?? 0) + feeFils });
+      if (earningsRef) tx.set(earningsRef, { ...earnings,
+        total: (Math.round((earnings?.total ?? 0) * 1000) + feeFils) / 1000,
+        cancellationFees: (Math.round((earnings?.cancellationFees ?? 0) * 1000) + feeFils) / 1000,
+        trips: earnings?.trips ?? 0, updatedAt: time });
+    }
+    if (data.status !== 'cancelled') tx.update(ref, { status: 'cancelled', cancelledBy: 'rider', cancelledAt: time, fare: { ...data.fare, cancellationFee: feeFils / 1000 },
       offeredTo: null, offerExpiresAt: null, offerDistanceMeters: null });
     if (offered?.data()?.offer?.rideId === ref.id) tx.update(offered.ref, { offer: null });
     if (assigned?.data()?.currentRideId === ref.id) tx.update(assigned.ref, { currentRideId: null });
@@ -131,4 +147,13 @@ export async function expireSearchingRidesHandler(db: Firestore, now = Timestamp
       }
     }
   }
+}
+
+export async function cancellationQuoteHandler(request: CallableRequest, db: Firestore,
+  config: () => Promise<FeeConfig> = async () => defaultFees, now = () => Timestamp.now()) {
+  authenticated(request);
+  const ride = (await db.doc('rides/' + rideId(request.data)).get()).data();
+  if (!ride) throw new HttpsError('not-found', 'Ride not found.');
+  if (ride.riderId !== request.auth!.uid) throw new HttpsError('permission-denied', 'Rider required.');
+  return { fee: cancellationFeeFils(ride as Parameters<typeof cancellationFeeFils>[0], now(), await config()) / 1000 };
 }

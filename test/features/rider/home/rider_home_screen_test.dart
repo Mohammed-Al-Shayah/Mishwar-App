@@ -105,6 +105,10 @@ void main() {
                       RiderHomeScreen(
                         mapBuilder: (_) => const MwMapPlaceholder(),
                       ),
+                      balanceDueFils:
+                          permission == LocationPermissionStatus.deniedForever
+                          ? 0
+                          : 500,
                     ),
                   ),
                 ),
@@ -114,6 +118,12 @@ void main() {
             final context = tester.element(find.byType(RiderHomeScreen));
             final l10n = AppLocalizations.of(context)!;
             expect(find.text(l10n.whereTo), findsNWidgets(2));
+            expect(
+              find.textContaining('JD 0.50'),
+              permission == LocationPermissionStatus.deniedForever
+                  ? findsNothing
+                  : findsOneWidget,
+            );
             expect(find.byType(GoogleMap), findsNothing);
             final map = tester.widget<MwMap>(find.byType(MwMap));
             final sheetRect = tester.getRect(

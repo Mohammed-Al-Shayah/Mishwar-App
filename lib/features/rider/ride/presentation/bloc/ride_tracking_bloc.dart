@@ -10,6 +10,7 @@ import 'package:mishwar/features/common/ride/domain/entities/driver_live_locatio
 import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/cancel_ride.dart';
+import 'package:mishwar/features/common/ride/domain/usecases/cancellation_quote.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_driver_location.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/watch_ride.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_clock.dart';
@@ -20,6 +21,11 @@ sealed class RideTrackingEvent {
 
 class RideTrackingStarted extends RideTrackingEvent {
   const RideTrackingStarted();
+}
+
+class _QuoteRequested extends RideTrackingEvent {
+  const _QuoteRequested(this.result);
+  final Completer<int?> result;
 }
 
 class RideCancelRequested extends RideTrackingEvent {
@@ -69,6 +75,7 @@ class RideTrackingState extends Equatable {
     this.ride,
     this.failure,
     this.isCancelling = false,
+    this.isQuoting = false,
     this.subtitleIndex = 0,
     this.navigation,
     this.driverLocation,
@@ -85,6 +92,7 @@ class RideTrackingState extends Equatable {
     RideEntity? ride,
     Failure? failure,
     bool? isCancelling,
+    bool? isQuoting,
     int? subtitleIndex,
     RideNavigation? navigation,
     DriverLiveLocation? driverLocation,
@@ -96,6 +104,7 @@ class RideTrackingState extends Equatable {
     ride: ride ?? this.ride,
     failure: failure,
     isCancelling: isCancelling ?? this.isCancelling,
+    isQuoting: isQuoting ?? this.isQuoting,
     subtitleIndex: subtitleIndex ?? this.subtitleIndex,
     navigation: navigation,
     driverLocation: clearLocation
@@ -108,6 +117,7 @@ class RideTrackingState extends Equatable {
   final RideEntity? ride;
   final Failure? failure;
   final bool isCancelling;
+  final bool isQuoting;
   final int subtitleIndex;
   final RideNavigation? navigation;
   RideDraft? get retryDraft => ride?.draft;
@@ -116,6 +126,7 @@ class RideTrackingState extends Equatable {
     ride,
     failure,
     isCancelling,
+    isQuoting,
     subtitleIndex,
     navigation,
     driverLocation,
@@ -133,7 +144,25 @@ class RideTrackingBloc extends Bloc<RideTrackingEvent, RideTrackingState> {
     @factoryParam this.rideId,
     this._watchDriverLocation,
     this._clockSource,
+    this._cancellationQuote,
   ) : super(const RideTrackingState()) {
+    on<_QuoteRequested>((event, emit) async {
+      if (state.isQuoting || state.isCancelling) {
+        event.result.complete();
+        return;
+      }
+      emit(state.copyWith(isQuoting: true));
+      final result = await _cancellationQuote(rideId);
+      if (!isClosed) {
+        emit(
+          state.copyWith(
+            isQuoting: false,
+            failure: result.getLeft().toNullable(),
+          ),
+        );
+      }
+      event.result.complete(isClosed ? null : result.getRight().toNullable());
+    });
     on<RideTrackingStarted>((event, emit) async {
       await _subscription?.cancel();
       if (isClosed) return;
@@ -316,6 +345,13 @@ class RideTrackingBloc extends Bloc<RideTrackingEvent, RideTrackingState> {
             1,
             (distanceMeters(location.point, ride.pickup.location) / 400).ceil(),
           );
+  }
+
+  final CancellationQuote _cancellationQuote;
+  Future<int?> quoteCancellation() {
+    final result = Completer<int?>();
+    add(_QuoteRequested(result));
+    return result.future;
   }
 
   final RideTrackingClock _clockSource;

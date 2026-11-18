@@ -22,6 +22,7 @@ abstract class UserModel with _$UserModel {
     String? photoUrl,
     @Default(5.0) double rating,
     @Default(0) int ratingCount,
+    @JsonKey(includeToJson: false) @Default(0) int balanceDueFils,
     String? fcmToken,
   }) = _UserModel;
   const UserModel._();
@@ -35,6 +36,7 @@ abstract class UserModel with _$UserModel {
   factory UserModel.fromEntity(UserEntity entity) => UserModel(
     id: entity.id,
     pendingRatingRideId: entity.pendingRatingRideId,
+    balanceDueFils: entity.balanceDueFils,
     name: entity.name,
     phone: entity.phone,
     role: entity.role,
@@ -46,6 +48,7 @@ abstract class UserModel with _$UserModel {
   UserEntity toEntity() => UserEntity(
     id: id,
     pendingRatingRideId: pendingRatingRideId,
+    balanceDueFils: balanceDueFils,
     name: name,
     phone: phone,
     role: role,

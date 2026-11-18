@@ -713,5 +713,48 @@
   "serviceRideDescription": "Request a ride now",
   "serviceScheduleDescription": "Choose your departure",
   "serviceParcelDescription": "Send a package",
-  "serviceAirportDescription": "Rides to and from the airport"
+  "serviceAirportDescription": "Rides to and from the airport",
+  "cancellationFeeWarning": "Cancelling now costs {amount}, added to your next ride.",
+  "freeWaitingCountdown": "Free waiting {time}",
+  "waitingFeeRate": "Waiting fee {amount} per minute",
+  "waitingFeeRunning": "Waiting fee: {amount}",
+  "feeWaiting": "Waiting fee",
+  "feePreviousBalance": "Previous cancellation fees",
+  "feeCancellation": "Cancellation fee",
+  "cancellationBalanceInfo": "You owe {amount} in cancellation fees, added to your next ride.",
+  "@cancellationFeeWarning": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@freeWaitingCountdown": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@waitingFeeRate": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@waitingFeeRunning": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@cancellationBalanceInfo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

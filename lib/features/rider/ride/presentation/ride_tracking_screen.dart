@@ -19,6 +19,7 @@ import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/trip_stops.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
+import 'package:mishwar/features/common/ride/presentation/fee_widgets.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 import 'package:mishwar/features/rider/ride/presentation/bloc/ride_tracking_bloc.dart';
 import 'package:mishwar/features/rider/ride/presentation/rider_trip_map.dart';
@@ -85,6 +86,8 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
     VehicleType.van => context.l10n.vehicleVan,
   };
   Future<void> _cancel(BuildContext sheetContext) async {
+    final fee = await context.read<RideTrackingBloc>().quoteCancellation();
+    if (!mounted || !sheetContext.mounted || fee == null) return;
     final searching =
         context.read<RideTrackingBloc>().state.ride?.status ==
         RideStatus.searching;
@@ -93,31 +96,38 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
       builder: (context) => SafeArea(
         child: Padding(
           padding: EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                searching
-                    ? context.l10n.rideCancelTitle
-                    : context.l10n.riderCancelConfirm,
-                style: AppTextStyles.title1,
-              ),
-              SizedBox(height: AppSpacing.xl),
-              MwPrimaryButton(
-                label: searching
-                    ? context.l10n.rideCancel
-                    : context.l10n.riderCancel,
-                onPressed: () => Navigator.pop(context, true),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  searching
-                      ? context.l10n.rideKeepSearching
-                      : context.l10n.riderContinue,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  fee > 0
+                      ? context.l10n.cancellationFeeWarning(
+                          feeAmount(context, fee),
+                        )
+                      : searching
+                      ? context.l10n.rideCancelTitle
+                      : context.l10n.riderCancelConfirm,
+                  style: AppTextStyles.title1,
                 ),
-              ),
-            ],
+                SizedBox(height: AppSpacing.xl),
+                MwPrimaryButton(
+                  label: searching
+                      ? context.l10n.rideCancel
+                      : context.l10n.riderCancel,
+                  onPressed: () => Navigator.pop(context, true),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text(
+                    searching
+                        ? context.l10n.rideKeepSearching
+                        : context.l10n.riderContinue,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -257,16 +267,9 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                 ),
                               if (ride.status == RideStatus.arrived &&
                                   state.waitingSince != null)
-                                Text(
-                                  context.l10n.riderWaiting(
-                                    ((state.now ?? DateTime.now())
-                                                .difference(state.waitingSince!)
-                                                .inSeconds /
-                                            60)
-                                        .floor()
-                                        .clamp(0, 9999),
-                                  ),
-                                  style: AppTextStyles.footnote,
+                                WaitingFeeNotice(
+                                  arrivedAt: state.waitingSince!,
+                                  now: state.now ?? DateTime.now(),
                                 ),
                               if (ride.status == RideStatus.inProgress)
                                 Text(
@@ -380,10 +383,11 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                 RideStatus.arrived,
                               ].contains(ride.status))
                                 TextButton(
-                                  onPressed: state.isCancelling
+                                  onPressed:
+                                      (state.isCancelling || state.isQuoting)
                                       ? null
                                       : () => _cancel(context),
-                                  child: state.isCancelling
+                                  child: (state.isCancelling || state.isQuoting)
                                       ? SizedBox.square(
                                           dimension: AppSizes.icon,
                                           child: CircularProgressIndicator(

@@ -79,6 +79,6 @@ test('scheduled cancellation has no fee, preserves pointer and is idempotent; ma
   await dispatchRide(db, 'soon', { now, enqueue: () => { throw Error('no matching'); }, notify: () => { throw Error('no push'); } });
   for (let i = 0; i < 2; i++) await cancelRideHandler({ auth: { uid: 'rider' }, data: { rideId: 'soon' } }, db);
   const ride = db.records.get('rides/soon'); assert.equal(ride.status, 'cancelled'); assert.equal(ride.cancelledBy, 'rider');
-  assert.equal(ride.fare?.cancellationFee, undefined); assert.equal(db.records.get('users/rider').activeRideId, 'current');
+  assert.equal(ride.fare?.cancellationFee, 0); assert.equal(db.records.get('users/rider').activeRideId, 'current');
   const d = deps(); await dispatchScheduledRidesHandler(db, d); assert.equal(d.notifications.length, 0);
 });
