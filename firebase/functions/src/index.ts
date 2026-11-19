@@ -1,4 +1,5 @@
-﻿import { initializeApp } from 'firebase-admin/app';
+import { callableOptions } from './lib/callable.js';
+import { initializeApp } from 'firebase-admin/app';
 import { onCall } from 'firebase-functions/v2/https';
 import { authenticated } from './lib/maps.js';
 
@@ -6,7 +7,7 @@ initializeApp();
 
 export { updateAppSettings, upsertPromo, setPromoActive, reviewDriver, updatePricing, adminCancelRide, upsertBanner, deleteBanner, updateServices } from './admin/index.js';
 
-export const ping = onCall({ region: 'europe-west1' }, (request) => {
+export const ping = onCall(callableOptions(), (request) => {
   authenticated(request);
   return { ok: true, time: new Date().toISOString() };
 });
@@ -24,3 +25,5 @@ export { createShareLink, sharedTrip } from './safety/index.js';
 export { createSupportTicket, replySupportTicket, setSupportTicketStatus, onSupportMessageCreated } from './support/index.js';
 
 export { onRideStatsWritten } from './admin/stats.js';
+
+export { protectOtpSms } from './auth/index.js';

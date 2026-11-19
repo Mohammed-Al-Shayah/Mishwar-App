@@ -22,7 +22,7 @@ enum AuthFailureCode {
     'invalid-phone-number' => invalidPhone,
     'invalid-verification-code' => invalidCode,
     'session-expired' => codeExpired,
-    'too-many-requests' => tooManyRequests,
+    'too-many-requests' || 'resource-exhausted' => tooManyRequests,
     'network-request-failed' => network,
     'quota-exceeded' => quotaExceeded,
     _ => unknown,

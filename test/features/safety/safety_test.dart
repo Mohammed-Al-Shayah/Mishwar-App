@@ -5,7 +5,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/failures.dart';
-import 'package:mishwar/core/validation/jordan_phone.dart';
+import 'package:mishwar/core/validation/phone_numbers.dart';
 import 'package:mishwar/features/common/location/domain/usecases/current_position.dart';
 import 'package:mishwar/features/common/safety/data/safety_remote_data_source.dart';
 import 'package:mishwar/features/common/safety/data/safety_repository_impl.dart';
@@ -89,15 +89,14 @@ void main() {
   test(
     'Jordanian validator accepts national inputs and rejects malformed input',
     () {
-      expect(normalizeJordanPhone('0781234567'), contact.phone);
-      expect(normalizeJordanPhone('781234567'), contact.phone);
+      expect(normalizePhone('0781234567'), contact.phone);
+      expect(normalizePhone('781234567'), contact.phone);
       for (final phone in [
-        '+962781234567',
         '0781234567\n',
         '071',
         '0181234567',
       ]) {
-        expect(normalizeJordanPhone(phone), isNull);
+        expect(normalizePhone(phone), isNull);
       }
     },
   );

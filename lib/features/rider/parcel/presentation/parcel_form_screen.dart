@@ -10,6 +10,8 @@ import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/validation/phone_input.dart';
+import 'package:mishwar/core/validation/phone_numbers.dart';
+import 'package:mishwar/core/widgets/mw_country_chip.dart';
 import 'package:mishwar/core/widgets/mw_list_row.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/mw_text_field.dart';
@@ -43,6 +45,9 @@ class ParcelFormScreen extends StatefulWidget {
 }
 
 class _ParcelFormScreenState extends State<ParcelFormScreen> {
+  late PhoneCountry _country = PhoneCountry.fromRegion(
+    WidgetsBinding.instance.platformDispatcher.locale.countryCode,
+  );
   final _name = TextEditingController();
   final _phone = TextEditingController();
   final _description = TextEditingController();
@@ -68,7 +73,12 @@ class _ParcelFormScreenState extends State<ParcelFormScreen> {
 
   Future<void> _continue() async {
     final cubit = context.read<ParcelFormCubit>();
-    final parcel = cubit.validate(_name.text, _phone.text, _description.text);
+    final parcel = cubit.validate(
+      _name.text,
+      _phone.text,
+      _description.text,
+      country: _country,
+    );
     if (parcel == null) return;
     final pickup = await cubit.pickup();
     if (!mounted || pickup == null) return;
@@ -120,7 +130,11 @@ class _ParcelFormScreenState extends State<ParcelFormScreen> {
             textDirection: TextDirection.ltr,
             child: Row(
               children: [
-                Text(context.l10n.countryCode, style: AppTextStyles.subhead),
+                MwCountryChip(
+                  country: _country,
+                  enabled: !state.busy,
+                  onChanged: (value) => setState(() => _country = value),
+                ),
                 SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: MwTextField(
@@ -128,7 +142,7 @@ class _ParcelFormScreenState extends State<ParcelFormScreen> {
                     controller: _phone,
                     keyboardType: TextInputType.phone,
                     textDirection: TextDirection.ltr,
-                    inputFormatters: jordanPhoneFormatters(),
+                    inputFormatters: phoneFormatters(),
                     enabled: !state.busy,
                   ),
                 ),

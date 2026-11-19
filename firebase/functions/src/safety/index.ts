@@ -1,10 +1,11 @@
+import { callableOptions } from '../lib/callable.js';
 import { getFirestore } from 'firebase-admin/firestore';
 import { defineString } from 'firebase-functions/params';
 import { onCall, onRequest } from 'firebase-functions/v2/https';
 import { createShareLinkHandler, sharedTripHandler, ShareRateLimiter } from './handlers.js';
 const base = defineString('SHARE_BASE_URL', { default: 'http://127.0.0.1:5002' });
 const limiter = new ShareRateLimiter();
-export const createShareLink = onCall({ region: 'europe-west1' }, request =>
+export const createShareLink = onCall(callableOptions(), request =>
   createShareLinkHandler(request, getFirestore(), base.value()));
 export const sharedTrip = onRequest({ region: 'europe-west1', invoker: 'public' }, async (request, response) => {
   response.set('Cache-Control', 'no-store');

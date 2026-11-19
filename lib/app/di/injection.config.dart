@@ -63,12 +63,18 @@ import 'package:mishwar/features/common/app_config/presentation/app_config_cubit
     as _i910;
 import 'package:mishwar/features/common/auth/data/datasources/auth_remote_data_source.dart'
     as _i243;
+import 'package:mishwar/features/common/auth/data/datasources/otp_protection_store.dart'
+    as _i150;
 import 'package:mishwar/features/common/auth/data/repositories/auth_repository_impl.dart'
     as _i15;
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart'
     as _i858;
 import 'package:mishwar/features/common/auth/domain/repositories/auth_repository.dart'
     as _i290;
+import 'package:mishwar/features/common/auth/domain/repositories/otp_protection_repository.dart'
+    as _i70;
+import 'package:mishwar/features/common/auth/domain/usecases/get_otp_protection.dart'
+    as _i1008;
 import 'package:mishwar/features/common/auth/domain/usecases/send_otp.dart'
     as _i563;
 import 'package:mishwar/features/common/auth/domain/usecases/sign_out.dart'
@@ -386,6 +392,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i390.ThemeModeCubit>(
       () => _i390.ThemeModeCubit(gh<_i460.SharedPreferences>()),
     );
+    gh.lazySingleton<_i150.OtpProtectionStore>(
+      () => _i150.OtpProtectionStore(gh<_i460.SharedPreferences>()),
+    );
     gh.lazySingleton<_i621.AppConfigRemoteDataSource>(
       () => _i621.AppConfigRemoteDataSource(gh<_i974.FirebaseFirestore>()),
     );
@@ -525,6 +534,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i669.GetParcelPhotoUrl>(),
       ),
     );
+    gh.lazySingleton<_i290.AuthRepository>(
+      () => _i15.AuthRepositoryImpl(
+        gh<_i243.AuthRemoteDataSource>(),
+        gh<_i150.OtpProtectionStore>(),
+      ),
+    );
+    gh.lazySingleton<_i768.PushTokenSync>(
+      () => _i768.PushTokenSync(
+        gh<_i43.PushRepository>(),
+        gh<_i290.AuthRepository>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i180.AdminSignIn>(
       () => _i180.AdminSignIn(gh<_i1005.AdminRepository>()),
     );
@@ -564,6 +586,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i575.GetPickupSuggestions>(
       () => _i575.GetPickupSuggestions(gh<_i575.PickupRepository>()),
     );
+    gh.lazySingleton<_i70.OtpProtectionRepository>(
+      () => firebaseModule.otpProtectionRepository(
+        gh<_i150.OtpProtectionStore>(),
+      ),
+    );
     gh.lazySingleton<_i164.ValidatePromo>(
       () => _i164.ValidatePromo(gh<_i285.PromoRepository>()),
     );
@@ -586,6 +613,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i62.SearchPlaces>(
       () => _i62.SearchPlaces(gh<_i1040.PlacesRepository>()),
+    );
+    gh.lazySingleton<_i1008.GetOtpProtection>(
+      () => _i1008.GetOtpProtection(gh<_i70.OtpProtectionRepository>()),
     );
     gh.lazySingleton<_i805.SupportRepository>(
       () => _i399.SupportRepositoryImpl(gh<_i868.SupportRemoteDataSource>()),
@@ -615,9 +645,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i393.GetPlaceDetails>(),
         params,
       ),
-    );
-    gh.lazySingleton<_i290.AuthRepository>(
-      () => _i15.AuthRepositoryImpl(gh<_i243.AuthRemoteDataSource>()),
     );
     gh.lazySingleton<_i342.WatchTrustedContacts>(
       () => _i342.WatchTrustedContacts(gh<_i323.SafetyRepository>()),
@@ -650,6 +677,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1039.AddOtherSavedPlace>(),
         gh<_i1039.RenameSavedPlace>(),
         gh<_i1039.DeleteSavedPlace>(),
+      ),
+    );
+    gh.lazySingleton<_i126.RegisterPushToken>(
+      () => _i126.RegisterPushToken(
+        gh<_i43.PushRepository>(),
+        gh<_i768.PushTokenSync>(),
+        gh<_i290.AuthRepository>(),
       ),
     );
     gh.lazySingleton<_i616.WatchBanners>(
@@ -697,6 +731,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i365.WatchPosition>(
       () => _i365.WatchPosition(gh<_i300.LocationRepository>()),
     );
+    gh.lazySingleton<_i282.UnregisterPushToken>(
+      () => _i282.UnregisterPushToken(
+        gh<_i43.PushRepository>(),
+        gh<_i290.AuthRepository>(),
+        gh<_i768.PushTokenSync>(),
+      ),
+    );
     gh.lazySingleton<_i563.SendOtp>(
       () => _i563.SendOtp(gh<_i290.AuthRepository>()),
     );
@@ -720,13 +761,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i107.CurrentPosition>(),
         initial,
       ),
-    );
-    gh.lazySingleton<_i768.PushTokenSync>(
-      () => _i768.PushTokenSync(
-        gh<_i43.PushRepository>(),
-        gh<_i290.AuthRepository>(),
-      ),
-      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i899.RateRide>(
       () => _i899.RateRide(gh<_i118.RideRepository>()),
@@ -769,10 +803,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i574.WatchScheduledRides>(
       () => _i574.WatchScheduledRides(gh<_i118.RideRepository>()),
-    );
-    gh.factoryParam<_i267.OtpCubit, _i858.OtpSession, dynamic>(
-      (session, _) =>
-          _i267.OtpCubit(gh<_i454.VerifyOtp>(), gh<_i563.SendOtp>(), session),
     );
     gh.lazySingleton<_i1043.WatchSupportTickets>(
       () => _i1043.WatchSupportTickets(gh<_i805.SupportRepository>()),
@@ -839,12 +869,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i60.RideReceiptCubit>(
       () => _i60.RideReceiptCubit(gh<_i263.WatchRide>()),
     );
+    gh.factoryParam<_i267.OtpCubit, _i858.OtpSession, dynamic>(
+      (session, _) => _i267.OtpCubit(
+        gh<_i454.VerifyOtp>(),
+        gh<_i563.SendOtp>(),
+        gh<_i1008.GetOtpProtection>(),
+        session,
+      ),
+    );
     gh.lazySingleton<_i838.SessionCubit>(
       () => _i838.SessionCubit(
         gh<_i584.WatchAuthState>(),
         gh<_i106.WatchUser>(),
         gh<_i291.WatchDriver>(),
       ),
+    );
+    gh.factory<_i964.PhoneCubit>(
+      () =>
+          _i964.PhoneCubit(gh<_i563.SendOtp>(), gh<_i1008.GetOtpProtection>()),
     );
     gh.factory<_i574.TrustedContactsCubit>(
       () => _i574.TrustedContactsCubit(
@@ -874,22 +916,36 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i804.OfferScheduler>(),
       ),
     );
+    gh.factory<_i562.DriverPresenceBloc>(
+      () => _i562.DriverPresenceBloc(
+        gh<_i291.WatchDriver>(),
+        gh<_i524.CheckLocationPermission>(),
+        gh<_i605.RequestLocationPermission>(),
+        gh<_i107.CurrentPosition>(),
+        gh<_i89.GoOnline>(),
+        gh<_i247.GoOffline>(),
+        gh<_i587.UpdateDriverLocation>(),
+        gh<_i653.WatchDriverLocation>(),
+        gh<_i916.OpenAppSettings>(),
+        gh<_i262.PresenceScheduler>(),
+        gh<_i126.RegisterPushToken>(),
+        gh<_i36.PublishTripLocation>(),
+      ),
+    );
     gh.factory<_i371.DriverEarningsCubit>(
       () => _i371.DriverEarningsCubit(gh<_i48.WatchDayEarnings>()),
     );
-    gh.factory<_i964.PhoneCubit>(() => _i964.PhoneCubit(gh<_i563.SendOtp>()));
+    gh.lazySingleton<_i442.SignOut>(
+      () => _i442.SignOut(
+        gh<_i290.AuthRepository>(),
+        gh<_i282.UnregisterPushToken>(),
+      ),
+    );
     gh.factory<_i555.EarningsScreenCubit>(
       () => _i555.EarningsScreenCubit(
         gh<_i942.GetWeekEarnings>(),
         gh<_i48.WatchDayEarnings>(),
         gh<_i811.GetRideHistory>(),
-      ),
-    );
-    gh.lazySingleton<_i126.RegisterPushToken>(
-      () => _i126.RegisterPushToken(
-        gh<_i43.PushRepository>(),
-        gh<_i768.PushTokenSync>(),
-        gh<_i290.AuthRepository>(),
       ),
     );
     gh.factory<_i594.ParcelFormCubit>(
@@ -931,13 +987,6 @@ extension GetItInjectableX on _i174.GetIt {
         side,
       ),
     );
-    gh.lazySingleton<_i282.UnregisterPushToken>(
-      () => _i282.UnregisterPushToken(
-        gh<_i43.PushRepository>(),
-        gh<_i290.AuthRepository>(),
-        gh<_i768.PushTokenSync>(),
-      ),
-    );
     gh.factory<_i831.RideHistoryCubit>(
       () => _i831.RideHistoryCubit(
         gh<_i811.GetRideHistory>(),
@@ -952,28 +1001,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1043.SendSupportMessage>(),
         gh<_i1043.MarkSupportRead>(),
         gh<_i1043.SetSupportStatus>(),
-      ),
-    );
-    gh.factory<_i562.DriverPresenceBloc>(
-      () => _i562.DriverPresenceBloc(
-        gh<_i291.WatchDriver>(),
-        gh<_i524.CheckLocationPermission>(),
-        gh<_i605.RequestLocationPermission>(),
-        gh<_i107.CurrentPosition>(),
-        gh<_i89.GoOnline>(),
-        gh<_i247.GoOffline>(),
-        gh<_i587.UpdateDriverLocation>(),
-        gh<_i653.WatchDriverLocation>(),
-        gh<_i916.OpenAppSettings>(),
-        gh<_i262.PresenceScheduler>(),
-        gh<_i126.RegisterPushToken>(),
-        gh<_i36.PublishTripLocation>(),
-      ),
-    );
-    gh.lazySingleton<_i442.SignOut>(
-      () => _i442.SignOut(
-        gh<_i290.AuthRepository>(),
-        gh<_i282.UnregisterPushToken>(),
       ),
     );
     gh.factory<_i777.AccountCubit>(

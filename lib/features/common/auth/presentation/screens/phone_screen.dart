@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
-import 'package:mishwar/core/theme/app_radius.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
+import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/validation/phone_input.dart';
+import 'package:mishwar/core/widgets/mw_country_chip.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/mw_text_field.dart';
 import 'package:mishwar/features/common/auth/presentation/cubit/phone_cubit.dart';
@@ -28,7 +29,7 @@ class PhoneScreen extends StatelessWidget {
         key: const Key('phone_continue'),
         label: context.l10n.continueLabel,
         isLoading: state.isLoading,
-        onPressed: state.normalizedPhone == null
+        onPressed: state.normalizedPhone == null || state.remaining > 0
             ? null
             : context.read<PhoneCubit>().submit,
       ),
@@ -37,16 +38,10 @@ class PhoneScreen extends StatelessWidget {
           textDirection: TextDirection.ltr,
           child: Row(
             children: [
-              Container(
-                padding: EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
-                  color: context.colors.fill,
-                  borderRadius: AppRadius.pillBorder,
-                ),
-                child: Text(
-                  context.l10n.countryCode,
-                  style: context.textStyles.titleSmall,
-                ),
+              MwCountryChip(
+                country: state.country,
+                enabled: !state.isLoading,
+                onChanged: context.read<PhoneCubit>().countryChanged,
               ),
               SizedBox(width: AppSpacing.xs),
               Expanded(
@@ -57,7 +52,7 @@ class PhoneScreen extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   enabled: !state.isLoading,
                   autofillHints: const [AutofillHints.telephoneNumberNational],
-                  inputFormatters: jordanPhoneFormatters(),
+                  inputFormatters: phoneFormatters(),
                   onChanged: context.read<PhoneCubit>().phoneChanged,
                 ),
               ),
@@ -71,6 +66,18 @@ class PhoneScreen extends StatelessWidget {
             color: context.colors.textSecondary,
           ),
         ),
+        if (state.locked)
+          Text(
+            context.l10n.errorTooManyRequests,
+            style: context.textStyles.bodySmall?.copyWith(
+              color: context.colors.negative,
+            ),
+          )
+        else if (state.remaining > 0)
+          Text(
+            context.l10n.resendCountdown(state.remaining),
+            style: AppTextStyles.tabular(context.textStyles.titleSmall!),
+          ),
         FailureText(state.failure),
       ],
     ),

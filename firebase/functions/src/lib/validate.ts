@@ -39,8 +39,8 @@ export function point(value: unknown): {
     return { lat: coordinate(data.lat, 90), lng: coordinate(data.lng, 180) };
 }
 
-export function jordanPhone(value: unknown): string {
+export function mobilePhone(value: unknown): string {
  const phone = string(value, 13, 13);
- if (!/^\+9627[0-9]{8}$/.test(phone)) invalid();
+ if (!/^\+(9627[789]|9705[69])[0-9]{7}$/.test(phone)) invalid();
  return phone;
 }

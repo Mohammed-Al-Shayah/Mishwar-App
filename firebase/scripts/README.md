@@ -25,3 +25,10 @@ Old no-driver records use `searchExpiresAt` when `noDriversAt` is absent. Missin
 terminal timestamps fall back to the creation day; recover original timestamps
 before backfilling if exact historical transition dates are needed. The script
 requires `createdAt` and validates this before changing aggregates.
+
+## OTP SMS region policy (T8.1)
+
+Owner-only: `node firebase/scripts/configure-auth.mjs <project-id>` uses existing ADC
+to allow SMS only to PS and JO and prints the resulting region config. Do not run
+against production during development. See [the security checklist](../../docs/SECURITY.md).
+The Auth emulator may not support this project-config API.

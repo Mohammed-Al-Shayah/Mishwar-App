@@ -162,14 +162,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorTooManyRequests =>
-      'Too many attempts. Please try again later.';
+      'Too many attempts. Try again in a little while.';
 
   @override
   String get errorNetwork => 'Check your internet connection and try again.';
 
   @override
-  String get errorQuota =>
-      'SMS is temporarily unavailable. Please try again later.';
+  String get errorQuota => 'Too many attempts. Try again in a little while.';
 
   @override
   String get errorGeneric => 'Something went wrong. Please try again.';
@@ -1399,11 +1398,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactName => 'Name';
 
   @override
-  String get contactPhone => 'Jordanian mobile number';
+  String get contactPhone => 'Mobile number';
 
   @override
   String get contactInvalid =>
-      'Enter a name of 1–40 characters and a valid Jordanian mobile number.';
+      'Enter a name of 1?40 characters and a valid Palestine or Jordan mobile number.';
 
   @override
   String get contactsLimit => 'You can add up to five trusted contacts.';
@@ -1867,4 +1866,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get promoCreateAdmin => 'New code';
+
+  @override
+  String get chooseCountry => 'Choose country';
+
+  @override
+  String get countryJordan => 'Jordan';
+
+  @override
+  String get countryPalestine => 'Palestine';
+
+  @override
+  String get otpRequestNew => 'Please request a new code to try again.';
 }

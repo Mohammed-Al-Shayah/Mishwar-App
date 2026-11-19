@@ -3,12 +3,15 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/core/error/exceptions.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:mishwar/features/common/auth/data/datasources/otp_protection_store.dart';
 import 'package:mishwar/features/common/auth/data/repositories/auth_repository_impl.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockRemote extends Mock implements AuthRemoteDataSource {}
+
+class MockProtectionStore extends Mock implements OtpProtectionStore {}
 
 void main() {
   const phone = '+962791234567';
@@ -18,7 +21,9 @@ void main() {
   late AuthRepositoryImpl repository;
   setUp(() {
     remote = MockRemote();
-    repository = AuthRepositoryImpl(remote);
+    final protection = MockProtectionStore();
+    when(() => protection.reserve(any())).thenAnswer((_) async {});
+    repository = AuthRepositoryImpl(remote, protection);
   });
   test('send OTP and resend success', () async {
     when(

@@ -19,7 +19,7 @@ for (const actor of ['anonymous','other','admin']) for (const operation of ['get
     await (actor === 'admin' && ['get','list'].includes(operation) ? assertSucceeds : assertFails)(actions[operation]());
   });
 }
-for (const patch of [{ name: '' },{ name: 'x'.repeat(41) },{ name: 1 },{ phone: '0781234567' },{ phone: '+0123' },{ phone: '+1' },{ phone: '+'+'1'.repeat(20) },{ phone: '+962781234567\n' },{ createdAt: now },{ extra: true }]) {
+for (const patch of [{ name: '' },{ name: 'x'.repeat(41) },{ name: 1 },{ phone: '0781234567' },{ phone: '+12025550123' },{ phone: '+962761234567' },{ phone: '+970581234567' },{ phone: '+0123' },{ phone: '+1' },{ phone: '+'+'1'.repeat(20) },{ phone: '+962781234567\n' },{ createdAt: now },{ extra: true }]) {
   for (const operation of ['create','update']) test(`trusted contacts: invalid ${JSON.stringify(patch)} ${operation}`, async () => {
     if (operation === 'update') await s.seed({ [path]: contact });
     const ref = doc(s.db(), path), data = { ...contact, createdAt: serverTimestamp(), ...patch };
@@ -37,4 +37,8 @@ for (const actor of ['anonymous','owner','other','admin']) test(`shares: ${actor
     await assertFails(getDoc(ref)); await assertFails(setDoc(ref, { rideId: 'forged' })); await assertFails(deleteDoc(ref));
   }
   await assertFails(getDocs(collection(s.db(actor), 'shares')));
+});
+
+test('trusted contacts: Palestine is accepted', async () => {
+  await assertSucceeds(setDoc(doc(s.db(), path), { ...contact, phone: '+970591234567', createdAt: serverTimestamp() }));
 });

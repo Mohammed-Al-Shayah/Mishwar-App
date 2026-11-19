@@ -383,7 +383,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorTooManyRequests.
   ///
   /// In ar, this message translates to:
-  /// **'محاولات كثيرة. جرّب بعد شوي.'**
+  /// **'حاولت كثير، جرّب بعد شوي'**
   String get errorTooManyRequests;
 
   /// No description provided for @errorNetwork.
@@ -395,7 +395,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorQuota.
   ///
   /// In ar, this message translates to:
-  /// **'الرسائل مش متاحة حالياً. جرّب بعد شوي.'**
+  /// **'حاولت كثير، جرّب بعد شوي'**
   String get errorQuota;
 
   /// No description provided for @errorGeneric.
@@ -2663,13 +2663,13 @@ abstract class AppLocalizations {
   /// No description provided for @contactPhone.
   ///
   /// In ar, this message translates to:
-  /// **'رقم الجوال الأردني'**
+  /// **'رقم الجوال'**
   String get contactPhone;
 
   /// No description provided for @contactInvalid.
   ///
   /// In ar, this message translates to:
-  /// **'أدخل اسماً من 1 إلى 40 حرفاً ورقم جوال أردني صحيح.'**
+  /// **'اكتب اسم من 1–40 حرف ورقم جوال صحيح من فلسطين أو الأردن.'**
   String get contactInvalid;
 
   /// No description provided for @contactsLimit.
@@ -3528,6 +3528,30 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'كود جديد'**
   String get promoCreateAdmin;
+
+  /// No description provided for @chooseCountry.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختار البلد'**
+  String get chooseCountry;
+
+  /// No description provided for @countryJordan.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأردن'**
+  String get countryJordan;
+
+  /// No description provided for @countryPalestine.
+  ///
+  /// In ar, this message translates to:
+  /// **'فلسطين'**
+  String get countryPalestine;
+
+  /// No description provided for @otpRequestNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة.'**
+  String get otpRequestNew;
 }
 
 class _AppLocalizationsDelegate

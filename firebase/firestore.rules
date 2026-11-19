@@ -41,7 +41,7 @@ service cloud.firestore {
             && data.keys().hasAll(['name', 'phone', 'createdAt'])
             && data.name is string && data.name.size() >= 1 && data.name.size() <= 40
             && data.phone is string && data.phone.size() <= 20
-            && data.phone.matches('^[+][1-9][0-9]{1,14}$')
+            && data.phone.matches('^[+](9627[789]|9705[69])[0-9]{7}$')
             && data.createdAt == request.time;
         }
         allow read: if isOwner() || isAdmin();
@@ -210,6 +210,11 @@ service cloud.firestore {
               && request.resource.data.heading >= 0 && request.resource.data.heading <= 360));
         allow delete: if false;
       }
+    }
+
+    // Server-only OTP counters, including for admins.
+    match /otpLimits/{document=**} {
+      allow read, write: if false;
     }
 
     match /stats/{document=**} {

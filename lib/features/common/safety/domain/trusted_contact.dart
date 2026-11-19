@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:mishwar/core/validation/phone_numbers.dart';
 
 class TrustedContact extends Equatable {
   const TrustedContact({
@@ -17,5 +18,5 @@ bool validTrustedContact(TrustedContact contact) =>
     contact.name.trim().isNotEmpty &&
     contact.name.trim().runes.length <= 40 &&
     contact.phone.length <= 20 &&
-    RegExp(r'^\+[1-9][0-9]{1,14}$').hasMatch(contact.phone) &&
+    isSupportedPhone(contact.phone) &&
     !contact.phone.endsWith('\n');

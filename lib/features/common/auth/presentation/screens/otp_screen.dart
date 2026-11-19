@@ -25,9 +25,23 @@ class OtpScreen extends StatelessWidget {
         SizedBox(height: AppSpacing.xl),
         MwOtpInput(
           key: ObjectKey(state.session),
-          enabled: !state.isLoading && !state.succeeded,
+          enabled: !state.isLoading && !state.succeeded && !state.needsNewCode,
           onChanged: context.read<OtpCubit>().codeChanged,
         ),
+        if (state.locked)
+          Text(
+            context.l10n.errorTooManyRequests,
+            style: context.textStyles.bodySmall?.copyWith(
+              color: context.colors.negative,
+            ),
+          ),
+        if (state.needsNewCode)
+          Text(
+            context.l10n.otpRequestNew,
+            style: context.textStyles.bodySmall?.copyWith(
+              color: context.colors.negative,
+            ),
+          ),
         FailureText(state.failure),
         if (state.isLoading)
           LinearProgressIndicator(color: context.colors.textPrimary),

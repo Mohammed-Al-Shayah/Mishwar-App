@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
-import 'package:mishwar/core/validation/jordan_phone.dart';
+import 'package:mishwar/core/validation/phone_numbers.dart';
 import 'package:mishwar/features/common/location/domain/usecases/current_position.dart';
 import 'package:mishwar/features/common/ride/domain/entities/parcel_details.dart';
 import 'package:mishwar/features/common/ride/domain/usecases/parcel_usecases.dart';
@@ -57,8 +57,13 @@ class ParcelFormCubit extends Cubit<ParcelFormState> {
     }
   }
 
-  ParcelDetails? validate(String name, String phone, String description) {
-    final normalized = normalizeJordanPhone(phone);
+  ParcelDetails? validate(
+    String name,
+    String phone,
+    String description, {
+    PhoneCountry country = PhoneCountry.jordan,
+  }) {
+    final normalized = normalizePhone(phone, country: country);
     if (name.trim().isEmpty ||
         name.trim().length > 40 ||
         normalized == null ||

@@ -1,3 +1,4 @@
+import { callableOptions } from '../lib/callable.js';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
 import { getMessaging } from 'firebase-admin/messaging';
@@ -16,7 +17,7 @@ import { acceptRideHandler, declineRideHandler } from './offers.js';
 import { feeConfigReader } from './fees.js';
 let readFees: ReturnType<typeof feeConfigReader> | undefined;
 const fees = () => (readFees ??= feeConfigReader(getFirestore()))();
-export const cancellationQuote = onCall({ region: 'europe-west1' }, request => cancellationQuoteHandler(request, getFirestore(), fees));
+export const cancellationQuote = onCall(callableOptions(), request => cancellationQuoteHandler(request, getFirestore(), fees));
 export const matchingDeps: MatchingDeps = {
   now: () => Timestamp.now(),
   enqueue: (data, scheduleDelaySeconds) => getFunctions()
@@ -32,18 +33,18 @@ export const offerTimeout = onTaskDispatched<OfferTask>({ region: 'europe-west1'
   (request) => offerTimeoutHandler(getFirestore(), request.data, matchingDeps));
 
 export const requestRide = onCall(mapsOptions, (request) => requestRideHandler(request, getFirestore(), mapsKey.value()));
-export const cancelRide = onCall({ region: 'europe-west1' }, (request) => cancelRideHandler(request, getFirestore(), matchingDeps, fees));
-export const acceptRide = onCall({ region: 'europe-west1' }, (request) => acceptRideHandler(request, getFirestore(), matchingDeps));
-export const declineRide = onCall({ region: 'europe-west1' }, (request) => declineRideHandler(request, getFirestore(), matchingDeps));
+export const cancelRide = onCall(callableOptions(), (request) => cancelRideHandler(request, getFirestore(), matchingDeps, fees));
+export const acceptRide = onCall(callableOptions(), (request) => acceptRideHandler(request, getFirestore(), matchingDeps));
+export const declineRide = onCall(callableOptions(), (request) => declineRideHandler(request, getFirestore(), matchingDeps));
 export const expireSearchingRides = onSchedule({ region: 'europe-west1', schedule: 'every 1 minutes' }, async () => {
   await expireSearchingRidesHandler(getFirestore(), Timestamp.now(), matchingDeps);
 });
 
-export const updateRideStatus = onCall({ region: 'europe-west1' }, (request) => updateRideStatusHandler(request, getFirestore()));
+export const updateRideStatus = onCall(callableOptions(), (request) => updateRideStatusHandler(request, getFirestore()));
 
 import { rateRideHandler, skipRatingHandler } from './ratings.js';
-export const rateRide = onCall({ region: 'europe-west1' }, request => rateRideHandler(request, getFirestore()));
-export const skipRating = onCall({ region: 'europe-west1' }, request => skipRatingHandler(request, getFirestore()));
+export const rateRide = onCall(callableOptions(), request => rateRideHandler(request, getFirestore()));
+export const skipRating = onCall(callableOptions(), request => skipRatingHandler(request, getFirestore()));
 
 import { scheduleRideHandler, schedulingReader, dispatchScheduledRidesHandler, scheduledMatching } from './scheduled.js';
 let readScheduling: ReturnType<typeof schedulingReader> | undefined;
@@ -61,8 +62,8 @@ export const dispatchScheduledRides = onSchedule({ region: 'europe-west1', sched
 import { getStorage } from 'firebase-admin/storage';
 import { parcelPhotoUrlHandler } from './parcel.js';
 import { adminCompleteParcelHandler } from './lifecycle.js';
-export const adminCompleteParcel = onCall({ region: 'europe-west1' }, request => adminCompleteParcelHandler(request, getFirestore()));
-export const parcelPhotoUrl = onCall({ region: 'europe-west1' }, request => parcelPhotoUrlHandler(request, getFirestore(), async (path, expires) => {
+export const adminCompleteParcel = onCall(callableOptions(), request => adminCompleteParcelHandler(request, getFirestore()));
+export const parcelPhotoUrl = onCall(callableOptions(), request => parcelPhotoUrlHandler(request, getFirestore(), async (path, expires) => {
   const [url] = await getStorage().bucket().file(path).getSignedUrl({ action: 'read', expires });
   return url;
 }));

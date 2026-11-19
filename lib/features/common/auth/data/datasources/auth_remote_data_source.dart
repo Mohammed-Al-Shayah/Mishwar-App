@@ -23,6 +23,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final _webConfirmations = <OtpSession, ConfirmationResult>{};
   final _autoVerified = <OtpSession, AuthUser>{};
   final _createdAt = <OtpSession, DateTime>{};
+  final _wrongCodes = <OtpSession, int>{};
   int _generation = 0;
   static const _timeout = Duration(seconds: 60);
   static const _sessionLifetime = Duration(minutes: 10);
@@ -38,6 +39,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     _webConfirmations.remove(session);
     _autoVerified.remove(session);
     _createdAt.remove(session);
+    _wrongCodes.remove(session);
   }
 
   void _remember(OtpSession session) {
@@ -127,6 +129,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               verificationId: verificationId,
               resendToken: resendToken,
             );
+            _remember(session);
             sentSession = session;
             if (resendFrom != null) _forget(resendFrom);
             completer.complete(session);
@@ -164,6 +167,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthUser> verifyOtp(OtpSession session, String code) async {
     try {
+      if ((_wrongCodes[session] ?? 0) >= 5) {
+        throw const AuthException('session-expired', code: 'session-expired');
+      }
       final automatic = autoVerifiedUser(session);
       if (automatic != null) return automatic;
       UserCredential result;
@@ -190,6 +196,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       _forget(session);
       return user;
     } on FirebaseAuthException catch (error) {
+      if (error.code == 'invalid-verification-code') {
+        _wrongCodes[session] = (_wrongCodes[session] ?? 0) + 1;
+      }
       throw _exception(error);
     }
   }
@@ -200,6 +209,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     _webConfirmations.clear();
     _autoVerified.clear();
     _createdAt.clear();
+    _wrongCodes.clear();
     try {
       await _auth.signOut();
     } on FirebaseAuthException catch (error) {

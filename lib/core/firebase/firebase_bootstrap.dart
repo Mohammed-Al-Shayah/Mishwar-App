@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,6 +17,21 @@ abstract final class FirebaseBootstrap {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    const siteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
+    const debug = !kReleaseMode;
+    if (!kIsWeb || siteKey.isNotEmpty) {
+      await FirebaseAppCheck.instance.activate(
+        providerAndroid: debug
+            ? const AndroidDebugProvider()
+            : const AndroidPlayIntegrityProvider(),
+        providerApple: debug
+            ? const AppleDebugProvider()
+            : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+        providerWeb: debug
+            ? WebDebugProvider()
+            : ReCaptchaEnterpriseProvider(siteKey),
+      );
+    }
     // Release builds never use emulators, whatever USE_EMULATORS says.
     if (useEmulators && !kReleaseMode) {
       final host = emulatorHost(

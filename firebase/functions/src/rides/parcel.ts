@@ -27,7 +27,7 @@ export function parcelInput(data: Record<string, unknown>, uid: string) {
     return { serviceType };
   }
   const raw = v.object(data.parcel);
-  const recipientPhone = v.jordanPhone(raw.recipientPhone);
+  const recipientPhone = v.mobilePhone(raw.recipientPhone);
   const photoPath = raw.photoPath === undefined ? undefined : v.string(raw.photoPath, 1, 1024);
   if (photoPath && (!photoPath.startsWith(`parcels/${uid}/`) ||
       !/^parcels\/[^/]+\/[^/]+$/.test(photoPath) || photoPath.split('/').some(p => p === '.' || p === '..'))) v.invalid();

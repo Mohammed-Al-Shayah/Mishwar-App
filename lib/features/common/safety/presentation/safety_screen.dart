@@ -7,8 +7,9 @@ import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_theme.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
-import 'package:mishwar/core/validation/jordan_phone.dart';
 import 'package:mishwar/core/validation/phone_input.dart';
+import 'package:mishwar/core/validation/phone_numbers.dart';
+import 'package:mishwar/core/widgets/mw_country_chip.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/core/widgets/mw_text_field.dart';
 import 'package:mishwar/features/common/safety/domain/trusted_contact.dart';
@@ -191,9 +192,16 @@ class _ContactEditor extends StatefulWidget {
 }
 
 class _ContactEditorState extends State<_ContactEditor> {
+  late PhoneCountry _country = widget.contact?.phone.startsWith('+970') == true
+      ? PhoneCountry.palestine
+      : widget.contact != null
+      ? PhoneCountry.jordan
+      : PhoneCountry.fromRegion(
+          WidgetsBinding.instance.platformDispatcher.locale.countryCode,
+        );
   late final _name = TextEditingController(text: widget.contact?.name);
   late final _phone = TextEditingController(
-    text: widget.contact?.phone.replaceFirst('+962', '0'),
+    text: widget.contact?.phone.replaceFirst(RegExp(r'^\+(962|970)'), '0'),
   );
   bool _invalid = false;
   @override
@@ -204,7 +212,7 @@ class _ContactEditorState extends State<_ContactEditor> {
   }
 
   Future<void> _save() async {
-    final phone = normalizeJordanPhone(_phone.text);
+    final phone = normalizePhone(_phone.text, country: _country);
     if (phone == null ||
         _name.text.trim().isEmpty ||
         _name.text.trim().runes.length > 40) {
@@ -233,12 +241,21 @@ class _ContactEditorState extends State<_ContactEditor> {
               enabled: !state.saving,
             ),
             SizedBox(height: AppSpacing.md),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: MwCountryChip(
+                country: _country,
+                enabled: !state.saving,
+                onChanged: (value) => setState(() => _country = value),
+              ),
+            ),
+            SizedBox(height: AppSpacing.xs),
             MwTextField(
               label: context.l10n.contactPhone,
               controller: _phone,
               keyboardType: TextInputType.phone,
               textDirection: TextDirection.ltr,
-              inputFormatters: jordanPhoneFormatters(),
+              inputFormatters: phoneFormatters(),
               enabled: !state.saving,
             ),
             if (_invalid)

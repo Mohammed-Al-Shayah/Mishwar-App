@@ -62,6 +62,7 @@ import '../features/driver/offer/driver_offer_bloc_test.dart'
 import '../features/driver/presence/driver_home_screen_test.dart'
     show MockPresenceBloc, homeEarnings;
 import '../helpers/location_mocks.dart';
+import '../helpers/otp_protection.dart';
 import '../helpers/ride_mocks.dart';
 import '../helpers/saved_places_mocks.dart';
 
@@ -148,9 +149,10 @@ void main() {
       final send = SendOtp(auth);
       final verifyOtp = VerifyOtp(auth);
       getIt
-        ..registerFactory(() => PhoneCubit(send))
+        ..registerFactory(() => PhoneCubit(send, protection()))
         ..registerFactoryParam<OtpCubit, OtpSession, dynamic>(
-          (session, _) => OtpCubit(verifyOtp, send, session),
+          (session, _) =>
+              OtpCubit(verifyOtp, send, protection(remaining: 60), session),
         )
         ..registerFactory(() => NameCubit(CreateUserProfile(users)))
         ..registerFactory(() => RoleCubit(SetUserRole(users)))

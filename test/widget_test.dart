@@ -21,6 +21,7 @@ import 'package:mishwar/features/common/auth/presentation/session/session_state.
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'helpers/otp_protection.dart';
 import 'helpers/saved_places_mocks.dart' show appConfigCubit;
 
 class MockSendOtp extends Mock implements SendOtp {}
@@ -61,7 +62,7 @@ void main() {
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
-        final cubit = PhoneCubit(MockSendOtp());
+        final cubit = PhoneCubit(MockSendOtp(), protection());
         addTearDown(cubit.close);
         await tester.pumpWidget(
           harness(

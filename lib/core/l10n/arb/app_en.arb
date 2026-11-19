@@ -54,9 +54,9 @@
   "errorInvalidPhone": "Enter a valid mobile number.",
   "errorInvalidCode": "The code is incorrect. Try again.",
   "errorCodeExpired": "The code expired. Request a new code.",
-  "errorTooManyRequests": "Too many attempts. Please try again later.",
+  "errorTooManyRequests": "Too many attempts. Try again in a little while.",
   "errorNetwork": "Check your internet connection and try again.",
-  "errorQuota": "SMS is temporarily unavailable. Please try again later.",
+  "errorQuota": "Too many attempts. Try again in a little while.",
   "errorGeneric": "Something went wrong. Please try again.",
   "errorNameRequired": "Enter your first and last name.",
   "errorNameLength": "Your name must be between 2 and 40 characters.",
@@ -773,8 +773,8 @@
     }
   },
   "contactName": "Name",
-  "contactPhone": "Jordanian mobile number",
-  "contactInvalid": "Enter a name of 1–40 characters and a valid Jordanian mobile number.",
+  "contactPhone": "Mobile number",
+  "contactInvalid": "Enter a name of 1?40 characters and a valid Palestine or Jordan mobile number.",
   "contactsLimit": "You can add up to five trusted contacts.",
   "emergencySettings": "Emergency settings",
   "emergencyFootnote": "The emergency number in Jordan is 911",
@@ -1017,5 +1017,9 @@
       }
     }
   },
-  "promoCreateAdmin": "New code"
+  "promoCreateAdmin": "New code",
+  "chooseCountry": "Choose country",
+  "countryJordan": "Jordan",
+  "countryPalestine": "Palestine",
+  "otpRequestNew": "Please request a new code to try again."
 }

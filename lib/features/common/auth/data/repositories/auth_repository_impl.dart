@@ -3,14 +3,16 @@ import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/exceptions.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/features/common/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:mishwar/features/common/auth/data/datasources/otp_protection_store.dart';
 import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/entities/otp_session.dart';
 import 'package:mishwar/features/common/auth/domain/repositories/auth_repository.dart';
 
 @LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
-  const AuthRepositoryImpl(this._remote);
+  const AuthRepositoryImpl(this._remote, this._protection);
   final AuthRemoteDataSource _remote;
+  final OtpProtectionStore _protection;
   Future<Either<Failure, T>> _guard<T>(Future<T> Function() action) async {
     try {
       return Right(await action());
@@ -31,7 +33,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, OtpSession>> sendOtp(
     String phoneE164, {
     OtpSession? resendFrom,
-  }) => _guard(() => _remote.sendOtp(phoneE164, resendFrom: resendFrom));
+  }) => _guard(() async {
+    await _protection.reserve(phoneE164);
+    return _remote.sendOtp(phoneE164, resendFrom: resendFrom);
+  });
   @override
   Future<Either<Failure, AuthUser>> verifyOtp(
     OtpSession session,

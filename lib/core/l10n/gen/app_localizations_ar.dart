@@ -159,13 +159,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorCodeExpired => 'انتهت صلاحية الرمز. اطلب رمز جديد.';
 
   @override
-  String get errorTooManyRequests => 'محاولات كثيرة. جرّب بعد شوي.';
+  String get errorTooManyRequests => 'حاولت كثير، جرّب بعد شوي';
 
   @override
   String get errorNetwork => 'تأكد من اتصال الإنترنت وجرّب مرة ثانية.';
 
   @override
-  String get errorQuota => 'الرسائل مش متاحة حالياً. جرّب بعد شوي.';
+  String get errorQuota => 'حاولت كثير، جرّب بعد شوي';
 
   @override
   String get errorGeneric => 'صار خطأ. جرّب مرة ثانية.';
@@ -1387,11 +1387,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contactName => 'الاسم';
 
   @override
-  String get contactPhone => 'رقم الجوال الأردني';
+  String get contactPhone => 'رقم الجوال';
 
   @override
   String get contactInvalid =>
-      'أدخل اسماً من 1 إلى 40 حرفاً ورقم جوال أردني صحيح.';
+      'اكتب اسم من 1–40 حرف ورقم جوال صحيح من فلسطين أو الأردن.';
 
   @override
   String get contactsLimit => 'يمكنك إضافة خمس جهات اتصال كحد أقصى.';
@@ -1851,4 +1851,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get promoCreateAdmin => 'كود جديد';
+
+  @override
+  String get chooseCountry => 'اختار البلد';
+
+  @override
+  String get countryJordan => 'الأردن';
+
+  @override
+  String get countryPalestine => 'فلسطين';
+
+  @override
+  String get otpRequestNew => 'الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة.';
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +19,8 @@ import 'package:mishwar/features/common/user/domain/usecases/create_user_profile
 import 'package:mishwar/features/common/user/domain/usecases/set_user_role.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../helpers/otp_protection.dart';
+
 class MockSendOtp extends Mock implements SendOtp {}
 
 class MockVerifyOtp extends Mock implements VerifyOtp {}
@@ -27,6 +30,7 @@ class MockCreateProfile extends Mock implements CreateUserProfile {}
 class MockSetRole extends Mock implements SetUserRole {}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late MockSendOtp send;
   late MockVerifyOtp verifyOtp;
   late MockCreateProfile create;
@@ -50,7 +54,7 @@ void main() {
       'normalizes $input and sends OTP',
       build: () {
         when(() => send(any())).thenAnswer((_) async => const Right(session));
-        return PhoneCubit(send);
+        return PhoneCubit(send, protection());
       },
       act: (cubit) async {
         cubit.phoneChanged(input);
@@ -72,11 +76,10 @@ void main() {
     '07123',
     '0691234567',
     '07912345678',
-    '+962791234567',
     '0791234567\n',
   ]) {
     test('invalid phone is never submitted: ${input.length}', () async {
-      final cubit = PhoneCubit(send)..phoneChanged(input);
+      final cubit = PhoneCubit(send, protection())..phoneChanged(input);
       await cubit.submit();
       expect(cubit.state.normalizedPhone, isNull);
       verifyZeroInteractions(send);
@@ -89,7 +92,7 @@ void main() {
       when(
         () => send(any()),
       ).thenAnswer((_) async => const Left(NetworkFailure('offline')));
-      return PhoneCubit(send);
+      return PhoneCubit(send, protection());
     },
     act: (cubit) async {
       cubit.phoneChanged('791234567');
@@ -105,7 +108,7 @@ void main() {
     'sixth digit auto submits once',
     build: () {
       when(() => verifyOtp(any())).thenAnswer((_) async => const Right(user));
-      return OtpCubit(verifyOtp, send, session);
+      return OtpCubit(verifyOtp, send, protection(remaining: 60), session);
     },
     act: (cubit) async {
       cubit
@@ -129,7 +132,7 @@ void main() {
           AuthFailure('secret', code: AuthFailureCode.invalidCode),
         ),
       );
-      return OtpCubit(verifyOtp, send, session);
+      return OtpCubit(verifyOtp, send, protection(remaining: 60), session);
     },
     act: (cubit) => cubit.codeChanged('000000'),
     expect: () => [
@@ -139,27 +142,33 @@ void main() {
         session: session,
         code: '000000',
         failure: AuthFailure('secret', code: AuthFailureCode.invalidCode),
+        wrongAttempts: 1,
       ),
     ],
   );
   test(
-    'resend waits 30 seconds, replaces session and cancels timer',
+    'resend waits 60 seconds, replaces session and cancels timer',
     () {
       fakeAsync((async) {
         const next = OtpSession(phone: '+962791234567', verificationId: 'next');
         when(() => send(any())).thenAnswer((_) async => const Right(next));
-        final cubit = OtpCubit(verifyOtp, send, session);
+        final cubit = OtpCubit(
+          verifyOtp,
+          send,
+          protection(remaining: 60),
+          session,
+        );
         unawaited(cubit.resend());
         async.flushMicrotasks();
         verifyZeroInteractions(send);
-        async.elapse(const Duration(seconds: 29));
+        async.elapse(const Duration(seconds: 59));
         expect(cubit.state.remaining, 1);
         async.elapse(const Duration(seconds: 1));
         expect(cubit.state.remaining, 0);
         unawaited(cubit.resend());
         async.flushMicrotasks();
         expect(cubit.state.session, next);
-        expect(cubit.state.remaining, 30);
+        expect(cubit.state.remaining, 60);
         verify(
           () => send(const SendOtpParams('+962791234567', resendFrom: session)),
         ).called(1);

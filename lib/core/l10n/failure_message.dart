@@ -18,7 +18,7 @@ String failureMessage(BuildContext context, Failure failure) {
       AuthFailureCode.codeExpired => l10n.errorCodeExpired,
       AuthFailureCode.tooManyRequests => l10n.errorTooManyRequests,
       AuthFailureCode.network => l10n.errorNetwork,
-      AuthFailureCode.quotaExceeded => l10n.errorQuota,
+      AuthFailureCode.quotaExceeded => l10n.errorTooManyRequests,
       AuthFailureCode.unknown => l10n.errorGeneric,
     },
     ValidationFailure(field: 'service-disabled') => l10n.parcelServiceDisabled,

@@ -54,9 +54,9 @@
   "errorInvalidPhone": "أدخل رقم موبايل صحيح.",
   "errorInvalidCode": "الرمز مش صحيح. جرّب مرة ثانية.",
   "errorCodeExpired": "انتهت صلاحية الرمز. اطلب رمز جديد.",
-  "errorTooManyRequests": "محاولات كثيرة. جرّب بعد شوي.",
+  "errorTooManyRequests": "حاولت كثير، جرّب بعد شوي",
   "errorNetwork": "تأكد من اتصال الإنترنت وجرّب مرة ثانية.",
-  "errorQuota": "الرسائل مش متاحة حالياً. جرّب بعد شوي.",
+  "errorQuota": "حاولت كثير، جرّب بعد شوي",
   "errorGeneric": "صار خطأ. جرّب مرة ثانية.",
   "errorNameRequired": "أدخل اسمك الأول واسم العائلة.",
   "errorNameLength": "لازم يكون اسمك بين حرفين و 40 حرف.",
@@ -780,8 +780,8 @@
     }
   },
   "contactName": "الاسم",
-  "contactPhone": "رقم الجوال الأردني",
-  "contactInvalid": "أدخل اسماً من 1 إلى 40 حرفاً ورقم جوال أردني صحيح.",
+  "contactPhone": "رقم الجوال",
+  "contactInvalid": "اكتب اسم من 1–40 حرف ورقم جوال صحيح من فلسطين أو الأردن.",
   "contactsLimit": "يمكنك إضافة خمس جهات اتصال كحد أقصى.",
   "emergencySettings": "إعدادات الطوارئ",
   "emergencyFootnote": "رقم الطوارئ في الأردن 911",
@@ -1024,5 +1024,9 @@
       }
     }
   },
-  "promoCreateAdmin": "كود جديد"
+  "promoCreateAdmin": "كود جديد",
+  "chooseCountry": "اختار البلد",
+  "countryJordan": "الأردن",
+  "countryPalestine": "فلسطين",
+  "otpRequestNew": "الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة."
 }
