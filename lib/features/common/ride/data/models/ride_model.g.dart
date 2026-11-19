@@ -55,6 +55,12 @@ _RideModel _$RideModelFromJson(Map<String, dynamic> json) => _RideModel(
   createdAt: const TimestampConverter().fromJson(
     json['createdAt'] as Timestamp,
   ),
+  market: json['market'] as String? ?? 'JO',
+  waitingPolicy:
+      (json['waitingPolicy'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ) ??
+      const <String, double>{},
   scheduledFor: _$JsonConverterFromJson<Timestamp, DateTime>(
     json['scheduledFor'],
     const TimestampConverter().fromJson,
@@ -130,6 +136,8 @@ Map<String, dynamic> _$RideModelToJson(_RideModel instance) =>
       'dropoff': instance.dropoff.toJson(),
       'fare': instance.fare.toJson(),
       'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'market': instance.market,
+      'waitingPolicy': instance.waitingPolicy,
       'scheduledFor': _$JsonConverterToJson<Timestamp, DateTime>(
         instance.scheduledFor,
         const TimestampConverter().toJson,

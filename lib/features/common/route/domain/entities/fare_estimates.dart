@@ -8,10 +8,14 @@ class FareEstimates extends Equatable {
     required this.route,
     required List<FareEstimate> fares,
     this.airport,
+    this.market = 'JO',
+    this.currency = 'JOD',
   }) : fares = List.unmodifiable(fares);
+  final String market;
+  final String currency;
   final RouteInfo route;
   final AirportDetails? airport;
   final List<FareEstimate> fares;
   @override
-  List<Object?> get props => [route, fares, airport];
+  List<Object?> get props => [route, fares, airport, market, currency];
 }

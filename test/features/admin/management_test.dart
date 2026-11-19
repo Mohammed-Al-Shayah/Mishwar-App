@@ -62,8 +62,8 @@ void main() {
     for (final raw in fixtures) {
       final f = raw as Map<String, dynamic>;
       expect(
-        promoDiscountFils(
-          fareFils: f['fareFils'] as int,
+        promoDiscountMinor(
+          fareMinor: f['fareMinor'] as int,
           type: f['type'] as String,
           value: (f['value'] as num).toDouble(),
           maxDiscount: (f['maxDiscount'] as num?)?.toDouble(),

@@ -315,8 +315,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String fareJod(String amount) {
-    return 'JD $amount';
+  String fareAmount(String amount) {
+    return '$amount';
   }
 
   @override
@@ -441,7 +441,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String tripPrice(String amount) {
-    return 'JD $amount';
+    return '$amount';
   }
 
   @override
@@ -693,7 +693,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String earningsBarLabel(String day, String amount) {
-    return '$day, JD $amount';
+    return '$day, $amount';
   }
 
   @override
@@ -1043,7 +1043,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminSaved => 'Saved';
 
   @override
-  String get adminCurrency => 'JOD';
+  String get adminCurrency => 'Currency';
 
   @override
   String get adminUnknown => '—';
@@ -1178,17 +1178,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String promoSelected(String code, String amount) {
-    return '$code · JD $amount off';
+    return '$code · $amount off';
   }
 
   @override
   String promoDiscount(String code, String amount) {
-    return 'Discount ($code) − JD $amount';
+    return 'Discount ($code) − $amount';
   }
 
   @override
   String promoCashFootnote(String amount) {
-    return 'Includes JD $amount discount';
+    return 'Includes $amount discount';
   }
 
   @override
@@ -1214,7 +1214,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String promoMinFare(String amount) {
-    return 'Minimum fare for this code is JD $amount';
+    return 'Minimum fare for this code is $amount';
   }
 
   @override
@@ -1690,7 +1690,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsAirport => 'Airport';
 
   @override
-  String get settingsAmount => 'Amount (JD)';
+  String get settingsAmount => 'Amount';
 
   @override
   String get settingsAfterSeconds => 'After seconds';
@@ -1699,7 +1699,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsFreeMinutes => 'Free minutes';
 
   @override
-  String get settingsPerMinute => 'Per minute (JD)';
+  String get settingsPerMinute => 'Per minute';
 
   @override
   String get settingsMinLeadMinutes => 'Minimum lead (minutes)';
@@ -1711,13 +1711,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDispatchBeforeMinutes => 'Dispatch before (minutes)';
 
   @override
-  String get settingsEconomy => 'Economy (JD)';
+  String get settingsEconomy => 'Economy';
 
   @override
-  String get settingsComfort => 'Comfort (JD)';
+  String get settingsComfort => 'Comfort';
 
   @override
-  String get settingsVan => 'XL (JD)';
+  String get settingsVan => 'XL';
 
   @override
   String get settingsZone => 'Airport bounding box (read only)';
@@ -1747,7 +1747,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get promoValue => 'Discount value';
 
   @override
-  String get promoMaxDiscount => 'Maximum discount (JD, optional)';
+  String get promoMaxDiscount => 'Maximum discount (optional)';
 
   @override
   String get promoUsageLimit => 'Total usage limit (optional)';
@@ -1780,7 +1780,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get promoMinimumFareLabel => 'Minimum fare (JD, optional)';
+  String get promoMinimumFareLabel => 'Minimum fare (optional)';
 
   @override
   String get adminReports => 'Reports';
@@ -1797,10 +1797,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportsCompletedRate => 'Completed rides %';
 
   @override
-  String get reportsRevenue => 'Revenue (JD)';
+  String get reportsRevenue => 'Revenue';
 
   @override
-  String get reportsAverage => 'Average fare (JD)';
+  String get reportsAverage => 'Average fare';
 
   @override
   String get reportsCancellationRate => 'Cancellation rate %';
@@ -1824,7 +1824,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportsCompleted => 'Completed';
 
   @override
-  String get reportsDiscount => 'Discounts (JD)';
+  String get reportsDiscount => 'Discounts';
 
   @override
   String get reportsRiderCancel => 'Rider cancellations';
@@ -1856,12 +1856,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String reportsScale(String rides, String revenue) {
-    return 'Bar scale: $rides rides · Line scale: JD $revenue';
+    return 'Bar scale: $rides rides · Line scale: $revenue';
   }
 
   @override
   String reportsChartDay(String day, String rides, String revenue) {
-    return '$day: $rides rides, revenue JD $revenue';
+    return '$day: $rides rides, revenue $revenue';
   }
 
   @override
@@ -1878,4 +1878,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get otpRequestNew => 'Please request a new code to try again.';
+
+  @override
+  String get marketPalestine => 'Palestine';
+
+  @override
+  String get marketJordan => 'Jordan';
+
+  @override
+  String get accountMarketPS => 'Palestine ? Shekel';
+
+  @override
+  String get accountMarketJO => 'Jordan ? Dinar';
+
+  @override
+  String get outOfServiceArea => 'This place is outside our service area.';
+
+  @override
+  String get settingsRounding => 'Fare rounding step';
+
+  @override
+  String get promoWrongMarket => 'This code is for another market.';
 }

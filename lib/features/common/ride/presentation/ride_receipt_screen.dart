@@ -151,13 +151,14 @@ class RideReceiptContent extends StatelessWidget {
             _fareRow(
               context,
               context.l10n.receiptFare,
-              context.l10n.fareJod(
+              context.l10n.fareAmount(
                 Money(
-                  (ride.fareFinalFils ?? ride.fareEstimatedFils) -
-                      ride.fareWaitingFeeFils -
-                      ride.farePreviousBalanceFils +
-                      (ride.promoApplied == true ? ride.discountFils : 0),
-                ).toJodString(),
+                  (ride.fareFinalMinor ?? ride.fareEstimatedMinor) -
+                      ride.fareWaitingFeeMinor -
+                      ride.farePreviousBalanceMinor +
+                      (ride.promoApplied == true ? ride.discountMinor : 0),
+                  ride.currency,
+                ).toDisplayString(),
               ),
             ),
           PromoDiscountRow(ride: ride),
@@ -266,7 +267,8 @@ String receiptCancellation(BuildContext context, RideEntity ride) =>
 /// Same server fare components as the visible receipt, shared as plain text.
 String receiptText(BuildContext context, RideEntity ride) {
   final l = context.l10n;
-  String amount(int fils) => l.fareJod(Money(fils).toJodString());
+  String amount(int minor) =>
+      l.fareAmount(Money(minor, ride.currency).toDisplayString());
   final lines = [
     l.receiptTitle,
     if (ride.airport != null) l.airportReceipt,
@@ -280,27 +282,27 @@ String receiptText(BuildContext context, RideEntity ride) {
     lines.add(receiptCancellation(context, ride));
   } else {
     final base =
-        (ride.fareFinalFils ?? ride.fareEstimatedFils) -
-        ride.fareWaitingFeeFils -
-        ride.farePreviousBalanceFils +
-        (ride.promoApplied == true ? ride.discountFils : 0);
+        (ride.fareFinalMinor ?? ride.fareEstimatedMinor) -
+        ride.fareWaitingFeeMinor -
+        ride.farePreviousBalanceMinor +
+        (ride.promoApplied == true ? ride.discountMinor : 0);
     lines.add(
       '${l.receiptFare}: ${amount(base)}',
     );
   }
-  if (ride.promoApplied == true && ride.discountFils > 0) {
+  if (ride.promoApplied == true && ride.discountMinor > 0) {
     lines.add(
       l.promoDiscount(
         ride.promoCode ?? '',
-        Money(ride.discountFils).toJodString(),
+        Money(ride.discountMinor, ride.currency).toDisplayString(),
       ),
     );
   }
   for (final (label, value) in [
-    (l.feeWaiting, ride.fareWaitingFeeFils),
-    (l.feePreviousBalance, ride.farePreviousBalanceFils),
+    (l.feeWaiting, ride.fareWaitingFeeMinor),
+    (l.feePreviousBalance, ride.farePreviousBalanceMinor),
     if (ride.status == RideStatus.cancelled)
-      (l.feeCancellation, ride.fareCancellationFeeFils),
+      (l.feeCancellation, ride.fareCancellationFeeMinor),
   ]) {
     if (value > 0) lines.add('$label: ${amount(value)}');
   }

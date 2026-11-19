@@ -7,9 +7,11 @@ import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/charts/earnings_bar_painter.dart';
+import 'package:mishwar/core/widgets/market_switcher.dart';
 import 'package:mishwar/features/admin/domain/admin_reports.dart';
 import 'package:mishwar/features/admin/presentation/report_download.dart';
 import 'package:mishwar/features/admin/presentation/reports_cubit.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 
 class AdminReportsPage extends StatelessWidget {
   const AdminReportsPage({super.key});
@@ -32,6 +34,11 @@ class AdminReportsPage extends StatelessWidget {
   Widget build(BuildContext context) => BlocBuilder<ReportsCubit, ReportsState>(
     builder: (context, state) => ListView(
       children: [
+        MarketSwitcher(
+          value: state.market,
+          enabled: !state.loading,
+          onChanged: (m) => context.read<ReportsCubit>().load(null, m),
+        ),
         Wrap(
           spacing: AppSpacing.md,
           runSpacing: AppSpacing.md,
@@ -97,11 +104,17 @@ class AdminReportsPage extends StatelessWidget {
                 ),
                 (
                   context.l10n.reportsRevenue,
-                  (data.total('revenueFils') / 1000).toStringAsFixed(2),
+                  Money(
+                    data.total('revenueMinor'),
+                    data.currency,
+                  ).toDisplayString(),
                 ),
                 (
                   context.l10n.reportsAverage,
-                  data.averageFare.toStringAsFixed(2),
+                  Money(
+                    (data.averageFare * Money.scale(data.currency)).round(),
+                    data.currency,
+                  ).toDisplayString(),
                 ),
                 (
                   context.l10n.reportsCancellationRate,
@@ -149,8 +162,14 @@ class AdminReportsPage extends StatelessWidget {
                         d.day,
                         '${d.count('requested')}',
                         '${d.count('completed')}',
-                        (d.count('revenueFils') / 1000).toStringAsFixed(2),
-                        (d.count('discountFils') / 1000).toStringAsFixed(2),
+                        Money(
+                          d.count('revenueMinor'),
+                          data.currency,
+                        ).toDisplayString(),
+                        Money(
+                          d.count('discountMinor'),
+                          data.currency,
+                        ).toDisplayString(),
                         '${d.count('cancelledByRider')}',
                         '${d.count('cancelledByDriver')}',
                         '${d.count('cancelledBySystem')}',
@@ -191,7 +210,7 @@ class ReportsChart extends StatelessWidget {
     );
     final maxRevenue = data.days.fold<int>(
       0,
-      (m, d) => d.count('revenueFils') > m ? d.count('revenueFils') : m,
+      (m, d) => d.count('revenueMinor') > m ? d.count('revenueMinor') : m,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -200,7 +219,7 @@ class ReportsChart extends StatelessWidget {
         Text(
           context.l10n.reportsScale(
             '$maxRides',
-            (maxRevenue / 1000).toStringAsFixed(2),
+            Money(maxRevenue, data.currency).toDisplayString(),
           ),
           style: AppTextStyles.footnote,
         ),
@@ -211,7 +230,10 @@ class ReportsChart extends StatelessWidget {
                 (d) => context.l10n.reportsChartDay(
                   d.day,
                   '${d.count('requested')}',
-                  (d.count('revenueFils') / 1000).toStringAsFixed(2),
+                  Money(
+                    d.count('revenueMinor'),
+                    data.currency,
+                  ).toDisplayString(),
                 ),
               )
               .join('; '),
@@ -281,7 +303,7 @@ class ReportsPainter extends CustomPainter {
       final x = (i + 0.5) * step;
       final y =
           size.height -
-          (maxRevenue == 0 ? 0 : d.count('revenueFils') / maxRevenue) *
+          (maxRevenue == 0 ? 0 : d.count('revenueMinor') / maxRevenue) *
               (size.height - stroke);
       if (i == 0) {
         path.moveTo(x, y);

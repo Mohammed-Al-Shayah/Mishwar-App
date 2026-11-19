@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PromoQuoteModel {
 
- String get code; double get discount; double get fareBefore; double get fareAfter;
+ String get code; double get discount; double get fareBefore; double get fareAfter; String get currency;
 /// Create a copy of PromoQuoteModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PromoQuoteModelCopyWith<PromoQuoteModel> get copyWith => _$PromoQuoteModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PromoQuoteModel&&(identical(other.code, code) || other.code == code)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.fareBefore, fareBefore) || other.fareBefore == fareBefore)&&(identical(other.fareAfter, fareAfter) || other.fareAfter == fareAfter));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PromoQuoteModel&&(identical(other.code, code) || other.code == code)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.fareBefore, fareBefore) || other.fareBefore == fareBefore)&&(identical(other.fareAfter, fareAfter) || other.fareAfter == fareAfter)&&(identical(other.currency, currency) || other.currency == currency));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,discount,fareBefore,fareAfter);
+int get hashCode => Object.hash(runtimeType,code,discount,fareBefore,fareAfter,currency);
 
 @override
 String toString() {
-  return 'PromoQuoteModel(code: $code, discount: $discount, fareBefore: $fareBefore, fareAfter: $fareAfter)';
+  return 'PromoQuoteModel(code: $code, discount: $discount, fareBefore: $fareBefore, fareAfter: $fareAfter, currency: $currency)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PromoQuoteModelCopyWith<$Res>  {
   factory $PromoQuoteModelCopyWith(PromoQuoteModel value, $Res Function(PromoQuoteModel) _then) = _$PromoQuoteModelCopyWithImpl;
 @useResult
 $Res call({
- String code, double discount, double fareBefore, double fareAfter
+ String code, double discount, double fareBefore, double fareAfter, String currency
 });
 
 
@@ -65,13 +65,14 @@ class _$PromoQuoteModelCopyWithImpl<$Res>
 
 /// Create a copy of PromoQuoteModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? discount = null,Object? fareBefore = null,Object? fareAfter = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? discount = null,Object? fareBefore = null,Object? fareAfter = null,Object? currency = null,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,discount: null == discount ? _self.discount : discount // ignore: cast_nullable_to_non_nullable
 as double,fareBefore: null == fareBefore ? _self.fareBefore : fareBefore // ignore: cast_nullable_to_non_nullable
 as double,fareAfter: null == fareAfter ? _self.fareAfter : fareAfter // ignore: cast_nullable_to_non_nullable
-as double,
+as double,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  double discount,  double fareBefore,  double fareAfter)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  double discount,  double fareBefore,  double fareAfter,  String currency)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PromoQuoteModel() when $default != null:
-return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter);case _:
+return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter,_that.currency);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  double discount,  double fareBefore,  double fareAfter)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  double discount,  double fareBefore,  double fareAfter,  String currency)  $default,) {final _that = this;
 switch (_that) {
 case _PromoQuoteModel():
-return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter);case _:
+return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter,_that.currency);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  double discount,  double fareBefore,  double fareAfter)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  double discount,  double fareBefore,  double fareAfter,  String currency)?  $default,) {final _that = this;
 switch (_that) {
 case _PromoQuoteModel() when $default != null:
-return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter);case _:
+return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter,_that.currency);case _:
   return null;
 
 }
@@ -212,13 +213,14 @@ return $default(_that.code,_that.discount,_that.fareBefore,_that.fareAfter);case
 @JsonSerializable()
 
 class _PromoQuoteModel extends PromoQuoteModel {
-  const _PromoQuoteModel({required this.code, required this.discount, required this.fareBefore, required this.fareAfter}): super._();
+  const _PromoQuoteModel({required this.code, required this.discount, required this.fareBefore, required this.fareAfter, this.currency = 'JOD'}): super._();
   factory _PromoQuoteModel.fromJson(Map<String, dynamic> json) => _$PromoQuoteModelFromJson(json);
 
 @override final  String code;
 @override final  double discount;
 @override final  double fareBefore;
 @override final  double fareAfter;
+@override@JsonKey() final  String currency;
 
 /// Create a copy of PromoQuoteModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PromoQuoteModel&&(identical(other.code, code) || other.code == code)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.fareBefore, fareBefore) || other.fareBefore == fareBefore)&&(identical(other.fareAfter, fareAfter) || other.fareAfter == fareAfter));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PromoQuoteModel&&(identical(other.code, code) || other.code == code)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.fareBefore, fareBefore) || other.fareBefore == fareBefore)&&(identical(other.fareAfter, fareAfter) || other.fareAfter == fareAfter)&&(identical(other.currency, currency) || other.currency == currency));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,discount,fareBefore,fareAfter);
+int get hashCode => Object.hash(runtimeType,code,discount,fareBefore,fareAfter,currency);
 
 @override
 String toString() {
-  return 'PromoQuoteModel(code: $code, discount: $discount, fareBefore: $fareBefore, fareAfter: $fareAfter)';
+  return 'PromoQuoteModel(code: $code, discount: $discount, fareBefore: $fareBefore, fareAfter: $fareAfter, currency: $currency)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$PromoQuoteModelCopyWith<$Res> implements $PromoQuoteModel
   factory _$PromoQuoteModelCopyWith(_PromoQuoteModel value, $Res Function(_PromoQuoteModel) _then) = __$PromoQuoteModelCopyWithImpl;
 @override @useResult
 $Res call({
- String code, double discount, double fareBefore, double fareAfter
+ String code, double discount, double fareBefore, double fareAfter, String currency
 });
 
 
@@ -270,13 +272,14 @@ class __$PromoQuoteModelCopyWithImpl<$Res>
 
 /// Create a copy of PromoQuoteModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? discount = null,Object? fareBefore = null,Object? fareAfter = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? discount = null,Object? fareBefore = null,Object? fareAfter = null,Object? currency = null,}) {
   return _then(_PromoQuoteModel(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,discount: null == discount ? _self.discount : discount // ignore: cast_nullable_to_non_nullable
 as double,fareBefore: null == fareBefore ? _self.fareBefore : fareBefore // ignore: cast_nullable_to_non_nullable
 as double,fareAfter: null == fareAfter ? _self.fareAfter : fareAfter // ignore: cast_nullable_to_non_nullable
-as double,
+as double,currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

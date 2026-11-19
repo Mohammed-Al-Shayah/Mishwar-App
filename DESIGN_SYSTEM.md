@@ -234,3 +234,9 @@ Implement via Material 3 `ThemeData` + `MishwarColors` `ThemeExtension`; widgets
   series uses its own labeled scale; accessible copy provides daily values.
   Daily tables scroll horizontally, and CSV export is a secondary action.
 - The sidebar navigation scrolls while language and sign-out stay visible.
+
+### Markets and currencies (T8.2)
+
+- Pricing, Settings, Promos, Reports and driver earnings use the native monochrome segmented control for فلسطين / الأردن. Disable it while saving. Reuse current spacing and typography tokens.
+- All ride amounts include their server currency: ₪ 25.50 or JD 4.70, in Western digits, LTR at the layout start edge. Never combine currencies into a total. Overview and driver home show separate currency amounts. Account adds a read-only footnote under the phone: فلسطين · شيكل / الأردن · دينار.
+- Pricing and promo editors submit parameters to the server; monetary previews and waiting-fee arithmetic do not run in widgets.

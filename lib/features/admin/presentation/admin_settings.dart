@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
@@ -6,11 +7,13 @@ import 'package:mishwar/core/theme/admin_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/market_switcher.dart';
 import 'package:mishwar/features/admin/domain/admin_management.dart';
 import 'package:mishwar/features/admin/presentation/admin_labels.dart';
 import 'package:mishwar/features/admin/presentation/management_cubit.dart';
 
 String settingsLabel(BuildContext c, String key) => switch (key) {
+  'rounding' || 'step' => c.l10n.settingsRounding,
   'cancellationFee' => c.l10n.settingsCancellation,
   'waitingFee' => c.l10n.settingsWaiting,
   'scheduling' => c.l10n.settingsScheduling,
@@ -37,6 +40,11 @@ class AdminSettings extends StatelessWidget {
       BlocBuilder<ManagementCubit, ManagementState>(
         builder: (context, state) => ListView(
           children: [
+            MarketSwitcher(
+              value: state.market,
+              enabled: !state.loading && !state.busy,
+              onChanged: context.read<ManagementCubit>().selectMarket,
+            ),
             if (state.loading) const LinearProgressIndicator(),
             if (state.failure != null)
               Row(
@@ -57,13 +65,29 @@ class AdminSettings extends StatelessWidget {
               for (final section in [
                 'cancellationFee',
                 'waitingFee',
+                'rounding',
                 'scheduling',
-                'airport',
+                if (state.market == 'JO') 'airport',
               ])
                 SettingsCard(
-                  key: ValueKey(section),
+                  key: ValueKey('${state.market}-$section'),
                   section: section,
-                  data: managementMap(state.data!.settings[section]),
+                  data: section == 'rounding'
+                      ? {
+                          'step':
+                              managementMap(
+                                state.data!.settings['rounding'],
+                              )[state.market] ??
+                              (state.market == 'PS' ? 0.5 : 0.05),
+                        }
+                      : managementMap(
+                          ['cancellationFee', 'waitingFee'].contains(section)
+                              ? managementMap(
+                                      state.data!.settings[section],
+                                    )[state.market] ??
+                                    state.data!.settings[section]
+                              : state.data!.settings[section],
+                        ),
                   edited: state.data!.edits[section],
                   busy: state.busy,
                 ),
@@ -333,7 +357,9 @@ class _SettingsCardState extends State<SettingsCard> {
                       await context.read<ManagementCubit>().save(
                         'updateAppSettings',
                         {
-                          widget.section: widget.section == 'airport'
+                          widget.section: widget.section == 'rounding'
+                              ? values['step']!
+                              : widget.section == 'airport'
                               ? {'fixedFares': values, 'pickupPoints': _points}
                               : values,
                         },

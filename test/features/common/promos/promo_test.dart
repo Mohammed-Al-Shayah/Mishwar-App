@@ -32,9 +32,9 @@ void main() {
         const Right<Failure, PromoQuote>(
           PromoQuote(
             code: 'WELCOME50',
-            discountFils: 1700,
-            fareBeforeFils: 3450,
-            fareAfterFils: 1750,
+            discountMinor: 1700,
+            fareBeforeMinor: 3450,
+            fareAfterMinor: 1750,
           ),
         ),
       );
@@ -73,7 +73,7 @@ void main() {
         );
         expect(
           await validate('CODE', draft, VehicleType.economy),
-          Left<Failure, PromoQuote>(PromoFailure(reason, minFareFils: 3000)),
+          Left<Failure, PromoQuote>(PromoFailure(reason, minFareMinor: 3000)),
         );
       }
       when(

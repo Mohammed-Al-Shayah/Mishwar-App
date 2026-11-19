@@ -34,9 +34,9 @@ class LoadManagement {
   Future<Either<Failure, ManagementData>> call() => _repository.load();
 }
 
-/// Same integer-fils, downward 50-fils rounding as evaluatePromo on the server.
-int promoDiscountFils({
-  required int fareFils,
+/// Reference math for shared server fixtures. Widgets never price money.
+int promoDiscountMinor({
+  required int fareMinor,
   required String type,
   required double value,
   double? maxDiscount,
@@ -49,10 +49,10 @@ int promoDiscountFils({
   final numerator = BigInt.parse('${decimal.first}$fraction');
   final raw = type == 'percent'
       ? (scale >= 0
-                ? BigInt.from(fareFils) *
+                ? BigInt.from(fareMinor) *
                       numerator ~/
                       (BigInt.from(100) * BigInt.from(10).pow(scale))
-                : BigInt.from(fareFils) *
+                : BigInt.from(fareMinor) *
                       numerator *
                       BigInt.from(10).pow(-scale) ~/
                       BigInt.from(100))
@@ -60,11 +60,12 @@ int promoDiscountFils({
       : (value * 1000).round();
   final cap = type == 'percent' && maxDiscount != null
       ? (maxDiscount * 1000).round()
-      : fareFils;
-  return raw.clamp(0, cap.clamp(0, fareFils)) ~/ 50 * 50;
+      : fareMinor;
+  return raw.clamp(0, cap.clamp(0, fareMinor)) ~/ 50 * 50;
 }
 
 const settingsBounds = <String, Map<String, (double, double, bool)>>{
+  'rounding': {'step': (0.01, 10, false)},
   'cancellationFee': {
     'amount': (0, 20, false),
     'afterSeconds': (0, 1800, true),

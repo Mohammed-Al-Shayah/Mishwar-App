@@ -135,7 +135,7 @@
   "chooseVehicle": "اختر {vehicle}",
   "tripPill": "{minutes} د · {destination}",
   "arrivalDuration": "{time} · {minutes} دقيقة",
-  "fareJod": "JD {amount}",
+  "fareAmount": "{amount}",
   "@chooseVehicle": {
     "placeholders": {
       "vehicle": {
@@ -163,7 +163,7 @@
       }
     }
   },
-  "@fareJod": {
+  "@fareAmount": {
     "placeholders": {
       "amount": {
         "type": "String"
@@ -241,7 +241,7 @@
   "tripCashPrompt": "استلم كاش من الراكب",
   "tripCall": "اتصل بالراكب",
   "tripNavigate": "خرائط Google",
-  "tripPrice": "JD {amount}",
+  "tripPrice": "{amount}",
   "tripToPickup": "رايح لعند الراكب",
   "tripArrived": "وصلت",
   "tripCompleteConfirm": "وصلت للوجهة؟",
@@ -440,7 +440,7 @@
   },
   "earningsDayTrips": "مشاوير هذا اليوم",
   "earningsNoTrips": "ما في مشاوير بهذا اليوم",
-  "earningsBarLabel": "{day}، JD {amount}",
+  "earningsBarLabel": "{day}، {amount}",
   "@earningsBarLabel": {
     "placeholders": {
       "day": {
@@ -565,7 +565,7 @@
   "adminUpdatedBy": "آخر تعديل بواسطة",
   "adminUpdatedAt": "آخر تعديل بتاريخ",
   "adminSaved": "تم الحفظ",
-  "adminCurrency": "د.أ",
+  "adminCurrency": "العملة",
   "adminUnknown": "—",
   "adminLanguage": "اللغة",
   "savedPlaces": "الأماكن المحفوظة",
@@ -628,7 +628,7 @@
   "promoApply": "تطبيق",
   "promoCodeLabel": "كود الخصم",
   "promoRemove": "إزالة كود الخصم",
-  "promoSelected": "{code} · خصم JD {amount}",
+  "promoSelected": "{code} · خصم {amount}",
   "@promoSelected": {
     "placeholders": {
       "code": {
@@ -639,7 +639,7 @@
       }
     }
   },
-  "promoDiscount": "خصم ({code}) − JD {amount}",
+  "promoDiscount": "خصم ({code}) − {amount}",
   "@promoDiscount": {
     "placeholders": {
       "code": {
@@ -650,7 +650,7 @@
       }
     }
   },
-  "promoCashFootnote": "شامل خصم JD {amount}",
+  "promoCashFootnote": "شامل خصم {amount}",
   "@promoCashFootnote": {
     "placeholders": {
       "amount": {
@@ -665,7 +665,7 @@
   "promoLimit": "وصل الكود للحد الأقصى",
   "promoUserLimit": "استخدمت الكود قبل",
   "promoFirstRide": "الكود لأول مشوار بس",
-  "promoMinFare": "أقل سعر للكود JD {amount}",
+  "promoMinFare": "أقل سعر للكود {amount}",
   "@promoMinFare": {
     "placeholders": {
       "amount": {
@@ -916,16 +916,16 @@
   "settingsWaiting": "رسوم الانتظار",
   "settingsScheduling": "الحجز المسبق",
   "settingsAirport": "المطار",
-  "settingsAmount": "المبلغ (JD)",
+  "settingsAmount": "المبلغ",
   "settingsAfterSeconds": "بعد كم ثانية؟",
   "settingsFreeMinutes": "دقائق الانتظار المجانية",
-  "settingsPerMinute": "لكل دقيقة (JD)",
+  "settingsPerMinute": "لكل دقيقة",
   "settingsMinLeadMinutes": "أقل وقت قبل الحجز (دقيقة)",
   "settingsMaxDaysAhead": "أبعد حجز (يوم)",
   "settingsDispatchBeforeMinutes": "إرسال الطلب قبل الموعد (دقيقة)",
-  "settingsEconomy": "مشوار X (JD)",
-  "settingsComfort": "مريح (JD)",
-  "settingsVan": "XL (JD)",
+  "settingsEconomy": "مشوار X",
+  "settingsComfort": "مريح",
+  "settingsVan": "XL",
   "settingsZone": "حدود منطقة المطار (للعرض بس)",
   "settingsPickupPoints": "نقاط الانطلاق",
   "settingsAddPoint": "إضافة نقطة",
@@ -935,7 +935,7 @@
   "promoPercent": "نسبة مئوية",
   "promoFixed": "مبلغ ثابت",
   "promoValue": "قيمة الخصم",
-  "promoMaxDiscount": "أعلى خصم (JD، اختياري)",
+  "promoMaxDiscount": "أعلى خصم (اختياري)",
   "promoUsageLimit": "حد الاستخدام الكلي (اختياري)",
   "promoPerUserLimit": "حد الاستخدام للشخص",
   "promoValidFrom": "بداية الصلاحية",
@@ -968,7 +968,7 @@
       }
     }
   },
-  "promoMinimumFareLabel": "أقل سعر مشوار (JD، اختياري)",
+  "promoMinimumFareLabel": "أقل سعر مشوار (اختياري)",
   "adminReports": "التقارير",
   "reportsRange": "آخر {days} أيام",
   "@reportsRange": {
@@ -980,8 +980,8 @@
   },
   "reportsRides": "المشاوير المطلوبة",
   "reportsCompletedRate": "المشاوير المكتملة %",
-  "reportsRevenue": "الإيراد (JD)",
-  "reportsAverage": "متوسط سعر المشوار (JD)",
+  "reportsRevenue": "الإيراد",
+  "reportsAverage": "متوسط سعر المشوار",
   "reportsCancellationRate": "نسبة الإلغاء %",
   "reportsPromoUses": "استخدامات الأكواد",
   "reportsExport": "تنزيل CSV",
@@ -989,7 +989,7 @@
   "reportsTopPromos": "أكثر الأكواد استخداماً",
   "reportsDay": "اليوم",
   "reportsCompleted": "المكتملة",
-  "reportsDiscount": "الخصومات (JD)",
+  "reportsDiscount": "الخصومات",
   "reportsRiderCancel": "إلغاء الراكب",
   "reportsDriverCancel": "إلغاء السائق",
   "reportsSystemCancel": "إلغاء النظام",
@@ -999,7 +999,7 @@
   "reportsScheduled": "المحجوزة",
   "reportsUses": "الاستخدامات",
   "reportsTimezone": "التواريخ بتوقيت عمّان. كل حدث محسوب بيومه، وإلغاء السائق بشمل إعادة إرسال الطلب.",
-  "reportsScale": "أعلى عمود: {rides} مشوار · أعلى خط: JD {revenue}",
+  "reportsScale": "أعلى عمود: {rides} مشوار · أعلى خط: {revenue}",
   "@reportsScale": {
     "placeholders": {
       "rides": {
@@ -1010,7 +1010,7 @@
       }
     }
   },
-  "reportsChartDay": "{day}: {rides} مشوار، إيراد JD {revenue}",
+  "reportsChartDay": "{day}: {rides} مشوار، إيراد {revenue}",
   "@reportsChartDay": {
     "placeholders": {
       "day": {
@@ -1028,5 +1028,12 @@
   "chooseCountry": "اختار البلد",
   "countryJordan": "الأردن",
   "countryPalestine": "فلسطين",
-  "otpRequestNew": "الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة."
+  "otpRequestNew": "الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة.",
+  "marketPalestine": "فلسطين",
+  "marketJordan": "الأردن",
+  "accountMarketPS": "فلسطين · شيكل",
+  "accountMarketJO": "الأردن · دينار",
+  "outOfServiceArea": "هاد المكان برا منطقة الخدمة",
+  "settingsRounding": "تقريب الأجرة",
+  "promoWrongMarket": "هاد الكود لسوق تاني"
 }

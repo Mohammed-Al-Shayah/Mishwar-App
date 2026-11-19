@@ -7,6 +7,11 @@ const hour = 60 * 60 * 1000;
 const day = 24 * hour;
 const hash = (kind: string, value: string) => createHash('sha256').update(`${kind}:${value}`).digest('hex');
 
+/** True only for "send an SMS" blocking events (not sign-in / create events). */
+export function isSmsSendEvent(event: { eventType?: string; smsType?: string }): boolean {
+  return (event.eventType ?? '').endsWith('beforeSendSms') || event.smsType !== undefined;
+}
+
 /** Sliding windows prevent bursts across boundaries. Never log the event or PII. */
 export async function limitOtpSms(event: Pick<AuthBlockingEvent, 'additionalUserInfo' | 'ipAddress'>,
   db: Firestore, now = Date.now()): Promise<void> {

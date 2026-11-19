@@ -26,7 +26,7 @@ export async function autocompleteHandler(request: CallableRequest, key: string,
         }[];
     }>('https://places.googleapis.com/v1/places:autocomplete', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': key },
-        body: JSON.stringify({ input, sessionToken, languageCode, includedRegionCodes: ['jo'],
+        body: JSON.stringify({ input, sessionToken, languageCode, includedRegionCodes: ['jo', 'ps'],
             ...(bias ? { locationBias: { circle: { center: { latitude: bias.lat, longitude: bias.lng }, radius: 30000 } } } : {}) }),
     }, fetchImpl);
     return { suggestions: (response.suggestions ?? []).flatMap(({ placePrediction: p }) => p?.placeId ? [{

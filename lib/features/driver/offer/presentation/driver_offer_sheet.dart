@@ -119,8 +119,11 @@ class DriverOfferSheet extends StatelessWidget {
                       Align(
                         alignment: AlignmentDirectional.centerStart,
                         child: Text(
-                          l10n.fareJod(
-                            Money(ride.fareEstimatedFils).toJodString(),
+                          l10n.fareAmount(
+                            Money(
+                              ride.fareEstimatedMinor,
+                              ride.currency,
+                            ).toDisplayString(),
                           ),
                           textDirection: TextDirection.ltr,
                           style: AppTextStyles.tabular(

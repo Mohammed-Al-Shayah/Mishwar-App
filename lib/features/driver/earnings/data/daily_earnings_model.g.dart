@@ -8,9 +8,14 @@ part of 'daily_earnings_model.dart';
 
 _DailyEarningsModel _$DailyEarningsModelFromJson(Map<String, dynamic> json) =>
     _DailyEarningsModel(
+      currency: json['currency'] as String? ?? 'JOD',
       total: (json['total'] as num?)?.toDouble() ?? 0.0,
       trips: (json['trips'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$DailyEarningsModelToJson(_DailyEarningsModel instance) =>
-    <String, dynamic>{'total': instance.total, 'trips': instance.trips};
+    <String, dynamic>{
+      'currency': instance.currency,
+      'total': instance.total,
+      'trips': instance.trips,
+    };

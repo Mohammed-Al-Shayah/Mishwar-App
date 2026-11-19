@@ -114,9 +114,11 @@ final class SchedulingFailure extends Failure {
 }
 
 final class PromoFailure extends Failure {
-  const PromoFailure(this.reason, {this.minFareFils}) : super('promo');
+  const PromoFailure(this.reason, {this.minFareMinor, this.currency = 'JOD'})
+    : super('promo');
   final String reason;
-  final int? minFareFils;
+  final String currency;
+  final int? minFareMinor;
   @override
-  List<Object> get props => [reason, ?minFareFils];
+  List<Object> get props => [reason, currency, ?minFareMinor];
 }

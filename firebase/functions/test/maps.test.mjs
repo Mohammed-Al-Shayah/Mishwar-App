@@ -21,7 +21,7 @@ for (const [name,handler,data,body] of cases) {
   let called = false;
   const result = await handler({auth:{uid:'test'},data},'fake-key',async (url,init)=>{
    called=true; assert.equal(init.headers['X-Goog-Api-Key'],'fake-key'); assert.ok(init.signal);
-   if(name==='autocomplete') { const payload=JSON.parse(init.body); assert.equal(payload.input,'Amman'); assert.equal(payload.languageCode,'ar'); assert.deepEqual(payload.includedRegionCodes,['jo']); assert.equal(payload.locationBias,undefined); }
+   if(name==='autocomplete') { const payload=JSON.parse(init.body); assert.equal(payload.input,'Amman'); assert.equal(payload.languageCode,'ar'); assert.deepEqual(payload.includedRegionCodes,['jo', 'ps']); assert.equal(payload.locationBias,undefined); }
    if(name==='details') { assert.ok(url.includes('a%2Fb')); assert.equal(init.headers['X-Goog-FieldMask'],'id,displayName,formattedAddress,location'); }
    if(name==='route') { const payload=JSON.parse(init.body); assert.equal(payload.travelMode,'DRIVE');assert.equal(payload.routingPreference,'TRAFFIC_AWARE'); }
    return Response.json(body);

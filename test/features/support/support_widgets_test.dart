@@ -39,10 +39,10 @@ void main() {
       vehicleType: original.vehicleType,
       pickup: original.pickup,
       dropoff: original.dropoff,
-      fareEstimatedFils: original.fareEstimatedFils,
+      fareEstimatedMinor: original.fareEstimatedMinor,
       createdAt: original.createdAt,
       cancelledBy: 'driver',
-      fareCancellationFeeFils: 1500,
+      fareCancellationFeeMinor: 1500,
     );
     await tester.pumpWidget(
       historyWrap(Scaffold(body: RideReceiptContent(ride: ride))),

@@ -1,17 +1,19 @@
-﻿import { Timestamp, type Firestore } from 'firebase-admin/firestore';
+import { currencyFor } from '../markets.js';
+import { minorScale } from '../money.js';
+import { Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { earningsDay } from '../rides/fees.js';
 
 type Ride = Record<string, unknown>;
 type Counters = Record<string, number>;
-export const emptyDailyStats = { requested: 0, completed: 0, cancelledByRider: 0, cancelledByDriver: 0, cancelledBySystem: 0, noDrivers: 0, revenueFils: 0, discountFils: 0, promoUses: 0, parcels: 0, airport: 0, scheduled: 0 };
+export const emptyDailyStats = { requested: 0, completed: 0, cancelledByRider: 0, cancelledByDriver: 0, cancelledBySystem: 0, noDrivers: 0, revenueMinor: 0, discountMinor: 0, promoUses: 0, parcels: 0, airport: 0, scheduled: 0 };
 export interface Contribution { marker: string; day: string; counters: Counters; promoCode?: string }
 function stamp(value: unknown, fallback: Timestamp): Timestamp {
   return value && typeof (value as Timestamp).toMillis === 'function' ? value as Timestamp : fallback;
 }
-function fils(value: unknown): number {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.round(value * 1000) : 0;
+function fils(value: unknown, scale = 1000): number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.round(value * scale) : 0;
 }
 /** One count per ride/category. Re-dispatch is a driver cancellation, not a new request. */
 export function rideContributions(ride: Ride, eventTime: Timestamp): Contribution[] {
@@ -22,10 +24,11 @@ export function rideContributions(ride: Ride, eventTime: Timestamp): Contributio
   if (ride.driverCancelledAt) contributions.push({ marker: 'cancelledByDriver', day: earningsDay(stamp(ride.driverCancelledAt, eventTime)), counters: { cancelledByDriver: 1 } });
   if (ride.status === 'completed') {
     const fare = ride.fare as Record<string, unknown> | undefined, promo = ride.promo as Record<string, unknown> | undefined;
-    const discountFils = fils(fare?.discount);
+    const scale = minorScale(currencyFor(ride.market === 'PS' ? 'PS' : 'JO'));
+    const discountMinor = fils(fare?.discount, scale);
     const promoCode = promo?.applied === true && typeof promo.code === 'string' && /^[A-Z0-9]{3,20}$/.test(promo.code) ? promo.code : undefined;
     contributions.push({ marker: 'completed', day: earningsDay(stamp(ride.completedAt, eventTime)), counters: {
-      completed: 1, revenueFils: fils(fare?.final), discountFils, promoUses: promoCode ? 1 : 0,
+      completed: 1, revenueMinor: fils(fare?.final, scale), discountMinor, promoUses: promoCode ? 1 : 0,
     }, promoCode });
   } else if (ride.status === 'cancelled') {
     const marker = ride.cancelledBy === 'rider' ? 'cancelledByRider' : ride.cancelledBy === 'driver' ? 'cancelledByDriver' : 'cancelledBySystem';
@@ -37,6 +40,7 @@ export function rideContributions(ride: Ride, eventTime: Timestamp): Contributio
 }
 export async function countRideStats(db: Firestore, rideId: string, before: Ride | undefined, after: Ride | undefined, eventTime: Timestamp) {
   if (!after || (before && before.status === after.status)) return;
+  const market = after.market === 'PS' ? 'PS' : 'JO';
   const contributions = rideContributions(after, eventTime);
   await db.runTransaction(async tx => {
     const ref = db.doc(`rides/${rideId}`), current = await tx.get(ref);
@@ -46,11 +50,11 @@ export async function countRideStats(db: Firestore, rideId: string, before: Ride
     if (!pending.length) return;
     const updates = new Map<string, { counters: Counters; promos: Counters }>();
     for (const c of pending) {
-      const path = `stats/${c.day}`, update = updates.get(path) ?? { counters: {}, promos: {} };
+      const path = `stats/${c.day}_${market}`, update = updates.get(path) ?? { counters: {}, promos: {} };
       for (const [key, value] of Object.entries(c.counters)) update.counters[key] = (update.counters[key] ?? 0) + value;
       if (c.promoCode) {
         update.promos[c.promoCode] = (update.promos[c.promoCode] ?? 0) + 1;
-        updates.set(`stats/promos/${c.promoCode}/${c.day}`, { counters: { uses: 1 }, promos: {} });
+        updates.set(`stats/promos/${c.promoCode}/${c.day}_${market}`, { counters: { uses: 1 }, promos: {} });
       }
       updates.set(path, update);
       counted.add(c.marker);
@@ -59,7 +63,7 @@ export async function countRideStats(db: Firestore, rideId: string, before: Ride
     const snapshots = await Promise.all([...updates.keys()].map(path => tx.get(db.doc(path))));
     for (const snapshot of snapshots) {
       const update = updates.get(snapshot.ref.path)!, previous = snapshot.data() ?? {};
-      const next: Record<string, unknown> = { ...(snapshot.ref.path.split('/').length === 2 ? emptyDailyStats : {}), ...previous };
+      const next: Record<string, unknown> = { ...(snapshot.ref.path.split('/').length === 2 ? emptyDailyStats : {}), ...previous, market, currency: currencyFor(market), day: snapshot.ref.id.slice(0, 10) };
       for (const [key, value] of Object.entries(update.counters)) next[key] = (previous[key] ?? 0) + value;
       const promoUsesByCode = { ...previous.promoUsesByCode };
       for (const [key, value] of Object.entries(update.promos)) promoUsesByCode[key] = (promoUsesByCode[key] ?? 0) + value;

@@ -63,8 +63,8 @@ class RideConfirmLoaded extends RideConfirmState {
     promoLoading: loading,
     promoFailure: failure,
   );
-  int get fareFils =>
-      fares.firstWhere((fare) => fare.vehicleType == selected).fils;
+  int get fareMinor =>
+      fares.firstWhere((fare) => fare.vehicleType == selected).minor;
   @override
   List<Object?> get props => [
     route,

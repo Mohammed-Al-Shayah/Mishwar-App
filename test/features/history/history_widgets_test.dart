@@ -192,7 +192,7 @@ void main() {
         7,
         (i) => DailyEarnings(
           day: end.subtract(Duration(days: 6 - i)),
-          totalFils: i * 1000,
+          totalMinor: i * 1000,
           trips: i,
         ),
       );
@@ -220,7 +220,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('JD 6.00'), findsOneWidget);
+      expect(find.text('JD 6.00'), findsNWidgets(2));
       final chart = find.byType(EarningsBarChart);
       expect(chart, findsOneWidget);
       final bars = find.descendant(of: chart, matching: find.byType(InkWell));
@@ -228,7 +228,7 @@ void main() {
       await tester.runAsync(() => tester.tap(bars.first));
       await tester.pumpAndSettle();
       expect(cubit.state.selected, days.first.day);
-      expect(find.text('JD 0.00'), findsOneWidget);
+      expect(find.text('JD 0.00'), findsNWidgets(2));
       expect(tester.takeException(), isNull);
     });
   }
@@ -260,14 +260,14 @@ void main() {
     );
     live.add(
       DriverEarningsState(
-        earnings: DailyEarnings(day: DateTime.utc(2026), totalFils: 12500),
+        earnings: DailyEarnings(day: DateTime.utc(2026), totalMinor: 12500),
       ),
     );
     await tester.pumpAndSettle();
     expect(find.text('JD 12.50'), findsOneWidget);
     live.add(
       DriverEarningsState(
-        earnings: DailyEarnings(day: DateTime.utc(2026), totalFils: 15000),
+        earnings: DailyEarnings(day: DateTime.utc(2026), totalMinor: 15000),
       ),
     );
     await tester.pumpAndSettle();

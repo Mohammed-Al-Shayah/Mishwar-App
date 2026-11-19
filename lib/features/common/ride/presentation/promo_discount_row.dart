@@ -11,14 +11,14 @@ class PromoDiscountRow extends StatelessWidget {
   final RideEntity ride;
   @override
   Widget build(BuildContext context) =>
-      ride.promoApplied != true || ride.discountFils <= 0
+      ride.promoApplied != true || ride.discountMinor <= 0
       ? const SizedBox.shrink()
       : Padding(
           padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: Text(
             context.l10n.promoDiscount(
               ride.promoCode ?? '',
-              Money(ride.discountFils).toJodString(),
+              Money(ride.discountMinor, ride.currency).toDisplayString(),
             ),
             style: AppTextStyles.tabular(
               AppTextStyles.body,

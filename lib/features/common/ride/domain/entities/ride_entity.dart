@@ -28,18 +28,22 @@ class RideEntity extends Equatable {
     required this.vehicleType,
     required this.pickup,
     required this.dropoff,
-    required this.fareEstimatedFils,
+    required this.fareEstimatedMinor,
     required this.createdAt,
+    this.waitingFreeSeconds = 180,
+    this.waitingRateMinor = 50,
+    this.market = 'JO',
+    this.currency = 'JOD',
     this.serviceType = ServiceType.ride,
     this.parcel,
     this.airport,
     this.scheduledFor,
     this.shareToken,
     this.promoCode,
-    this.discountFils = 0,
-    this.fareCancellationFeeFils = 0,
-    this.fareWaitingFeeFils = 0,
-    this.farePreviousBalanceFils = 0,
+    this.discountMinor = 0,
+    this.fareCancellationFeeMinor = 0,
+    this.fareWaitingFeeMinor = 0,
+    this.farePreviousBalanceMinor = 0,
     this.promoApplied,
     this.driverRating,
     this.riderRating,
@@ -52,21 +56,25 @@ class RideEntity extends Equatable {
     this.startedAt,
     this.completedAt,
     this.route,
-    this.fareFinalFils,
+    this.fareFinalMinor,
     this.cancelledBy,
     this.searchExpiresAt,
     this.offerExpiresAt,
     this.offerDistanceMeters,
   });
+  final int waitingFreeSeconds;
+  final int waitingRateMinor;
+  final String market;
+  final String currency;
   final ServiceType serviceType;
   final ParcelDetails? parcel;
   final AirportDetails? airport;
   final String? shareToken;
   final String? promoCode;
-  final int discountFils;
-  final int fareCancellationFeeFils;
-  final int fareWaitingFeeFils;
-  final int farePreviousBalanceFils;
+  final int discountMinor;
+  final int fareCancellationFeeMinor;
+  final int fareWaitingFeeMinor;
+  final int farePreviousBalanceMinor;
   final bool? promoApplied;
   final DateTime? scheduledFor;
   final int? driverRating;
@@ -86,8 +94,8 @@ class RideEntity extends Equatable {
   final RidePlace pickup;
   final RidePlace dropoff;
   final RouteInfo? route;
-  final int fareEstimatedFils;
-  final int? fareFinalFils;
+  final int fareEstimatedMinor;
+  final int? fareFinalMinor;
   final String? cancelledBy;
   final DateTime createdAt;
   final DateTime? searchExpiresAt;
@@ -101,16 +109,20 @@ class RideEntity extends Equatable {
   );
   @override
   List<Object?> get props => [
+    waitingFreeSeconds,
+    waitingRateMinor,
+    market,
+    currency,
     serviceType,
     airport,
     parcel,
     scheduledFor,
     shareToken,
     promoCode,
-    discountFils,
-    fareCancellationFeeFils,
-    fareWaitingFeeFils,
-    farePreviousBalanceFils,
+    discountMinor,
+    fareCancellationFeeMinor,
+    fareWaitingFeeMinor,
+    farePreviousBalanceMinor,
     promoApplied,
     driverRating,
     riderRating,
@@ -129,8 +141,8 @@ class RideEntity extends Equatable {
     pickup,
     dropoff,
     route,
-    fareEstimatedFils,
-    fareFinalFils,
+    fareEstimatedMinor,
+    fareFinalMinor,
     cancelledBy,
     createdAt,
     searchExpiresAt,

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mishwar/core/time/amman_day.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/driver/earnings/domain/daily_earnings.dart';
 
 part 'daily_earnings_model.freezed.dart';
@@ -8,6 +9,7 @@ part 'daily_earnings_model.g.dart';
 @freezed
 abstract class DailyEarningsModel with _$DailyEarningsModel {
   const factory DailyEarningsModel({
+    @Default('JOD') String currency,
     @Default(0.0) double total,
     @Default(0) int trips,
   }) = _DailyEarningsModel;
@@ -21,7 +23,8 @@ abstract class DailyEarningsModel with _$DailyEarningsModel {
     }
     return DailyEarnings(
       day: calendarDay(day),
-      totalFils: (total * 1000).round(),
+      currency: currency,
+      totalMinor: (total * Money.scale(currency)).round(),
       trips: trips,
     );
   }

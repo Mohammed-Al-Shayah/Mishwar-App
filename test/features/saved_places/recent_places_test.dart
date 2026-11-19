@@ -33,7 +33,7 @@ RideEntity ride(
     address: '$name street',
     location: const GeoPointValue(32, 35),
   ),
-  fareEstimatedFils: 100,
+  fareEstimatedMinor: 100,
   createdAt: DateTime.utc(2026),
 );
 

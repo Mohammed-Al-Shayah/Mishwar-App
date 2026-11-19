@@ -37,9 +37,13 @@ String adminDate(BuildContext context, DateTime? date) => date == null
     : DateFormat.yMMMd(
         Localizations.localeOf(context).languageCode,
       ).add_Hm().format(date.toLocal());
-String adminMoney(BuildContext context, int? fils) => fils == null
+String adminMoney(
+  BuildContext context,
+  int? minor, [
+  String currency = 'JOD',
+]) => minor == null
     ? context.l10n.adminUnknown
-    : context.l10n.fareJod(Money(fils).toJodString());
+    : context.l10n.fareAmount(Money(minor, currency).toDisplayString());
 String adminEvent(BuildContext context, String event) => switch (event) {
   'createdAt' => context.l10n.adminApplied,
   'acceptedAt' => context.l10n.adminAccepted,

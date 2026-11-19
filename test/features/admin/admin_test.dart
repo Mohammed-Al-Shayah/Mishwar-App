@@ -9,6 +9,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mishwar/app/router/app_router.dart';
 import 'package:mishwar/core/error/failures.dart';
 import 'package:mishwar/core/l10n/gen/app_localizations.dart';
+import 'package:mishwar/core/widgets/market_switcher.dart';
 import 'package:mishwar/features/admin/domain/admin_management.dart';
 import 'package:mishwar/features/admin/domain/admin_reports.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
@@ -25,7 +26,6 @@ import 'package:mishwar/features/common/auth/domain/entities/auth_user.dart';
 import 'package:mishwar/features/common/auth/domain/usecases/sign_out.dart';
 import 'package:mishwar/features/common/auth/presentation/session/session_state.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/pricing_table.dart';
-import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart';
 import 'package:mishwar/features/common/support/domain/support_usecases.dart';
 import 'package:mishwar/features/common/support/presentation/support_cubits.dart';
 import 'package:mocktail/mocktail.dart';
@@ -76,7 +76,6 @@ AdminCubit makeCubit(TestAdminRepository repository) => AdminCubit(
   LoadAdminPage(repository),
   AdminAction(repository),
   LoadAdminLicense(repository),
-  const FareCalculator(),
 );
 
 void main() {
@@ -195,7 +194,7 @@ void main() {
     });
   }
   test(
-    'admin actions, failures, license and pricing validation/preview',
+    'admin actions, failures, license and pricing validation',
     () async {
       final repo = TestAdminRepository();
       final cubit = makeCubit(repo);
@@ -227,10 +226,6 @@ void main() {
       }
       expect(AdminCubit.parseRate('50'), 50000);
       expect(AdminCubit.parseRate('0.001'), 1);
-      expect(
-        cubit.preview(PricingTable.defaults().rates.values.first).toJodString(),
-        '4.50',
-      );
       await cubit.close();
       await repo.feed.close();
     },
@@ -360,7 +355,7 @@ void main() {
           expect(find.textContaining('31.9'), findsOneWidget);
         }
         if (section == AdminSection.pricing) {
-          expect(find.textContaining('4.50'), findsOneWidget);
+          expect(find.byType(MarketSwitcher), findsOneWidget);
           await tester.enterText(find.byKey(const ValueKey('economy-0')), '0');
           await tester.tap(find.text(l10n.adminSave));
           await tester.pumpAndSettle();
@@ -368,7 +363,13 @@ void main() {
           expect(repo.actions, isEmpty);
           await tester.enterText(find.byKey(const ValueKey('economy-0')), '1');
           await tester.pumpAndSettle();
-          expect(find.textContaining('5.00'), findsOneWidget);
+          expect(
+            tester
+                .widget<TextFormField>(find.byKey(const ValueKey('economy-0')))
+                .controller!
+                .text,
+            '1',
+          );
           await tester.tap(find.text(l10n.adminSave));
           await tester.pumpAndSettle();
           expect(repo.actions.single.$1, 'updatePricing');

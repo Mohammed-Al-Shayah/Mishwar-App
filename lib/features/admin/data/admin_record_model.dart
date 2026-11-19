@@ -19,9 +19,13 @@ abstract class AdminRecordModel with _$AdminRecordModel {
     final fare = adminMap(fields['fare']);
     final location = adminMap(fields['location']);
     final point = location['geopoint'] as GeoPoint?;
-    int? fils(Object? value) => value is num ? (value * 1000).round() : null;
+    final currency = fare['currency'] == 'ILS' ? 'ILS' : 'JOD';
+    int? minor(Object? value) => value is num
+        ? (value * (currency == 'ILS' ? 100 : 1000)).round()
+        : null;
     return AdminEntry(
       id: id,
+      currency: currency,
       status: fields['status'] as String? ?? '',
       name: fields['name'] as String? ?? '',
       phone: fields['phone'] as String? ?? '',
@@ -42,8 +46,8 @@ abstract class AdminRecordModel with _$AdminRecordModel {
       driver: driver['name'] as String? ?? fields['driverId'] as String? ?? '',
       pickup: _placeName(fields['pickup']),
       dropoff: _placeName(fields['dropoff']),
-      estimated: fils(fare['estimated']),
-      finalFare: fils(fare['final']),
+      estimated: minor(fare['estimated']),
+      finalFare: minor(fare['final']),
       riderRating: fields['riderRating'] is num
           ? fields['riderRating'] as num
           : adminMap(fields['riderRating'])['stars'] as num?,

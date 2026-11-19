@@ -1,6 +1,7 @@
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { type VehicleType } from '../pricing.js';
 
+export interface MultiPolygon { type: 'MultiPolygon'; coordinates: number[][][][] }
 export interface Polygon { type: 'Polygon'; coordinates: number[][][] }
 export interface AirportConfig {
   zone: Polygon;
@@ -29,7 +30,9 @@ export function readAirport(data?: Record<string, unknown>): AirportConfig | und
 }
 // GeoJSON positions are [longitude, latitude]. Boundaries count as inside.
 // Intended for simple rings that do not cross the antimeridian; holes are supported.
-export function pointInPolygon(lat: number, lng: number, polygon: Polygon): boolean {
+export function pointInPolygon(lat: number, lng: number, polygon: Polygon | MultiPolygon): boolean {
+  if (polygon.type === 'MultiPolygon') return polygon.coordinates.some(coordinates => pointInPolygon(lat, lng, { type: 'Polygon', coordinates }));
+  if (polygon.type !== 'Polygon' || !polygon.coordinates?.length) throw new Error('Invalid zone.');
   const ringContains = (ring: number[][]): boolean => {
     let inside = false;
     for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {

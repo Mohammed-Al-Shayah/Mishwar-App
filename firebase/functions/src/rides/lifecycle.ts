@@ -1,10 +1,12 @@
+import { currencyFor, roundingStep } from '../markets.js';
+import { minorScale } from '../money.js';
 import { validDeliveryCode } from './parcel.js';
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { distanceBetween } from 'geofire-common';
 import { authenticated } from '../lib/maps.js';
 import * as v from '../lib/validate.js';
-import { computeFare, DEFAULT_PRICING, parsePricing, roundFare, type VehicleType } from '../pricing.js';
+import { computeFare, marketPricing, roundFare, type VehicleType } from '../pricing.js';
 import { readPromo } from '../promos/handlers.js';
 import { earningsDay, parseFees, waitingFeeFils } from './fees.js';
 import { rideId } from './handlers.js';
@@ -61,39 +63,41 @@ export async function updateRideStatusHandler(request: CallableRequest, db: Fire
     }
     const userRef = db.doc(`users/${ride.riderId}`);
     const user = (await tx.get(userRef)).data();
-    const settings = parseFees((await tx.get(db.doc('config/app'))).data());
-    const waitingFils = waitingFeeFils(ride.arrivedAt, ride.startedAt, settings);
-    const balanceFils = user?.balanceDueFils ?? 0;
+    const market = ride.market ?? 'JO', currency = currencyFor(market), scale = minorScale(currency);
+    const app = (await tx.get(db.doc('config/app'))).data(), step = roundingStep(app, market);
+    const settings = parseFees(app, market);
+    const waitingFils = waitingFeeFils(ride.arrivedAt, ride.startedAt, settings, market, step);
+    const balanceFils = user?.balanceDue?.[currency] ?? (currency === 'JOD' ? user?.balanceDueFils ?? 0 : 0);
     if (!Number.isSafeInteger(balanceFils) || balanceFils < 0) invalid();
     const pricingDocument = await tx.get(db.doc('config/pricing'));
-    const pricing = pricingDocument.exists ? parsePricing(pricingDocument.data()) : DEFAULT_PRICING;
+    const pricing = marketPricing(pricingDocument.data(), market);
     const seconds = (time.toMillis() - (ride.startedAt?.toMillis() ?? NaN)) / 1000;
     if (!Number.isFinite(seconds) || seconds < 0 || !Number.isFinite(ride.fare?.estimated) || ride.fare.estimated < 0) invalid();
-    const priced = ride.airport?.fixedFare === true ? ride.fare.estimated : computeFare(pricing[ride.vehicleType as VehicleType], ride.route.distanceMeters, seconds);
-    const estimatedFils = Math.round(ride.fare.estimated * 1000);
-    const cap = estimatedFils * 3 / 2000;
-    let final = ride.airport?.fixedFare === true ? ride.fare.estimated : roundFare(Math.min(cap, Math.max(ride.fare.estimated, priced)));
-    const checked = ride.promo ? await readPromo(db, tx, ride.promo.code, ride.riderId, final, ride.createdAt) : undefined;
+    const priced = ride.airport?.fixedFare === true ? ride.fare.estimated : computeFare(pricing[ride.vehicleType as VehicleType], ride.route.distanceMeters, seconds, currency, step);
+    const estimatedFils = Math.round(ride.fare.estimated * scale);
+    const cap = estimatedFils * 3 / (2 * scale);
+    let final = ride.airport?.fixedFare === true ? ride.fare.estimated : roundFare(Math.min(cap, Math.max(ride.fare.estimated, priced)), currency, step);
+    const checked = ride.promo ? await readPromo(db, tx, ride.promo.code, ride.riderId, final, ride.createdAt, market, step) : undefined;
     const discount = checked?.result.ok ? checked.result.discountJod : 0;
-    if (discount > 0 || ride.airport?.fixedFare !== true) final = roundFare(Math.max(0, (Math.round(final * 1000) - Math.round(discount * 1000)) / 1000));
-    final = (Math.round(final * 1000) + waitingFils + balanceFils) / 1000;
+    if (discount > 0 || ride.airport?.fixedFare !== true) final = roundFare(Math.max(0, (Math.round(final * scale) - Math.round(discount * scale)) / scale), currency, step);
+    final = (Math.round(final * scale) + waitingFils + balanceFils) / scale;
     const day = earningsDay(time);
-    const earningsRef = db.doc(`drivers/${ride.driverId}/earnings/${day}`);
+    const earningsRef = db.doc(`drivers/${ride.driverId}/earnings/${day}_${market}`);
     const earnings = (await tx.get(earningsRef)).data();
     if (checked?.result.ok) {
       tx.update(checked.ref, { usedCount: checked.promo!.usedCount + 1 });
       tx.set(checked.redemptionRef, { count: checked.count + 1, lastRideId: id, updatedAt: time });
     }
     // Earnings use the discounted fare for now; platform absorption comes with future payout logic.
-    // Add integer fils, then persist a two-decimal JOD amount.
-    const totalFils = Math.round((earnings?.total ?? 0) * 1000) + Math.round(final * 1000);
+    // Add integer minor units in this market currency.
+    const totalFils = Math.round((earnings?.total ?? 0) * scale) + Math.round(final * scale);
     if (log) tx.create(log, { action: 'adminCompleteParcel', target: id, by: uid, at: time });
-    tx.update(ref, { status, completedAt: time, fare: { ...ride.fare, final, waitingFee: waitingFils / 1000, previousBalance: balanceFils / 1000, ...(ride.promo ? { discount } : {}) },
+    tx.update(ref, { status, completedAt: time, market, fare: { ...ride.fare, currency, final, waitingFee: waitingFils / scale, previousBalance: balanceFils / scale, ...(ride.promo ? { discount } : {}) },
       ...(ride.promo ? { promo: { ...ride.promo, applied: checked!.result.ok } } : {}) });
-    tx.update(userRef, { pendingRatingRideId: id, balanceDueFils: 0,
+    tx.update(userRef, { pendingRatingRideId: id, balanceDue: { ...user?.balanceDue, [currency]: 0 }, ...(currency === 'JOD' ? { balanceDueFils: FieldValue.delete() } : {}),
       ...(user?.activeRideId === id ? { activeRideId: FieldValue.delete() } : {}) });
     tx.update(driverRef, { currentRideId: null, pendingRatingRideId: id });
-    tx.set(earningsRef, { ...earnings, total: Number((totalFils / 1000).toFixed(2)), trips: (earnings?.trips ?? 0) + 1, updatedAt: time });
+    tx.set(earningsRef, { ...earnings, currency, market, day, total: totalFils / scale, trips: (earnings?.trips ?? 0) + 1, updatedAt: time });
   });
   if (result) throw new HttpsError('failed-precondition', 'Delivery code rejected.', { reason: result });
   return { ok: true };

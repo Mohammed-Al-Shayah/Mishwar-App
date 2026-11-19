@@ -46,11 +46,11 @@ test('quote matches cancellation; balance and driver credit are atomic and idemp
     'drivers/a': driver(0, { currentRideId: 'x' }), 'users/rider': { balanceDueFils: 100, activeRideId: 'x' } });
   h.setTime(120001);
   const quote = await cancellationQuoteHandler(req(), h.db, undefined, h.deps.now);
-  assert.deepEqual(quote, { fee: 0.5 });
+  assert.deepEqual(quote, { fee: 0.5, currency: 'JOD' });
   await Promise.all([cancelRideHandler(req(), h.db, h.deps), cancelRideHandler(req(), h.db, h.deps)]);
   assert.equal(h.db.records.get('rides/x').fare.cancellationFee, quote.fee);
-  assert.equal(h.db.records.get('users/rider').balanceDueFils, 600);
-  const earnings = h.db.records.get('drivers/a/earnings/' + earningsDay(h.deps.now()));
+  assert.equal(h.db.records.get('users/rider').balanceDue.JOD, 600);
+  const earnings = h.db.records.get('drivers/a/earnings/' + earningsDay(h.deps.now()) + '_JO');
   assert.equal(earnings.total, 0.5); assert.equal(earnings.cancellationFees, 0.5); assert.equal(earnings.trips, 0);
   await assert.rejects(cancellationQuoteHandler(req('a'), h.db), e => e.code === 'permission-denied');
   await assert.rejects(cancellationQuoteHandler({ data: { rideId: 'x' } }, h.db), e => e.code === 'unauthenticated');
@@ -65,8 +65,8 @@ test('completion combines promo trip-only discount, waiting and previous balance
   await complete('x'); await complete('x');
   const fare = h.db.records.get('rides/x').fare;
   assert.equal(fare.discount, 1.25); assert.equal(fare.waitingFee, 0.1); assert.equal(fare.previousBalance, 0.5); assert.equal(fare.final, 1.85);
-  assert.equal(h.db.records.get('users/rider').balanceDueFils, 0);
-  const path = 'drivers/a/earnings/' + earningsDay(h.deps.now());
+  assert.equal(h.db.records.get('users/rider').balanceDue.JOD, 0);
+  const path = 'drivers/a/earnings/' + earningsDay(h.deps.now()) + '_JO';
   assert.equal(h.db.records.get(path).total, 1.85);
   h.db.records.set('rides/y', ride({ status: 'in_progress', driverId: 'a', startedAt: ts(241000), route: { distanceMeters: 0 }, fare: { estimated: 2.5 } }));
   h.db.records.get('drivers/a').currentRideId = 'y';
@@ -81,7 +81,7 @@ test('searching, scheduled and late-driver cancellation never add balance or ear
       acceptedAt: ts(0), offerDistanceMeters: 1000, fare: { estimated: 2.5 } }),
       'drivers/a': driver(0, { currentRideId: 'x' }) });
     h.setTime(600001);
-    assert.deepEqual(await cancellationQuoteHandler(req(), h.db, undefined, h.deps.now), { fee: 0 });
+    assert.deepEqual(await cancellationQuoteHandler(req(), h.db, undefined, h.deps.now), { fee: 0, currency: 'JOD' });
     await cancelRideHandler(req(), h.db, h.deps);
     assert.equal(h.db.records.get('rides/x').fare.cancellationFee, 0);
     assert.equal(h.db.records.get('users/rider').balanceDueFils, undefined);

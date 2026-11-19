@@ -195,7 +195,7 @@ void main() {
           case 'completed':
             snapshot(RideStatus.completed);
             expect(bloc.state.phase, TripPhase.collectCash);
-            expect(bloc.state.ride!.fareFinalFils, 5250);
+            expect(bloc.state.ride!.fareFinalMinor, 5250);
           case 'riderCancel':
             snapshot(RideStatus.cancelled);
             expect(bloc.state.phase, TripPhase.cancelled);

@@ -6,6 +6,7 @@ import 'package:mishwar/core/theme/admin_theme.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/market_switcher.dart';
 import 'package:mishwar/features/admin/domain/admin_management.dart';
 import 'package:mishwar/features/admin/presentation/admin_labels.dart';
 import 'package:mishwar/features/admin/presentation/management_cubit.dart';
@@ -41,6 +42,11 @@ class AdminPromos extends StatelessWidget {
   ) => BlocBuilder<ManagementCubit, ManagementState>(
     builder: (context, state) => ListView(
       children: [
+        MarketSwitcher(
+          value: state.market,
+          enabled: !state.busy && !state.loading,
+          onChanged: context.read<ManagementCubit>().selectMarket,
+        ),
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: TextButton(
@@ -82,7 +88,10 @@ class AdminPromos extends StatelessWidget {
                 DataColumn(label: Text(label)),
             ],
             rows: [
-              for (final p in state.data?.promos ?? <Map<String, Object?>>[])
+              for (final p
+                  in (state.data?.promos ?? <Map<String, Object?>>[]).where(
+                    (p) => (p['market'] ?? 'JO') == state.market,
+                  ))
                 DataRow(
                   onSelectChanged: state.busy ? null : (_) => _edit(context, p),
                   cells: [
@@ -332,25 +341,6 @@ class _PromoEditorState extends State<PromoEditor> {
                         style: TextStyle(color: context.colors.negative),
                       )
                     : const SizedBox.shrink(),
-              ),
-              Text(
-                context.l10n.promoPreview(
-                  (promoDiscountFils(
-                            fareFils: 5000,
-                            type: _type,
-                            value:
-                                double.tryParse(
-                                  _fields['value']!.text,
-                                )?.clamp(0, 100) ??
-                                0,
-                            maxDiscount: double.tryParse(
-                              _fields['maxDiscount']!.text,
-                            )?.clamp(0, 100),
-                          ) /
-                          1000)
-                      .toStringAsFixed(2),
-                ),
-                style: AppTextStyles.headline,
               ),
               SizedBox(height: AppSpacing.md),
               FilledButton(

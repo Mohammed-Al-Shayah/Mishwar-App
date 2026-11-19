@@ -72,7 +72,7 @@ MockRecentPlacesCubit recentCubit({List<PlaceDetails> places = const []}) {
   return cubit;
 }
 
-Widget savedProviders(Widget child, {int balanceDueFils = 0}) =>
+Widget savedProviders(Widget child, {int balanceDueMinor = 0}) =>
     MultiBlocProvider(
       providers: [
         BlocProvider<SessionCubit>(
@@ -80,7 +80,7 @@ Widget savedProviders(Widget child, {int balanceDueFils = 0}) =>
             final session = readyRatingSession();
             when(() => session.state).thenReturn(
               SessionReady(
-                ratingSession().user.copyWith(balanceDueFils: balanceDueFils),
+                ratingSession().user.copyWith(balanceDueMinor: balanceDueMinor),
               ),
             );
             return session;

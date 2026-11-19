@@ -1,14 +1,15 @@
-import 'package:injectable/injectable.dart';
+// Test-only reference for the shared server fare fixtures.
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/vehicle_rates.dart';
 
-@lazySingleton
 class FareCalculator {
   const FareCalculator();
   Money compute({
     required VehicleRates rates,
     required num distanceMeters,
     required num durationSeconds,
+    String currency = 'JOD',
+    int roundingStep = 50,
   }) {
     if ([
       rates.base,
@@ -30,13 +31,13 @@ class FareCalculator {
     final minimum = BigInt.from(rates.minimum) * denominator;
     final fare = total > minimum ? total : minimum;
     final rounded =
-        ((fare * BigInt.two + BigInt.from(50) * denominator) ~/
-            (BigInt.from(100) * denominator)) *
-        BigInt.from(50);
+        ((fare * BigInt.two + BigInt.from(roundingStep) * denominator) ~/
+            (BigInt.from(roundingStep * 2) * denominator)) *
+        BigInt.from(roundingStep);
     if (rounded > BigInt.from(9007199254740991)) {
       throw ArgumentError('Fare is too large');
     }
-    return Money(rounded.toInt());
+    return Money(rounded.toInt(), currency);
   }
 
   // Parse decimal inputs before arithmetic to preserve exact half-up ties.

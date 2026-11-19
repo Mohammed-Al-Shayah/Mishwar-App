@@ -1,3 +1,4 @@
+import { decimal, toMinor, minorScale, roundMinor, roundMoney, type Currency } from './money.js';
 export interface VehicleRates {
     base: number;
     perKm: number;
@@ -11,50 +12,31 @@ export const DEFAULT_PRICING: PricingTable = {
     comfort: { base: 0.80, perKm: 0.45, perMin: 0.07, minimum: 2.50 },
     van: { base: 1.00, perKm: 0.55, perMin: 0.08, minimum: 3.00 },
 };
-// Convert the decimal representation to a rational before any arithmetic.
-// This preserves exact half-up ties (including fractional route durations).
-function decimal(value: number): [
-    bigint,
-    bigint
-] {
-    if (!Number.isFinite(value) || value < 0)
-        throw new RangeError('Expected a finite nonnegative number.');
-    const [coefficient, exponent = '0'] = value.toString().toLowerCase().split('e');
-    const [whole, fraction = ''] = coefficient.split('.');
-    const scale = fraction.length - Number(exponent);
-    const numerator = BigInt(whole + fraction);
-    return scale >= 0 ? [numerator, 10n ** BigInt(scale)] : [numerator * 10n ** BigInt(-scale), 1n];
+// Palestine rates are placeholders pending owner approval.
+export const PS_PRICING: PricingTable = {
+ economy: { base: 3, perKm: 1.8, perMin: 0.3, minimum: 10 },
+ comfort: { base: 5, perKm: 2.6, perMin: 0.4, minimum: 15 },
+ van: { base: 6, perKm: 3.2, perMin: 0.5, minimum: 18 },
+};
+export function roundFare(value: number, currency: Currency = 'JOD', step = 50): number {
+ return roundMoney(value, currency, step);
 }
-function fils(value: number): bigint {
-    const [n, d] = decimal(value);
-    if (n * 1000n % d !== 0n)
-        throw new RangeError('Rates must use whole fils.');
-    return n * 1000n / d;
+export function computeFare(rates: VehicleRates, distanceMeters: number, durationSeconds: number, currency: Currency = 'JOD', step = 50): number {
+ const [distance, ds] = decimal(distanceMeters), [duration, ts] = decimal(durationSeconds);
+ const denominator = ds * ts * 1000n * 60n;
+ const minor = (v: number) => BigInt(toMinor(v, currency));
+ const total = minor(rates.base) * denominator + minor(rates.perKm) * distance * ts * 60n + minor(rates.perMin) * duration * ds * 1000n;
+ const minimum = minor(rates.minimum) * denominator;
+ const rounded = roundMinor(total > minimum ? total : minimum, denominator, step);
+ if (rounded > BigInt(Number.MAX_SAFE_INTEGER)) throw new RangeError('Fare too large.');
+ return Number(rounded) / minorScale(currency);
 }
-// Exact half-up rounding to the nearest 0.05 JOD, also used after fare caps.
-function roundFils(numerator: bigint, denominator: bigint): bigint {
-    return ((numerator * 2n + 50n * denominator) / (100n * denominator)) * 50n;
+export function marketPricing(value: unknown, market: 'PS' | 'JO'): PricingTable {
+ if (value === undefined) return market === 'PS' ? PS_PRICING : DEFAULT_PRICING;
+ const data = value as Record<string, unknown>;
+ return parsePricing(data[market] ?? (market === 'JO' ? data : PS_PRICING), market === 'PS' ? 'ILS' : 'JOD');
 }
-export function roundFare(value: number): number {
-    const [n, d] = decimal(value);
-    return Number(roundFils(n * 1000n, d)) / 1000;
-}
-export function computeFare(rates: VehicleRates, distanceMeters: number, durationSeconds: number): number {
-    const [distance, distanceScale] = decimal(distanceMeters);
-    const [duration, durationScale] = decimal(durationSeconds);
-    const denominator = distanceScale * durationScale * 1000n * 60n;
-    const total = fils(rates.base) * denominator
-        + fils(rates.perKm) * distance * durationScale * 60n
-        + fils(rates.perMin) * duration * distanceScale * 1000n;
-    const minimum = fils(rates.minimum) * denominator;
-    const fare = total > minimum ? total : minimum;
-    const roundedFils = roundFils(fare, denominator);
-    const result = Number(roundedFils) / 1000;
-    if (!Number.isFinite(result) || roundedFils > BigInt(Number.MAX_SAFE_INTEGER))
-        throw new RangeError('Fare is too large.');
-    return Number(result.toFixed(2));
-}
-export function parsePricing(value: unknown): PricingTable {
+export function parsePricing(value: unknown, currency: Currency = 'JOD'): PricingTable {
     if (!value || typeof value !== 'object')
         throw new Error('Invalid pricing configuration.');
     const table = value as PricingTable;
@@ -63,7 +45,7 @@ export function parsePricing(value: unknown): PricingTable {
         if (!rates || typeof rates !== 'object')
             throw new Error('Invalid pricing configuration.');
         for (const name of ['base', 'perKm', 'perMin', 'minimum'] as const)
-            fils(rates[name]);
+            toMinor(rates[name], currency);
     }
     return table;
 }

@@ -325,7 +325,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                               BlocBuilder<SessionCubit, SessionState>(
                                 builder: (context, session) {
                                   final balance = session is SessionReady
-                                      ? session.user.balanceDueFils
+                                      ? session.user.displayBalance
                                       : 0;
                                   return balance <= 0
                                       ? const SizedBox.shrink()
@@ -336,7 +336,15 @@ class _RiderHomeScreenState extends State<RiderHomeScreen>
                                           child: Text(
                                             context.l10n
                                                 .cancellationBalanceInfo(
-                                                  feeAmount(context, balance),
+                                                  feeAmount(
+                                                    context,
+                                                    balance,
+                                                    session is SessionReady
+                                                        ? session
+                                                              .user
+                                                              .displayCurrency
+                                                        : 'JOD',
+                                                  ),
                                                 ),
                                             style: AppTextStyles.footnote
                                                 .copyWith(

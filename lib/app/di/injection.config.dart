@@ -135,8 +135,6 @@ import 'package:mishwar/features/common/places/domain/usecases/get_place_details
     as _i393;
 import 'package:mishwar/features/common/places/domain/usecases/search_places.dart'
     as _i62;
-import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart'
-    as _i304;
 import 'package:mishwar/features/common/promos/data/promo_remote_data_source.dart'
     as _i585;
 import 'package:mishwar/features/common/promos/data/promo_repository_impl.dart'
@@ -345,7 +343,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firebaseModule.firestore);
     gh.lazySingleton<_i809.FirebaseFunctions>(() => firebaseModule.functions);
     gh.lazySingleton<_i766.GeolocatorClient>(() => _i766.GeolocatorClient());
-    gh.lazySingleton<_i304.FareCalculator>(() => const _i304.FareCalculator());
     gh.lazySingleton<_i804.OfferScheduler>(() => _i804.OfferScheduler());
     gh.lazySingleton<_i27.DriverLocationSource>(
       () => _i27.DriverLocationSource(),
@@ -658,15 +655,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i342.CreateShareLink>(
       () => _i342.CreateShareLink(gh<_i323.SafetyRepository>()),
     );
-    gh.factory<_i630.AdminCubit>(
-      () => _i630.AdminCubit(
-        gh<_i180.WatchAdminData>(),
-        gh<_i180.LoadAdminPage>(),
-        gh<_i180.AdminAction>(),
-        gh<_i180.LoadAdminLicense>(),
-        gh<_i304.FareCalculator>(),
-      ),
-    );
     gh.lazySingleton<_i118.RideRepository>(
       () => _i297.RideRepositoryImpl(gh<_i747.RideRemoteDataSource>()),
     );
@@ -730,6 +718,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i365.WatchPosition>(
       () => _i365.WatchPosition(gh<_i300.LocationRepository>()),
+    );
+    gh.factory<_i630.AdminCubit>(
+      () => _i630.AdminCubit(
+        gh<_i180.WatchAdminData>(),
+        gh<_i180.LoadAdminPage>(),
+        gh<_i180.AdminAction>(),
+        gh<_i180.LoadAdminLicense>(),
+      ),
     );
     gh.lazySingleton<_i282.UnregisterPushToken>(
       () => _i282.UnregisterPushToken(

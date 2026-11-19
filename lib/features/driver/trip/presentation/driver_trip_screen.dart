@@ -323,20 +323,26 @@ class _TripViewState extends State<_TripView> {
                   Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
-                      ride.fareFinalFils == null
+                      ride.fareFinalMinor == null
                           ? context.l10n.errorGeneric
                           : context.l10n.tripPrice(
-                              Money(ride.fareFinalFils!).toJodString(),
+                              Money(
+                                ride.fareFinalMinor!,
+                                ride.currency,
+                              ).toDisplayString(),
                             ),
                       textDirection: TextDirection.ltr,
                       style: AppTextStyles.tabular(AppTextStyles.largeTitle),
                     ),
                   ),
                   FareFeeRows(ride: ride),
-                  if (ride.promoApplied == true && ride.discountFils > 0)
+                  if (ride.promoApplied == true && ride.discountMinor > 0)
                     Text(
                       context.l10n.promoCashFootnote(
-                        Money(ride.discountFils).toJodString(),
+                        Money(
+                          ride.discountMinor,
+                          ride.currency,
+                        ).toDisplayString(),
                       ),
                       style: AppTextStyles.footnote,
                     ),
@@ -413,14 +419,7 @@ class _TripViewState extends State<_TripView> {
                   SizedBox(height: AppSpacing.md),
                   if (state.phase == TripPhase.waiting)
                     Text(
-                      elapsed.inMilliseconds > WaitingDisplay.freeSeconds * 1000
-                          ? context.l10n.waitingFeeRunning(
-                              feeAmount(
-                                context,
-                                WaitingDisplay.feeFils(elapsed),
-                              ),
-                            )
-                          : context.l10n.tripWaitingTime(time),
+                      context.l10n.tripWaitingTime(time),
                       style: AppTextStyles.tabular(AppTextStyles.largeTitle),
                     ),
                   if (state.phase == TripPhase.onTrip) ...[
@@ -494,7 +493,7 @@ class _TripViewState extends State<_TripView> {
                     _ => context.l10n.tripArrived,
                   },
                   onPressed:
-                      state.terminal || (cash && ride.fareFinalFils == null)
+                      state.terminal || (cash && ride.fareFinalMinor == null)
                       ? null
                       : () {
                           switch (state.phase) {

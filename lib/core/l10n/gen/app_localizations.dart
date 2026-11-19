@@ -662,11 +662,11 @@ abstract class AppLocalizations {
   /// **'{time} · {minutes} دقيقة'**
   String arrivalDuration(String time, int minutes);
 
-  /// No description provided for @fareJod.
+  /// No description provided for @fareAmount.
   ///
   /// In ar, this message translates to:
-  /// **'JD {amount}'**
-  String fareJod(String amount);
+  /// **'{amount}'**
+  String fareAmount(String amount);
 
   /// No description provided for @searchingTitle.
   ///
@@ -893,7 +893,7 @@ abstract class AppLocalizations {
   /// No description provided for @tripPrice.
   ///
   /// In ar, this message translates to:
-  /// **'JD {amount}'**
+  /// **'{amount}'**
   String tripPrice(String amount);
 
   /// No description provided for @tripToPickup.
@@ -1325,7 +1325,7 @@ abstract class AppLocalizations {
   /// No description provided for @earningsBarLabel.
   ///
   /// In ar, this message translates to:
-  /// **'{day}، JD {amount}'**
+  /// **'{day}، {amount}'**
   String earningsBarLabel(String day, String amount);
 
   /// No description provided for @accountProfile.
@@ -2015,7 +2015,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminCurrency.
   ///
   /// In ar, this message translates to:
-  /// **'د.أ'**
+  /// **'العملة'**
   String get adminCurrency;
 
   /// No description provided for @adminUnknown.
@@ -2267,19 +2267,19 @@ abstract class AppLocalizations {
   /// No description provided for @promoSelected.
   ///
   /// In ar, this message translates to:
-  /// **'{code} · خصم JD {amount}'**
+  /// **'{code} · خصم {amount}'**
   String promoSelected(String code, String amount);
 
   /// No description provided for @promoDiscount.
   ///
   /// In ar, this message translates to:
-  /// **'خصم ({code}) − JD {amount}'**
+  /// **'خصم ({code}) − {amount}'**
   String promoDiscount(String code, String amount);
 
   /// No description provided for @promoCashFootnote.
   ///
   /// In ar, this message translates to:
-  /// **'شامل خصم JD {amount}'**
+  /// **'شامل خصم {amount}'**
   String promoCashFootnote(String amount);
 
   /// No description provided for @promoNotFound.
@@ -2327,7 +2327,7 @@ abstract class AppLocalizations {
   /// No description provided for @promoMinFare.
   ///
   /// In ar, this message translates to:
-  /// **'أقل سعر للكود JD {amount}'**
+  /// **'أقل سعر للكود {amount}'**
   String promoMinFare(String amount);
 
   /// No description provided for @promoRateLimit.
@@ -3202,7 +3202,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAmount.
   ///
   /// In ar, this message translates to:
-  /// **'المبلغ (JD)'**
+  /// **'المبلغ'**
   String get settingsAmount;
 
   /// No description provided for @settingsAfterSeconds.
@@ -3220,7 +3220,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsPerMinute.
   ///
   /// In ar, this message translates to:
-  /// **'لكل دقيقة (JD)'**
+  /// **'لكل دقيقة'**
   String get settingsPerMinute;
 
   /// No description provided for @settingsMinLeadMinutes.
@@ -3244,19 +3244,19 @@ abstract class AppLocalizations {
   /// No description provided for @settingsEconomy.
   ///
   /// In ar, this message translates to:
-  /// **'مشوار X (JD)'**
+  /// **'مشوار X'**
   String get settingsEconomy;
 
   /// No description provided for @settingsComfort.
   ///
   /// In ar, this message translates to:
-  /// **'مريح (JD)'**
+  /// **'مريح'**
   String get settingsComfort;
 
   /// No description provided for @settingsVan.
   ///
   /// In ar, this message translates to:
-  /// **'XL (JD)'**
+  /// **'XL'**
   String get settingsVan;
 
   /// No description provided for @settingsZone.
@@ -3316,7 +3316,7 @@ abstract class AppLocalizations {
   /// No description provided for @promoMaxDiscount.
   ///
   /// In ar, this message translates to:
-  /// **'أعلى خصم (JD، اختياري)'**
+  /// **'أعلى خصم (اختياري)'**
   String get promoMaxDiscount;
 
   /// No description provided for @promoUsageLimit.
@@ -3370,7 +3370,7 @@ abstract class AppLocalizations {
   /// No description provided for @promoMinimumFareLabel.
   ///
   /// In ar, this message translates to:
-  /// **'أقل سعر مشوار (JD، اختياري)'**
+  /// **'أقل سعر مشوار (اختياري)'**
   String get promoMinimumFareLabel;
 
   /// No description provided for @adminReports.
@@ -3400,13 +3400,13 @@ abstract class AppLocalizations {
   /// No description provided for @reportsRevenue.
   ///
   /// In ar, this message translates to:
-  /// **'الإيراد (JD)'**
+  /// **'الإيراد'**
   String get reportsRevenue;
 
   /// No description provided for @reportsAverage.
   ///
   /// In ar, this message translates to:
-  /// **'متوسط سعر المشوار (JD)'**
+  /// **'متوسط سعر المشوار'**
   String get reportsAverage;
 
   /// No description provided for @reportsCancellationRate.
@@ -3454,7 +3454,7 @@ abstract class AppLocalizations {
   /// No description provided for @reportsDiscount.
   ///
   /// In ar, this message translates to:
-  /// **'الخصومات (JD)'**
+  /// **'الخصومات'**
   String get reportsDiscount;
 
   /// No description provided for @reportsRiderCancel.
@@ -3514,13 +3514,13 @@ abstract class AppLocalizations {
   /// No description provided for @reportsScale.
   ///
   /// In ar, this message translates to:
-  /// **'أعلى عمود: {rides} مشوار · أعلى خط: JD {revenue}'**
+  /// **'أعلى عمود: {rides} مشوار · أعلى خط: {revenue}'**
   String reportsScale(String rides, String revenue);
 
   /// No description provided for @reportsChartDay.
   ///
   /// In ar, this message translates to:
-  /// **'{day}: {rides} مشوار، إيراد JD {revenue}'**
+  /// **'{day}: {rides} مشوار، إيراد {revenue}'**
   String reportsChartDay(String day, String rides, String revenue);
 
   /// No description provided for @promoCreateAdmin.
@@ -3552,6 +3552,48 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة.'**
   String get otpRequestNew;
+
+  /// No description provided for @marketPalestine.
+  ///
+  /// In ar, this message translates to:
+  /// **'فلسطين'**
+  String get marketPalestine;
+
+  /// No description provided for @marketJordan.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأردن'**
+  String get marketJordan;
+
+  /// No description provided for @accountMarketPS.
+  ///
+  /// In ar, this message translates to:
+  /// **'فلسطين · شيكل'**
+  String get accountMarketPS;
+
+  /// No description provided for @accountMarketJO.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأردن · دينار'**
+  String get accountMarketJO;
+
+  /// No description provided for @outOfServiceArea.
+  ///
+  /// In ar, this message translates to:
+  /// **'هاد المكان برا منطقة الخدمة'**
+  String get outOfServiceArea;
+
+  /// No description provided for @settingsRounding.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقريب الأجرة'**
+  String get settingsRounding;
+
+  /// No description provided for @promoWrongMarket.
+  ///
+  /// In ar, this message translates to:
+  /// **'هاد الكود لسوق تاني'**
+  String get promoWrongMarket;
 }
 
 class _AppLocalizationsDelegate

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:mishwar/core/validation/phone_numbers.dart';
 import 'package:mishwar/features/common/user/domain/entities/user_role.dart';
 
 class UserEntity extends Equatable {
@@ -12,7 +13,9 @@ class UserEntity extends Equatable {
     this.pendingRatingRideId,
     this.rating = 5.0,
     this.ratingCount = 0,
-    this.balanceDueFils = 0,
+    this.balanceDueMinor = 0,
+    this.balanceDue = const {},
+    this.homeMarket,
   });
   final String id;
   final String? pendingRatingRideId;
@@ -22,7 +25,21 @@ class UserEntity extends Equatable {
   final String? photoUrl;
   final double rating;
   final int ratingCount;
-  final int balanceDueFils;
+  final int balanceDueMinor;
+  final Map<String, int> balanceDue;
+  final String? homeMarket;
+  String get displayMarket =>
+      homeMarket ??
+      PhoneCountry.values
+          .firstWhere(
+            (c) => phone.startsWith(c.dialCode),
+            orElse: () => PhoneCountry.jordan,
+          )
+          .region;
+  String get displayCurrency => displayMarket == 'PS' ? 'ILS' : 'JOD';
+  int get displayBalance =>
+      balanceDue[displayCurrency] ??
+      (displayCurrency == 'JOD' ? balanceDueMinor : 0);
   final DateTime createdAt;
   static const _unset = Object();
   UserEntity copyWith({
@@ -34,7 +51,9 @@ class UserEntity extends Equatable {
     Object? photoUrl = _unset,
     double? rating,
     int? ratingCount,
-    int? balanceDueFils,
+    int? balanceDueMinor,
+    Map<String, int>? balanceDue,
+    String? homeMarket,
     DateTime? createdAt,
   }) => UserEntity(
     id: id ?? this.id,
@@ -47,7 +66,9 @@ class UserEntity extends Equatable {
     photoUrl: identical(photoUrl, _unset) ? this.photoUrl : photoUrl as String?,
     rating: rating ?? this.rating,
     ratingCount: ratingCount ?? this.ratingCount,
-    balanceDueFils: balanceDueFils ?? this.balanceDueFils,
+    balanceDueMinor: balanceDueMinor ?? this.balanceDueMinor,
+    balanceDue: balanceDue ?? this.balanceDue,
+    homeMarket: homeMarket ?? this.homeMarket,
     createdAt: createdAt ?? this.createdAt,
   );
 
@@ -61,7 +82,9 @@ class UserEntity extends Equatable {
     photoUrl,
     rating,
     ratingCount,
-    balanceDueFils,
+    balanceDueMinor,
+    balanceDue,
+    homeMarket,
     createdAt,
   ];
 }

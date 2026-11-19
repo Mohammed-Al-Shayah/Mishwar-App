@@ -76,7 +76,7 @@ void main() {
     expect(result.toNullable()!.location, point);
     verify(() => functions.httpsCallable('placeDetails')).called(1);
   });
-  test('fare estimates map route and JOD to fils', () async {
+  test('fare estimates map route and JOD to minor', () async {
     response({
       'route': {
         'polyline': 'abc',
@@ -92,7 +92,7 @@ void main() {
       destination: point,
     );
     expect(result.toNullable()!.route.durationSeconds, 600);
-    expect(result.toNullable()!.fares.single.fils, 3400);
+    expect(result.toNullable()!.fares.single.minor, 3400);
     expect(result.toNullable()!.fares.single.vehicleType, VehicleType.economy);
     verify(() => functions.httpsCallable('getFareEstimates')).called(1);
   });

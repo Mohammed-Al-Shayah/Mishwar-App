@@ -1,3 +1,4 @@
+import { formatMoney, toMinor } from '../money.js';
 import { FieldValue, type Firestore } from 'firebase-admin/firestore';
 import type { Messaging } from 'firebase-admin/messaging';
 
@@ -21,7 +22,7 @@ export async function sendOfferNotification(
     try {
       await messaging.send({
         token, data: { type: body ? 'scheduled_ride' : 'ride_offer', rideId },
-        notification: { title: body ? 'مشوارك المجدول' : 'طلب مشوار جديد', body: body ?? `${ride.pickup.name} · JD ${ride.fare.estimated.toFixed(2)}` },
+        notification: { title: body ? 'مشوارك المجدول' : 'طلب مشوار جديد', body: body ?? `${ride.pickup.name} · ${formatMoney(toMinor(ride.fare.estimated, ride.fare.currency ?? 'JOD'), ride.fare.currency ?? 'JOD')}` },
         android: { priority: 'high', ttl: 15000, notification: { channelId: 'ride_offers', sound: 'default' } },
         apns: { headers: { 'apns-priority': '10', 'apns-expiration': String(Math.floor(Date.now() / 1000) + 15) },
           payload: { aps: { sound: 'default' } } },

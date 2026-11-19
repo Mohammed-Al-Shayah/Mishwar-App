@@ -89,7 +89,7 @@ void main() {
         'airport': {'direction': 'from_airport'},
       }).toEntity();
       expect(parsed.airport!.direction, AirportDirection.fromAirport);
-      expect(parsed.fares.single.fils, 12000);
+      expect(parsed.fares.single.minor, 12000);
     },
   );
 

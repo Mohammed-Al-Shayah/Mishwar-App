@@ -326,25 +326,27 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                         originalPrice:
                                             loaded.selected == type &&
                                                 loaded.promoQuote != null
-                                            ? context.l10n.fareJod(
+                                            ? context.l10n.fareAmount(
                                                 Money(
                                                   loaded
                                                       .promoQuote!
-                                                      .fareBeforeFils,
-                                                ).toJodString(),
+                                                      .fareBeforeMinor,
+                                                  loaded.fares.first.currency,
+                                                ).toDisplayString(),
                                               )
                                             : null,
                                         price:
                                             loaded.selected == type &&
                                                 loaded.promoQuote != null
-                                            ? context.l10n.fareJod(
+                                            ? context.l10n.fareAmount(
                                                 Money(
                                                   loaded
                                                       .promoQuote!
-                                                      .fareAfterFils,
-                                                ).toJodString(),
+                                                      .fareAfterMinor,
+                                                  loaded.fares.first.currency,
+                                                ).toDisplayString(),
                                               )
-                                            : context.l10n.fareJod(
+                                            : context.l10n.fareAmount(
                                                 Money(
                                                   loaded.fares
                                                       .firstWhere(
@@ -352,8 +354,9 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                                             f.vehicleType ==
                                                             type,
                                                       )
-                                                      .fils,
-                                                ).toJodString(),
+                                                      .minor,
+                                                  loaded.fares.first.currency,
+                                                ).toDisplayString(),
                                               ),
                                       ),
                                   if (state is RideConfirmLoading)
@@ -417,8 +420,9 @@ class _RideConfirmScreenState extends State<RideConfirmScreen> {
                                   : context.l10n.promoSelected(
                                       loaded.promoQuote!.code,
                                       Money(
-                                        loaded.promoQuote!.discountFils,
-                                      ).toJodString(),
+                                        loaded.promoQuote!.discountMinor,
+                                        loaded.fares.first.currency,
+                                      ).toDisplayString(),
                                     ),
                               onTap: loaded.isRequesting
                                   ? null

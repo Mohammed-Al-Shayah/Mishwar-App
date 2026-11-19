@@ -11,7 +11,7 @@ test('settings and promo operations require strict admin claim',async()=>{for(co
 test('settings sections merge without editing zone or other settings and record audit',async()=>{
  const h=harness({'config/app':{airport,cancellationFee:{amount:1,afterSeconds:120},services:[{id:'ride'}]}});
  await updateAppSettingsHandler(request({cancellationFee:{amount:0},airport:{fixedFares:{van:100},pickupPoints:[{id:'a',name:'Gate',lat:31.5,lng:35.5}]}}),h.db);
- const app=h.db.records.get('config/app');assert.equal(app.airport.zone,airport.zone);assert.equal(app.airport.fixedFares.comfort,16);assert.equal(app.airport.fixedFares.van,100);assert.equal(app.cancellationFee.afterSeconds,120);assert.equal(app.services[0].id,'ride');assert.equal([...h.db.records.keys()].filter(p=>p.startsWith('adminLog/')).length,1);
+ const app=h.db.records.get('config/app');assert.equal(app.airport.zone,airport.zone);assert.equal(app.airport.fixedFares.comfort,16);assert.equal(app.airport.fixedFares.van,100);assert.equal(app.cancellationFee.JO.afterSeconds,120);assert.equal(app.services[0].id,'ride');assert.equal([...h.db.records.keys()].filter(p=>p.startsWith('adminLog/')).length,1);
 });
 test('settings rejects every bound and invalid airport points without writes',async()=>{
  const invalid=[{}, {zone:{}},{cancellationFee:{amount:21,afterSeconds:0}},{cancellationFee:{amount:0,afterSeconds:1801}},{waitingFee:{freeMinutes:31,perMinute:0}},{waitingFee:{freeMinutes:0,perMinute:2.1}},{scheduling:{minLeadMinutes:14,maxDaysAhead:1,dispatchBeforeMinutes:5}},{scheduling:{minLeadMinutes:15,maxDaysAhead:61,dispatchBeforeMinutes:5}},{scheduling:{minLeadMinutes:15,maxDaysAhead:1,dispatchBeforeMinutes:61}},{airport:{zone:'x'}},{airport:{fixedFares:{economy:0}}},{airport:{pickupPoints:[{id:'a',name:'Outside',lat:30,lng:35}]}},{airport:{pickupPoints:Array(11).fill({id:'a',name:'A',lat:31.5,lng:35.5})}},{airport:{pickupPoints:[{id:'a',name:'x'.repeat(61),lat:31.5,lng:35.5}]}}];
@@ -30,5 +30,5 @@ import {readFileSync} from 'node:fs';
 import {evaluatePromo} from '../lib/promos/evaluate.js';
 test('promo math shares fixtures with Dart admin preview',()=>{
  const fixtures=JSON.parse(readFileSync(new URL('./fixtures/promo-math.json',import.meta.url),'utf8').replace(/^\uFEFF/,''));
- for(const f of fixtures){const result=evaluatePromo({...f,usedCount:0,active:true,firstRideOnly:false,validFrom:{toMillis:()=>0},validUntil:{toMillis:()=>2}}, {fareJod:f.fareFils/1000,uid:'r',isFirstRide:true,userRedemptions:0,now:{toMillis:()=>1}});assert.equal(result.ok,true);assert.equal(Math.round(result.discountJod*1000),f.expected);}
+ for(const f of fixtures){const result=evaluatePromo({...f,usedCount:0,active:true,firstRideOnly:false,validFrom:{toMillis:()=>0},validUntil:{toMillis:()=>2}}, {fareJod:f.fareMinor/1000,uid:'r',isFirstRide:true,userRedemptions:0,now:{toMillis:()=>1}});assert.equal(result.ok,true);assert.equal(Math.round(result.discountJod*1000),f.expected);}
 });

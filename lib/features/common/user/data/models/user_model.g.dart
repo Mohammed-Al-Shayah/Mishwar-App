@@ -22,7 +22,13 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   photoUrl: json['photoUrl'] as String?,
   rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
   ratingCount: (json['ratingCount'] as num?)?.toInt() ?? 0,
-  balanceDueFils: (json['balanceDueFils'] as num?)?.toInt() ?? 0,
+  balanceDueMinor: (json['balanceDueFils'] as num?)?.toInt() ?? 0,
+  balanceDue:
+      (json['balanceDue'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toInt()),
+      ) ??
+      const <String, int>{},
+  homeMarket: json['homeMarket'] as String?,
   fcmToken: json['fcmToken'] as String?,
 );
 

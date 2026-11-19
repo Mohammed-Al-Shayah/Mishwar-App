@@ -177,9 +177,19 @@ void main() {
         final ref = MockRef();
         final snapshot = MockSnapshot();
         when(
-          () => db.doc('drivers/u/earnings/${earningsDayKey(day)}'),
+          () => db.doc('drivers/u/earnings/${earningsDayKey(day)}_JO'),
         ).thenReturn(ref);
         when(ref.get).thenAnswer((_) async => snapshot);
+        when(() => snapshot.exists).thenReturn(i == 0);
+        final psRef = MockRef();
+        final psSnapshot = MockSnapshot();
+        when(
+          () => db.doc('drivers/u/earnings/${earningsDayKey(day)}_PS'),
+        ).thenReturn(psRef);
+        when(psRef.get).thenAnswer((_) async => psSnapshot);
+        when(() => psSnapshot.exists).thenReturn(false);
+        when(psSnapshot.data).thenReturn(null);
+        when(psRef.snapshots).thenAnswer((_) => Stream.value(psSnapshot));
         when(
           snapshot.data,
         ).thenReturn(i == 0 ? {'total': 4.75, 'trips': 2} : null);
@@ -189,11 +199,16 @@ void main() {
       final week = (await repo.week('u', end)).getRight().toNullable()!;
       expect(week.length, 7);
       expect(week.first.day, DateTime.utc(2026, 11, 11));
-      expect(week.take(6).every((d) => d.totalFils == 0 && d.trips == 0), true);
-      expect(week.last, DailyEarnings(day: end, totalFils: 4750, trips: 2));
+      expect(
+        week.take(6).every((d) => d.totalMinor == 0 && d.trips == 0),
+        true,
+      );
+      expect(week.last.totalMinor, 4750);
+      expect(week.last.trips, 2);
+      expect(week.last.forCurrency('ILS').totalMinor, 0);
       expect(
         (await repo.watchDay('u', end).first).getRight().toNullable(),
-        week.last,
+        isA<DailyEarnings>().having((d) => d.totalMinor, 'total', 4750),
       );
       when(() => db.doc(any())).thenThrow(StateError('offline'));
       expect((await repo.week('u', end)).isLeft(), true);
@@ -307,9 +322,9 @@ void main() {
       addTearDown(cubit.close);
       await cubit.load('u', endingOn: end);
       expect(cubit.state.trips.single.id, 'overnight');
-      live.add(Right(DailyEarnings(day: end, totalFils: 7500, trips: 1)));
+      live.add(Right(DailyEarnings(day: end, totalMinor: 7500, trips: 1)));
       await Future<void>.delayed(Duration.zero);
-      expect(cubit.state.selectedEarnings!.totalFils, 7500);
+      expect(cubit.state.selectedEarnings!.totalMinor, 7500);
       await cubit.selectDay(days.first.day);
       expect(cubit.state.selected, days.first.day);
       expect(cubit.state.trips, isEmpty);
@@ -327,9 +342,9 @@ void main() {
     final cubit = DriverEarningsCubit(WatchDayEarnings(repository));
     await cubit.start('u');
     final day = ammanDay(DateTime.now());
-    live.add(Right(DailyEarnings(day: day, totalFils: 12000)));
+    live.add(Right(DailyEarnings(day: day, totalMinor: 12000)));
     await Future<void>.delayed(Duration.zero);
-    expect(cubit.state.earnings!.totalFils, 12000);
+    expect(cubit.state.earnings!.totalMinor, 12000);
     await cubit.close();
     expect(live.hasListener, false);
     await live.close();

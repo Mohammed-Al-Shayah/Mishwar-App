@@ -1,3 +1,4 @@
+import { findMarket } from '../markets.js';
 import { FieldValue, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { authenticated } from '../lib/maps.js';
@@ -17,6 +18,9 @@ export async function acceptRideHandler(request: CallableRequest, db: Firestore,
     if (!ride || ride.status !== 'searching' || ride.offeredTo !== uid) precondition('not-offered');
     if (!ride.offerExpiresAt || ride.offerExpiresAt.toMillis() <= deps.now().toMillis()) precondition('offer-expired');
     if (!driver || driver.status !== 'approved' || driver.isOnline !== true || driver.currentRideId) precondition('driver-busy');
+    const point = driver.location?.geopoint;
+    const app = (await tx.get(db.doc('config/app'))).data();
+    if (!point || findMarket({ lat: point.latitude, lng: point.longitude }, app) !== (ride.market ?? 'JO')) precondition('not-offered');
     if (driver.offer?.rideId !== id) precondition('not-offered');
     const driverUser = (await tx.get(db.doc(`users/${uid}`))).data();
     const riderUser = (await tx.get(db.doc(`users/${ride.riderId}`))).data();

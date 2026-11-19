@@ -4,97 +4,152 @@
     "vehicleType": "economy",
     "distanceMeters": 100,
     "durationSeconds": 60,
-    "expectedFils": 1500
+    "expectedMinor": 1500,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "comfort zero",
     "vehicleType": "comfort",
     "distanceMeters": 0,
     "durationSeconds": 0,
-    "expectedFils": 2500
+    "expectedMinor": 2500,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "van minimum",
     "vehicleType": "van",
     "distanceMeters": 1000,
     "durationSeconds": 60,
-    "expectedFils": 3000
+    "expectedMinor": 3000,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "economy long",
     "vehicleType": "economy",
     "distanceMeters": 40000,
     "durationSeconds": 3600,
-    "expectedFils": 15500
+    "expectedMinor": 15500,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "comfort long",
     "vehicleType": "comfort",
     "distanceMeters": 40000,
     "durationSeconds": 3600,
-    "expectedFils": 23000
+    "expectedMinor": 23000,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "van long",
     "vehicleType": "van",
     "distanceMeters": 40000,
     "durationSeconds": 3600,
-    "expectedFils": 27800
+    "expectedMinor": 27800,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "half up x.x25",
     "vehicleType": "economy",
     "distanceMeters": 6750,
     "durationSeconds": 0,
-    "expectedFils": 2550
+    "expectedMinor": 2550,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "half up x.x75",
     "vehicleType": "economy",
     "distanceMeters": 6250,
     "durationSeconds": 0,
-    "expectedFils": 2400
+    "expectedMinor": 2400,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "below tie",
     "vehicleType": "economy",
     "distanceMeters": 6749,
     "durationSeconds": 0,
-    "expectedFils": 2500
+    "expectedMinor": 2500,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "above tie",
     "vehicleType": "economy",
     "distanceMeters": 6751,
     "durationSeconds": 0,
-    "expectedFils": 2550
+    "expectedMinor": 2550,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "fractional seconds tie",
     "vehicleType": "economy",
     "distanceMeters": 6000,
     "durationSeconds": 30,
-    "expectedFils": 2350
+    "expectedMinor": 2350,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "fractional route duration",
     "vehicleType": "comfort",
     "distanceMeters": 10000,
     "durationSeconds": 123.5,
-    "expectedFils": 5450
+    "expectedMinor": 5450,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "zero economy",
     "vehicleType": "economy",
     "distanceMeters": 0,
     "durationSeconds": 0,
-    "expectedFils": 1500
+    "expectedMinor": 1500,
+    "currency": "JOD",
+    "market": "JO"
   },
   {
     "name": "zero van",
     "vehicleType": "van",
     "distanceMeters": 0,
     "durationSeconds": 0,
-    "expectedFils": 3000
+    "expectedMinor": 3000,
+    "currency": "JOD",
+    "market": "JO"
+  },
+  {
+    "name": "PS economy minimum",
+    "market": "PS",
+    "currency": "ILS",
+    "vehicleType": "economy",
+    "distanceMeters": 0,
+    "durationSeconds": 0,
+    "expectedMinor": 1000
+  },
+  {
+    "name": "PS economy half up",
+    "market": "PS",
+    "currency": "ILS",
+    "vehicleType": "economy",
+    "distanceMeters": 3750,
+    "durationSeconds": 100,
+    "expectedMinor": 1050
+  },
+  {
+    "name": "PS comfort",
+    "market": "PS",
+    "currency": "ILS",
+    "vehicleType": "comfort",
+    "distanceMeters": 10000,
+    "durationSeconds": 600,
+    "expectedMinor": 3500
   }
 ]

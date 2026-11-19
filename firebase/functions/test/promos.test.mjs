@@ -31,7 +31,7 @@ const estimate = async () => ({ route:{distanceMeters:5000,durationSeconds:600,p
 const setup = () => harness({'users/rider':{role:'rider'},'promos/WELCOME50':promo()});
 test('validate server quote and ten-check window, including invalid attempts',async()=>{
   const h=setup();
-  assert.deepEqual(await validatePromoHandler(req(),h.db,'',estimate,h.deps.now),{code:'WELCOME50',discount:1.7,fareBefore:3.45,fareAfter:1.75});
+  assert.deepEqual(await validatePromoHandler(req(),h.db,'',estimate,h.deps.now),{market:'JO',currency:'JOD',code:'WELCOME50',discount:1.7,fareBefore:3.45,fareAfter:1.75});
   for(let i=0;i<9;i++) await assert.rejects(validatePromoHandler(req({code:'bad'}),h.db,'',estimate,h.deps.now),e=>e.details.reason==='not-found');
   await assert.rejects(validatePromoHandler(req(),h.db,'',estimate,h.deps.now),e=>e.code==='resource-exhausted');
   h.setTime(601000); await validatePromoHandler(req(),h.db,'',estimate,h.deps.now);

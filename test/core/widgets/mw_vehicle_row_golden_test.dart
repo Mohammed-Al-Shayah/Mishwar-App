@@ -47,7 +47,7 @@ void main() {
                         seats: 4,
                         subtitle: context.l10n.arrivalDuration('3:42', 10),
                         tagline: context.l10n.economyTagline,
-                        price: context.l10n.fareJod('4.60'),
+                        price: context.l10n.fareAmount('JD 4.60'),
                         selected: selected,
                         onTap: () {},
                       ),

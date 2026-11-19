@@ -16,15 +16,16 @@ const markers = new Map();
 for (const doc of rides.docs) {
   const ride = doc.data();
   if (!ride.createdAt?.toMillis) throw Error(`Missing createdAt: ${doc.id}. No stats were changed.`);
+  const market = ride.market ?? 'JO', currency = market === 'PS' ? 'ILS' : 'JOD';
   const contributions = rideContributions(ride, ride.createdAt ?? Timestamp.now());
   markers.set(doc.ref.path, contributions.map(c => c.marker));
   for (const c of contributions) {
-    const path = `stats/${c.day}`, row = aggregates.get(path) ?? { ...emptyDailyStats };
+    const path = `stats/${c.day}_${market}`, row = aggregates.get(path) ?? { ...emptyDailyStats, market, currency, day: c.day };
     for (const [key, value] of Object.entries(c.counters)) row[key] = (row[key] ?? 0) + value;
     if (c.promoCode) {
       row.promoUsesByCode ??= {};
       row.promoUsesByCode[c.promoCode] = (row.promoUsesByCode[c.promoCode] ?? 0) + 1;
-      const promoPath = `stats/promos/${c.promoCode}/${c.day}`;
+      const promoPath = `stats/promos/${c.promoCode}/${c.day}_${market}`;
       aggregates.set(promoPath, { uses: (aggregates.get(promoPath)?.uses ?? 0) + 1 });
     }
     aggregates.set(path, row);

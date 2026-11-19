@@ -316,6 +316,11 @@ void main() {
       if (nextRole == UserRole.rider) verify(presence.close).called(1);
       await openAccount(nextRole);
       await tester.scrollUntilVisible(find.text(l10n.signOutLabel), 200);
+      await Scrollable.ensureVisible(
+        tester.element(find.text(l10n.signOutLabel)),
+        alignment: 0.5,
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.signOutLabel));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.accountConfirm));

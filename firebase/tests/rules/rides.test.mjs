@@ -29,7 +29,7 @@ test('live: requires parent ride and required fields', async () => {
   await s.seed({ 'rides/trip': ride });
   for (const field of ['geopoint', 'updatedAt']) { const data = live(); delete data[field]; await assertFails(setDoc(doc(s.db('driver'), 'rides/trip/live/driver'), data)); }
 });
-for (const field of ['status', 'driverId', 'offeredTo', 'fare.final', 'riderRating', 'driverRating']) test(`rides: server-owned ${field}`, async () => {
+for (const field of ['market', 'fare.currency', 'status', 'driverId', 'offeredTo', 'fare.final', 'riderRating', 'driverRating']) test(`rides: server-owned ${field}`, async () => {
   await s.seed({ 'rides/trip': ride });
   await assertFails(updateDoc(doc(s.db('rider'), 'rides/trip'), { [field]: field === 'fare.final' ? 0 : 'forged' }));
 });

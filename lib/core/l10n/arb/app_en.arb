@@ -135,7 +135,7 @@
   "chooseVehicle": "Choose {vehicle}",
   "tripPill": "{minutes} min · {destination}",
   "arrivalDuration": "{time} · {minutes} minutes",
-  "fareJod": "JD {amount}",
+  "fareAmount": "{amount}",
   "@chooseVehicle": {
     "placeholders": {
       "vehicle": {
@@ -163,7 +163,7 @@
       }
     }
   },
-  "@fareJod": {
+  "@fareAmount": {
     "placeholders": {
       "amount": {
         "type": "String"
@@ -241,7 +241,7 @@
   "tripCashPrompt": "Collect cash from the rider",
   "tripCall": "Call rider",
   "tripNavigate": "Google Maps",
-  "tripPrice": "JD {amount}",
+  "tripPrice": "{amount}",
   "tripToPickup": "Heading to the rider",
   "tripArrived": "I have arrived",
   "tripCompleteConfirm": "Reached the destination?",
@@ -440,7 +440,7 @@
   },
   "earningsDayTrips": "This day's trips",
   "earningsNoTrips": "No trips on this day",
-  "earningsBarLabel": "{day}, JD {amount}",
+  "earningsBarLabel": "{day}, {amount}",
   "@earningsBarLabel": {
     "placeholders": {
       "day": {
@@ -565,7 +565,7 @@
   "adminUpdatedBy": "Last updated by",
   "adminUpdatedAt": "Last updated at",
   "adminSaved": "Saved",
-  "adminCurrency": "JOD",
+  "adminCurrency": "Currency",
   "adminUnknown": "—",
   "adminLanguage": "Language",
   "savedPlaces": "Saved places",
@@ -621,7 +621,7 @@
   "promoApply": "Apply",
   "promoCodeLabel": "Promo code",
   "promoRemove": "Remove promo code",
-  "promoSelected": "{code} · JD {amount} off",
+  "promoSelected": "{code} · {amount} off",
   "@promoSelected": {
     "placeholders": {
       "code": {
@@ -632,7 +632,7 @@
       }
     }
   },
-  "promoDiscount": "Discount ({code}) − JD {amount}",
+  "promoDiscount": "Discount ({code}) − {amount}",
   "@promoDiscount": {
     "placeholders": {
       "code": {
@@ -643,7 +643,7 @@
       }
     }
   },
-  "promoCashFootnote": "Includes JD {amount} discount",
+  "promoCashFootnote": "Includes {amount} discount",
   "@promoCashFootnote": {
     "placeholders": {
       "amount": {
@@ -658,7 +658,7 @@
   "promoLimit": "This code has reached its limit",
   "promoUserLimit": "You already used this code",
   "promoFirstRide": "This code is for your first ride only",
-  "promoMinFare": "Minimum fare for this code is JD {amount}",
+  "promoMinFare": "Minimum fare for this code is {amount}",
   "@promoMinFare": {
     "placeholders": {
       "amount": {
@@ -909,16 +909,16 @@
   "settingsWaiting": "Waiting fee",
   "settingsScheduling": "Scheduling",
   "settingsAirport": "Airport",
-  "settingsAmount": "Amount (JD)",
+  "settingsAmount": "Amount",
   "settingsAfterSeconds": "After seconds",
   "settingsFreeMinutes": "Free minutes",
-  "settingsPerMinute": "Per minute (JD)",
+  "settingsPerMinute": "Per minute",
   "settingsMinLeadMinutes": "Minimum lead (minutes)",
   "settingsMaxDaysAhead": "Days ahead",
   "settingsDispatchBeforeMinutes": "Dispatch before (minutes)",
-  "settingsEconomy": "Economy (JD)",
-  "settingsComfort": "Comfort (JD)",
-  "settingsVan": "XL (JD)",
+  "settingsEconomy": "Economy",
+  "settingsComfort": "Comfort",
+  "settingsVan": "XL",
   "settingsZone": "Airport bounding box (read only)",
   "settingsPickupPoints": "Pickup points",
   "settingsAddPoint": "Add point",
@@ -928,7 +928,7 @@
   "promoPercent": "Percent",
   "promoFixed": "Fixed amount",
   "promoValue": "Discount value",
-  "promoMaxDiscount": "Maximum discount (JD, optional)",
+  "promoMaxDiscount": "Maximum discount (optional)",
   "promoUsageLimit": "Total usage limit (optional)",
   "promoPerUserLimit": "Per-user limit",
   "promoValidFrom": "Valid from",
@@ -961,7 +961,7 @@
       }
     }
   },
-  "promoMinimumFareLabel": "Minimum fare (JD, optional)",
+  "promoMinimumFareLabel": "Minimum fare (optional)",
   "adminReports": "Reports",
   "reportsRange": "Last {days} days",
   "@reportsRange": {
@@ -973,8 +973,8 @@
   },
   "reportsRides": "Requested rides",
   "reportsCompletedRate": "Completed rides %",
-  "reportsRevenue": "Revenue (JD)",
-  "reportsAverage": "Average fare (JD)",
+  "reportsRevenue": "Revenue",
+  "reportsAverage": "Average fare",
   "reportsCancellationRate": "Cancellation rate %",
   "reportsPromoUses": "Promo uses",
   "reportsExport": "Download CSV",
@@ -982,7 +982,7 @@
   "reportsTopPromos": "Top promo codes",
   "reportsDay": "Day",
   "reportsCompleted": "Completed",
-  "reportsDiscount": "Discounts (JD)",
+  "reportsDiscount": "Discounts",
   "reportsRiderCancel": "Rider cancellations",
   "reportsDriverCancel": "Driver cancellations",
   "reportsSystemCancel": "System cancellations",
@@ -992,7 +992,7 @@
   "reportsScheduled": "Scheduled",
   "reportsUses": "Uses",
   "reportsTimezone": "Dates use Amman time. Events count on their own day; driver cancellations include re-dispatch.",
-  "reportsScale": "Bar scale: {rides} rides · Line scale: JD {revenue}",
+  "reportsScale": "Bar scale: {rides} rides · Line scale: {revenue}",
   "@reportsScale": {
     "placeholders": {
       "rides": {
@@ -1003,7 +1003,7 @@
       }
     }
   },
-  "reportsChartDay": "{day}: {rides} rides, revenue JD {revenue}",
+  "reportsChartDay": "{day}: {rides} rides, revenue {revenue}",
   "@reportsChartDay": {
     "placeholders": {
       "day": {
@@ -1021,5 +1021,12 @@
   "chooseCountry": "Choose country",
   "countryJordan": "Jordan",
   "countryPalestine": "Palestine",
-  "otpRequestNew": "Please request a new code to try again."
+  "otpRequestNew": "Please request a new code to try again.",
+  "marketPalestine": "Palestine",
+  "marketJordan": "Jordan",
+  "accountMarketPS": "Palestine ? Shekel",
+  "accountMarketJO": "Jordan ? Dinar",
+  "outOfServiceArea": "This place is outside our service area.",
+  "settingsRounding": "Fare rounding step",
+  "promoWrongMarket": "This code is for another market."
 }

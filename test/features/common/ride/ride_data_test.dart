@@ -45,7 +45,7 @@ void main() {
     () {
       final json = rideJson();
       final legacy = RideModel.fromJson(json).toEntity();
-      expect(legacy.discountFils, 0);
+      expect(legacy.discountMinor, 0);
       expect(legacy.promoApplied, isNull);
       final model = RideModel.fromJson({
         ...json,
@@ -59,8 +59,8 @@ void main() {
       });
       final ride = model.toEntity();
       expect(ride.promoCode, 'WELCOME50');
-      expect(ride.discountFils, 1700);
-      expect(ride.fareFinalFils, 1750);
+      expect(ride.discountMinor, 1700);
+      expect(ride.fareFinalMinor, 1750);
       expect(ride.promoApplied, true);
       expect(RideModel.fromJson(model.toJson()), model);
     },
@@ -128,7 +128,7 @@ void main() {
     expect(entity.arrivedAt, time.toDate().toUtc());
     expect(entity.startedAt, time.toDate().toUtc());
     expect(entity.completedAt, time.toDate().toUtc());
-    expect(entity.fareFinalFils, 3750);
+    expect(entity.fareFinalMinor, 3750);
     final legacy = RideModel.fromJson(rideJson()).toEntity();
     expect(legacy.driverInfo, isNull);
     expect(legacy.riderInfo, isNull);
@@ -256,15 +256,15 @@ void main() {
     );
   });
   test(
-    'Firestore ride round-trip preserves nested data, timestamps and fils',
+    'Firestore ride round-trip preserves nested data, timestamps and minor',
     () {
       final model = RideModel.fromJson(rideJson());
       expect(RideModel.fromJson(model.toJson()), model);
       final entity = model.toEntity();
-      expect(entity.fareEstimatedFils, 2550);
+      expect(entity.fareEstimatedMinor, 2550);
       expect(entity.offerDistanceMeters, 1200);
       expect(entity.offerExpiresAt, DateTime.utc(2026, 1, 1, 0, 0, 15));
-      expect(entity.fareFinalFils, isNull);
+      expect(entity.fareFinalMinor, isNull);
       expect(entity.pickup.location.lat, 31.95);
       expect(entity.route!.durationSeconds, 600);
       expect(entity.createdAt.isUtc, isTrue);
@@ -279,7 +279,7 @@ void main() {
           'fare': {'estimated': 2.55, 'final': 3.2, 'currency': 'JOD'},
         });
         expect(changed.toJson()['status'], status);
-        expect(changed.toEntity().fareFinalFils, 3200);
+        expect(changed.toEntity().fareFinalMinor, 3200);
       }
     },
   );

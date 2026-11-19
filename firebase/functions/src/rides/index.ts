@@ -1,3 +1,4 @@
+import { type Market } from '../markets.js';
 import { callableOptions } from '../lib/callable.js';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
@@ -15,8 +16,7 @@ import { updateRideStatusHandler } from './lifecycle.js';
 import { acceptRideHandler, declineRideHandler } from './offers.js';
 
 import { feeConfigReader } from './fees.js';
-let readFees: ReturnType<typeof feeConfigReader> | undefined;
-const fees = () => (readFees ??= feeConfigReader(getFirestore()))();
+const fees = (market: Market = 'JO') => feeConfigReader(getFirestore())(market);
 export const cancellationQuote = onCall(callableOptions(), request => cancellationQuoteHandler(request, getFirestore(), fees));
 export const matchingDeps: MatchingDeps = {
   now: () => Timestamp.now(),

@@ -58,7 +58,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.textContaining('JD 0.10'), findsOneWidget);
+      expect(find.textContaining('4:01'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
     for (final phase in [
@@ -142,7 +142,7 @@ void main() {
               expect(find.text(l10n.tripWaitingTime('2:13')), findsOneWidget);
             }
             if (phase == TripPhase.collectCash) {
-              expect(find.text(l10n.tripPrice('5.25')), findsOneWidget);
+              expect(find.text(l10n.tripPrice('JD 5.25')), findsOneWidget);
             }
             if (phase == TripPhase.toPickup) {
               expect(find.text(l10n.tripTooFar), findsOneWidget);

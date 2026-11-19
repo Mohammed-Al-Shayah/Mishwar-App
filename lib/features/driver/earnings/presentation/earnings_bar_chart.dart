@@ -6,6 +6,7 @@ import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/widgets/charts/earnings_bar_painter.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/driver/earnings/domain/daily_earnings.dart';
 
 class EarningsBarChart extends StatelessWidget {
@@ -22,7 +23,7 @@ class EarningsBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final maximum = days.fold<int>(
       0,
-      (max, d) => d.totalFils > max ? d.totalFils : max,
+      (max, d) => d.totalMinor > max ? d.totalMinor : max,
     );
     final locale = Localizations.localeOf(context).toString();
     return Row(
@@ -35,7 +36,7 @@ class EarningsBarChart extends StatelessWidget {
               button: true,
               label: context.l10n.earningsBarLabel(
                 DateFormat.MMMEd(locale).format(day.day),
-                (day.totalFils / 1000).toStringAsFixed(2),
+                Money(day.totalMinor, day.currency).toDisplayString(),
               ),
               child: InkWell(
                 onTap: () => onSelected(day.day),
@@ -44,7 +45,7 @@ class EarningsBarChart extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        (day.totalFils / 1000).toStringAsFixed(2),
+                        Money(day.totalMinor, day.currency).toDisplayString(),
                         textDirection: TextDirection.ltr,
                         style: AppTextStyles.tabular(AppTextStyles.caption),
                       ),
@@ -56,7 +57,7 @@ class EarningsBarChart extends StatelessWidget {
                           painter: EarningsBarPainter(
                             fraction: maximum == 0
                                 ? 0
-                                : day.totalFils / maximum,
+                                : day.totalMinor / maximum,
                             color: day.day == selected
                                 ? context.colors.textPrimary
                                 : context.colors.textSecondary,

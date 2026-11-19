@@ -17,11 +17,11 @@ import '../../history/history_widgets_test.dart' show historySize, historyWrap;
 import 'ride_data_test.dart' show MockSource, rideJson;
 
 void main() {
-  test('fee models default legacy values and map server fils', () {
+  test('fee models default legacy values and map server minor', () {
     final legacy = RideModel.fromJson(rideJson()).toEntity();
-    expect(legacy.fareCancellationFeeFils, 0);
-    expect(legacy.fareWaitingFeeFils, 0);
-    expect(legacy.farePreviousBalanceFils, 0);
+    expect(legacy.fareCancellationFeeMinor, 0);
+    expect(legacy.fareWaitingFeeMinor, 0);
+    expect(legacy.farePreviousBalanceMinor, 0);
     final model = RideModel.fromJson(rideJson()).copyWith(
       fare: const RideFareModel(
         estimated: 2.5,
@@ -31,9 +31,9 @@ void main() {
         previousBalance: 1,
       ),
     );
-    expect(model.toEntity().fareCancellationFeeFils, 500);
-    expect(model.toEntity().fareWaitingFeeFils, 100);
-    expect(model.toEntity().farePreviousBalanceFils, 1000);
+    expect(model.toEntity().fareCancellationFeeMinor, 500);
+    expect(model.toEntity().fareWaitingFeeMinor, 100);
+    expect(model.toEntity().farePreviousBalanceMinor, 1000);
     expect(
       () =>
           model.copyWith(fare: model.fare.copyWith(waitingFee: -1)).toEntity(),
@@ -46,11 +46,11 @@ void main() {
       'createdAt': Timestamp.fromDate(DateTime.utc(2026)),
       'balanceDueFils': 500,
     });
-    expect(user.toEntity().balanceDueFils, 500);
-    expect(user.toEntity().copyWith(name: 'New').balanceDueFils, 500);
+    expect(user.toEntity().balanceDueMinor, 500);
+    expect(user.toEntity().copyWith(name: 'New').balanceDueMinor, 500);
     expect(
       UserModel.fromEntity(user.toEntity()).toJson(),
-      isNot(contains('balanceDueFils')),
+      isNot(contains('balanceDueMinor')),
     );
   });
   test('quote use case maps source and failure through repository', () async {
@@ -64,11 +64,6 @@ void main() {
       FirebaseFunctionsException(code: 'unavailable', message: 'Offline'),
     );
     expect((await quote('x')).isLeft(), isTrue);
-  });
-  test('display defaults use whole started minutes', () {
-    expect(WaitingDisplay.feeFils(const Duration(seconds: 180)), 0);
-    expect(WaitingDisplay.feeFils(const Duration(seconds: 181)), 50);
-    expect(WaitingDisplay.feeFils(const Duration(seconds: 241)), 100);
   });
   for (final language in ['ar', 'en']) {
     testWidgets('$language cancelled receipt total is the cancellation fee', (

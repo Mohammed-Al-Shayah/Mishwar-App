@@ -1,3 +1,5 @@
+import { currencyFor, roundingStep, type Market } from '../markets.js';
+import { minorScale } from '../money.js';
 import { Timestamp, type Firestore, type Transaction } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { fareEstimatesHandler } from '../getFareEstimates.js';
@@ -12,20 +14,20 @@ export function normalizePromo(value: unknown): string {
   return code;
 }
 // All reads precede writes so this helper can participate in ride completion.
-export async function readPromo(db: Firestore, tx: Transaction, code: string, uid: string, fareJod: number, now: Timestamp) {
+export async function readPromo(db: Firestore, tx: Transaction, code: string, uid: string, fareJod: number, now: Timestamp, market: Market = 'JO', step = 50) {
   const ref = db.doc(`promos/${code}`), redemptionRef = db.doc(`promos/${code}/redemptions/${uid}`);
   const promo = (await tx.get(ref)).data() as Promo | undefined;
   const count = (await tx.get(redemptionRef)).data()?.count ?? 0;
   const completed = await tx.get(db.collection('rides').where('riderId', '==', uid).where('status', '==', 'completed').limit(1));
   return { ref, redemptionRef, promo, count, result: evaluatePromo(promo, {
-    fareJod, uid, isFirstRide: completed.empty, userRedemptions: count, now,
+    market, step, fareJod, uid, isFirstRide: completed.empty, userRedemptions: count, now,
   }) };
 }
-export async function previewPromo(db: Firestore, code: string, uid: string, fare: number, now = Timestamp.now()) {
+export async function previewPromo(db: Firestore, code: string, uid: string, fare: number, now = Timestamp.now(), market: Market = 'JO', step = 50) {
   return db.runTransaction(async tx => {
-    const checked = await readPromo(db, tx, code, uid, fare, now);
+    const checked = await readPromo(db, tx, code, uid, fare, now, market, step);
     if (!checked.result.ok) throw new HttpsError('failed-precondition', 'Promo unavailable.', {
-      reason: checked.result.reason, ...(checked.result.reason === 'min-fare' ? { minFare: checked.promo!.minFare } : {}),
+      currency: currencyFor(market), reason: checked.result.reason, ...(checked.result.reason === 'min-fare' ? { minFare: checked.promo!.minFare } : {}),
     });
     return { code, discountPreview: checked.result.discountJod };
   });
@@ -48,7 +50,8 @@ export async function validatePromoHandler(request: CallableRequest, db: Firesto
   const pickup = v.point(v.object(data.pickup)), dropoff = v.point(v.object(data.dropoff));
   const estimates = await estimate({ ...request, data: { origin: pickup, destination: dropoff } }, key);
   const fareBefore = estimates.fares.find(fare => fare.vehicleType === data.vehicleType)!.amount;
-  const promo = await previewPromo(db, code, uid, fareBefore, now());
-  return { code, discount: promo.discountPreview, fareBefore,
-    fareAfter: (Math.round(fareBefore * 1000) - Math.round(promo.discountPreview * 1000)) / 1000 };
+  const promo = await previewPromo(db, code, uid, fareBefore, now(), estimates.market, roundingStep((await db.doc('config/app').get()).data(), estimates.market));
+  const currency = estimates.currency ?? 'JOD', scale = minorScale(currency);
+  return { market: estimates.market ?? 'JO', currency, code, discount: promo.discountPreview, fareBefore,
+    fareAfter: (Math.round(fareBefore * scale) - Math.round(promo.discountPreview * scale)) / scale };
 }

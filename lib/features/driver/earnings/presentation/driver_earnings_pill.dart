@@ -6,6 +6,7 @@ import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/widgets/mw_skeleton.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/driver/earnings/presentation/driver_earnings_cubit.dart';
 
 class DriverEarningsPill extends StatelessWidget {
@@ -17,15 +18,17 @@ class DriverEarningsPill extends StatelessWidget {
       builder: (context, state) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (state.earnings != null)
-            Text(
-              context.l10n.fareJod(
-                (state.earnings!.totalFils / 1000).toStringAsFixed(2),
+          if (state.earnings != null) ...[
+            for (final currency in ['ILS', 'JOD'])
+              Text(
+                Money(
+                  state.earnings!.forCurrency(currency).totalMinor,
+                  currency,
+                ).toDisplayString(),
+                textDirection: TextDirection.ltr,
+                style: AppTextStyles.tabular(AppTextStyles.headline),
               ),
-              textDirection: TextDirection.ltr,
-              style: AppTextStyles.tabular(AppTextStyles.title1),
-            )
-          else if (state.failure != null)
+          ] else if (state.failure != null)
             Text(
               failureMessage(context, state.failure!),
               style: AppTextStyles.footnote,

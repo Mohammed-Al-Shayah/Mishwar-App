@@ -1,3 +1,4 @@
+import { marketCode } from '../markets.js';
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import * as v from '../lib/validate.js';
@@ -50,9 +51,11 @@ export async function reviewDriverHandler(request: CallableRequest, db: Firestor
 }
 export async function updatePricingHandler(request: CallableRequest, db: Firestore) {
   const by = admin(request), data = v.object(request.data);
+  const market = marketCode(data.market ?? 'JO');
+  const input = v.object(data.pricing ?? data);
   let pricing: PricingTable;
   try {
-    pricing = parsePricing(data);
+    pricing = parsePricing(input, market === 'PS' ? 'ILS' : 'JOD');
     for (const type of ['economy', 'comfort', 'van'] as const) {
       for (const field of ['base', 'perKm', 'perMin', 'minimum'] as const) {
         const value = pricing[type][field];
@@ -61,10 +64,10 @@ export async function updatePricingHandler(request: CallableRequest, db: Firesto
     }
   } catch { return v.invalid(); }
   const clean = Object.fromEntries(['economy', 'comfort', 'van'].map(type => [type,
-    Object.fromEntries(['base', 'perKm', 'perMin', 'minimum'].map(field => [field, v.object(data[type])[field]]))]));
+    Object.fromEntries(['base', 'perKm', 'perMin', 'minimum'].map(field => [field, v.object(input[type])[field]]))]));
   const at = Timestamp.now(), log = db.collection('adminLog').doc();
   await db.runTransaction(async tx => {
-    tx.set(db.doc('config/pricing'), { ...clean, updatedAt: at, updatedBy: by });
+    tx.set(db.doc('config/pricing'), { [market]: clean, updatedAt: at, updatedBy: by }, { merge: true });
     tx.create(log, { action: 'updatePricing', target: 'config/pricing', by, at, details: clean });
   });
   return { ok: true };

@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mishwar/core/l10n/l10n.dart';
 import 'package:mishwar/core/theme/admin_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
+import 'package:mishwar/core/widgets/market_switcher.dart';
 import 'package:mishwar/core/widgets/mw_primary_button.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
 import 'package:mishwar/features/admin/presentation/admin_cubit.dart';
 import 'package:mishwar/features/admin/presentation/admin_labels.dart';
-import 'package:mishwar/features/common/pricing/domain/entities/vehicle_rates.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
 
 class AdminPricing extends StatefulWidget {
@@ -21,6 +21,22 @@ class AdminPricing extends StatefulWidget {
 }
 
 class _AdminPricingState extends State<AdminPricing> {
+  String _market = 'JO';
+  int get _scale => _market == 'PS' ? 100 : 1000;
+  void _select(String market) {
+    setState(() {
+      _market = market;
+      final pricing = widget.data.marketPricing[market] ?? widget.data.pricing!;
+      for (final type in VehicleType.values) {
+        final r = pricing[type];
+        final values = [r.base, r.perKm, r.perMin, r.minimum];
+        for (var i = 0; i < values.length; i++) {
+          _controllers[type]![i].text = (values[i] / _scale).toStringAsFixed(2);
+        }
+      }
+    });
+  }
+
   final _form = GlobalKey<FormState>();
   late final Map<VehicleType, List<TextEditingController>> _controllers = {
     for (final type in VehicleType.values)
@@ -65,6 +81,11 @@ class _AdminPricingState extends State<AdminPricing> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          MarketSwitcher(
+            value: _market,
+            enabled: !widget.busy,
+            onChanged: _select,
+          ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
@@ -73,7 +94,6 @@ class _AdminPricingState extends State<AdminPricing> {
               columns: [
                 DataColumn(label: Text(context.l10n.adminVehicle)),
                 ...fields.map((s) => DataColumn(label: Text(s))),
-                DataColumn(label: Text(context.l10n.adminPreview)),
               ],
               rows: [
                 for (final type in VehicleType.values)
@@ -96,18 +116,13 @@ class _AdminPricingState extends State<AdminPricing> {
                               decoration: InputDecoration(labelText: fields[i]),
                               onChanged: (_) => setState(() {}),
                               validator: (value) =>
-                                  AdminCubit.parseRate(value ?? '') == null
+                                  AdminCubit.parseRate(value ?? '', _scale) ==
+                                      null
                                   ? context.l10n.adminRateInvalid
                                   : null,
                             ),
                           ),
                         ),
-                      DataCell(
-                        Text(
-                          _preview(context, type),
-                          textDirection: TextDirection.ltr,
-                        ),
-                      ),
                     ],
                   ),
               ],
@@ -135,14 +150,16 @@ class _AdminPricingState extends State<AdminPricing> {
                 const names = ['base', 'perKm', 'perMin', 'minimum'];
                 unawaited(
                   context.read<AdminCubit>().act('updatePricing', {
+                    'market': _market,
                     for (final type in VehicleType.values)
                       type.name: {
                         for (var i = 0; i < names.length; i++)
                           names[i]:
                               AdminCubit.parseRate(
                                 _controllers[type]![i].text,
+                                _scale,
                               )! /
-                              1000,
+                              _scale,
                       },
                   }),
                 );
@@ -152,21 +169,5 @@ class _AdminPricingState extends State<AdminPricing> {
         ],
       ),
     );
-  }
-
-  String _preview(BuildContext context, VehicleType type) {
-    final values = _controllers[type]!
-        .map((c) => AdminCubit.parseRate(c.text))
-        .toList();
-    if (values.contains(null)) return context.l10n.adminUnknown;
-    final money = context.read<AdminCubit>().preview(
-      VehicleRates(
-        base: values[0]!,
-        perKm: values[1]!,
-        perMin: values[2]!,
-        minimum: values[3]!,
-      ),
-    );
-    return adminMoney(context, money.amount);
   }
 }

@@ -1,4 +1,7 @@
-﻿import { Timestamp, type Firestore } from 'firebase-admin/firestore';
+import { toMinor } from '../money.js';
+import { currencyFor } from '../markets.js';
+import { marketCode } from '../markets.js';
+import { Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import * as v from '../lib/validate.js';
 import { pointInPolygon, readAirport } from '../lib/appConfig.js';
@@ -26,14 +29,18 @@ function date(value: unknown): Timestamp {
   return Timestamp.fromMillis(millis);
 }
 export async function updateAppSettingsHandler(request: CallableRequest, db: Firestore) {
-  const by = admin(request), data = v.object(request.data);
-  const sections = ['cancellationFee', 'waitingFee', 'scheduling', 'airport'];
+  const by = admin(request), data = { ...v.object(request.data) };
+  const market = marketCode(data.market ?? 'JO');
+  delete data.market;
+  const sections = ['cancellationFee', 'waitingFee', 'rounding', 'scheduling', 'airport'];
+  if (market === 'PS' && data.airport) return v.invalid();
   if (!Object.keys(data).length || Object.keys(data).some(key => !sections.includes(key))) return v.invalid();
   const at = Timestamp.now(), log = db.collection('adminLog').doc();
   await db.runTransaction(async tx => {
     const ref = db.doc('config/app'), current = (await tx.get(ref)).data() ?? {};
     const clean: Record<string, unknown> = {};
     for (const section of Object.keys(data)) {
+      if (section === 'rounding') { try { toMinor(number(data.rounding, market === 'PS' ? 0.01 : 0.001, 10), currencyFor(market)); } catch { return v.invalid(); } clean.rounding = { ...v.object(current.rounding ?? {}), [market]: number(data.rounding, market === 'PS' ? 0.01 : 0.001, 10) }; continue; }
       const input = v.object(data[section]);
       const bounds: Record<string, [number, number, boolean?]> = section === 'cancellationFee'
         ? { amount: [0, 20], afterSeconds: [0, 1800, true] }
@@ -41,9 +48,12 @@ export async function updateAppSettingsHandler(request: CallableRequest, db: Fir
           : section === 'scheduling' ? { minLeadMinutes: [15, 720, true], maxDaysAhead: [1, 60, true], dispatchBeforeMinutes: [5, 60, true] } : {};
       if (section !== 'airport') {
         if (!Object.keys(input).length || Object.keys(input).some(key => !(key in bounds))) return v.invalid();
-        const defaults: Record<string, Record<string, number>> = { cancellationFee: { amount: 0.5, afterSeconds: 120 }, waitingFee: { freeMinutes: 3, perMinute: 0.05 }, scheduling: { minLeadMinutes: 30, maxDaysAhead: 30, dispatchBeforeMinutes: 15 } };
-        const merged = { ...defaults[section], ...v.object(current[section] ?? {}), ...input };
-        clean[section] = Object.fromEntries(Object.entries(bounds).map(([key, [min, max, integer]]) => [key, number(merged[key], min, max, integer)]));
+        const defaults: Record<string, Record<string, number>> = { cancellationFee: { amount: market === 'PS' ? 2 : 0.5, afterSeconds: 120 }, waitingFee: { freeMinutes: 3, perMinute: market === 'PS' ? 0.5 : 0.05 }, scheduling: { minLeadMinutes: 30, maxDaysAhead: 30, dispatchBeforeMinutes: 15 } };
+        const merged = { ...defaults[section], ...v.object(section === 'scheduling' ? current[section] ?? {} : v.object(current[section] ?? {})[market] ?? {}), ...input };
+        const values = Object.fromEntries(Object.entries(bounds).map(([key, [min, max, integer]]) => [key, number(merged[key], min, max, integer)]));
+        if (section === 'cancellationFee') { try { toMinor(values.amount, currencyFor(market)); } catch { return v.invalid(); } }
+        if (section === 'waitingFee') { try { toMinor(values.perMinute, currencyFor(market)); } catch { return v.invalid(); } }
+        clean[section] = section === 'scheduling' ? values : { ...v.object(current[section] ?? {}), [market]: values };
       } else {
         if (!Object.keys(input).length || Object.keys(input).some(key => !['fixedFares', 'pickupPoints'].includes(key))) return v.invalid();
         const airport = readAirport(current);
@@ -72,17 +82,19 @@ export async function upsertPromoHandler(request: CallableRequest, db: Firestore
   const by = admin(request), data = v.object(request.data), promoCode = code(data.code);
   const type = data.type;
   if (type !== 'fixed' && type !== 'percent') return v.invalid();
-  const clean = { type, value: number(data.value, 0.001, type === 'percent' ? 100 : 100),
+  const market = marketCode(data.market ?? 'JO');
+  const clean = { market, type, value: number(data.value, 0.001, type === 'percent' ? 100 : 100),
     ...(data.maxDiscount === undefined ? {} : { maxDiscount: number(data.maxDiscount, 0, 100) }),
     ...(data.minFare === undefined ? {} : { minFare: number(data.minFare, 0, 100) }),
     ...(data.usageLimit === undefined ? {} : { usageLimit: number(data.usageLimit, 1, Number.MAX_SAFE_INTEGER, true) }),
     perUserLimit: number(data.perUserLimit, 1, Number.MAX_SAFE_INTEGER, true), firstRideOnly: boolean(data.firstRideOnly),
     validFrom: date(data.validFrom), validUntil: date(data.validUntil), active: boolean(data.active) };
+  try { if (type === 'fixed') toMinor(clean.value, currencyFor(market)); if (clean.maxDiscount !== undefined) toMinor(clean.maxDiscount, currencyFor(market)); if (clean.minFare !== undefined) toMinor(clean.minFare, currencyFor(market)); } catch { return v.invalid(); }
   if (clean.validFrom.toMillis() >= clean.validUntil.toMillis()) return v.invalid();
   const ref = db.doc(`promos/${promoCode}`), log = db.collection('adminLog').doc(), at = Timestamp.now();
   await db.runTransaction(async tx => {
     const previous = (await tx.get(ref)).data(), usedCount = previous?.usedCount ?? 0;
-    if ((usedCount > 0 && previous?.type !== type) || (clean.usageLimit !== undefined && clean.usageLimit < usedCount)) {
+    if ((usedCount > 0 && (previous?.type !== type || (previous.market ?? 'JO') !== market)) || (clean.usageLimit !== undefined && clean.usageLimit < usedCount)) {
       throw new HttpsError('failed-precondition', 'Promo history must be preserved.');
     }
     tx.set(ref, { ...clean, usedCount });

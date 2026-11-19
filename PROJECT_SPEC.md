@@ -145,6 +145,8 @@ lib/features/
 {
   "name": "string",
   "phone": "+9627XXXXXXXX",
+  "homeMarket": "PS | JO (server-set)",
+  "balanceDue": { "JOD": 0, "ILS": 0 },
   "role": "rider | driver | admin",
   "photoUrl": "string?",
   "rating": 4.9,
@@ -173,11 +175,12 @@ lib/features/
   "riderId": "uid",
   "driverId": "uid?",
   "status": "searching | accepted | arriving | arrived | in_progress | completed | cancelled | no_drivers",
+  "market": "PS | JO",
   "vehicleType": "economy",
   "pickup":  { "address": "string", "geopoint": "GeoPoint" },
   "dropoff": { "address": "string", "geopoint": "GeoPoint" },
   "route":   { "polyline": "string", "distanceMeters": 0, "durationSeconds": 0 },
-  "fare":    { "estimated": 0, "final": 0, "currency": "JOD" },
+  "fare":    { "estimated": 0, "final": 0, "currency": "JOD | ILS" },
   "paymentMethod": "cash",
   "offeredTo": "driverUid?",
   "declinedBy": ["uid"],
@@ -191,12 +194,59 @@ lib/features/
 }
 ```
 
+### الأسواق والعملات (T8.2)
+- سوق المشوار بيتحدد من موقع الانطلاق بالسيرفر: فلسطين ← PS / ILS (₪)، الأردن ← JO / JOD (JD). خارج السوقين: `failed-precondition` والسبب `out-of-service-area` («هاد المكان برا منطقة الخدمة»).
+- `config/app.markets`: `{PS: {zone: serialized GeoJSON MultiPolygon, currency: 'ILS'}, JO: {zone: serialized GeoJSON Polygon, currency: 'JOD'}}`. حدود تقريبية للخدمة تشمل الضفة وغزة والأردن، بحاجة لمراجعة المالك. PS إله أولوية بالتداخل.
+- `users.homeMarket` من رقم Auth الموثّق (+970 / +962)، بيتحدد بالسيرفر، ولعملة العرض الافتراضية بس. رقم الراكب ما بيحدد سوق المشوار. `balanceDue: {JOD: minor, ILS: minor}`، وترحيل `balanceDueFils` إلى JOD. الرصيد بينضاف لمشوار بنفس العملة بس.
+- `rides.market` و`fare.currency` حقول للسيرفر فقط؛ كل مبالغ الأجرة بعملة المشوار. JOD وحدته 1/1000 (فلس)، ILS وحدته 1/100 (أغورة). الحساب والتقريب بالسيرفر فقط.
+- `config/pricing` مقسوم `{JO: {economy, comfort, van}, PS: {economy, comfort, van}}`؛ الأسعار القديمة JO. PS قيم مبدئية للمالك: economy 3/1.8/0.3/10، comfort 5/2.6/0.4/15، van 6/3.2/0.5/18 (base/perKm/perMin/minimum).
+- `config/app.cancellationFee` و`waitingFee` مقسومين حسب PS/JO، و`rounding: {JO: 0.05, PS: 0.50}`. المطار JO فقط وبالدينار.
+- `promos.market` إلزامي؛ الكود والمبالغ لسوقه فقط. الأرباح `drivers/{uid}/earnings/{YYYY-MM-DD}_{market}` فيها day/market/currency. الإحصاءات `stats/{day}_{market}` و`stats/promos/{code}/{day}_{market}`؛ الإيرادات بوحدات minor، ممنوع جمع العملتين.
+- المطابقة بتفحص الموقع الحالي للسائق داخل مضلع سوق المشوار، وبتعيد التحقق داخل المعاملة وعند القبول. ترحيل المحاكيات فقط: `firebase/scripts/migrate-markets.mjs` ثم إعادة بناء الإحصاءات، مع الحفاظ على الأسعار التاريخية بالدينار.
+
 ### `config/pricing`
 ```json
 {
-  "economy": { "base": 0.50, "perKm": 0.30, "perMin": 0.05, "minimum": 1.50 },
-  "comfort": { "base": 0.80, "perKm": 0.45, "perMin": 0.07, "minimum": 2.50 },
-  "van":     { "base": 1.00, "perKm": 0.55, "perMin": 0.08, "minimum": 3.00 }
+  "JO": {
+    "economy": {
+      "base": 0.5,
+      "perKm": 0.3,
+      "perMin": 0.05,
+      "minimum": 1.5
+    },
+    "comfort": {
+      "base": 0.8,
+      "perKm": 0.45,
+      "perMin": 0.07,
+      "minimum": 2.5
+    },
+    "van": {
+      "base": 1,
+      "perKm": 0.55,
+      "perMin": 0.08,
+      "minimum": 3
+    }
+  },
+  "PS": {
+    "economy": {
+      "base": 3,
+      "perKm": 1.8,
+      "perMin": 0.3,
+      "minimum": 10
+    },
+    "comfort": {
+      "base": 5,
+      "perKm": 2.6,
+      "perMin": 0.4,
+      "minimum": 15
+    },
+    "van": {
+      "base": 6,
+      "perKm": 3.2,
+      "perMin": 0.5,
+      "minimum": 18
+    }
+  }
 }
 ```
 
@@ -229,7 +279,7 @@ lib/features/
 
 **`promos/{code}`**
 ```json
-{ "type": "percent | fixed", "value": 50, "maxDiscount": 2.00, "minFare": 1.50, "firstRideOnly": true,
+{ "market": "PS | JO", "type": "percent | fixed", "value": 50, "maxDiscount": 2.00, "minFare": 1.50, "firstRideOnly": true,
   "usageLimit": 1000, "perUserLimit": 1, "usedCount": 0, "validFrom": "timestamp", "validUntil": "timestamp", "active": true }
 ```
 `promos/{code}/redemptions/{uid}`: بتسجل مين استخدم الكود.
@@ -249,8 +299,10 @@ lib/features/
     { "id": "parcel", "enabled": false, "order": 3 },
     { "id": "airport", "enabled": false, "order": 4 }
   ],
-  "cancellationFee": { "afterSeconds": 120, "amount": 0.50 },
-  "waitingFee": { "freeMinutes": 3, "perMinute": 0.05 },
+  "markets": { "PS": { "zone": "serialized GeoJSON MultiPolygon (approximate)", "currency": "ILS" }, "JO": { "zone": "serialized GeoJSON Polygon (approximate)", "currency": "JOD" } },
+  "rounding": { "JO": 0.05, "PS": 0.50 },
+  "cancellationFee": { "JO": { "afterSeconds": 120, "amount": 0.50 }, "PS": { "afterSeconds": 120, "amount": 2 } },
+  "waitingFee": { "JO": { "freeMinutes": 3, "perMinute": 0.05 }, "PS": { "freeMinutes": 3, "perMinute": 0.50 } },
   "airport": { "zone": "GeoJSON polygon", "fixedFares": { "economy": 12.0, "comfort": 16.0, "van": 20.0 } },
   "scheduling": { "minLeadMinutes": 30, "maxDaysAhead": 30, "dispatchBeforeMinutes": 15 }
 }
@@ -298,7 +350,7 @@ searching ──(سائق قبل)──► accepted ──► arriving ──►
 - السعر النهائي بينحسب بالسيرفر وقت `completed`.
 
 ### توزيع الطلبات على السائقين (Matching)
-1. Cloud Function `onRideCreated`: بتدور على السائقين اللي `isOnline=true` و`status=approved` ومش معهم مشوار، ضمن نصف قطر 5 كم، بنفس نوع السيارة.
+1. Cloud Function `onRideCreated`: بتدور على السائقين اللي `isOnline=true` و`status=approved` ومش معهم مشوار، ضمن نصف قطر 5 كم، بنفس نوع السيارة وبنفس سوق المشوار حسب موقع السائق الحالي بالسيرفر.
 2. بترتبهم حسب المسافة وبتعرض الطلب على الأقرب (`offeredTo`) وبتبعتله إشعار FCM.
 3. السائق معه **15 ثانية** يقبل. إذا رفض أو ما رد، بينضاف على `declinedBy` والطلب بيروح للي بعده.
 4. القبول بيصير بـ **Transaction** عشان ما يقبل المشوار سائقين بنفس الوقت.
@@ -476,6 +528,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 
 ### المرحلة 8 — الحماية
 - [x] **T8.1 — OTP abuse protection** حماية OTP: فلسطين والأردن فقط، App Check، حدود إرسال بالسيرفر، قفل محلي ومحاولات الرمز، واختبارات ودليل الإنتاج.
+- [x] **T8.2 — Markets and currencies (Palestine ₪ / Jordan JD)** سوق المشوار من موقع الانطلاق، عزل المطابقة والأرصدة والأسعار والرسوم والخصومات والأرباح والتقارير حسب السوق، واجهات متعددة العملات، ترحيل محلي واختبارات. بانتظار مراجعة Claude.
 
 ---
 

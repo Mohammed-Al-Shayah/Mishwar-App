@@ -127,16 +127,26 @@ class AdminRemoteDataSource {
     if (section == AdminSection.pricing) {
       return _db.doc('config/pricing').snapshots().map((doc) {
         final data = doc.data();
-        final pricing = data == null
-            ? PricingTable.defaults()
-            : PricingTable({
-                for (final type in VehicleType.values)
-                  type: _rates(adminMap(data[type.name])),
-              });
+        if (data == null) return AdminData(pricing: PricingTable.defaults());
+        final tables = <String, PricingTable>{
+          for (final market in [
+            'JO',
+            'PS',
+          ].where((m) => m == 'JO' || data[m] != null))
+            market: PricingTable({
+              for (final type in VehicleType.values)
+                type: _rates(
+                  adminMap(adminMap(data[market] ?? data)[type.name]),
+                  market == 'PS' ? 100 : 1000,
+                ),
+            }),
+        };
+        final pricing = tables['JO']!;
         return AdminData(
           pricing: pricing,
-          updatedBy: data?['updatedBy'] as String?,
-          updatedAt: (data?['updatedAt'] as Timestamp?)?.toDate(),
+          marketPricing: tables,
+          updatedBy: data['updatedBy'] as String?,
+          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
         );
       });
     }
@@ -172,10 +182,21 @@ class AdminRemoteDataSource {
             .limit(10)
             .get();
         final entries = await _entries(rides);
+        final revenueDocs = await _db.collection('stats').get();
+        final revenue = <String, int>{'JOD': 0, 'ILS': 0};
+        for (final d in revenueDocs.docs) {
+          final currency = d.data()['currency'];
+          if (revenue.containsKey(currency)) {
+            revenue[currency as String] =
+                revenue[currency]! +
+                ((d.data()['revenueMinor'] as num?)?.toInt() ?? 0);
+          }
+        }
         if (!controller.isClosed && current == generation) {
           controller.add(
             AdminData(
               entries: entries,
+              revenue: revenue,
               stats: counts.map((c) => c.count ?? 0).toList(),
             ),
           );
@@ -218,12 +239,13 @@ class AdminRemoteDataSource {
     return controller.stream;
   }
 
-  VehicleRates _rates(Map<String, dynamic> data) => VehicleRates(
-    base: ((data['base'] as num) * 1000).round(),
-    perKm: ((data['perKm'] as num) * 1000).round(),
-    perMin: ((data['perMin'] as num) * 1000).round(),
-    minimum: ((data['minimum'] as num) * 1000).round(),
-  );
+  VehicleRates _rates(Map<String, dynamic> data, [int scale = 1000]) =>
+      VehicleRates(
+        base: ((data['base'] as num) * scale).round(),
+        perKm: ((data['perKm'] as num) * scale).round(),
+        perMin: ((data['perMin'] as num) * scale).round(),
+        minimum: ((data['minimum'] as num) * scale).round(),
+      );
   Future<String> license(String path) => _storage.ref(path).getDownloadURL();
   Future<void> action(String name, Map<String, Object> arguments) async {
     await _functions.httpsCallable(name).call<void>(arguments);

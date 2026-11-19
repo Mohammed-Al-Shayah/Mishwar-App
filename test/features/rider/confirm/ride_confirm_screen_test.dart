@@ -83,9 +83,9 @@ void main() {
           (_) async => const Right(
             PromoQuote(
               code: 'WELCOME50',
-              discountFils: 1700,
-              fareBeforeFils: 4600,
-              fareAfterFils: 2900,
+              discountMinor: 1700,
+              fareBeforeMinor: 4600,
+              fareAfterMinor: 2900,
             ),
           ),
         );

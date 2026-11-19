@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// All rates are integer fils (1 JOD = 1000 fils).
+/// All rates are integer minor (1 JOD = 1000 minor).
 class VehicleRates extends Equatable {
   const VehicleRates({
     required this.base,

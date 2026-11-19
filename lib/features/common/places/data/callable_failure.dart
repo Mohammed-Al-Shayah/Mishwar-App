@@ -5,6 +5,9 @@ Failure callableFailure(Object error) {
   if (error is FirebaseFunctionsException && error.details is Map) {
     final details = error.details as Map;
     final reason = details['reason'];
+    if (reason == 'out-of-service-area') {
+      return const ValidationFailure('out-of-service-area');
+    }
     if (reason == 'service-disabled') {
       return const ValidationFailure('service-disabled');
     }
@@ -18,11 +21,15 @@ Failure callableFailure(Object error) {
       'first-ride-only',
       'min-fare',
       'rate-limit',
+      'wrong-market',
     ].contains(reason)) {
       final minFare = details['minFare'];
       return PromoFailure(
         reason as String,
-        minFareFils: minFare is num ? (minFare * 1000).round() : null,
+        currency: details['currency'] == 'ILS' ? 'ILS' : 'JOD',
+        minFareMinor: minFare is num
+            ? (minFare * (details['currency'] == 'ILS' ? 100 : 1000)).round()
+            : null,
       );
     }
   }

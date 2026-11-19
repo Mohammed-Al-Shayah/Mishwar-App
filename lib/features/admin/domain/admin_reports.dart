@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mishwar/core/error/failures.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 
 class ReportDay extends Equatable {
   ReportDay({
@@ -23,7 +24,11 @@ class ReportDay extends Equatable {
 }
 
 class ReportData extends Equatable {
-  ReportData(List<ReportDay> days) : days = List.unmodifiable(days);
+  ReportData(List<ReportDay> days, {this.market = 'JO'})
+    : days = List.unmodifiable(days);
+  final String market;
+  String get currency => market == 'PS' ? 'ILS' : 'JOD';
+  int get scale => Money.scale(currency);
   final List<ReportDay> days;
   int total(String key) => days.fold(0, (sum, d) => sum + d.count(key));
   int get cancellations => days.fold(0, (sum, d) => sum + d.cancellations);
@@ -34,7 +39,7 @@ class ReportData extends Equatable {
       total('requested') == 0 ? 0 : cancellations / total('requested') * 100;
   double get averageFare => total('completed') == 0
       ? 0
-      : total('revenueFils') / total('completed') / 1000;
+      : total('revenueMinor') / total('completed') / scale;
   List<MapEntry<String, int>> get topPromos {
     final totals = <String, int>{};
     for (final d in days) {
@@ -58,8 +63,8 @@ class ReportData extends Equatable {
           d.day,
           d.count('requested'),
           d.count('completed'),
-          (d.count('revenueFils') / 1000).toStringAsFixed(3),
-          (d.count('discountFils') / 1000).toStringAsFixed(3),
+          (d.count('revenueMinor') / scale).toStringAsFixed(3),
+          (d.count('discountMinor') / scale).toStringAsFixed(3),
           d.count('cancelledByRider'),
           d.count('cancelledByDriver'),
           d.count('cancelledBySystem'),
@@ -74,20 +79,21 @@ class ReportData extends Equatable {
   }
 
   @override
-  List<Object?> get props => [days];
+  List<Object?> get props => [days, market];
 }
 
 // One read boundary for the reports use case.
 // ignore: one_member_abstracts
 abstract interface class ReportsRepository {
-  Future<Either<Failure, ReportData>> load(int days);
+  Future<Either<Failure, ReportData>> load(int days, [String market = 'JO']);
 }
 
 @lazySingleton
 class LoadReports {
   const LoadReports(this._repository);
   final ReportsRepository _repository;
-  Future<Either<Failure, ReportData>> call(int days) => _repository.load(days);
+  Future<Either<Failure, ReportData>> call(int days, [String market = 'JO']) =>
+      _repository.load(days, market);
 }
 
 /// Calendar dates in Asia/Amman (UTC+3); do not use the browser's local zone.

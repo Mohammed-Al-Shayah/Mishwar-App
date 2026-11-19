@@ -27,3 +27,5 @@ export { createSupportTicket, replySupportTicket, setSupportTicketStatus, onSupp
 export { onRideStatsWritten } from './admin/stats.js';
 
 export { protectOtpSms } from './auth/index.js';
+
+export { setUserHomeMarket } from './auth/homeMarket.js';

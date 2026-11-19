@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { initializeApp, deleteApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { limitOtpSms } from '../lib/auth/otpLimits.js';
+import { isSmsSendEvent, limitOtpSms } from '../lib/auth/otpLimits.js';
 
 test('Firestore emulator: concurrent SMS transactions reserve exactly three and roll over', async () => {
   const host = process.env.FIRESTORE_EMULATOR_HOST ?? '127.0.0.1:8080';
@@ -26,4 +26,10 @@ test('Firestore emulator: concurrent SMS transactions reserve exactly three and 
     await db.recursiveDelete(db.collection('otpLimits'));
     await deleteApp(app);
   }
+});
+test('only SMS-send events are limited; sign-in events from the emulator pass through', () => {
+  assert.equal(isSmsSendEvent({ eventType: 'providers/cloud.auth/eventTypes/user.beforeSendSms' }), true);
+  assert.equal(isSmsSendEvent({ smsType: 'SIGN_IN_OR_SIGN_UP' }), true);
+  assert.equal(isSmsSendEvent({ eventType: 'providers/cloud.auth/eventTypes/user.beforeSignIn' }), false);
+  assert.equal(isSmsSendEvent({}), false);
 });

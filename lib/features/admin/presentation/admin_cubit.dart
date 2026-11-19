@@ -8,9 +8,6 @@ import 'package:mishwar/core/usecase/usecase.dart';
 import 'package:mishwar/features/admin/domain/admin_repository.dart';
 import 'package:mishwar/features/admin/domain/admin_usecases.dart';
 import 'package:mishwar/features/common/auth/domain/usecases/sign_out.dart';
-import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
-import 'package:mishwar/features/common/pricing/domain/entities/vehicle_rates.dart';
-import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart';
 
 class AdminState extends Equatable {
   const AdminState({
@@ -65,13 +62,12 @@ class AdminState extends Equatable {
 
 @injectable
 class AdminCubit extends Cubit<AdminState> {
-  AdminCubit(this._watch, this._load, this._action, this._license, this._fare)
+  AdminCubit(this._watch, this._load, this._action, this._license)
     : super(const AdminState());
   final WatchAdminData _watch;
   final LoadAdminPage _load;
   final AdminAction _action;
   final LoadAdminLicense _license;
-  final FareCalculator _fare;
   StreamSubscription<dynamic>? _subscription;
   final _cursors = <String?>[null];
   String? _rideId;
@@ -249,17 +245,15 @@ class AdminCubit extends Cubit<AdminState> {
     );
   }
 
-  static int? parseRate(String text) {
+  static int? parseRate(String text, [int scale = 1000]) {
     final value = double.tryParse(text.trim());
     if (value == null || !value.isFinite || value <= 0 || value > 50) {
       return null;
     }
-    final fils = value * 1000;
-    return (fils - fils.round()).abs() < 0.0000001 ? fils.round() : null;
+    final minor = value * scale;
+    return (minor - minor.round()).abs() < 0.0000001 ? minor.round() : null;
   }
 
-  Money preview(VehicleRates rates) =>
-      _fare.compute(rates: rates, distanceMeters: 10000, durationSeconds: 1200);
   @override
   Future<void> close() async {
     _generation++;

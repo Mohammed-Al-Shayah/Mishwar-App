@@ -105,7 +105,7 @@ void main() {
                       RiderHomeScreen(
                         mapBuilder: (_) => const MwMapPlaceholder(),
                       ),
-                      balanceDueFils:
+                      balanceDueMinor:
                           permission == LocationPermissionStatus.deniedForever
                           ? 0
                           : 500,

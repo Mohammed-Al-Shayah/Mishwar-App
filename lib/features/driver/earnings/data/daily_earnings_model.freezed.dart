@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DailyEarningsModel {
 
- double get total; int get trips;
+ String get currency; double get total; int get trips;
 /// Create a copy of DailyEarningsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DailyEarningsModelCopyWith<DailyEarningsModel> get copyWith => _$DailyEarningsM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DailyEarningsModel&&(identical(other.total, total) || other.total == total)&&(identical(other.trips, trips) || other.trips == trips));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DailyEarningsModel&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.total, total) || other.total == total)&&(identical(other.trips, trips) || other.trips == trips));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,total,trips);
+int get hashCode => Object.hash(runtimeType,currency,total,trips);
 
 @override
 String toString() {
-  return 'DailyEarningsModel(total: $total, trips: $trips)';
+  return 'DailyEarningsModel(currency: $currency, total: $total, trips: $trips)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DailyEarningsModelCopyWith<$Res>  {
   factory $DailyEarningsModelCopyWith(DailyEarningsModel value, $Res Function(DailyEarningsModel) _then) = _$DailyEarningsModelCopyWithImpl;
 @useResult
 $Res call({
- double total, int trips
+ String currency, double total, int trips
 });
 
 
@@ -65,9 +65,10 @@ class _$DailyEarningsModelCopyWithImpl<$Res>
 
 /// Create a copy of DailyEarningsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? total = null,Object? trips = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currency = null,Object? total = null,Object? trips = null,}) {
   return _then(_self.copyWith(
-total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
+currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as double,trips: null == trips ? _self.trips : trips // ignore: cast_nullable_to_non_nullable
 as int,
   ));
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double total,  int trips)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String currency,  double total,  int trips)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DailyEarningsModel() when $default != null:
-return $default(_that.total,_that.trips);case _:
+return $default(_that.currency,_that.total,_that.trips);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.total,_that.trips);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double total,  int trips)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String currency,  double total,  int trips)  $default,) {final _that = this;
 switch (_that) {
 case _DailyEarningsModel():
-return $default(_that.total,_that.trips);case _:
+return $default(_that.currency,_that.total,_that.trips);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.total,_that.trips);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double total,  int trips)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String currency,  double total,  int trips)?  $default,) {final _that = this;
 switch (_that) {
 case _DailyEarningsModel() when $default != null:
-return $default(_that.total,_that.trips);case _:
+return $default(_that.currency,_that.total,_that.trips);case _:
   return null;
 
 }
@@ -210,9 +211,10 @@ return $default(_that.total,_that.trips);case _:
 @JsonSerializable()
 
 class _DailyEarningsModel extends DailyEarningsModel {
-  const _DailyEarningsModel({this.total = 0.0, this.trips = 0}): super._();
+  const _DailyEarningsModel({this.currency = 'JOD', this.total = 0.0, this.trips = 0}): super._();
   factory _DailyEarningsModel.fromJson(Map<String, dynamic> json) => _$DailyEarningsModelFromJson(json);
 
+@override@JsonKey() final  String currency;
 @override@JsonKey() final  double total;
 @override@JsonKey() final  int trips;
 
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DailyEarningsModel&&(identical(other.total, total) || other.total == total)&&(identical(other.trips, trips) || other.trips == trips));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DailyEarningsModel&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.total, total) || other.total == total)&&(identical(other.trips, trips) || other.trips == trips));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,total,trips);
+int get hashCode => Object.hash(runtimeType,currency,total,trips);
 
 @override
 String toString() {
-  return 'DailyEarningsModel(total: $total, trips: $trips)';
+  return 'DailyEarningsModel(currency: $currency, total: $total, trips: $trips)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$DailyEarningsModelCopyWith<$Res> implements $DailyEarning
   factory _$DailyEarningsModelCopyWith(_DailyEarningsModel value, $Res Function(_DailyEarningsModel) _then) = __$DailyEarningsModelCopyWithImpl;
 @override @useResult
 $Res call({
- double total, int trips
+ String currency, double total, int trips
 });
 
 
@@ -266,9 +268,10 @@ class __$DailyEarningsModelCopyWithImpl<$Res>
 
 /// Create a copy of DailyEarningsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? total = null,Object? trips = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currency = null,Object? total = null,Object? trips = null,}) {
   return _then(_DailyEarningsModel(
-total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
+currency: null == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as double,trips: null == trips ? _self.trips : trips // ignore: cast_nullable_to_non_nullable
 as int,
   ));

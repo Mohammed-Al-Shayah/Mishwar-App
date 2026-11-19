@@ -8,6 +8,7 @@ import 'package:mishwar/core/theme/app_text_styles.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
 import 'package:mishwar/core/time/amman_day.dart';
 import 'package:mishwar/core/widgets/mw_skeleton.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
 
 String historyDate(BuildContext context, DateTime date) {
@@ -15,13 +16,15 @@ String historyDate(BuildContext context, DateTime date) {
   return DateFormat.MMMEd(locale).add_jm().format(date.toLocal());
 }
 
-String ridePrice(BuildContext context, RideEntity ride) => context.l10n.fareJod(
-  ((ride.status == RideStatus.cancelled
-              ? ride.fareCancellationFeeFils
-              : ride.fareFinalFils ?? ride.fareEstimatedFils) /
-          1000)
-      .toStringAsFixed(2),
-);
+String ridePrice(BuildContext context, RideEntity ride) =>
+    context.l10n.fareAmount(
+      Money(
+        ride.status == RideStatus.cancelled
+            ? ride.fareCancellationFeeMinor
+            : ride.fareFinalMinor ?? ride.fareEstimatedMinor,
+        ride.currency,
+      ).toDisplayString(),
+    );
 
 class HistorySkeleton extends StatelessWidget {
   const HistorySkeleton({super.key});

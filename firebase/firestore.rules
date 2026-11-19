@@ -103,12 +103,12 @@ service cloud.firestore {
         && (!('createdAt' in request.resource.data) || request.resource.data.createdAt == request.time)
         && (!('fcmToken' in request.resource.data) || request.resource.data.fcmToken == null
           || request.resource.data.fcmTokenUpdatedAt == request.time)
-        && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting', 'balanceDueFils']);
+        && !request.resource.data.keys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting', 'balanceDueFils', 'balanceDue', 'homeMarket', 'market']);
       allow update: if !isAdmin() && isOwner()
         && validClientRole() && validProfile() && validPushUpdate()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
           ['name', 'phone', 'photoUrl', 'role', 'fcmToken', 'fcmTokenUpdatedAt'])
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting', 'balanceDueFils'])
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeRideId', 'pendingRatingRideId', 'rating', 'ratingCount', 'accountDeleting', 'balanceDueFils', 'balanceDue', 'homeMarket', 'market'])
         && (!('role' in resource.data)
           || ('role' in request.resource.data
             && request.resource.data.role == resource.data.role));

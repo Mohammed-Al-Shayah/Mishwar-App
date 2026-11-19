@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/data/models/driver_live_location_model.dart';
 import 'package:mishwar/features/common/ride/data/models/ride_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_history.dart';
@@ -78,7 +79,8 @@ class RideRemoteDataSource {
     if (fee is! num || !fee.isFinite || fee < 0) {
       throw const FormatException('Invalid fee');
     }
-    return (fee * 1000).round();
+    return (fee * Money.scale(result.data['currency'] as String? ?? 'JOD'))
+        .round();
   }
 
   Future<bool> cancel(String id) async {

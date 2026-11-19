@@ -320,6 +320,12 @@ class _AccountBody extends StatelessWidget {
                                 style: context.textStyles.bodySmall,
                               ),
                             ),
+                            Text(
+                              user.displayMarket == 'PS'
+                                  ? context.l10n.accountMarketPS
+                                  : context.l10n.accountMarketJO,
+                              style: context.textStyles.bodySmall,
+                            ),
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppSpacing.sm,

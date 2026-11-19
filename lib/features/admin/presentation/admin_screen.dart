@@ -21,6 +21,7 @@ import 'package:mishwar/features/admin/presentation/admin_promos.dart';
 import 'package:mishwar/features/admin/presentation/admin_reports_page.dart';
 import 'package:mishwar/features/admin/presentation/admin_settings.dart';
 import 'package:mishwar/features/admin/presentation/admin_support.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({this.supportTicketId, super.key});
@@ -321,6 +322,15 @@ class _AdminScreenState extends State<AdminScreen> {
       AdminSection.overview => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          for (final entry in state.data!.revenue.entries)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                '${context.l10n.reportsRevenue}: '
+                '${Money(entry.value, entry.key).toDisplayString()}',
+                textDirection: TextDirection.ltr,
+              ),
+            ),
           Row(
             children: [
               for (var i = 0; i < state.data!.stats.length; i++)
@@ -412,7 +422,7 @@ class _AdminScreenState extends State<AdminScreen> {
       Text(e.driver),
       Text('${e.pickup} → ${e.dropoff}'),
       _status(context, e.status),
-      _ltr(adminMoney(context, e.finalFare ?? e.estimated)),
+      _ltr(adminMoney(context, e.finalFare ?? e.estimated, e.currency)),
     ],
     false,
   );
@@ -533,11 +543,11 @@ class _AdminScreenState extends State<AdminScreen> {
               Text('${entry.pickup} → ${entry.dropoff}'),
               _ltr(
                 '${context.l10n.adminEstimated}: '
-                '${adminMoney(context, entry.estimated)}',
+                '${adminMoney(context, entry.estimated, entry.currency)}',
               ),
               _ltr(
                 '${context.l10n.adminFinal}: '
-                '${adminMoney(context, entry.finalFare)}',
+                '${adminMoney(context, entry.finalFare, entry.currency)}',
               ),
               Text(
                 '${context.l10n.adminRiderRating}: '

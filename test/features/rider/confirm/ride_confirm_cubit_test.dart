@@ -41,9 +41,9 @@ const route = RouteInfo(
 final estimates = FareEstimates(
   route: route,
   fares: const [
-    FareEstimate(vehicleType: VehicleType.economy, fils: 4600),
-    FareEstimate(vehicleType: VehicleType.comfort, fils: 5800),
-    FareEstimate(vehicleType: VehicleType.van, fils: 7200),
+    FareEstimate(vehicleType: VehicleType.economy, minor: 4600),
+    FareEstimate(vehicleType: VehicleType.comfort, minor: 5800),
+    FareEstimate(vehicleType: VehicleType.van, minor: 7200),
   ],
 );
 void stubSuccess(MockRouteRepository repository) {
@@ -72,9 +72,9 @@ void main() {
         (_) async => const Right(
           PromoQuote(
             code: 'WELCOME50',
-            discountFils: 1000,
-            fareBeforeFils: 4600,
-            fareAfterFils: 3600,
+            discountMinor: 1000,
+            fareBeforeMinor: 4600,
+            fareAfterMinor: 3600,
           ),
         ),
       );
@@ -106,9 +106,9 @@ void main() {
       final first = Completer<Either<Failure, PromoQuote>>();
       const quote = PromoQuote(
         code: 'WELCOME50',
-        discountFils: 1700,
-        fareBeforeFils: 4600,
-        fareAfterFils: 2900,
+        discountMinor: 1700,
+        fareBeforeMinor: 4600,
+        fareAfterMinor: 2900,
       );
       when(
         () => promos.validate('welcome50', draft, VehicleType.economy),
@@ -223,7 +223,7 @@ void main() {
       ),
       isA<RideConfirmLoaded>().having((s) => s.isRequesting, 'loading', true),
       isA<RideConfirmRequested>()
-          .having((s) => s.fareFils, 'fare', 7200)
+          .having((s) => s.fareMinor, 'fare', 7200)
           .having((s) => s.selected, 'selected', VehicleType.van),
     ],
   );

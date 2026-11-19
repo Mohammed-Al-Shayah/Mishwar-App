@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mishwar/core/firebase/converters.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/data/models/airport_details_model.dart';
 import 'package:mishwar/features/common/ride/domain/entities/parcel_details.dart';
 import 'package:mishwar/features/common/ride/domain/entities/ride_entity.dart';
@@ -71,6 +72,8 @@ abstract class RideModel with _$RideModel {
     required RidePlaceModel dropoff,
     required RideFareModel fare,
     @TimestampConverter() required DateTime createdAt,
+    @Default('JO') String market,
+    @Default(<String, double>{}) Map<String, double> waitingPolicy,
     @TimestampConverter() DateTime? scheduledFor,
     @Default(ServiceType.ride) ServiceType serviceType,
     ParcelDetailsModel? parcel,
@@ -104,14 +107,23 @@ abstract class RideModel with _$RideModel {
         ].any((value) => !value.isFinite || value < 0) ||
         !fare.discount.isFinite ||
         fare.discount < 0 ||
-        fare.currency != 'JOD' ||
+        !['JOD', 'ILS'].contains(fare.currency) ||
         !fare.estimated.isFinite ||
         fare.estimated < 0 ||
         (fare.finalAmount != null &&
             (!fare.finalAmount!.isFinite || fare.finalAmount! < 0))) {
       throw const FormatException('Invalid fare');
     }
+    final scale = Money.scale(fare.currency);
     return RideEntity(
+      waitingFreeSeconds: ((waitingPolicy['freeMinutes'] ?? 3) * 60).round(),
+      waitingRateMinor:
+          ((waitingPolicy['perMinute'] ??
+                      (fare.currency == 'ILS' ? 0.5 : 0.05)) *
+                  scale)
+              .round(),
+      market: market,
+      currency: fare.currency,
       serviceType: serviceType,
       parcel: parcel?.toEntity(),
       airport: airport?.toEntity(),
@@ -119,10 +131,10 @@ abstract class RideModel with _$RideModel {
       scheduledFor: scheduledFor,
       promoCode: promo?.code,
       promoApplied: promo?.applied,
-      fareCancellationFeeFils: (fare.cancellationFee * 1000).round(),
-      fareWaitingFeeFils: (fare.waitingFee * 1000).round(),
-      farePreviousBalanceFils: (fare.previousBalance * 1000).round(),
-      discountFils: (fare.discount * 1000).round(),
+      fareCancellationFeeMinor: (fare.cancellationFee * scale).round(),
+      fareWaitingFeeMinor: (fare.waitingFee * scale).round(),
+      farePreviousBalanceMinor: (fare.previousBalance * scale).round(),
+      discountMinor: (fare.discount * scale).round(),
       driverRating: driverRating?.stars,
       riderRating: riderRating?.stars,
       id: id,
@@ -140,10 +152,10 @@ abstract class RideModel with _$RideModel {
       pickup: pickup.toEntity(),
       dropoff: dropoff.toEntity(),
       route: route?.toEntity(),
-      fareEstimatedFils: (fare.estimated * 1000).round(),
-      fareFinalFils: fare.finalAmount == null
+      fareEstimatedMinor: (fare.estimated * scale).round(),
+      fareFinalMinor: fare.finalAmount == null
           ? null
-          : (fare.finalAmount! * 1000).round(),
+          : (fare.finalAmount! * scale).round(),
       cancelledBy: cancelledBy,
       createdAt: createdAt,
       searchExpiresAt: searchExpiresAt,

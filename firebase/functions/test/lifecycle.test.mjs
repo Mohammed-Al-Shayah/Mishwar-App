@@ -58,13 +58,13 @@ test('fare floor, duration, cap, rounding and configured vehicle rates', async (
 test('completion clears pointers, sets ratings and increments earnings once using Amman day', async () => {
   const now = Date.parse('2026-11-16T22:00:00Z');
   const h = setup('in_progress', { startedAt: ts(now - 1200000) }); h.setTime(now);
-  h.db.records.set('drivers/a/earnings/2026-11-17', { total: 0.1, trips: 2 });
+  h.db.records.set('drivers/a/earnings/2026-11-17_JO', { total: 0.1, trips: 2 });
   await Promise.all([update(h, 'completed'), update(h, 'completed')]);
   assert.equal(h.db.records.get('users/rider').activeRideId, undefined);
   assert.equal(h.db.records.get('users/rider').pendingRatingRideId, 'x');
   assert.equal(h.db.records.get('drivers/a').currentRideId, null);
   assert.equal(h.db.records.get('drivers/a').pendingRatingRideId, 'x');
-  assert.deepEqual(h.db.records.get('drivers/a/earnings/2026-11-17'), { total: 3.1, trips: 3, updatedAt: ts(now) });
+  assert.deepEqual(h.db.records.get('drivers/a/earnings/2026-11-17_JO'), { currency: 'JOD', market: 'JO', day: '2026-11-17', total: 3.1, trips: 3, updatedAt: ts(now) });
   const other = setup('in_progress'); other.db.records.get('users/rider').activeRideId = 'new';
   await update(other, 'completed'); assert.equal(other.db.records.get('users/rider').activeRideId, 'new');
 });

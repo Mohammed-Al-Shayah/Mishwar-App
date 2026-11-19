@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/pricing_table.dart';
 import 'package:mishwar/features/common/pricing/domain/entities/vehicle_rates.dart';
-import 'package:mishwar/features/common/pricing/domain/fare_calculator.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
+
+import '../../../../helpers/fare_reference.dart';
 
 void main() {
   const calculator = FareCalculator();
@@ -22,29 +23,54 @@ void main() {
     test('shared fixture: ${row['name']}', () {
       final type = VehicleType.values.byName(row['vehicleType'] as String);
       final result = calculator.compute(
-        rates: table[type],
+        rates: row['market'] == 'PS'
+            ? switch (type) {
+                VehicleType.economy => const VehicleRates(
+                  base: 300,
+                  perKm: 180,
+                  perMin: 30,
+                  minimum: 1000,
+                ),
+                VehicleType.comfort => const VehicleRates(
+                  base: 500,
+                  perKm: 260,
+                  perMin: 40,
+                  minimum: 1500,
+                ),
+                VehicleType.van => const VehicleRates(
+                  base: 600,
+                  perKm: 320,
+                  perMin: 50,
+                  minimum: 1800,
+                ),
+              }
+            : table[type],
+        currency: row['currency'] as String,
         distanceMeters: row['distanceMeters'] as num,
         durationSeconds: row['durationSeconds'] as num,
       );
-      expect(result.amount, row['expectedFils']);
+      expect(result.amount, row['expectedMinor']);
       expect(
-        result.toJodString(),
-        ((row['expectedFils'] as int) / 1000).toStringAsFixed(2),
+        result.toDisplayString(),
+        Money(
+          row['expectedMinor'] as int,
+          row['currency'] as String,
+        ).toDisplayString(),
       );
     });
   }
-  test('money formatting preserves fils and two decimal display', () {
-    for (final (fils, text) in [
+  test('money formatting preserves minor and two decimal display', () {
+    for (final (minor, text) in [
       (0, '0.00'),
       (50, '0.05'),
       (3400, '3.40'),
       (10000, '10.00'),
       (3405, '3.41'),
     ]) {
-      final money = Money(fils);
-      expect(money.amount, fils);
-      expect(money.toJodString(), text);
-      expect(money, Money(fils));
+      final money = Money(minor);
+      expect(money.amount, minor);
+      expect(money.toDisplayString(), 'JD $text');
+      expect(money, Money(minor));
     }
   });
   test('pricing table is complete and immutable', () {

@@ -5,12 +5,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {spawnSync, spawn} from 'node:child_process';
 import {createServer} from 'node:http';
-import {computeFare,DEFAULT_PRICING} from '../lib/pricing.js';
+import {computeFare,DEFAULT_PRICING,PS_PRICING} from '../lib/pricing.js';
 import {fareEstimatesHandler as estimates} from '../lib/getFareEstimates.js';
 const fareEstimatesHandler = (...args) => estimates(...args, async()=>undefined);
 const fixtures=JSON.parse(readFileSync(new URL('./fixtures/fares.json',import.meta.url),'utf8'));
 for(const row of fixtures) test('fixture: '+row.name,()=>{
- assert.equal(computeFare(DEFAULT_PRICING[row.vehicleType],row.distanceMeters,row.durationSeconds)*1000,row.expectedFils);
+ assert.equal(Math.round(computeFare((row.market === 'PS' ? PS_PRICING : DEFAULT_PRICING)[row.vehicleType],row.distanceMeters,row.durationSeconds,row.currency)*(row.currency === 'ILS' ? 100 : 1000)),row.expectedMinor);
 });
 test('invalid rates or measurements are rejected',()=>{
  for(const value of [-1,NaN,Infinity]) {
@@ -20,13 +20,13 @@ test('invalid rates or measurements are rejected',()=>{
  }
  assert.throws(()=>computeFare({...DEFAULT_PRICING.economy,base:0.0001},0,0),RangeError);
 });
-const data={origin:{lat:31,lng:35},destination:{lat:32,lng:36}};
+const data={origin:{lat:31.95,lng:35.91},destination:{lat:32,lng:36}};
 const request={auth:{uid:'test'},data};
 const body={routes:[{distanceMeters:10000,duration:'600s',polyline:{encodedPolyline:'abc'}}]};
 const fakeFetch=async()=>Response.json(body);
 test('fare estimates default only when document is missing',async()=>{
  const result=await fareEstimatesHandler(request,'fake',fakeFetch,async()=>undefined);
- assert.deepEqual(result,{route:{polyline:'abc',distanceMeters:10000,durationSeconds:600},fares:[
+ assert.deepEqual(result,{market:'JO',currency:'JOD',route:{polyline:'abc',distanceMeters:10000,durationSeconds:600},fares:[
  {vehicleType:'economy',amount:4,currency:'JOD'},
  {vehicleType:'comfort',amount:6,currency:'JOD'},
  {vehicleType:'van',amount:7.3,currency:'JOD'},
@@ -46,7 +46,7 @@ for(const [status,code] of [[400,'internal'],[503,'unavailable']])test('fare est
 test('fare estimates timeout',async(context)=>{
  context.mock.timers.enable({apis:['setTimeout']});
  const pending=fareEstimatesHandler(request,'fake',async(_url,init)=>new Promise((_resolve,reject)=>init.signal.addEventListener('abort',()=>reject(new DOMException('private','AbortError')))),async()=>assert.fail('pricing called'));
- const rejected=assert.rejects(pending,{code:'unavailable'});context.mock.timers.tick(8000);await rejected;
+ const rejected=assert.rejects(pending,{code:'unavailable'});await Promise.resolve();await Promise.resolve();context.mock.timers.tick(8000);await rejected;
 });
 test('fare estimates unauthenticated and invalid input',async()=>{
  for(const [req,code] of [[{data},'unauthenticated'],[{auth:{uid:'test'},data:{}},'invalid-argument']]) await assert.rejects(fareEstimatesHandler(req,'fake',()=>assert.fail('network called'),async()=>assert.fail('pricing called')),{code});
@@ -76,6 +76,6 @@ test('seed writes defaults through local REST with owner authorization',async()=
   assert.equal(code,0,errors);
   assert.equal(received.method,'PATCH');assert.equal(received.auth,'Bearer owner');
   assert.equal(received.url,'/v1/projects/demo-mishwar/databases/(default)/documents/config/pricing');
-  for(const [type,rates] of Object.entries(DEFAULT_PRICING))for(const [name,value]of Object.entries(rates))assert.equal(received.body.fields[type].mapValue.fields[name].doubleValue,value);
+  for(const [type,rates] of Object.entries(DEFAULT_PRICING))for(const [name,value]of Object.entries(rates))assert.equal(received.body.fields.JO.mapValue.fields[type].mapValue.fields[name].doubleValue,value);
  } finally { await new Promise(resolve=>server.close(resolve)); }
 });

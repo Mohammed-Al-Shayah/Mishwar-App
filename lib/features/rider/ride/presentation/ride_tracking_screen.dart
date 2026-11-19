@@ -108,7 +108,16 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                 Text(
                   fee > 0
                       ? context.l10n.cancellationFeeWarning(
-                          feeAmount(context, fee),
+                          feeAmount(
+                            context,
+                            fee,
+                            this.context
+                                    .read<RideTrackingBloc>()
+                                    .state
+                                    .ride
+                                    ?.currency ??
+                                'JOD',
+                          ),
                         )
                       : searching
                       ? context.l10n.rideCancelTitle
@@ -278,6 +287,9 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                               if (ride.status == RideStatus.arrived &&
                                   state.waitingSince != null)
                                 WaitingFeeNotice(
+                                  currency: ride.currency,
+                                  freeSeconds: ride.waitingFreeSeconds,
+                                  perMinuteMinor: ride.waitingRateMinor,
                                   arrivedAt: state.waitingSince!,
                                   now: state.now ?? DateTime.now(),
                                 ),
@@ -348,10 +360,11 @@ class _RideTrackingScreenState extends State<RideTrackingScreen>
                                     ),
                                   ),
                                   Text(
-                                    context.l10n.fareJod(
+                                    context.l10n.fareAmount(
                                       Money(
-                                        ride.fareEstimatedFils,
-                                      ).toJodString(),
+                                        ride.fareEstimatedMinor,
+                                        ride.currency,
+                                      ).toDisplayString(),
                                     ),
                                     style: AppTextStyles.tabular(
                                       AppTextStyles.headline,

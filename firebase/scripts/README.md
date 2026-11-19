@@ -32,3 +32,14 @@ Owner-only: `node firebase/scripts/configure-auth.mjs <project-id>` uses existin
 to allow SMS only to PS and JO and prints the resulting region config. Do not run
 against production during development. See [the security checklist](../../docs/SECURITY.md).
 The Auth emulator may not support this project-config API.
+
+## Markets migration (T8.2)
+
+With local ride traffic paused, build Functions, set FIRESTORE_EMULATOR_HOST to 127.0.0.1:8080 and GCLOUD_PROJECT to demo-mishwar, then run:
+
+```powershell
+node firebase/scripts/migrate-markets.mjs
+node firebase/scripts/backfill-stats.mjs
+```
+
+Both scripts refuse remote hosts and non-demo projects. Neither loads secret files or starts/stops emulators. Re-running is idempotent. Flat pricing and fee config migrate to JO; Palestinian pricing/fees and the approximate service polygons are placeholders requiring owner review. Existing ride amounts remain JOD/JO to preserve historical money, even for old PS pickups. User balances migrate to JOD; earnings IDs gain _JO and currency. Stats must then be rebuilt with per-market IDs. No currency conversion is performed.

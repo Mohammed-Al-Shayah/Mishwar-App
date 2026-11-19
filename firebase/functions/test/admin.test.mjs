@@ -56,7 +56,7 @@ test('pricing bounds, finite numbers and whole fils validation; metadata cannot 
   const h = harness();
   await updatePricingHandler(request({ ...DEFAULT_PRICING, updatedBy: 'forged', economy: { ...DEFAULT_PRICING.economy, base: 50, extra: 'ignored' } }), h.db);
   const data = h.db.records.get('config/pricing'); assert.equal(data.updatedBy, 'admin'); assert.ok(data.updatedAt);
-  assert.equal(data.economy.base, 50); assert.equal(data.economy.extra, undefined); assert.equal(logs(h)[0].target, 'config/pricing');
+  assert.equal(data.JO.economy.base, 50); assert.equal(data.JO.economy.extra, undefined); assert.equal(logs(h)[0].target, 'config/pricing');
 });
 test('cancel all active statuses; clear only matching pointers and append audit', async () => {
   for (const status of ['searching', 'accepted', 'arriving', 'arrived', 'in_progress']) {

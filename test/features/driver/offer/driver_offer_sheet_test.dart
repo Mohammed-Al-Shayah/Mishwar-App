@@ -90,7 +90,7 @@ void main() {
           language: language,
         ),
       );
-      expect(find.text(l10n.fareJod('4.70')), findsOneWidget);
+      expect(find.text(l10n.fareAmount('JD 4.70')), findsOneWidget);
       expect(find.text(l10n.offerSeconds(12)), findsOneWidget);
       expect(find.text(l10n.offerPickupDistance(3, '1.2')), findsOneWidget);
       expect(find.text(l10n.offerTripDistance(10, '5.0')), findsOneWidget);

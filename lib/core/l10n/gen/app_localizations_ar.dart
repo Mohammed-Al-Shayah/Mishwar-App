@@ -309,8 +309,8 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String fareJod(String amount) {
-    return 'JD $amount';
+  String fareAmount(String amount) {
+    return '$amount';
   }
 
   @override
@@ -435,7 +435,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String tripPrice(String amount) {
-    return 'JD $amount';
+    return '$amount';
   }
 
   @override
@@ -683,7 +683,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String earningsBarLabel(String day, String amount) {
-    return '$day، JD $amount';
+    return '$day، $amount';
   }
 
   @override
@@ -1033,7 +1033,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adminSaved => 'تم الحفظ';
 
   @override
-  String get adminCurrency => 'د.أ';
+  String get adminCurrency => 'العملة';
 
   @override
   String get adminUnknown => '—';
@@ -1167,17 +1167,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String promoSelected(String code, String amount) {
-    return '$code · خصم JD $amount';
+    return '$code · خصم $amount';
   }
 
   @override
   String promoDiscount(String code, String amount) {
-    return 'خصم ($code) − JD $amount';
+    return 'خصم ($code) − $amount';
   }
 
   @override
   String promoCashFootnote(String amount) {
-    return 'شامل خصم JD $amount';
+    return 'شامل خصم $amount';
   }
 
   @override
@@ -1203,7 +1203,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String promoMinFare(String amount) {
-    return 'أقل سعر للكود JD $amount';
+    return 'أقل سعر للكود $amount';
   }
 
   @override
@@ -1675,7 +1675,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsAirport => 'المطار';
 
   @override
-  String get settingsAmount => 'المبلغ (JD)';
+  String get settingsAmount => 'المبلغ';
 
   @override
   String get settingsAfterSeconds => 'بعد كم ثانية؟';
@@ -1684,7 +1684,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsFreeMinutes => 'دقائق الانتظار المجانية';
 
   @override
-  String get settingsPerMinute => 'لكل دقيقة (JD)';
+  String get settingsPerMinute => 'لكل دقيقة';
 
   @override
   String get settingsMinLeadMinutes => 'أقل وقت قبل الحجز (دقيقة)';
@@ -1696,13 +1696,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsDispatchBeforeMinutes => 'إرسال الطلب قبل الموعد (دقيقة)';
 
   @override
-  String get settingsEconomy => 'مشوار X (JD)';
+  String get settingsEconomy => 'مشوار X';
 
   @override
-  String get settingsComfort => 'مريح (JD)';
+  String get settingsComfort => 'مريح';
 
   @override
-  String get settingsVan => 'XL (JD)';
+  String get settingsVan => 'XL';
 
   @override
   String get settingsZone => 'حدود منطقة المطار (للعرض بس)';
@@ -1732,7 +1732,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get promoValue => 'قيمة الخصم';
 
   @override
-  String get promoMaxDiscount => 'أعلى خصم (JD، اختياري)';
+  String get promoMaxDiscount => 'أعلى خصم (اختياري)';
 
   @override
   String get promoUsageLimit => 'حد الاستخدام الكلي (اختياري)';
@@ -1765,7 +1765,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get promoMinimumFareLabel => 'أقل سعر مشوار (JD، اختياري)';
+  String get promoMinimumFareLabel => 'أقل سعر مشوار (اختياري)';
 
   @override
   String get adminReports => 'التقارير';
@@ -1782,10 +1782,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportsCompletedRate => 'المشاوير المكتملة %';
 
   @override
-  String get reportsRevenue => 'الإيراد (JD)';
+  String get reportsRevenue => 'الإيراد';
 
   @override
-  String get reportsAverage => 'متوسط سعر المشوار (JD)';
+  String get reportsAverage => 'متوسط سعر المشوار';
 
   @override
   String get reportsCancellationRate => 'نسبة الإلغاء %';
@@ -1809,7 +1809,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportsCompleted => 'المكتملة';
 
   @override
-  String get reportsDiscount => 'الخصومات (JD)';
+  String get reportsDiscount => 'الخصومات';
 
   @override
   String get reportsRiderCancel => 'إلغاء الراكب';
@@ -1841,12 +1841,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String reportsScale(String rides, String revenue) {
-    return 'أعلى عمود: $rides مشوار · أعلى خط: JD $revenue';
+    return 'أعلى عمود: $rides مشوار · أعلى خط: $revenue';
   }
 
   @override
   String reportsChartDay(String day, String rides, String revenue) {
-    return '$day: $rides مشوار، إيراد JD $revenue';
+    return '$day: $rides مشوار، إيراد $revenue';
   }
 
   @override
@@ -1863,4 +1863,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get otpRequestNew => 'الرمز ما زبط. اطلب رمز جديد وجرّب كمان مرة.';
+
+  @override
+  String get marketPalestine => 'فلسطين';
+
+  @override
+  String get marketJordan => 'الأردن';
+
+  @override
+  String get accountMarketPS => 'فلسطين · شيكل';
+
+  @override
+  String get accountMarketJO => 'الأردن · دينار';
+
+  @override
+  String get outOfServiceArea => 'هاد المكان برا منطقة الخدمة';
+
+  @override
+  String get settingsRounding => 'تقريب الأجرة';
+
+  @override
+  String get promoWrongMarket => 'هاد الكود لسوق تاني';
 }

@@ -28,6 +28,7 @@ class AdminEntry extends Equatable {
   AdminEntry({
     required this.id,
     required this.status,
+    this.currency = 'JOD',
     this.name = '',
     this.phone = '',
     this.vehicle = '',
@@ -52,6 +53,7 @@ class AdminEntry extends Equatable {
     this.busy = false,
     this.reason = '',
   }) : timeline = Map.unmodifiable(timeline);
+  final String currency;
   final String id;
   final String status;
   final String name;
@@ -80,6 +82,7 @@ class AdminEntry extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    currency,
     status,
     name,
     phone,
@@ -132,6 +135,8 @@ class AdminData extends Equatable {
     List<int> stats = const [],
     this.next,
     this.pricing,
+    this.marketPricing = const {},
+    this.revenue = const {},
     this.updatedAt,
     this.updatedBy,
   }) : entries = List.unmodifiable(entries),
@@ -141,6 +146,8 @@ class AdminData extends Equatable {
   final String? next;
   final String? updatedBy;
   final PricingTable? pricing;
+  final Map<String, PricingTable> marketPricing;
+  final Map<String, int> revenue;
   final DateTime? updatedAt;
   @override
   List<Object?> get props => [
@@ -148,6 +155,8 @@ class AdminData extends Equatable {
     stats,
     next,
     pricing,
+    marketPricing,
+    revenue,
     updatedAt,
     updatedBy,
   ];

@@ -67,8 +67,9 @@ class _RideSummaryScreenState extends State<RideSummaryScreen> {
                   child: Text(
                     context.l10n.tripPrice(
                       Money(
-                        ride.fareFinalFils ?? ride.fareEstimatedFils,
-                      ).toJodString(),
+                        ride.fareFinalMinor ?? ride.fareEstimatedMinor,
+                        ride.currency,
+                      ).toDisplayString(),
                     ),
                     textDirection: TextDirection.ltr,
                     style: AppTextStyles.tabular(AppTextStyles.largeTitle),

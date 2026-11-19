@@ -1,9 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mishwar/features/common/pricing/domain/entities/money.dart';
 import 'package:mishwar/features/common/ride/data/models/airport_details_model.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimate.dart';
 import 'package:mishwar/features/common/route/domain/entities/fare_estimates.dart';
 import 'package:mishwar/features/common/route/domain/entities/route_info.dart';
 import 'package:mishwar/features/common/user/domain/entities/vehicle_entity.dart';
+
 part 'route_models.freezed.dart';
 part 'route_models.g.dart';
 
@@ -35,12 +37,13 @@ abstract class FareEstimateModel with _$FareEstimateModel {
   factory FareEstimateModel.fromJson(Map<String, dynamic> json) =>
       _$FareEstimateModelFromJson(json);
   FareEstimate toEntity() {
-    if (currency != 'JOD' || !amount.isFinite || amount < 0) {
+    if (!['JOD', 'ILS'].contains(currency) || !amount.isFinite || amount < 0) {
       throw const FormatException('Invalid fare');
     }
     return FareEstimate(
       vehicleType: vehicleType,
-      fils: (amount * 1000).round(),
+      minor: (amount * Money.scale(currency)).round(),
+      currency: currency,
     );
   }
 }
@@ -50,12 +53,16 @@ abstract class FareEstimatesModel with _$FareEstimatesModel {
   const factory FareEstimatesModel({
     required RouteModel route,
     required List<FareEstimateModel> fares,
+    @Default('JO') String market,
+    @Default('JOD') String currency,
     AirportDetailsModel? airport,
   }) = _FareEstimatesModel;
   const FareEstimatesModel._();
   factory FareEstimatesModel.fromJson(Map<String, dynamic> json) =>
       _$FareEstimatesModelFromJson(json);
   FareEstimates toEntity() => FareEstimates(
+    market: market,
+    currency: currency,
     route: route.toEntity(),
     airport: airport?.toEntity(),
     fares: List.unmodifiable(fares.map((fare) => fare.toEntity())),

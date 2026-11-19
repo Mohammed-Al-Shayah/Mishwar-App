@@ -3,14 +3,22 @@ import 'package:equatable/equatable.dart';
 class PromoQuote extends Equatable {
   const PromoQuote({
     required this.code,
-    required this.discountFils,
-    required this.fareBeforeFils,
-    required this.fareAfterFils,
+    required this.discountMinor,
+    required this.fareBeforeMinor,
+    required this.fareAfterMinor,
+    this.currency = 'JOD',
   });
   final String code;
-  final int discountFils;
-  final int fareBeforeFils;
-  final int fareAfterFils;
+  final String currency;
+  final int discountMinor;
+  final int fareBeforeMinor;
+  final int fareAfterMinor;
   @override
-  List<Object> get props => [code, discountFils, fareBeforeFils, fareAfterFils];
+  List<Object> get props => [
+    currency,
+    code,
+    discountMinor,
+    fareBeforeMinor,
+    fareAfterMinor,
+  ];
 }

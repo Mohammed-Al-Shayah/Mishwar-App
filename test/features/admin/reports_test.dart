@@ -21,7 +21,7 @@ ReportData fixture() => ReportData([
     counts: const {
       'requested': 10,
       'completed': 8,
-      'revenueFils': 40000,
+      'revenueMinor': 40000,
       'cancelledByRider': 1,
       'promoUses': 2,
     },
@@ -32,7 +32,7 @@ ReportData fixture() => ReportData([
     counts: const {
       'requested': 5,
       'completed': 4,
-      'revenueFils': 20000,
+      'revenueMinor': 20000,
       'cancelledByDriver': 1,
       'promoUses': 3,
     },

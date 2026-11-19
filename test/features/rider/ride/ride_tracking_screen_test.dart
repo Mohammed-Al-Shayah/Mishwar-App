@@ -137,29 +137,30 @@ Future<GoRouter> pumpTracking(
   return router;
 }
 
-RideEntity liveRide(RideStatus status, {int? finalFils}) => RideModel.fromJson({
-  ...rideJson(),
-  'status': 'accepted',
-  'driverId': 'driver',
-  'driverInfo': {
-    'name': 'Ahmad',
-    'phone': '+962780000002',
-    'rating': 4.9,
-    'vehicle': {
-      'type': 'economy',
-      'make': 'Toyota',
-      'model': 'Corolla',
-      'color': 'White',
-      'plate': '12-34567',
-    },
-  },
-  'route': {'polyline': '', 'distanceMeters': 1000, 'durationSeconds': 600},
-  'fare': {
-    'estimated': 2.55,
-    'final': finalFils == null ? null : finalFils / 1000,
-    'currency': 'JOD',
-  },
-}).copyWith(status: status).toEntity();
+RideEntity liveRide(RideStatus status, {int? finalMinor}) =>
+    RideModel.fromJson({
+      ...rideJson(),
+      'status': 'accepted',
+      'driverId': 'driver',
+      'driverInfo': {
+        'name': 'Ahmad',
+        'phone': '+962780000002',
+        'rating': 4.9,
+        'vehicle': {
+          'type': 'economy',
+          'make': 'Toyota',
+          'model': 'Corolla',
+          'color': 'White',
+          'plate': '12-34567',
+        },
+      },
+      'route': {'polyline': '', 'distanceMeters': 1000, 'durationSeconds': 600},
+      'fare': {
+        'estimated': 2.55,
+        'final': finalMinor == null ? null : finalMinor / 1000,
+        'currency': 'JOD',
+      },
+    }).copyWith(status: status).toEntity();
 void main() {
   late MockRideRepository repository;
   setUp(() {
@@ -254,7 +255,7 @@ void main() {
     testWidgets('summary fare and trip rows $language', (tester) async {
       when(() => repository.watchRide('ride')).thenAnswer(
         (_) => Stream.value(
-          Right(liveRide(RideStatus.completed, finalFils: 5250)),
+          Right(liveRide(RideStatus.completed, finalMinor: 5250)),
         ),
       );
       final router = await pumpTracking(
