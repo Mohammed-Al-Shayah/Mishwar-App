@@ -558,7 +558,7 @@ fare = max(minimum, base + perKm × km + perMin × minutes)
 - [x] Android Studio + Android SDK (موجود)
 - [x] Node.js (موجود، للـ Cloud Functions و Firebase CLI)
 - [x] Git (موجود)
-- [ ] Firebase CLI: `npm i -g firebase-tools`
-- [ ] FlutterFire CLI: `dart pub global activate flutterfire_cli`
-- [ ] Codex CLI
+- [x] Firebase CLI: `npm i -g firebase-tools`
+- [x] FlutterFire CLI: `dart pub global activate flutterfire_cli`
+- [x] Codex CLI
 - [ ] مشروع Firebase + مفتاح Google Maps (من حسابك)
