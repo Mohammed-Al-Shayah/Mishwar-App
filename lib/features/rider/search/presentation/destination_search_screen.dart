@@ -8,12 +8,16 @@ import 'package:mishwar/core/theme/app_radius.dart';
 import 'package:mishwar/core/theme/app_sizes.dart';
 import 'package:mishwar/core/theme/app_spacing.dart';
 import 'package:mishwar/core/theme/theme_x.dart';
+import 'package:mishwar/core/widgets/map/mw_map.dart';
 import 'package:mishwar/core/widgets/map/mw_map_fab.dart';
 import 'package:mishwar/core/widgets/mw_list_row.dart';
 import 'package:mishwar/core/widgets/mw_skeleton.dart';
 import 'package:mishwar/core/widgets/mw_text_field.dart';
+import 'package:mishwar/features/common/places/domain/entities/place_details.dart';
+import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/common/saved_places/presentation/saved_place_labels.dart';
 import 'package:mishwar/features/common/saved_places/presentation/saved_places_cubit.dart';
+import 'package:mishwar/features/common/user/domain/entities/geo_point_value.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_bloc.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_event.dart';
 import 'package:mishwar/features/rider/search/presentation/bloc/destination_search_state.dart';
@@ -34,164 +38,198 @@ class _DestinationSearchScreenState extends State<DestinationSearchScreen> {
     super.dispose();
   }
 
+  /// Opens the pin screen centred on [origin]; a confirmed pin becomes the
+  /// destination, like a chosen suggestion.
+  Future<void> _pickOnMap(BuildContext context, GeoPointValue origin) async {
+    final stop = await context.push<RideStop>(
+      '/rider/pin',
+      extra: RideStop(
+        name: context.l10n.destinationGeneric,
+        address: '',
+        location: origin,
+      ),
+    );
+    if (stop == null || !context.mounted) return;
+    context.pop(
+      PlaceDetails(
+        placeId: 'pin-${stop.location.lat},${stop.location.lng}',
+        name: stop.name,
+        address: stop.address,
+        location: stop.location,
+      ),
+    );
+  }
+
   void _change(String text) {
     setState(() {});
     context.read<DestinationSearchBloc>().add(QueryChanged(text));
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocConsumer<DestinationSearchBloc, DestinationSearchState>(
-        listener: (context, state) {
-          if (state is DestinationChosen) context.pop(state.details);
-        },
-        builder: (context, state) => Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(
+    BuildContext context,
+  ) => BlocConsumer<DestinationSearchBloc, DestinationSearchState>(
+    listener: (context, state) {
+      if (state is DestinationChosen) context.pop(state.details);
+    },
+    builder: (context, state) => Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      MwMapFab(
-                        icon: AppIcons.back,
-                        label: MaterialLocalizations.of(
-                          context,
-                        ).backButtonTooltip,
-                        onPressed: () => context.pop(),
-                      ),
-                      SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          context.l10n.planRide,
-                          style: context.textStyles.titleMedium,
-                        ),
-                      ),
-                    ],
+                  MwMapFab(
+                    icon: AppIcons.back,
+                    label: MaterialLocalizations.of(
+                      context,
+                    ).backButtonTooltip,
+                    onPressed: () => context.pop(),
                   ),
-                  SizedBox(height: AppSpacing.md),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: context.colors.fillSubtle,
-                      borderRadius: AppRadius.tileBorder,
-                    ),
-                    padding: EdgeInsets.all(AppSpacing.sm),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: AppSizes.timelineMark,
-                              height: AppSizes.timelineMark,
-                              decoration: BoxDecoration(
-                                color: context.colors.textPrimary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            Container(
-                              width: AppSizes.timelineLine,
-                              height: AppSizes.timelineHeight,
-                              color: context.colors.textPrimary,
-                            ),
-                            Container(
-                              width: AppSizes.timelineMark,
-                              height: AppSizes.timelineMark,
-                              color: context.colors.textPrimary,
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: AppSpacing.sm,
-                                ),
-                                child: Text(
-                                  widget.pickupName ??
-                                      context.l10n.currentLocation,
-                                  style: context.textStyles.bodySmall?.copyWith(
-                                    color: context.colors.textSecondary,
-                                  ),
-                                ),
-                              ),
-                              MwTextField(
-                                label: context.l10n.whereTo,
-                                hintText: context.l10n.whereTo,
-                                autofocus: true,
-                                controller: _controller,
-                                textInputAction: TextInputAction.search,
-                                onChanged: _change,
-                                suffixIcon: _controller.text.isEmpty
-                                    ? null
-                                    : IconButton(
-                                        key: const Key('clear_destination'),
-                                        tooltip: context.l10n.clearSearch,
-                                        icon: Icon(
-                                          AppIcons.close,
-                                          size: AppSizes.icon,
-                                        ),
-                                        onPressed: () {
-                                          _controller.clear();
-                                          setState(() {});
-                                          context
-                                              .read<DestinationSearchBloc>()
-                                              .add(const Cleared());
-                                        },
-                                      ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: AppSpacing.md),
+                  SizedBox(width: AppSpacing.sm),
                   Expanded(
-                    child: BlocBuilder<SavedPlacesCubit, SavedPlacesState>(
-                      builder: (context, saved) {
-                        final query = _controller.text.trim().toLowerCase();
-                        final places = saved.places
-                            .where(
-                              (p) =>
-                                  query.isEmpty ||
-                                  p.name.toLowerCase().contains(query) ||
-                                  p.address.toLowerCase().contains(query),
-                            )
-                            .toList();
-                        return ListView(
-                          children: [
-                            if (places.isNotEmpty) ...[
-                              Text(
-                                context.l10n.savedPlaces,
-                                style: context.textStyles.titleMedium,
-                              ),
-                              for (final place in places)
-                                MwListRow(
-                                  icon: savedPlaceIcon(place.label),
-                                  title: savedPlaceTitle(context, place),
-                                  subtitle: place.address,
-                                  onTap: state is DestinationResolving
-                                      ? null
-                                      : () => context.pop(place.details),
-                                ),
-                              SizedBox(height: AppSpacing.md),
-                            ],
-                            _results(context, state),
-                          ],
-                        );
-                      },
+                    child: Text(
+                      context.l10n.planRide,
+                      style: context.textStyles.titleMedium,
                     ),
                   ),
                 ],
               ),
-            ),
+              SizedBox(height: AppSpacing.md),
+              Container(
+                decoration: BoxDecoration(
+                  color: context.colors.fillSubtle,
+                  borderRadius: AppRadius.tileBorder,
+                ),
+                padding: EdgeInsets.all(AppSpacing.sm),
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          width: AppSizes.timelineMark,
+                          height: AppSizes.timelineMark,
+                          decoration: BoxDecoration(
+                            color: context.colors.textPrimary,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        Container(
+                          width: AppSizes.timelineLine,
+                          height: AppSizes.timelineHeight,
+                          color: context.colors.textPrimary,
+                        ),
+                        Container(
+                          width: AppSizes.timelineMark,
+                          height: AppSizes.timelineMark,
+                          color: context.colors.textPrimary,
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppSpacing.sm,
+                            ),
+                            child: Text(
+                              widget.pickupName ?? context.l10n.currentLocation,
+                              style: context.textStyles.bodySmall?.copyWith(
+                                color: context.colors.textSecondary,
+                              ),
+                            ),
+                          ),
+                          MwTextField(
+                            label: context.l10n.whereTo,
+                            hintText: context.l10n.whereTo,
+                            autofocus: true,
+                            controller: _controller,
+                            textInputAction: TextInputAction.search,
+                            onChanged: _change,
+                            suffixIcon: _controller.text.isEmpty
+                                ? null
+                                : IconButton(
+                                    key: const Key('clear_destination'),
+                                    tooltip: context.l10n.clearSearch,
+                                    icon: Icon(
+                                      AppIcons.close,
+                                      size: AppSizes.icon,
+                                    ),
+                                    onPressed: () {
+                                      _controller.clear();
+                                      setState(() {});
+                                      context.read<DestinationSearchBloc>().add(
+                                        const Cleared(),
+                                      );
+                                    },
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: AppSpacing.md),
+              Expanded(
+                child: BlocBuilder<SavedPlacesCubit, SavedPlacesState>(
+                  builder: (context, saved) {
+                    final query = _controller.text.trim().toLowerCase();
+                    final places = saved.places
+                        .where(
+                          (p) =>
+                              query.isEmpty ||
+                              p.name.toLowerCase().contains(query) ||
+                              p.address.toLowerCase().contains(query),
+                        )
+                        .toList();
+                    final origin =
+                        context.read<DestinationSearchBloc>().params.position ??
+                        MwMap.defaultTarget;
+                    return ListView(
+                      children: [
+                        MwListRow(
+                          key: const Key('choose_on_map'),
+                          icon: AppIcons.map,
+                          title: context.l10n.chooseOnMap,
+                          subtitle: '',
+                          onTap: state is DestinationResolving
+                              ? null
+                              : () => _pickOnMap(context, origin),
+                        ),
+                        if (places.isNotEmpty) ...[
+                          Text(
+                            context.l10n.savedPlaces,
+                            style: context.textStyles.titleMedium,
+                          ),
+                          for (final place in places)
+                            MwListRow(
+                              icon: savedPlaceIcon(place.label),
+                              title: savedPlaceTitle(context, place),
+                              subtitle: place.address,
+                              onTap: state is DestinationResolving
+                                  ? null
+                                  : () => context.pop(place.details),
+                            ),
+                          SizedBox(height: AppSpacing.md),
+                        ],
+                        _results(context, state),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _results(BuildContext context, DestinationSearchState state) {
     if (state.suggestions.isNotEmpty) {

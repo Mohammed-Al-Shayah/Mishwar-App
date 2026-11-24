@@ -1672,6 +1672,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickupGeneric => 'Pickup point';
 
   @override
+  String get chooseOnMap => 'Set on map';
+
+  @override
+  String get destinationPinTitle => 'Set your destination';
+
+  @override
+  String get destinationPinHint =>
+      'Move the map until the pin is on your destination';
+
+  @override
+  String get destinationPinConfirm => 'Confirm destination';
+
+  @override
+  String get destinationGeneric => 'Destination';
+
+  @override
   String get adminSettings => 'Settings';
 
   @override

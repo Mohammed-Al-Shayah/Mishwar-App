@@ -44,8 +44,16 @@ class PickupConfirmCubit extends Cubit<PickupConfirmState> {
   int _revision = 0;
   String _lang = 'ar';
   String _fallback = '';
+  bool _suggestPickups = true;
 
-  Future<void> start({required String lang, required String fallback}) async {
+  /// [suggestPickups] is false when the pin picks a destination: no pickup
+  /// points and no distance-from-device warning.
+  Future<void> start({
+    required String lang,
+    required String fallback,
+    bool suggestPickups = true,
+  }) async {
+    _suggestPickups = suggestPickups;
     _lang = lang;
     _fallback = fallback;
     final point = state.stop.location;
@@ -56,6 +64,7 @@ class PickupConfirmCubit extends Cubit<PickupConfirmState> {
       _device = p;
       _emit(state.stop, state.phase);
     });
+    if (!suggestPickups) return;
     final suggestions = await _suggestions(point);
     if (isClosed) return;
     suggestions.fold(
@@ -76,7 +85,9 @@ class PickupConfirmCubit extends Cubit<PickupConfirmState> {
         phase: phase,
         suggestions: suggestions ?? state.suggestions,
         farFromDevice:
-            _device != null && distanceMeters(_device!, stop.location) > 1000,
+            _suggestPickups &&
+            _device != null &&
+            distanceMeters(_device!, stop.location) > 1000,
       ),
     );
   }

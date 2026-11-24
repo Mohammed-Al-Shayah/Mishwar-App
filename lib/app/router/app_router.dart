@@ -137,7 +137,9 @@ String? sessionRedirect(
                         (location == '/rider/search' &&
                             extra is DestinationSearchParams) ||
                         (location == '/rider/confirm' && extra is RideDraft) ||
-                        (location == '/rider/pickup' && extra is RideStop) ||
+                        ((location == '/rider/pickup' ||
+                                location == '/rider/pin') &&
+                            extra is RideStop) ||
                         RegExp(
                           r'^/rider/ride/[^/]+(/summary)?$',
                         ).hasMatch(location))
@@ -484,6 +486,17 @@ GoRouter createAppRouter(
                 getIt<PickupConfirmCubit>(param1: state.extra! as RideStop),
             child: PickupConfirmScreen(
               mapBuilder: pickupMapBuilder ?? riderMapBuilder,
+            ),
+          ),
+        ),
+        GoRoute(
+          path: 'pin',
+          builder: (_, state) => BlocProvider(
+            create: (_) =>
+                getIt<PickupConfirmCubit>(param1: state.extra! as RideStop),
+            child: PickupConfirmScreen(
+              mapBuilder: pickupMapBuilder ?? riderMapBuilder,
+              forDestination: true,
             ),
           ),
         ),

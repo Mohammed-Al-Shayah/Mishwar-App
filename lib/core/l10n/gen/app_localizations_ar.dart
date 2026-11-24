@@ -1657,6 +1657,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pickupGeneric => '???? ????????';
 
   @override
+  String get chooseOnMap => 'حدد على الخريطة';
+
+  @override
+  String get destinationPinTitle => 'حدد وجهتك';
+
+  @override
+  String get destinationPinHint => 'حرّك الخريطة لحد ما يصير الدبوس على وجهتك';
+
+  @override
+  String get destinationPinConfirm => 'تأكيد الوجهة';
+
+  @override
+  String get destinationGeneric => 'الوجهة';
+
+  @override
   String get adminSettings => 'الإعدادات';
 
   @override

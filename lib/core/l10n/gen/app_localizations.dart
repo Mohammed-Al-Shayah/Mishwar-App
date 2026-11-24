@@ -3163,6 +3163,36 @@ abstract class AppLocalizations {
   /// **'???? ????????'**
   String get pickupGeneric;
 
+  /// No description provided for @chooseOnMap.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدد على الخريطة'**
+  String get chooseOnMap;
+
+  /// No description provided for @destinationPinTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدد وجهتك'**
+  String get destinationPinTitle;
+
+  /// No description provided for @destinationPinHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'حرّك الخريطة لحد ما يصير الدبوس على وجهتك'**
+  String get destinationPinHint;
+
+  /// No description provided for @destinationPinConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الوجهة'**
+  String get destinationPinConfirm;
+
+  /// No description provided for @destinationGeneric.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوجهة'**
+  String get destinationGeneric;
+
   /// No description provided for @adminSettings.
   ///
   /// In ar, this message translates to:

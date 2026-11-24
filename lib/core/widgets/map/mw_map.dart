@@ -66,6 +66,9 @@ class MwMap extends StatefulWidget {
     this.mapBuilder,
     super.key,
   });
+
+  /// Where the map opens when the device location is unknown (central Amman).
+  static const defaultTarget = GeoPointValue(31.9539, 35.9106);
   final VoidCallback? onUserInteraction;
   final GeoPointValue? initialTarget;
   final VoidCallback? onCameraMoveStarted;
@@ -110,8 +113,8 @@ class _MwMapState extends State<MwMap> {
           child: GoogleMap(
             initialCameraPosition: CameraPosition(
               target: LatLng(
-                widget.initialTarget?.lat ?? 31.9539,
-                widget.initialTarget?.lng ?? 35.9106,
+                widget.initialTarget?.lat ?? MwMap.defaultTarget.lat,
+                widget.initialTarget?.lng ?? MwMap.defaultTarget.lng,
               ),
               zoom: widget.initialTarget == null ? 13 : 16,
             ),

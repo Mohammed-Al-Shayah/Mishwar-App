@@ -7,7 +7,11 @@ export async function google<T>(url: string, init: RequestInit, fetchImpl: Fetch
     try {
         const response = await fetchImpl(url, { ...init, signal: controller.signal });
         if (!response.ok) {
-            logger.error('Google request failed', { status: response.status });
+            // Only Google's error code and reason are logged (e.g. API_KEY_INVALID); never the body or key.
+            const body = await response.json().catch(() => undefined) as
+                { error?: { status?: string; details?: { reason?: string }[] } } | undefined;
+            logger.error('Google request failed', { status: response.status, googleStatus: body?.error?.status,
+                reason: body?.error?.details?.find(d => d?.reason)?.reason });
             throw new HttpsError(response.status >= 500 ? 'unavailable' : 'internal', 'Map service request failed.');
         }
         return await response.json() as T;

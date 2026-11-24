@@ -19,8 +19,15 @@ import 'package:mishwar/features/common/ride/domain/entities/ride_draft.dart';
 import 'package:mishwar/features/rider/pickup/presentation/pickup_confirm_cubit.dart';
 
 class PickupConfirmScreen extends StatefulWidget {
-  const PickupConfirmScreen({this.mapBuilder, super.key});
+  const PickupConfirmScreen({
+    this.mapBuilder,
+    this.forDestination = false,
+    super.key,
+  });
   final WidgetBuilder? mapBuilder;
+
+  /// Reuses the pin screen to pick the destination instead of the pickup.
+  final bool forDestination;
   @override
   State<PickupConfirmScreen> createState() => _PickupConfirmScreenState();
 }
@@ -36,10 +43,15 @@ class _PickupConfirmScreenState extends State<PickupConfirmScreen> {
     unawaited(
       context.read<PickupConfirmCubit>().start(
         lang: Localizations.localeOf(context).languageCode,
-        fallback: context.l10n.pickupGeneric,
+        fallback: _generic,
+        suggestPickups: !widget.forDestination,
       ),
     );
   }
+
+  String get _generic => widget.forDestination
+      ? context.l10n.destinationGeneric
+      : context.l10n.pickupGeneric;
 
   @override
   Widget build(
@@ -88,9 +100,7 @@ class _PickupConfirmScreenState extends State<PickupConfirmScreen> {
                     child: Center(
                       child: _PickupPin(
                         moving: state.phase == PickupPhase.moving,
-                        label: state.busy
-                            ? context.l10n.pickupGeneric
-                            : state.stop.name,
+                        label: state.busy ? _generic : state.stop.name,
                       ),
                     ),
                   ),
@@ -139,7 +149,9 @@ class _PickupConfirmScreenState extends State<PickupConfirmScreen> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
-                                      context.l10n.pickupTitle,
+                                      widget.forDestination
+                                          ? context.l10n.destinationPinTitle
+                                          : context.l10n.pickupTitle,
                                       style: AppTextStyles.title1,
                                     ),
                                     SizedBox(height: AppSpacing.sm),
@@ -163,7 +175,9 @@ class _PickupConfirmScreenState extends State<PickupConfirmScreen> {
                                     ],
                                     SizedBox(height: AppSpacing.sm),
                                     Text(
-                                      context.l10n.pickupHint,
+                                      widget.forDestination
+                                          ? context.l10n.destinationPinHint
+                                          : context.l10n.pickupHint,
                                       style: AppTextStyles.footnote.copyWith(
                                         color: context.colors.textSecondary,
                                       ),
@@ -200,7 +214,9 @@ class _PickupConfirmScreenState extends State<PickupConfirmScreen> {
                               ),
                             ),
                             MwPrimaryButton(
-                              label: context.l10n.pickupConfirm,
+                              label: widget.forDestination
+                                  ? context.l10n.destinationPinConfirm
+                                  : context.l10n.pickupConfirm,
                               onPressed:
                                   state.busy || state.phase == PickupPhase.idle
                                   ? null
