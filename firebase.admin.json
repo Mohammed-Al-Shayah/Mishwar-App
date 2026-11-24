@@ -1,0 +1,8 @@
+{
+  "hosting": {
+    "site": "mishwar-ps-jo-admin",
+    "public": "build/web",
+    "ignore": ["**/.*"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  }
+}
