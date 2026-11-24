@@ -3130,37 +3130,37 @@ abstract class AppLocalizations {
   /// No description provided for @pickupTitle.
   ///
   /// In ar, this message translates to:
-  /// **'???? ???? ????????'**
+  /// **'أكّد مكان الركوب'**
   String get pickupTitle;
 
   /// No description provided for @pickupHint.
   ///
   /// In ar, this message translates to:
-  /// **'???? ??????? ???? ???? ????? ??????'**
+  /// **'حرّك الخريطة عشان تحدد مكان الركوب بالزبط'**
   String get pickupHint;
 
   /// No description provided for @pickupConfirm.
   ///
   /// In ar, this message translates to:
-  /// **'???? ????????'**
+  /// **'تأكيد مكان الركوب'**
   String get pickupConfirm;
 
   /// No description provided for @pickupFarWarning.
   ///
   /// In ar, this message translates to:
-  /// **'???? ???????? ????? ?? ?????'**
+  /// **'مكان الركوب بعيد عن موقعك'**
   String get pickupFarWarning;
 
   /// No description provided for @pickupEdit.
   ///
   /// In ar, this message translates to:
-  /// **'???? ???? ????????'**
+  /// **'عدّل مكان الركوب'**
   String get pickupEdit;
 
   /// No description provided for @pickupGeneric.
   ///
   /// In ar, this message translates to:
-  /// **'???? ????????'**
+  /// **'مكان الركوب'**
   String get pickupGeneric;
 
   /// No description provided for @chooseOnMap.
