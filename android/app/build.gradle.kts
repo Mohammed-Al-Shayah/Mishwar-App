@@ -28,6 +28,9 @@ val mapsApiKey = secretsProperties.getProperty("MAPS_API_KEY", "")
 
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     id("dev.flutter.flutter-gradle-plugin")
 }
 

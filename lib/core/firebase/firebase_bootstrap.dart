@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mishwar/core/firebase/demo_firebase_options.dart';
 import 'package:mishwar/core/firebase/firebase_env.dart';
 import 'package:mishwar/firebase_options.dart';
 
@@ -15,7 +16,10 @@ abstract final class FirebaseBootstrap {
 
   static Future<void> _initialize() async {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+      // Emulators run demo-mishwar; real builds use the live project.
+      options: useEmulators && !kReleaseMode
+          ? DemoFirebaseOptions.currentPlatform
+          : DefaultFirebaseOptions.currentPlatform,
     );
     const siteKey = String.fromEnvironment('RECAPTCHA_SITE_KEY');
     const debug = !kReleaseMode;

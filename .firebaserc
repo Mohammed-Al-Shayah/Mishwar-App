@@ -1,1 +1,1 @@
-{ "projects": { "default": "demo-mishwar" } }
+{ "projects": { "default": "demo-mishwar", "prod": "mishwar-ps-jo" } }

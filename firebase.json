@@ -66,5 +66,26 @@
         "destination": "/t/index.html"
       }
     ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mishwar-ps-jo",
+          "appId": "1:174154062820:android:7a472e0888643a625405f1",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mishwar-ps-jo",
+          "configurations": {
+            "android": "1:174154062820:android:7a472e0888643a625405f1",
+            "ios": "1:174154062820:ios:cfdd9388525451615405f1",
+            "web": "1:174154062820:web:ec5eb152d30fa83f5405f1"
+          }
+        }
+      }
+    }
   }
 }
