@@ -8,6 +8,8 @@ Read `PROJECT_SPEC.md` before any task. It is the source of truth for features, 
 - When done, report: files changed, commands run and their results, anything left open.
 - Do not commit. The reviewer (Claude) reviews first; commits use `feat(T1.2): short description`.
 - After review approval, tick the task in `PROJECT_SPEC.md` section 8.
+- Claude (reviewer): after each finished task passes analyze and tests, commit it and `git push origin main`
+  without asking. No `Co-Authored-By` lines in commit messages.
 
 ## Stack (do not substitute)
 Flutter + Dart 3 · Firebase (Auth phone/OTP, Firestore, Functions in TypeScript, FCM) · `flutter_bloc` (Cubit / Bloc) · `get_it` + `injectable` · `flutter_screenutil` · `go_router` · `freezed` + `json_serializable` · `fpdart` · `equatable` · `bloc_test` + `mocktail` · `very_good_analysis`.
