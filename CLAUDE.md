@@ -12,7 +12,8 @@ subagents in `.claude/agents/`; you review their work before anything is committ
 | `engineering-manager` | First: find the task ID in PROJECT_SPEC.md §8, define done. Last: status report. |
 | `ui-designer` | Screen spec from DESIGN_SYSTEM.md → `docs/design/<TASK_ID>.md`, before any UI code. |
 | `backend-dev` | Cloud Functions, Firestore rules/indexes, and the `domain` + `data` layers. |
-| `frontend-dev` | The `presentation` layer: cubits/blocs, screens, router, `.arb` strings. |
+| `mobile-dev` | Rider + driver app screens, maps, live location, FCM, Android/iOS setup. |
+| `frontend-dev` | Admin web dashboard, shared widgets in `core/widgets`, router, `.arb` strings. |
 | `team-lead` | Progress check against the acceptance criteria and layer rules. |
 | `qa-engineer` | analyze + tests, missing tests, bug reports. |
 | `devops` | Full pre-report checklist and release readiness. Never deploys to production. |
@@ -21,7 +22,7 @@ subagents in `.claude/agents/`; you review their work before anything is committ
 1. `engineering-manager` defines goal, acceptance criteria and scope.
 2. You split it into tickets (domain/data vs presentation vs functions/rules).
 3. `ui-designer` and `backend-dev` work in parallel when the task has UI.
-4. `frontend-dev` builds the presentation layer on top of the use cases.
+4. `mobile-dev` (rider/driver) and `frontend-dev` (admin web, shared widgets) build the presentation layer on top of the use cases.
 5. `team-lead` checks progress; `qa-engineer` runs checks. Send bugs back to the right developer.
 6. You review the diff yourself against AGENTS.md.
 7. `devops` runs the full checklist; `engineering-manager` writes the status report.
